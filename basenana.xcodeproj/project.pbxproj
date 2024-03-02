@@ -15,6 +15,11 @@
 		3F1BBE312B8E1480005D533F /* basenanaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE302B8E1480005D533F /* basenanaTests.swift */; };
 		3F1BBE3B2B8E1480005D533F /* basenanaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE3A2B8E1480005D533F /* basenanaUITests.swift */; };
 		3F1BBE3D2B8E1480005D533F /* basenanaUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE3C2B8E1480005D533F /* basenanaUITestsLaunchTests.swift */; };
+		3F1BBE4F2B90C4D5005D533F /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE4E2B90C4D5005D533F /* SidebarView.swift */; };
+		3F1BBE512B90C542005D533F /* EntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE502B90C542005D533F /* EntryViewModel.swift */; };
+		3F1BBE532B90C54D005D533F /* DocumentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE522B90C54D005D533F /* DocumentViewModel.swift */; };
+		3F1BBE552B90C8F7005D533F /* GroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE542B90C8F7005D533F /* GroupViewModel.swift */; };
+		3F1BBE572B90CD59005D533F /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE562B90CD59005D533F /* Entry.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +52,11 @@
 		3F1BBE362B8E1480005D533F /* basenanaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = basenanaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F1BBE3A2B8E1480005D533F /* basenanaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = basenanaUITests.swift; sourceTree = "<group>"; };
 		3F1BBE3C2B8E1480005D533F /* basenanaUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = basenanaUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		3F1BBE4E2B90C4D5005D533F /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		3F1BBE502B90C542005D533F /* EntryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryViewModel.swift; sourceTree = "<group>"; };
+		3F1BBE522B90C54D005D533F /* DocumentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentViewModel.swift; sourceTree = "<group>"; };
+		3F1BBE542B90C8F7005D533F /* GroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewModel.swift; sourceTree = "<group>"; };
+		3F1BBE562B90CD59005D533F /* Entry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,8 +107,12 @@
 		3F1BBE1B2B8E147F005D533F /* basenana */ = {
 			isa = PBXGroup;
 			children = (
+				3F1BBE4D2B90C3EA005D533F /* Helpers */,
+				3F1BBE4C2B90C3DD005D533F /* Services */,
+				3F1BBE4B2B90C3CA005D533F /* ViewModels */,
+				3F1BBE4A2B90C3A2005D533F /* Models */,
+				3F1BBE492B90C393005D533F /* Views */,
 				3F1BBE1C2B8E147F005D533F /* basenanaApp.swift */,
-				3F1BBE1E2B8E147F005D533F /* ContentView.swift */,
 				3F1BBE202B8E147F005D533F /* Item.swift */,
 				3F1BBE222B8E1480005D533F /* Assets.xcassets */,
 				3F1BBE242B8E1480005D533F /* basenana.entitlements */,
@@ -130,6 +144,47 @@
 				3F1BBE3C2B8E1480005D533F /* basenanaUITestsLaunchTests.swift */,
 			);
 			path = basenanaUITests;
+			sourceTree = "<group>";
+		};
+		3F1BBE492B90C393005D533F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3F1BBE1E2B8E147F005D533F /* ContentView.swift */,
+				3F1BBE4E2B90C4D5005D533F /* SidebarView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3F1BBE4A2B90C3A2005D533F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3F1BBE562B90CD59005D533F /* Entry.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		3F1BBE4B2B90C3CA005D533F /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				3F1BBE502B90C542005D533F /* EntryViewModel.swift */,
+				3F1BBE522B90C54D005D533F /* DocumentViewModel.swift */,
+				3F1BBE542B90C8F7005D533F /* GroupViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		3F1BBE4C2B90C3DD005D533F /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		3F1BBE4D2B90C3EA005D533F /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -262,9 +317,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F1BBE572B90CD59005D533F /* Entry.swift in Sources */,
 				3F1BBE1F2B8E147F005D533F /* ContentView.swift in Sources */,
+				3F1BBE552B90C8F7005D533F /* GroupViewModel.swift in Sources */,
+				3F1BBE512B90C542005D533F /* EntryViewModel.swift in Sources */,
+				3F1BBE4F2B90C4D5005D533F /* SidebarView.swift in Sources */,
 				3F1BBE212B8E147F005D533F /* Item.swift in Sources */,
 				3F1BBE1D2B8E147F005D533F /* basenanaApp.swift in Sources */,
+				3F1BBE532B90C54D005D533F /* DocumentViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
