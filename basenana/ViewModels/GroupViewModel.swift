@@ -16,7 +16,6 @@ class GroupViewModel: ObservableObject, Identifiable {
     @Published var modifiedAt: Date
     @Published var accessAt: Date
     @Published var subGroups: [GroupViewModel]?
-    @Published var isToggle: Bool
     
     init(group: GroupNode) {
         self.id = group.entry.id
@@ -26,11 +25,16 @@ class GroupViewModel: ObservableObject, Identifiable {
         self.changedAt = group.entry.changedAt
         self.modifiedAt = group.entry.modifiedAt
         self.accessAt = group.entry.accessAt
-        self.isToggle = false
         
-        self.subGroups = []
-        for subGroup in group.subGroups{
-            self.subGroups!.append(GroupViewModel(group: subGroup))
+        if group.subGroups.count > 0{
+            self.subGroups = []
+            for subGroup in group.subGroups{
+                self.subGroups!.append(GroupViewModel(group: subGroup))
+            }
         }
+    }
+    
+    func listChildren() -> [EntryViewModel] {
+        return []
     }
 }

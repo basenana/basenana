@@ -14,8 +14,9 @@ struct ContentView: View {
 
     var body: some View {
         NavigationSplitView {
-            SidebarView(groups: buildGroups())
-                .toolbar {
+        SidebarView(groups: buildGroups())
+            .frame(minWidth: 180,idealWidth: 180)
+            .toolbar {
                 ToolbarItem {
                     Button(action: addItem) {
                         Label("Add Item", systemImage: "plus")

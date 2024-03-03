@@ -17,17 +17,25 @@ struct SidebarView: View {
                 Text("Inbox")
             } label: {
                 HStack{
-                    Image(systemName: "tray.fill").foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                    Image(systemName: "tray.fill").foregroundColor(.blue)
                     Text("Inbox")
                 }.frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.vertical, 5)
             }
             
             NavigationLink {
-                Text("Unread")
+                GeometryReader{geometry in
+                         HSplitView(){
+                            Rectangle()
+                                .frame(minWidth: 0, idealWidth: 200, maxWidth: .infinity)
+                            Rectangle().foregroundColor(.green).frame(minWidth:200, idealWidth: 200, maxWidth: .infinity)
+                         }
+                         .frame(width: geometry.size.width, height: geometry.size.height)
+                         
+                      }
             } label: {
                 HStack{
-                    Image(systemName: "circle.fill")
+                    Image(systemName: "circle.fill").foregroundColor(.brown)
                     Text("Unread")
                 }.frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.vertical, 5)
@@ -43,15 +51,15 @@ struct SidebarView: View {
                     .padding(.vertical, 5)
             }
             
-            Text("Groups")
+            Text("GROUPS")
                 .font(.subheadline)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.vertical, 5)
-                .padding(.horizontal, -5)
+                .padding(.leading, -8)
             ForEach(groups) { grp in
                 OutlineGroup(grp, children: \.subGroups){ subGroup in
                     NavigationLink {
-                        Text(grp.createdAt, format: Date.FormatStyle(date: .numeric, time: .standard))
+                        GroupView(group: subGroup)
                     } label: {
                         HStack{
                             Image(systemName: "folder")
@@ -75,9 +83,14 @@ func buildGroup(id: Int64) -> GroupNode {
     let sub2 = EntryInfo(
         id: id*10 + 2, name: "group \(id).2", kind: "raw", createdAt: Date(), changedAt: Date(), modifiedAt: Date(), accessAt: Date())
     
+    let sub3 = EntryInfo(
+        id: id*100 + 1, name: "group \(id).2.1", kind: "raw", createdAt: Date(), changedAt: Date(), modifiedAt: Date(), accessAt: Date())
+    
     return GroupNode(entry: en, subGroups: [
             GroupNode(entry: sub1, subGroups: []),
-            GroupNode(entry: sub2, subGroups: []),
+            GroupNode(entry: sub2, subGroups: [
+                GroupNode(entry: sub3, subGroups: []),
+            ]),
         ])
 }
 
