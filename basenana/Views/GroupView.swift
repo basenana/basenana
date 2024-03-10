@@ -8,17 +8,14 @@
 import SwiftUI
 
 struct GroupView: View{
-    var group: GroupViewModel
-    var entries: [EntryViewModel]
-    var selectedEntry: EntryViewModel?
+    @State private var groupEntry: EntryViewModel
     
-    init(group: GroupViewModel) {
-        self.group = group
-        self.entries = group.listChildren()
+    init(groupEntry: EntryViewModel) {
+        self.groupEntry = groupEntry
     }
     
     var body: some View {
-        Table(entries) {
+        Table(self.groupEntry.children) {
             TableColumn("Name") {
                 Text($0.name)
             }
@@ -32,11 +29,6 @@ struct GroupView: View{
                 Text("\($0.modifiedAt, format: Date.FormatStyle(date: .numeric, time: .standard))")
             }.width(120)
         }
-//        Text("display files in group view \(group.name)")
     }
 }
 
-
-#Preview {
-    GroupView(group: GroupViewModel(group: buildGroup(id: Int64(10))))
-}

@@ -10,37 +10,49 @@ import SwiftUI
 
 
 struct QuickInboxView: View{
-    @State private var offset = CGSize.zero
-    @State private var isDragging = false
+    @EnvironmentObject var entryService: EntryService
+    
+    @Binding var isShowingQuickInbox: Bool
+    
     @State private var urlInput: String = ""
-    @State private var fileTypeOption = 0
-    @State private var styleOption = 0
+    @State private var fileTypeOption = "webarchive"
+    @State private var isClutterFree = true
     
     var body: some View{
-        VStack {
-            TextField("Enter URL", text: $urlInput)
-                .padding(.horizontal, 50.0)
-                .padding(.top, 20)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .frame(minWidth: 400, maxWidth: .infinity, minHeight: 20)
-            HStack{
+        Form{
+            Section() {
+                Text("Save Web Page to Inbox")
+                                .font(.title2)
+                TextField("URL", text: $urlInput)
+                
                 Picker("File", selection: $fileTypeOption) {
-                    Text("Webarchive").tag(0)
-                    Text("Html").tag(1)
-                    Text("Bookmark").tag(2)
+                    Text("Webarchive").tag("webarchive")
+                    Text("Html").tag("html")
+                    Text("Bookmark").tag("bookmark")
                 }
-                .padding()
-                Picker("Style", selection: $styleOption) {
-                    Text("ClutterFree").tag(0)
-                    Text("Raw").tag(1)
-                }
-                .padding()
+                Toggle("Clutter Free", isOn: $isClutterFree)
             }
+            .padding(.horizontal, 50.0)
+            .padding(.top, 20)
+            .textFieldStyle(RoundedBorderTextFieldStyle())
+            .frame(minWidth: 400, maxWidth: .infinity, minHeight: 20)
+            HStack {
+                Button("Cancel") {
+                    isShowingQuickInbox = false
+                }
+                
+                Button("Submit") {
+                    entryService.quickInbox(urlStr: urlInput, fileType: fileTypeOption, isClusterFree: isClutterFree)
+                    isShowingQuickInbox = false
+                }
+                .buttonStyle(.borderedProminent)
+            }.padding()
         }
-        .background(Color.gray.opacity(0.2))
+        .formStyle(.grouped)
+        .padding()
     }
 }
 
-#Preview {
-    QuickInboxView()
-}
+//#Preview {
+//    QuickInboxView(isShowingQuickInbox: null).environmentObject(EntryService())
+//}

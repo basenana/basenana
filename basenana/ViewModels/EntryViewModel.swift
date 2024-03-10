@@ -6,26 +6,48 @@
 //
 
 import Foundation
+import SwiftUI
 
 
 class EntryViewModel: ObservableObject, Identifiable {
-    @Published var id: Int64
-    @Published var name: String
-    @Published var kind: String
-    @Published var size: Int64
+    @EnvironmentObject var entryService: EntryService
+    
+    @Published var id: Int64 = -1
+    @Published var name: String = "unknown"
+    @Published var kind: String = "group"
+    @Published var size: Int64 = 0
+    
     @Published var createdAt: Date
     @Published var changedAt: Date
     @Published var modifiedAt: Date
     @Published var accessAt: Date
     
-    init(entryInfo: EntryInfo) {
-        self.id = entryInfo.id
-        self.name = entryInfo.name
-        self.kind = entryInfo.kind
-        self.size = 0
-        self.createdAt = entryInfo.createdAt
-        self.changedAt = entryInfo.changedAt
-        self.modifiedAt = entryInfo.modifiedAt
-        self.accessAt = entryInfo.accessAt
+
+    var children: [EntryViewModel] {
+        get {
+            if !isGroup(){
+                return []
+            }
+            return entryService.listChildren(parentEntryID: id)
+        }
+    }
+    
+    init() {
+        let nowAt = Date()
+        self.createdAt = nowAt
+        self.changedAt = nowAt
+        self.modifiedAt = nowAt
+        self.accessAt = nowAt
+    }
+    
+    func createChildren(){
+    }
+    
+    func removeChildren(){
+    }
+    
+    func isGroup() -> Bool {
+        return kind == "group"
     }
 }
+

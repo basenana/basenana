@@ -9,24 +9,26 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    @EnvironmentObject var entryService: EntryService
+    @State private var rootGroups: [GroupTreeViewModel] = []
     @State private var isShowingQuickInbox = false
 
     var body: some View {
         NavigationSplitView {
-        SidebarView(groups: buildGroups())
+            SidebarView(groups: $rootGroups)
             .frame(minWidth: 180,idealWidth: 180)
+            .onAppear{
+                rootGroups = entryService.listRootGroupTree()
+            }
             .toolbar {
                 ToolbarItem {
                     Button(action: quickInbox) {
-                        Label("Add Item", systemImage: "plus")
+                        Label("Quick Inbox", systemImage: "plus")
                     }
                 }
             }
-            // Show URL Form as a sheet
             .sheet(isPresented: $isShowingQuickInbox, content: {
-                QuickInboxView()
+                QuickInboxView(isShowingQuickInbox: $isShowingQuickInbox)
             })
         } detail: {
             Text("Select an item")
@@ -42,5 +44,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+        .environmentObject(EntryService())
 }
