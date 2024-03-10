@@ -11,6 +11,7 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
+    @State private var isShowingQuickInbox = false
 
     var body: some View {
         NavigationSplitView {
@@ -18,28 +19,23 @@ struct ContentView: View {
             .frame(minWidth: 180,idealWidth: 180)
             .toolbar {
                 ToolbarItem {
-                    Button(action: addItem) {
+                    Button(action: quickInbox) {
                         Label("Add Item", systemImage: "plus")
                     }
                 }
             }
+            // Show URL Form as a sheet
+            .sheet(isPresented: $isShowingQuickInbox, content: {
+                QuickInboxView()
+            })
         } detail: {
             Text("Select an item")
         }
     }
 
-    private func addItem() {
+    private func quickInbox() {
         withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
+            isShowingQuickInbox.toggle()
         }
     }
 }

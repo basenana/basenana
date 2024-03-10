@@ -24,6 +24,7 @@
 		3F1BBE5B2B93225E005D533F /* DocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE5A2B93225E005D533F /* DocumentView.swift */; };
 		3F1BBE5E2B93664E005D533F /* HTMLStringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE5D2B93664E005D533F /* HTMLStringView.swift */; };
 		ED917E782B9607BE004FCB9A /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED917E772B9607BE004FCB9A /* Document.swift */; };
+		3F1BBE602B94BAF9005D533F /* QuickInboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE5F2B94BAF9005D533F /* QuickInboxView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,7 @@
 		3F1BBE5A2B93225E005D533F /* DocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentView.swift; sourceTree = "<group>"; };
 		3F1BBE5D2B93664E005D533F /* HTMLStringView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLStringView.swift; sourceTree = "<group>"; };
 		ED917E772B9607BE004FCB9A /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
+		3F1BBE5F2B94BAF9005D533F /* QuickInboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickInboxView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +163,7 @@
 				3F1BBE4E2B90C4D5005D533F /* SidebarView.swift */,
 				3F1BBE582B932251005D533F /* GroupView.swift */,
 				3F1BBE5A2B93225E005D533F /* DocumentView.swift */,
+				3F1BBE5F2B94BAF9005D533F /* QuickInboxView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -330,6 +333,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3F1BBE572B90CD59005D533F /* Entry.swift in Sources */,
+				3F1BBE602B94BAF9005D533F /* QuickInboxView.swift in Sources */,
 				3F1BBE1F2B8E147F005D533F /* ContentView.swift in Sources */,
 				3F1BBE5E2B93664E005D533F /* HTMLStringView.swift in Sources */,
 				3F1BBE592B932251005D533F /* GroupView.swift in Sources */,
