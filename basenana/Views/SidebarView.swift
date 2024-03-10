@@ -24,15 +24,7 @@ struct SidebarView: View {
             }
             
             NavigationLink {
-                GeometryReader{geometry in
-                         HSplitView(){
-                            Rectangle()
-                                .frame(minWidth: 0, idealWidth: 200, maxWidth: .infinity)
-                            Rectangle().foregroundColor(.green).frame(minWidth:200, idealWidth: 200, maxWidth: .infinity)
-                         }
-                         .frame(width: geometry.size.width, height: geometry.size.height)
-                         
-                      }
+                DocumentView(docs: buildDocs())
             } label: {
                 HStack{
                     Image(systemName: "circle.fill").foregroundColor(.brown)
