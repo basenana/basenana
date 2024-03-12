@@ -6,16 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct GroupView: View{
-    @State private var groupEntry: EntryViewModel
-    
-    init(groupEntry: EntryViewModel) {
-        self.groupEntry = groupEntry
-    }
-    
+    @Environment(\.modelContext) private var context
+    var groupEntry: EntryModel
+    @Query(filter: #Predicate<EntryModel>{$0.parent == rootEntryID}, sort: \EntryModel.name) private var groupChileren: [EntryModel]
+
     var body: some View {
-        Table(self.groupEntry.children) {
+        Table(groupChileren) {
             TableColumn("Name") {
                 Text($0.name)
             }

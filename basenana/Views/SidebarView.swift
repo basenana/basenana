@@ -7,14 +7,37 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 
 struct SidebarView: View {
-    @Binding var groups: [GroupTreeViewModel]
+    @Environment(\.modelContext) private var context
+    @Query(filter: #Predicate<EntryModel>{$0.parent == rootEntryID}, sort: \EntryModel.name) private var rootChileren: [EntryModel]
+
+    private var inboxEntry: EntryModel {
+        var iEntry: EntryModel = initInboxEntry()
+        do {
+            let data = try context.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.id == inboxEntryID}))
+            
+            if data.first == nil{
+                iEntry = initInboxEntry()
+                context.insert(iEntry)
+                try context.save()
+            }else{
+                iEntry = data.first!
+            }
+            return iEntry
+        }catch{
+            debugPrint("fetch inbox entry failed")
+        }
+        return iEntry
+    }
+    
+    @State private var rootGroups: [GroupTreeViewModel] = []
     
     var body: some View {
         List{
             NavigationLink {
-                Text("Inbox")
+                GroupView(groupEntry: inboxEntry)
             } label: {
                 HStack{
                     Image(systemName: "tray.fill").foregroundColor(.blue)
@@ -44,7 +67,7 @@ struct SidebarView: View {
             }
             
             Section("GROUPS"){
-                OutlineGroup(groups, children: \.subGroups){ subGroup in
+                OutlineGroup(rootGroups, children: \.subGroups){ subGroup in
                     NavigationLink {
                         GroupView(groupEntry: subGroup.entry)
                     } label: {
@@ -55,6 +78,8 @@ struct SidebarView: View {
                         }.padding(.vertical, 4)
                     }
                 }
+            }.onAppear{
+                rootGroups = GroupTreeViewModel(entry: initRootEntry(), modelContext: context).subGroups ?? []
             }
         }
     }

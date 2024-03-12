@@ -32,7 +32,7 @@ class EntryViewModel: ObservableObject, Identifiable {
         }
     }
     
-    init() {
+    init(model : EntryModel) {
         let nowAt = Date()
         self.createdAt = nowAt
         self.changedAt = nowAt

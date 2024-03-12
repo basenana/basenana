@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		3F0AEC6D2B9E0582000DA928 /* DocumentInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEC6C2B9E0582000DA928 /* DocumentInfoViewModel.swift */; };
+		3F0AEC702B9F2C55000DA928 /* Frostflake in Frameworks */ = {isa = PBXBuildFile; productRef = 3F0AEC6F2B9F2C55000DA928 /* Frostflake */; };
+		3F0AEC722B9F2C55000DA928 /* flake in Frameworks */ = {isa = PBXBuildFile; productRef = 3F0AEC712B9F2C55000DA928 /* flake */; };
+		3F0AEC742BA0A807000DA928 /* EntryHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEC732BA0A807000DA928 /* EntryHelpers.swift */; };
 		3F1BBE1D2B8E147F005D533F /* basenanaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE1C2B8E147F005D533F /* basenanaApp.swift */; };
 		3F1BBE1F2B8E147F005D533F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE1E2B8E147F005D533F /* ContentView.swift */; };
 		3F1BBE212B8E147F005D533F /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE202B8E147F005D533F /* Item.swift */; };
@@ -47,6 +50,7 @@
 
 /* Begin PBXFileReference section */
 		3F0AEC6C2B9E0582000DA928 /* DocumentInfoViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentInfoViewModel.swift; sourceTree = "<group>"; };
+		3F0AEC732BA0A807000DA928 /* EntryHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryHelpers.swift; sourceTree = "<group>"; };
 		3F1BBE192B8E147F005D533F /* basenana.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = basenana.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F1BBE1C2B8E147F005D533F /* basenanaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = basenanaApp.swift; sourceTree = "<group>"; };
 		3F1BBE1E2B8E147F005D533F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -76,6 +80,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F0AEC722B9F2C55000DA928 /* flake in Frameworks */,
+				3F0AEC702B9F2C55000DA928 /* Frostflake in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,6 +207,7 @@
 			isa = PBXGroup;
 			children = (
 				3F1BBE5D2B93664E005D533F /* HTMLStringView.swift */,
+				3F0AEC732BA0A807000DA928 /* EntryHelpers.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -221,6 +228,10 @@
 			dependencies = (
 			);
 			name = basenana;
+			packageProductDependencies = (
+				3F0AEC6F2B9F2C55000DA928 /* Frostflake */,
+				3F0AEC712B9F2C55000DA928 /* flake */,
+			);
 			productName = basenana;
 			productReference = 3F1BBE192B8E147F005D533F /* basenana.app */;
 			productType = "com.apple.product-type.application";
@@ -293,6 +304,9 @@
 				Base,
 			);
 			mainGroup = 3F1BBE102B8E147F005D533F;
+			packageReferences = (
+				3F0AEC6E2B9F2C55000DA928 /* XCRemoteSwiftPackageReference "package-frostflake" */,
+			);
 			productRefGroup = 3F1BBE1A2B8E147F005D533F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -346,6 +360,7 @@
 				3F1BBE212B8E147F005D533F /* Item.swift in Sources */,
 				3F0AEC6D2B9E0582000DA928 /* DocumentInfoViewModel.swift in Sources */,
 				3F2CB97D2B9A02B600ADDDED /* EntryService.swift in Sources */,
+				3F0AEC742BA0A807000DA928 /* EntryHelpers.swift in Sources */,
 				3F2CB97F2B9A038D00ADDDED /* GroupTreeViewModel.swift in Sources */,
 				3F1BBE1D2B8E147F005D533F /* basenanaApp.swift in Sources */,
 				3F1BBE5B2B93225E005D533F /* DocumentView.swift in Sources */,
@@ -705,6 +720,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3F0AEC6E2B9F2C55000DA928 /* XCRemoteSwiftPackageReference "package-frostflake" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ordo-one/package-frostflake";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3F0AEC6F2B9F2C55000DA928 /* Frostflake */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F0AEC6E2B9F2C55000DA928 /* XCRemoteSwiftPackageReference "package-frostflake" */;
+			productName = Frostflake;
+		};
+		3F0AEC712B9F2C55000DA928 /* flake */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F0AEC6E2B9F2C55000DA928 /* XCRemoteSwiftPackageReference "package-frostflake" */;
+			productName = flake;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3F1BBE112B8E147F005D533F /* Project object */;
 }

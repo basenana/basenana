@@ -9,17 +9,12 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @EnvironmentObject var entryService: EntryService
-    @State private var rootGroups: [GroupTreeViewModel] = []
     @State private var isShowingQuickInbox = false
 
     var body: some View {
         NavigationSplitView {
-            SidebarView(groups: $rootGroups)
+            SidebarView()
             .frame(minWidth: 180,idealWidth: 180)
-            .onAppear{
-                rootGroups = entryService.listRootGroupTree()
-            }
             .toolbar {
                 ToolbarItem {
                     Button(action: quickInbox) {
@@ -42,7 +37,3 @@ struct ContentView: View {
     }
 }
 
-#Preview {
-    ContentView()
-        .environmentObject(EntryService())
-}

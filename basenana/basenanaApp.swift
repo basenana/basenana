@@ -23,14 +23,11 @@ struct basenanaApp: App {
         }
     }()
     
-    var entryService: EntryService = EntryService()
-    
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
         .modelContainer(sharedModelContainer)
-        .environmentObject(entryService)
         
     }
 }
