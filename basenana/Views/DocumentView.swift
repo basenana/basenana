@@ -18,29 +18,21 @@ struct DocumentView: View {
     }
     
     var body: some View {
-        GeometryReader { geometry in
-            HSplitView() {
-                List(docs, id: \.self, selection: $selectedItem) { document in
-                    DocumentItemView(doc: document)
-                    //                        .listRowBackground(self.selectedItem == document ? Color.blue.opacity(0.3) : Color.clear)
-                }
-                .frame(minWidth: 300, idealWidth: 300)
-                
-                if let selectedItem = selectedItem {
+        NavigationView{
+            List(docs, id: \.self, selection: $selectedItem) { document in
+                NavigationLink {
                     Rectangle()
                         .fill(Color.white)
                         .overlay(
-                            HTMLStringView(htmlContent: selectedItem.content)
+                            HTMLStringView(htmlContent: selectedItem?.content ?? "")
                         )
                         .frame(minWidth: 0, idealWidth: 1000, maxWidth: .infinity)
                         .layoutPriority(1)
-                } else {
-                    Rectangle()
-                        .fill(Color.gray)
-                        .layoutPriority(1)
+                } label: {
+                    DocumentItemView(doc: document)
                 }
             }
-            .frame(width: geometry.size.width, height: geometry.size.height)
+            .frame(minWidth: 300, idealWidth: 300)
         }
     }
 }

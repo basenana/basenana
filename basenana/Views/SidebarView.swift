@@ -92,9 +92,9 @@ struct SidebarView: View {
             }
             .listStyle(.sidebar)
             
-            VStack {
+            VStack(alignment: .leading) {
                 Spacer(minLength: 10)
-                HStack(alignment: .firstTextBaseline){
+                HStack{
                     Button(action: {
                         // Handle your button action here
                     }) {
@@ -103,13 +103,11 @@ struct SidebarView: View {
                     Button(action: {
                         // Handle your button action here
                     }) {
-                        Image(systemName: "magnifyingglass")
+                        Image(systemName: "tray")
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: 10)
-                .padding()
-                .buttonStyle(PlainButtonStyle())
-                .background(.clear)
+                .padding(.vertical, 5)
+                .buttonStyle(BorderlessButtonStyle())
             }
         }
         .contextMenu {
@@ -135,6 +133,8 @@ struct SidebarView: View {
 struct SidebarGroupsView: View {
     @EnvironmentObject private var entryService: EntryService
     @ObservedObject var rootGroup: GroupTreeRootViewModel
+    
+    @State var selection = Set<GroupTreeViewModel.ID>()
     
     var body: some View {
         OutlineGroup(rootGroup.subGroups, children: \.subGroups){ subGroup in
