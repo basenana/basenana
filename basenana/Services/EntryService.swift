@@ -16,17 +16,21 @@ class EntryService: ObservableObject {
     let rootEntryID: Int64 = 1
     let inboxEntryID: Int64 = 1024
     
-    @Environment(\.modelContext) private var context
+    private var modelContext: ModelContext
+    
+    init(modelContext: ModelContext) {
+        self.modelContext = modelContext
+    }
 
     func rootEntry() -> EntryViewModel {
         var rootEntry: EntryModel
         do {
-            let data = try context.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.id == rootEntryID}))
+            let data = try modelContext.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.id == rootEntryID}))
             
             if data.first == nil{
                 rootEntry = initRootEntry()
-                context.insert(rootEntry)
-                try context.save()
+                modelContext.insert(rootEntry)
+                try modelContext.save()
             }else{
                 rootEntry = data.first!
             }
@@ -41,12 +45,12 @@ class EntryService: ObservableObject {
     func inboxEntry() -> EntryViewModel {
         var inboxEntry: EntryModel
         do {
-            let data = try context.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.id == inboxEntryID}))
+            let data = try modelContext.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.id == inboxEntryID}))
             
             if data.first == nil{
                 inboxEntry = initInboxEntry()
-                context.insert(inboxEntry)
-                try context.save()
+                modelContext.insert(inboxEntry)
+                try modelContext.save()
             }else{
                 inboxEntry = data.first!
             }
@@ -58,11 +62,10 @@ class EntryService: ObservableObject {
     }
     
     func quickInbox(urlStr: String, fileType: String, isClusterFree:Bool) {
-        let iEn = inboxEntry()
-        var newEntry = EntryModel(id: genEntryID(), name: urlStr, parent: inboxEntryID)
-        context.insert(newEntry)
+        let newEntry = EntryModel(id: genEntryID(), name: urlStr, parent: inboxEntryID)
+        modelContext.insert(newEntry)
         do {
-            try context.save()
+            try modelContext.save()
         } catch {
             debugPrint("insert entry to inbox failed")
         }
@@ -71,7 +74,7 @@ class EntryService: ObservableObject {
     
     func getEntry(entryID: Int64) -> EntryViewModel? {
         do {
-            let data = try context.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.id == entryID}))
+            let data = try modelContext.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.id == entryID}))
             if data.first == nil{
                 return nil
             }
@@ -84,7 +87,7 @@ class EntryService: ObservableObject {
     
     func listChildren(parentEntryID: Int64) -> [EntryViewModel]{
         do {
-            let rtn = try context.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.parent == parentEntryID})).map{
+            let rtn = try modelContext.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.parent == parentEntryID})).map{
                 EntryViewModel(model: $0)
             }
             return rtn

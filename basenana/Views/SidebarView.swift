@@ -11,8 +11,9 @@ import SwiftData
 
 struct SidebarView: View {
     @Environment(\.modelContext) private var context
-    @Query(filter: #Predicate<EntryModel>{$0.parent == rootEntryID}, sort: \EntryModel.name) private var rootChileren: [EntryModel]
-
+    @EnvironmentObject private var entryService: EntryService
+    @EnvironmentObject private var groupService: GroupService
+    
     private var inboxEntry: EntryModel {
         var iEntry: EntryModel = initInboxEntry()
         do {
@@ -31,55 +32,121 @@ struct SidebarView: View {
         }
         return iEntry
     }
-    
-    @State private var rootGroups: [GroupTreeViewModel] = []
-    
     var body: some View {
-        List{
-            NavigationLink {
-                GroupView(groupEntry: inboxEntry)
-            } label: {
-                HStack{
-                    Image(systemName: "tray.fill").foregroundColor(.blue)
-                    Text("Inbox")
-                }.frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.vertical, 5)
+        ZStack{
+            List{
+                NavigationLink {
+                    GroupView(groupChileren: entryService.listChildren(parentEntryID: inboxEntryID))
+                } label: {
+                    HStack{
+                        Image(systemName: "tray.fill").foregroundColor(.blue)
+                        Text("Inbox")
+                    }.frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.vertical, 5)
+                }
+                
+                NavigationLink {
+                    DocumentView(docs: buildDocs())
+                } label: {
+                    HStack{
+                        Image(systemName: "circle.fill").foregroundColor(.brown)
+                        Text("Unread")
+                    }.frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.vertical, 5)
+                }
+                
+                NavigationLink {
+                    NavigationView {
+                        List {
+                            NavigationLink {
+                                Text("Marked")
+                            } label: {
+                                HStack{
+                                    Image(systemName: "bookmark.fill").foregroundColor(.yellow)
+                                    Text("Marked")
+                                }.frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(.vertical, 5)
+                            }.tag("m1")
+                            NavigationLink {
+                                Text("Marked2")
+                            } label: {
+                                HStack{
+                                    Image(systemName: "bookmark.fill").foregroundColor(.yellow)
+                                    Text("Marked")
+                                }.frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(.vertical, 5)
+                            }.tag("m2")
+                        }.listStyle(.sidebar)
+                    }
+                    //                Text("Marked")
+                } label: {
+                    HStack{
+                        Image(systemName: "bookmark.fill").foregroundColor(.yellow)
+                        Text("Marked")
+                    }.frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.vertical, 5)
+                }
+                Section("GROUPS"){
+                    SidebarGroupsView(rootGroup: groupService.rootGroup())
+                }
             }
+            .listStyle(.sidebar)
             
-            NavigationLink {
-                DocumentView(docs: buildDocs())
-            } label: {
-                HStack{
-                    Image(systemName: "circle.fill").foregroundColor(.brown)
-                    Text("Unread")
-                }.frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.vertical, 5)
-            }
-            
-            NavigationLink {
-                Text("Marked")
-            } label: {
-                HStack{
-                    Image(systemName: "bookmark.fill").foregroundColor(.yellow)
-                    Text("Marked")
-                }.frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.vertical, 5)
-            }
-            
-            Section("GROUPS"){
-                OutlineGroup(rootGroups, children: \.subGroups){ subGroup in
-                    NavigationLink {
-                        GroupView(groupEntry: subGroup.entry)
-                    } label: {
-                        HStack{
-                            Image(systemName: "folder")
-                            Text("\(subGroup.entry.name)")
-                                .multilineTextAlignment(.leading)
-                        }.padding(.vertical, 4)
+            VStack {
+                Spacer(minLength: 10)
+                HStack(alignment: .firstTextBaseline){
+                    Button(action: {
+                        // Handle your button action here
+                    }) {
+                        Image(systemName: "plus")
+                    }
+                    Button(action: {
+                        // Handle your button action here
+                    }) {
+                        Image(systemName: "magnifyingglass")
                     }
                 }
-            }.onAppear{
-                rootGroups = GroupTreeViewModel(entry: initRootEntry(), modelContext: context).subGroups ?? []
+                .frame(maxWidth: .infinity, maxHeight: 10)
+                .padding()
+                .buttonStyle(PlainButtonStyle())
+                .background(.clear)
+            }
+        }
+        .contextMenu {
+            Button(action: {
+                // perform some action
+                print("Button 1 clicked")
+            }) {
+                Text("Button 1")
+                Image(systemName: "1.circle")
+            }
+            
+            Button(action: {
+                // perform some action
+                print("Button 2 clicked")
+            }) {
+                Text("Button 2")
+                Image(systemName: "2.circle")
+            }
+        }
+    }
+}
+
+struct SidebarGroupsView: View {
+    @EnvironmentObject private var entryService: EntryService
+    @ObservedObject var rootGroup: GroupTreeRootViewModel
+    
+    var body: some View {
+        OutlineGroup(rootGroup.subGroups, children: \.subGroups){ subGroup in
+            NavigationLink {
+                GroupView(groupChileren: entryService.listChildren(parentEntryID: subGroup.entry.id))
+                    .id(subGroup.entry.id)
+            } label: {
+                HStack{
+                    Image(systemName: "folder")
+                    Text("\(subGroup.entry.name)")
+                        .multilineTextAlignment(.leading)
+                }.padding(.vertical, 4)
             }
         }
     }

@@ -8,6 +8,18 @@
 import Foundation
 import SwiftData
 
+class GroupTreeRootViewModel: ObservableObject, Identifiable {
+    private var modelContext: ModelContext
+    
+    @Published var subGroups: [GroupTreeViewModel] = []
+    
+    init(modelContext: ModelContext) {
+        self.modelContext = modelContext
+        self.subGroups = GroupTreeViewModel(entry: initRootEntry(), modelContext: modelContext).subGroups ?? []
+    }
+
+}
+    
 
 class GroupTreeViewModel: ObservableObject, Identifiable {
     @Published var entry: EntryModel

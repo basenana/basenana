@@ -33,11 +33,14 @@ class EntryViewModel: ObservableObject, Identifiable {
     }
     
     init(model : EntryModel) {
-        let nowAt = Date()
-        self.createdAt = nowAt
-        self.changedAt = nowAt
-        self.modifiedAt = nowAt
-        self.accessAt = nowAt
+        self.id = model.id
+        self.name = model.name
+        self.kind = model.kind
+        self.size = model.size
+        self.createdAt = model.createdAt
+        self.changedAt = model.changedAt
+        self.modifiedAt = model.modifiedAt
+        self.accessAt = model.accessAt
     }
     
     func createChildren(){

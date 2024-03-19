@@ -10,7 +10,8 @@ import SwiftUI
 
 
 struct QuickInboxView: View{
-    @Environment(\.modelContext) private var context
+    @EnvironmentObject private var entryService: EntryService
+    @EnvironmentObject private var groupService: GroupService
 
     @Binding var isShowingQuickInbox: Bool
     @State private var urlInput: String = ""
@@ -52,14 +53,8 @@ struct QuickInboxView: View{
     }
     
     func quickInbox(urlStr: String, fileType: String, isClusterFree:Bool) {
-        var newEntry = EntryModel(id: genEntryID(), name: urlStr, parent: 1, kind: "group")
-        context.insert(newEntry)
-        do {
-            try context.save()
-        } catch {
-            debugPrint("insert entry to inbox failed")
-        }
-        return
+        entryService.quickInbox(urlStr: urlStr, fileType: fileType, isClusterFree: isClusterFree)
+        groupService.reflush()
     }
 }
 

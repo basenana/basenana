@@ -9,9 +9,11 @@ import SwiftUI
 import SwiftData
 
 struct GroupView: View{
-    @Environment(\.modelContext) private var context
-    var groupEntry: EntryModel
-    @Query(filter: #Predicate<EntryModel>{$0.parent == rootEntryID}, sort: \EntryModel.name) private var groupChileren: [EntryModel]
+    @State private var groupChileren: [EntryViewModel]
+    
+    init(groupChileren: [EntryViewModel]) {
+        self.groupChileren = groupChileren
+    }
 
     var body: some View {
         Table(groupChileren) {
