@@ -6,28 +6,50 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct GroupView: View{
-    @State private var groupEntry: EntryViewModel
-    
-    init(groupEntry: EntryViewModel) {
-        self.groupEntry = groupEntry
-    }
+    var groupID: Int64
+    @State private var groupChileren: [EntryModel] = []
+    @State private var selection: Set<EntryModel.ID> = []
+    @EnvironmentObject private var entryService: EntryService
     
     var body: some View {
-        Table(self.groupEntry.children) {
-            TableColumn("Name") {
-                Text($0.name)
-            }
-            TableColumn("Kind") {
-                Text($0.kind)
-            }.width(120)
-            TableColumn("Size") {
+        Table(of: EntryModel.self, selection: $selection) {
+            TableColumn("name", value: \.name)
+            TableColumn("email", value: \.kind)
+            TableColumn("size"){
                 Text("\($0.size)")
-            }.width(120)
+            }
             TableColumn("Date Modified") {
                 Text("\($0.modifiedAt, format: Date.FormatStyle(date: .numeric, time: .standard))")
-            }.width(120)
+            }
+        } rows: {
+            ForEach(groupChileren) { child in
+                TableRow(child)
+                    .contextMenu {
+                        Button("Edit") {
+                            // TODO open editor in inspector
+                        }
+                        Button("See Details") {
+                            // TODO open detai view
+                        }
+                        Divider()
+                        Button("Delete", role: .destructive) {
+                        }
+                    }
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button(action: {
+                }, label: {
+                    Image(systemName: "ellipsis.message")
+                })
+            }
+        }
+        .onAppear{
+            groupChileren = entryService.listChildren(parentEntryID: groupID)
         }
     }
 }

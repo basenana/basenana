@@ -10,10 +10,9 @@ import SwiftUI
 
 
 struct QuickInboxView: View{
-    @EnvironmentObject var entryService: EntryService
-    
+    @EnvironmentObject private var entryService: EntryService
+
     @Binding var isShowingQuickInbox: Bool
-    
     @State private var urlInput: String = ""
     @State private var fileTypeOption = "webarchive"
     @State private var isClutterFree = true
@@ -42,7 +41,7 @@ struct QuickInboxView: View{
                 }
                 
                 Button("Submit") {
-                    entryService.quickInbox(urlStr: urlInput, fileType: fileTypeOption, isClusterFree: isClutterFree)
+                    quickInbox(urlStr: urlInput, fileType: fileTypeOption, isClusterFree: isClutterFree)
                     isShowingQuickInbox = false
                 }
                 .buttonStyle(.borderedProminent)
@@ -50,6 +49,11 @@ struct QuickInboxView: View{
         }
         .formStyle(.grouped)
         .padding()
+    }
+    
+    func quickInbox(urlStr: String, fileType: String, isClusterFree:Bool) {
+        entryService.quickInbox(urlStr: urlStr, fileType: fileType, isClusterFree: isClusterFree)
+        entryService.reflush()
     }
 }
 

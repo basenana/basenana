@@ -7,14 +7,16 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 
 struct SidebarView: View {
-    @Binding var groups: [GroupTreeViewModel]
+    @EnvironmentObject private var groupService: GroupService
     
     var body: some View {
         List{
             NavigationLink {
-                Text("Inbox")
+                GroupView(groupID: inboxEntryID).id(inboxEntryID)
+                    .navigationTitle("Inbox")
             } label: {
                 HStack{
                     Image(systemName: "tray.fill").foregroundColor(.blue)
@@ -25,6 +27,7 @@ struct SidebarView: View {
             
             NavigationLink {
                 DocumentView(docs: buildDocs())
+                    .navigationTitle("Unread")
             } label: {
                 HStack{
                     Image(systemName: "circle.fill").foregroundColor(.brown)
@@ -34,7 +37,28 @@ struct SidebarView: View {
             }
             
             NavigationLink {
-                Text("Marked")
+                NavigationView {
+                    List {
+                        NavigationLink {
+                            Text("Marked")
+                        } label: {
+                            HStack{
+                                Image(systemName: "bookmark.fill").foregroundColor(.yellow)
+                                Text("Marked")
+                            }.frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.vertical, 5)
+                        }.tag("m1")
+                        NavigationLink {
+                            Text("Marked2")
+                        } label: {
+                            HStack{
+                                Image(systemName: "bookmark.fill").foregroundColor(.yellow)
+                                Text("Marked")
+                            }.frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.vertical, 5)
+                        }.tag("m2")
+                    }.listStyle(.sidebar)
+                }
             } label: {
                 HStack{
                     Image(systemName: "bookmark.fill").foregroundColor(.yellow)
@@ -42,20 +66,50 @@ struct SidebarView: View {
                 }.frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.vertical, 5)
             }
-            
             Section("GROUPS"){
-                OutlineGroup(groups, children: \.subGroups){ subGroup in
-                    NavigationLink {
-                        GroupView(groupEntry: subGroup.entry)
-                    } label: {
-                        HStack{
-                            Image(systemName: "folder")
-                            Text("\(subGroup.entry.name)")
-                                .multilineTextAlignment(.leading)
-                        }.padding(.vertical, 4)
-                    }
-                }
+                SidebarGroupsView()
+            }
+            .onAppear{
+                groupService.initGroupTree()
+            }
+        }
+        .listStyle(.sidebar)
+    }
+}
+
+struct SidebarGroupsView: View {
+    private var rootGroups = GroupRoot.children ?? []
+    
+    var body: some View {
+        OutlineGroup(rootGroups, children: \.children){ child in
+            NavigationLink {
+                GroupView(groupID: child.groupID).id(child.groupID)
+                    .navigationTitle(child.groupName)
+            } label: {
+                HStack{
+                    Image(systemName: "folder")
+                    Text("\(child.groupName)")
+                        .multilineTextAlignment(.leading)
+                }.padding(.vertical, 4)
+            }
+        }
+        .contextMenu {
+            Button(action: {
+                // perform some action
+                print("Button 1 clicked")
+            }) {
+                Text("Button 1")
+                Image(systemName: "1.circle")
+            }
+            
+            Button(action: {
+                // perform some action
+                print("Button 2 clicked")
+            }) {
+                Text("Button 2")
+                Image(systemName: "2.circle")
             }
         }
     }
+    
 }
