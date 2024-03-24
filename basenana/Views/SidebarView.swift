@@ -10,104 +10,87 @@ import SwiftUI
 import SwiftData
 
 struct SidebarView: View {
-    @Environment(\.modelContext) private var context
-    @EnvironmentObject private var entryService: EntryService
     @EnvironmentObject private var groupService: GroupService
     
-    private var inboxEntry: EntryModel {
-        var iEntry: EntryModel = initInboxEntry()
-        do {
-            let data = try context.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.id == inboxEntryID}))
-            
-            if data.first == nil{
-                iEntry = initInboxEntry()
-                context.insert(iEntry)
-                try context.save()
-            }else{
-                iEntry = data.first!
-            }
-            return iEntry
-        }catch{
-            debugPrint("fetch inbox entry failed")
-        }
-        return iEntry
-    }
     var body: some View {
-        ZStack{
-            List{
-                NavigationLink {
-                    GroupView(groupChileren: entryService.listChildren(parentEntryID: inboxEntryID))
-                } label: {
-                    HStack{
-                        Image(systemName: "tray.fill").foregroundColor(.blue)
-                        Text("Inbox")
-                    }.frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.vertical, 5)
-                }
-                
-                NavigationLink {
-                    DocumentView(docs: buildDocs())
-                } label: {
-                    HStack{
-                        Image(systemName: "circle.fill").foregroundColor(.brown)
-                        Text("Unread")
-                    }.frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.vertical, 5)
-                }
-                
-                NavigationLink {
-                    NavigationView {
-                        List {
-                            NavigationLink {
-                                Text("Marked")
-                            } label: {
-                                HStack{
-                                    Image(systemName: "bookmark.fill").foregroundColor(.yellow)
-                                    Text("Marked")
-                                }.frame(maxWidth: .infinity, alignment: .leading)
-                                    .padding(.vertical, 5)
-                            }.tag("m1")
-                            NavigationLink {
-                                Text("Marked2")
-                            } label: {
-                                HStack{
-                                    Image(systemName: "bookmark.fill").foregroundColor(.yellow)
-                                    Text("Marked")
-                                }.frame(maxWidth: .infinity, alignment: .leading)
-                                    .padding(.vertical, 5)
-                            }.tag("m2")
-                        }.listStyle(.sidebar)
-                    }
-                    //                Text("Marked")
-                } label: {
-                    HStack{
-                        Image(systemName: "bookmark.fill").foregroundColor(.yellow)
-                        Text("Marked")
-                    }.frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.vertical, 5)
-                }
-                Section("GROUPS"){
-                    SidebarGroupsView(rootGroup: groupService.rootGroup())
-                }
-            }
-            .listStyle(.sidebar)
-            
-            VStack(alignment: .leading) {
-                Spacer(minLength: 10)
+        List{
+            NavigationLink {
+                GroupView(groupID: inboxEntryID).id(inboxEntryID)
+                    .navigationTitle("Inbox")
+            } label: {
                 HStack{
-                    Button(action: {
-                        // Handle your button action here
-                    }) {
-                        Image(systemName: "plus")
-                    }
-                    Button(action: {
-                        // Handle your button action here
-                    }) {
-                        Image(systemName: "tray")
-                    }
+                    Image(systemName: "tray.fill").foregroundColor(.blue)
+                    Text("Inbox")
+                }.frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.vertical, 5)
+            }
+            
+            NavigationLink {
+                DocumentView(docs: buildDocs())
+                    .navigationTitle("Unread")
+            } label: {
+                HStack{
+                    Image(systemName: "circle.fill").foregroundColor(.brown)
+                    Text("Unread")
+                }.frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.vertical, 5)
+            }
+            
+            NavigationLink {
+                NavigationView {
+                    List {
+                        NavigationLink {
+                            Text("Marked")
+                        } label: {
+                            HStack{
+                                Image(systemName: "bookmark.fill").foregroundColor(.yellow)
+                                Text("Marked")
+                            }.frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.vertical, 5)
+                        }.tag("m1")
+                        NavigationLink {
+                            Text("Marked2")
+                        } label: {
+                            HStack{
+                                Image(systemName: "bookmark.fill").foregroundColor(.yellow)
+                                Text("Marked")
+                            }.frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.vertical, 5)
+                        }.tag("m2")
+                    }.listStyle(.sidebar)
                 }
-                .padding(.vertical, 5)
-                .buttonStyle(BorderlessButtonStyle())
+            } label: {
+                HStack{
+                    Image(systemName: "bookmark.fill").foregroundColor(.yellow)
+                    Text("Marked")
+                }.frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.vertical, 5)
+            }
+            Section("GROUPS"){
+                SidebarGroupsView()
+            }
+            .onAppear{
+                groupService.initGroupTree()
+            }
+        }
+        .listStyle(.sidebar)
+    }
+}
+
+struct SidebarGroupsView: View {
+    private var rootGroups = GroupRoot.children ?? []
+    
+    var body: some View {
+        OutlineGroup(rootGroups, children: \.children){ child in
+            NavigationLink {
+                GroupView(groupID: child.groupID).id(child.groupID)
+                    .navigationTitle(child.groupName)
+            } label: {
+                HStack{
+                    Image(systemName: "folder")
+                    Text("\(child.groupName)")
+                        .multilineTextAlignment(.leading)
+                }.padding(.vertical, 4)
             }
         }
         .contextMenu {
@@ -128,26 +111,5 @@ struct SidebarView: View {
             }
         }
     }
-}
-
-struct SidebarGroupsView: View {
-    @EnvironmentObject private var entryService: EntryService
-    @ObservedObject var rootGroup: GroupTreeRootViewModel
     
-    @State var selection = Set<GroupTreeViewModel.ID>()
-    
-    var body: some View {
-        OutlineGroup(rootGroup.subGroups, children: \.subGroups){ subGroup in
-            NavigationLink {
-                GroupView(groupChileren: entryService.listChildren(parentEntryID: subGroup.entry.id))
-                    .id(subGroup.entry.id)
-            } label: {
-                HStack{
-                    Image(systemName: "folder")
-                    Text("\(subGroup.entry.name)")
-                        .multilineTextAlignment(.leading)
-                }.padding(.vertical, 4)
-            }
-        }
-    }
 }

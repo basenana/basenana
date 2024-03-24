@@ -20,14 +20,14 @@
 		3F1BBE3B2B8E1480005D533F /* basenanaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE3A2B8E1480005D533F /* basenanaUITests.swift */; };
 		3F1BBE3D2B8E1480005D533F /* basenanaUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE3C2B8E1480005D533F /* basenanaUITestsLaunchTests.swift */; };
 		3F1BBE4F2B90C4D5005D533F /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE4E2B90C4D5005D533F /* SidebarView.swift */; };
-		3F1BBE512B90C542005D533F /* EntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE502B90C542005D533F /* EntryViewModel.swift */; };
 		3F1BBE572B90CD59005D533F /* EntryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE562B90CD59005D533F /* EntryModel.swift */; };
 		3F1BBE592B932251005D533F /* GroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE582B932251005D533F /* GroupView.swift */; };
 		3F1BBE5B2B93225E005D533F /* DocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE5A2B93225E005D533F /* DocumentView.swift */; };
 		3F1BBE5E2B93664E005D533F /* HTMLStringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE5D2B93664E005D533F /* HTMLStringView.swift */; };
 		3F1BBE602B94BAF9005D533F /* QuickInboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE5F2B94BAF9005D533F /* QuickInboxView.swift */; };
 		3F2CB97D2B9A02B600ADDDED /* EntryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2CB97C2B9A02B600ADDDED /* EntryService.swift */; };
-		3F2CB97F2B9A038D00ADDDED /* GroupTreeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2CB97E2B9A038D00ADDDED /* GroupTreeViewModel.swift */; };
+		3F81C9C52BAF1A6D00FEE130 /* GroupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C42BAF1A6D00FEE130 /* GroupModel.swift */; };
+		3F81C9C72BAFCB8900FEE130 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C62BAFCB8900FEE130 /* MainView.swift */; };
 		ED917E782B9607BE004FCB9A /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED917E772B9607BE004FCB9A /* Document.swift */; };
 /* End PBXBuildFile section */
 
@@ -64,14 +64,14 @@
 		3F1BBE3A2B8E1480005D533F /* basenanaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = basenanaUITests.swift; sourceTree = "<group>"; };
 		3F1BBE3C2B8E1480005D533F /* basenanaUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = basenanaUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		3F1BBE4E2B90C4D5005D533F /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
-		3F1BBE502B90C542005D533F /* EntryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryViewModel.swift; sourceTree = "<group>"; };
 		3F1BBE562B90CD59005D533F /* EntryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryModel.swift; sourceTree = "<group>"; };
 		3F1BBE582B932251005D533F /* GroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupView.swift; sourceTree = "<group>"; };
 		3F1BBE5A2B93225E005D533F /* DocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentView.swift; sourceTree = "<group>"; };
 		3F1BBE5D2B93664E005D533F /* HTMLStringView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLStringView.swift; sourceTree = "<group>"; };
 		3F1BBE5F2B94BAF9005D533F /* QuickInboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickInboxView.swift; sourceTree = "<group>"; };
 		3F2CB97C2B9A02B600ADDDED /* EntryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryService.swift; sourceTree = "<group>"; };
-		3F2CB97E2B9A038D00ADDDED /* GroupTreeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupTreeViewModel.swift; sourceTree = "<group>"; };
+		3F81C9C42BAF1A6D00FEE130 /* GroupModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupModel.swift; sourceTree = "<group>"; };
+		3F81C9C62BAFCB8900FEE130 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		ED917E772B9607BE004FCB9A /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -171,6 +171,7 @@
 				3F1BBE582B932251005D533F /* GroupView.swift */,
 				3F1BBE5A2B93225E005D533F /* DocumentView.swift */,
 				3F1BBE5F2B94BAF9005D533F /* QuickInboxView.swift */,
+				3F81C9C62BAFCB8900FEE130 /* MainView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -180,6 +181,7 @@
 			children = (
 				ED917E772B9607BE004FCB9A /* Document.swift */,
 				3F1BBE562B90CD59005D533F /* EntryModel.swift */,
+				3F81C9C42BAF1A6D00FEE130 /* GroupModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -188,8 +190,6 @@
 			isa = PBXGroup;
 			children = (
 				3F0AEC6C2B9E0582000DA928 /* DocumentInfoViewModel.swift */,
-				3F1BBE502B90C542005D533F /* EntryViewModel.swift */,
-				3F2CB97E2B9A038D00ADDDED /* GroupTreeViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -354,15 +354,15 @@
 				3F1BBE5E2B93664E005D533F /* HTMLStringView.swift in Sources */,
 				3F1BBE592B932251005D533F /* GroupView.swift in Sources */,
 				ED917E782B9607BE004FCB9A /* Document.swift in Sources */,
-				3F1BBE512B90C542005D533F /* EntryViewModel.swift in Sources */,
 				3F1BBE4F2B90C4D5005D533F /* SidebarView.swift in Sources */,
 				3F1BBE212B8E147F005D533F /* Item.swift in Sources */,
 				3F0AEC6D2B9E0582000DA928 /* DocumentInfoViewModel.swift in Sources */,
+				3F81C9C52BAF1A6D00FEE130 /* GroupModel.swift in Sources */,
 				3F2CB97D2B9A02B600ADDDED /* EntryService.swift in Sources */,
 				3F0AEC762BA48EC7000DA928 /* GroupService.swift in Sources */,
 				3F0AEC742BA0A807000DA928 /* EntryHelpers.swift in Sources */,
-				3F2CB97F2B9A038D00ADDDED /* GroupTreeViewModel.swift in Sources */,
 				3F1BBE1D2B8E147F005D533F /* basenanaApp.swift in Sources */,
+				3F81C9C72BAFCB8900FEE130 /* MainView.swift in Sources */,
 				3F1BBE5B2B93225E005D533F /* DocumentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

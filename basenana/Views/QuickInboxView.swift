@@ -11,7 +11,6 @@ import SwiftUI
 
 struct QuickInboxView: View{
     @EnvironmentObject private var entryService: EntryService
-    @EnvironmentObject private var groupService: GroupService
 
     @Binding var isShowingQuickInbox: Bool
     @State private var urlInput: String = ""
@@ -54,7 +53,7 @@ struct QuickInboxView: View{
     
     func quickInbox(urlStr: String, fileType: String, isClusterFree:Bool) {
         entryService.quickInbox(urlStr: urlStr, fileType: fileType, isClusterFree: isClusterFree)
-        groupService.reflush()
+        entryService.reflush()
     }
 }
 

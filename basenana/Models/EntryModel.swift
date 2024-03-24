@@ -12,7 +12,7 @@ let rootEntryID: Int64 = 1
 let inboxEntryID: Int64 = 1024
 
 @Model
-class EntryModel {
+class EntryModel: Identifiable {
     @Attribute(.unique) var id: Int64
     var name: String
     var aliases: String
@@ -56,5 +56,10 @@ class EntryModel {
     func isGroup() -> Bool {
         return kind == "group"
     }
+    
+    func isVisitable() -> Bool{
+        return !name.starts(with: ".")
+    }
 }
+
 

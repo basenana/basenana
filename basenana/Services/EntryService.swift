@@ -22,7 +22,7 @@ class EntryService: ObservableObject {
         self.modelContext = modelContext
     }
 
-    func rootEntry() -> EntryViewModel {
+    func rootEntry() -> EntryModel {
         var rootEntry: EntryModel
         do {
             let data = try modelContext.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.id == rootEntryID}))
@@ -36,13 +36,13 @@ class EntryService: ObservableObject {
             }
         }catch{
             debugPrint("fetch root entry failed")
-            return EntryViewModel(model: initRootEntry())
+            return initRootEntry()
         }
-        return EntryViewModel(model: rootEntry)
+        return  rootEntry
     }
     
     
-    func inboxEntry() -> EntryViewModel {
+    func inboxEntry() -> EntryModel {
         var inboxEntry: EntryModel
         do {
             let data = try modelContext.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.id == inboxEntryID}))
@@ -56,9 +56,9 @@ class EntryService: ObservableObject {
             }
         }catch{
             debugPrint("fetch inbox entry failed")
-            return EntryViewModel(model: initInboxEntry())
+            return initInboxEntry()
         }
-        return EntryViewModel(model: inboxEntry)
+        return inboxEntry
     }
     
     func quickInbox(urlStr: String, fileType: String, isClusterFree:Bool) {
@@ -72,24 +72,22 @@ class EntryService: ObservableObject {
         return
     }
     
-    func getEntry(entryID: Int64) -> EntryViewModel? {
+    func getEntry(entryID: Int64) -> EntryModel? {
         do {
             let data = try modelContext.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.id == entryID}))
             if data.first == nil{
                 return nil
             }
-            return EntryViewModel(model: data.first!)
+            return  data.first!
         }catch{
             debugPrint("fetch entry \(entryID) failed")
             return nil
         }
     }
     
-    func listChildren(parentEntryID: Int64) -> [EntryViewModel]{
+    func listChildren(parentEntryID: Int64) -> [EntryModel]{
         do {
-            let rtn = try modelContext.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.parent == parentEntryID})).map{
-                EntryViewModel(model: $0)
-            }
+            let rtn = try modelContext.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.parent == parentEntryID}))
             return rtn
         }catch{
             debugPrint("fetch entry \(parentEntryID) children failed")
@@ -97,12 +95,12 @@ class EntryService: ObservableObject {
         }
     }
     
-    func listRootGroupTree() -> [GroupTreeViewModel]{
-        return []
-    }
-    
     func genEntryID() -> Int64 {
         return Int64(Frostflake(generatorIdentifier: 1).generate())
+    }
+    
+    func reflush() {
+        self.objectWillChange.send()
     }
 }
 

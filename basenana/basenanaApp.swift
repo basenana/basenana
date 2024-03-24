@@ -25,20 +25,8 @@ struct basenanaApp: App {
     
     var body: some Scene {
         WindowGroup {
-            NavigationView {
-                SidebarView()
-                .frame(minWidth: 180,idealWidth: 180)
-            }
-            .toolbar {
-                ToolbarItemGroup(placement: .navigation) {
-                    Button(action: {
-                        NSApp.keyWindow?.initialFirstResponder?.tryToPerform(
-                            #selector(NSSplitViewController.toggleSidebar(_:)), with: nil)
-                    }, label: {
-                        Image(systemName: "sidebar.left")
-                    })
-                }
-            }
+            MainView()
+                .frame(minWidth: 1000, minHeight: 600)
         }
         .modelContainer(sharedModelContainer)
         .environmentObject(EntryService(modelContext: sharedModelContainer.mainContext))
