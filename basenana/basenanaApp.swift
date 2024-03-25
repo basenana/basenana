@@ -13,6 +13,7 @@ struct basenanaApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             EntryModel.self,
+            DocumentModel.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         
@@ -31,5 +32,6 @@ struct basenanaApp: App {
         .modelContainer(sharedModelContainer)
         .environmentObject(EntryService(modelContext: sharedModelContainer.mainContext))
         .environmentObject(GroupService(modelContext: sharedModelContainer.mainContext))
+        .environmentObject(DocumentService(modelContext: sharedModelContainer.mainContext))
     }
 }

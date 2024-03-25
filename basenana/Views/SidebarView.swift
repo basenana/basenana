@@ -11,7 +11,8 @@ import SwiftData
 
 struct SidebarView: View {
     @EnvironmentObject private var groupService: GroupService
-    
+    @EnvironmentObject private var docService: DocumentService
+
     var body: some View {
         List{
             NavigationLink {
@@ -26,7 +27,7 @@ struct SidebarView: View {
             }
             
             NavigationLink {
-                DocumentView(docs: buildDocs())
+                DocumentView()
                     .navigationTitle("Unread")
             } label: {
                 HStack{

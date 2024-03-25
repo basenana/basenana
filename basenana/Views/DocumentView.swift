@@ -10,13 +10,10 @@ import SwiftUI
 
 
 struct DocumentView: View {
-    @State private var selectedItem: DocumentInfoViewModel?
-    var docs: [DocumentInfoViewModel] = []
-    
-    init(docs: [DocumentInfoViewModel]) {
-        self.docs = docs
-    }
-    
+    @State private var selectedItem: DocumentModel?
+    @State private var docs: [DocumentModel] = []
+    @EnvironmentObject private var docService: DocumentService
+
     var body: some View {
         NavigationView{
             List(docs, id: \.self, selection: $selectedItem) { document in
@@ -33,14 +30,17 @@ struct DocumentView: View {
                 }
             }
             .frame(minWidth: 300, idealWidth: 300)
+            .onAppear{
+                docs = docService.listDocuments()
+            }
         }
     }
 }
 
 struct DocumentItemView: View {
-    var doc: DocumentInfoViewModel
+    var doc: DocumentModel
     
-    init(doc: DocumentInfoViewModel) {
+    init(doc: DocumentModel) {
         self.doc = doc
     }
     
@@ -87,20 +87,6 @@ struct DocumentItemView: View {
     }
 }
 
-func buildDoc(id: Int64) -> DocumentInfoViewModel {
-    var doc = DocumentInfo(
-        id: id, oid: id + 100, name: "doc \(id)", parentEntryId: id + 200, content: "It is content for document \(id)",  createdAt: Date(), changedAt: Date())
-    return DocumentInfoViewModel(doc: doc)
-}
-
-func buildDocs() -> [DocumentInfoViewModel] {
-    var result: [DocumentInfoViewModel] = []
-    for i in 1...10 {
-        result.append(buildDoc(id: Int64(i)))
-    }
-    return result
-}
-
-#Preview {
-    DocumentView(docs: buildDocs())
-}
+//#Preview {
+//    DocumentView(docs: buildDocs())
+//}
