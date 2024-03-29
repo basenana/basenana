@@ -12,19 +12,61 @@ import SwiftUI
 struct DocumentView: View {
     @State private var selectedItem: DocumentModel?
     @State private var docs: [DocumentModel] = []
+    @State var isDrawerOpen: Bool = false
     @EnvironmentObject private var docService: DocumentService
-
+    
     var body: some View {
         NavigationView{
             List(docs, id: \.self, selection: $selectedItem) { document in
                 NavigationLink {
-                    Rectangle()
-                        .fill(Color.white)
-                        .overlay(
-                            HTMLStringView(htmlContent: selectedItem?.content ?? "")
-                        )
-                        .frame(minWidth: 0, idealWidth: 1000, maxWidth: .infinity)
+                    GeometryReader { geometry in
+                        HStack(spacing: 0) {
+                            Rectangle()
+                                .fill(Color.white)
+                                .overlay(
+                                    HTMLStringView(htmlContent: selectedItem?.content ?? "")
+                                )
+                                .frame(minWidth: 0, idealWidth: 1000, maxWidth: .infinity)
+                            
+                            Spacer()
+                            ZStack {
+                                if isDrawerOpen {
+                                    Color.gray.edgesIgnoringSafeArea(.all)
+                                }
+                                
+                                HStack {
+                                    Spacer()
+                                    VStack {
+                                        Spacer()
+                                        Button(action: { withAnimation { isDrawerOpen.toggle() } }) {
+                                            Image(systemName: "ellipsis.message")
+                                                .resizable()
+                                                .frame(width: 30, height: 30)
+                                                .foregroundColor(.blue)
+                                        }
+                                        .buttonStyle(PlainButtonStyle())
+                                        .padding(.trailing, 30)
+                                    }
+                                    .frame(width: 20)
+                                    .padding()
+                                    
+                                    if isDrawerOpen {
+                                        VStack {
+                                            // Drawer content goes here
+                                            Text("dialogue content")
+                                                .padding()
+                                        }
+                                        .frame(width: 200)
+                                        .background(Color.white)
+                                    }
+                                }
+                            }
+                            .frame(width: isDrawerOpen ? 205 : 5)
+                            
+                        }
+                        .frame(width: geometry.size.width, height: geometry.size.height)
                         .layoutPriority(1)
+                    }
                 } label: {
                     DocumentItemView(doc: document)
                 }
