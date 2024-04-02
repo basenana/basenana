@@ -16,7 +16,7 @@ struct DialogueView: View {
                 .padding(10)
         }
         .background(Color.white)
-        .frame( width: isDrawerOpen ? 200:5)
+        .frame( width: 200)
     }
 }
 

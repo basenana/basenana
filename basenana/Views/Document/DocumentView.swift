@@ -28,13 +28,31 @@ struct DocumentView: View {
                                     .overlay(
                                         HTMLStringView(htmlContent: selectedItem?.content ?? "")
                                     )
-                                    .frame(minWidth: 0, idealWidth: 1000)
+                                    .frame(minWidth: 0,  maxWidth: .infinity)
                                 
-                                DialogueView(isDrawerOpen: $isDrawerOpen)
-                                    .frame(width: isDrawerOpen ? 200 : 5)
+                                
+                                if isDrawerOpen{
+                                    
+                                    DialogueView(isDrawerOpen: $isDrawerOpen)
+                                }
                             }
-                            
-                            DialogueButtonView(isDrawerOpen: $isDrawerOpen)
+                            .overlay(
+                                Button(action: {
+                                    withAnimation(.easeInOut) {
+                                        isDrawerOpen.toggle()
+                                    }
+                                }, label: {
+                                        Image(systemName: isDrawerOpen ? "xmark.circle" : "ellipsis.message")
+                                            .resizable()
+                                            .foregroundColor(.blue)
+                                            .frame(width: 25, height: 25)
+                                            .offset(x: -5, y: 5)
+                                    
+                                })
+                                .buttonStyle(PlainButtonStyle())
+                                
+                                ,alignment: .topTrailing
+                            )
                             
                         }
                         .frame(width: geometry.size.width, height: geometry.size.height)
@@ -53,7 +71,3 @@ struct DocumentView: View {
     }
 }
 
-
-//#Preview {
-//    DocumentView(docs: buildDocs())
-//}
