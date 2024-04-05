@@ -29,7 +29,6 @@ struct SidebarView: View {
             NavigationLink {
                 DocumentView()
                     .navigationTitle("Unread")
-//                ContentView()
             } label: {
                 HStack{
                     Image(systemName: "circle.fill").foregroundColor(.brown)
