@@ -66,28 +66,24 @@ struct DialogueView: View {
                     }
                     .padding()
                     
+                    Spacer()
+                    
                     // send msg
-                    HStack {
-                        TextField("New message", text: $newMessage, onCommit: {
-                            Task {
+                    TextField("New Message", text: $newMessage, axis: .vertical)
+                        .padding(20)
+                        .textFieldStyle(PlainTextFieldStyle())
+                        .frame(minHeight: 60, alignment: .center)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .fill(Color(red: 241/255, green: 241/255, blue: 241/255))
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 8)
+                        )
+                        .onSubmit {
+                            Task{
                                 self.sendMessage()
                             }
-                        })
-                        .multilineTextAlignment(.leading)
-                        .lineLimit(nil)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        
-                        
-                        
-                        Button(action: {
-                            self.sendMessage()
-                        }) {
-                            Image(systemName:"paperplane")
-                            Text("Send")
                         }
-                        
-                    }
-                    .padding(10)
                     
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 10))
