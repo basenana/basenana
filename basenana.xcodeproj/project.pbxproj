@@ -74,7 +74,7 @@
 		3F81C9C42BAF1A6D00FEE130 /* GroupModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupModel.swift; sourceTree = "<group>"; };
 		3F81C9C62BAFCB8900FEE130 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		ED47907A2BB129FF00FEA8D4 /* DocumentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentService.swift; sourceTree = "<group>"; };
-		ED85A3BD2BBAB21A0040598E /* DialogueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueView.swift; sourceTree = "<group>"; };
+		ED85A3BD2BBAB21A0040598E /* DialogueView.swift */ = {isa = PBXFileReference; indentWidth = 5; lastKnownFileType = sourcecode.swift; path = DialogueView.swift; sourceTree = "<group>"; };
 		ED85A3C22BBAB3BD0040598E /* DocumentItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentItemView.swift; sourceTree = "<group>"; };
 		ED917E772B9607BE004FCB9A /* DocumentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
