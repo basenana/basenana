@@ -10,7 +10,8 @@ import SwiftUI
 struct DialogueView: View {
     @Binding var isDrawerOpen: Bool
     
-    @State private var isHovering = false
+    @State private var isCloseHovering = false
+    @State private var isEraserHovering = false
     @State var newMessage = ""
     @State var messages = [
         Message(user: "User", text: "Hello!"),
@@ -27,28 +28,66 @@ struct DialogueView: View {
                 RoundedRectangle(cornerRadius: 10)
                     .fill(Color(red: 241/255, green: 241/255, blue: 241/255))
                     .overlay(
-                        Text("对话主题") // FIXME: set theme of doc dialogue
+                        Text("Assisted Reading")
                     )
                     .frame(height: 30)
                 
                 Spacer()
                 
+                // button of eraser ..
+                Button {
+                    withAnimation(.easeInOut) {
+                        messages = []
+                    }
+                } label: {
+                    if isEraserHovering {
+                        Image(systemName: "eraser.fill").resizable().frame(width: 20, height: 20)
+                            .help("This is the eraser tool")
+                    } else {
+                        Image(systemName: "eraser").resizable().frame(width: 20, height: 20)
+                    }
+                }
+                .buttonStyle(PlainButtonStyle())
+                .onHover { hovering in isEraserHovering = hovering }
+                .overlay(
+                      Group {
+                        if isEraserHovering {
+                          Text("Clear")
+                            .background(Color.white)
+                            .foregroundColor(.black)
+                            .frame(width: 200)
+                            .offset(y: -20.0)
+                        }
+                      }
+                    )
+
+                
                 // button of close ..
                 Button {
                     withAnimation(.easeInOut) { isDrawerOpen.toggle() }
                 } label: {
-                    if isHovering {
+                    if isCloseHovering {
                         Image(systemName: "xmark.circle.fill").resizable().frame(width: 20, height: 20)
                     } else {
                         Image(systemName: "xmark.circle").resizable().frame(width: 20, height: 20)
                     }
                 }
                 .buttonStyle(PlainButtonStyle())
-                .onHover { hovering in isHovering = hovering }
+                .onHover { hovering in isCloseHovering = hovering }
+                .overlay(
+                      Group {
+                        if isCloseHovering {
+                          Text("Close")
+                            .background(Color.white)
+                            .foregroundColor(.black)
+                            .frame(width: 200)
+                            .offset(y: -20.0)
+                        }
+                      }
+                    )
             }
-            .padding(.top, 5)
-            .padding(.vertical, 2)
-            
+            .padding(10)
+
             ZStack{
                 
                 // gray background
@@ -124,6 +163,7 @@ struct MessageView: View {
                     .padding(10)
                     .background(Color(red:222/255, green:241/255, blue: 245/255 ))
                     .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .textSelection(.enabled)
             }
         } else {
             // message of robot in left
@@ -140,6 +180,7 @@ struct MessageView: View {
                     .padding(10)
                     .background(Color(red:228/255, green: 228/255, blue:228/255))
                     .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .textSelection(.enabled)
             }
             Spacer()
         }
