@@ -57,15 +57,19 @@ class DialogueService: ObservableObject {
         } else {
             do{
                 let messageString = dialogue?.messages
-                if messageString == "" && let data = messageString?.data(using: .utf8) {
-                    var messages = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]]
-                    messages?.append(newMessage)
+                if messageString == "" {
                     
-                    let jsonData = try JSONSerialization.data(withJSONObject: messages, options: [])
-                    let jsonString = String(data: jsonData, encoding: .utf8)
-                    dialogue!.messages = jsonString!
-                    
+                    if let data = messageString?.data(using: .utf8) {
+                        var messages = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: String]]
+                        messages?.append(newMessage)
+                        
+                        let jsonData = try JSONSerialization.data(withJSONObject: messages, options: [])
+                        let jsonString = String(data: jsonData, encoding: .utf8)
+                        dialogue!.messages = jsonString!
+                        
+                    }
                 }
+                
             } catch {
                 debugPrint("Error converting JSON to String: \(error)")
                 return

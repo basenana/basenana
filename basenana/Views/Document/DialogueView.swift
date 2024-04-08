@@ -55,7 +55,7 @@ struct DialogueView: View {
                          }
                          .onAppear{
                               dialogue = dialogueService.getDialogue(docId: docId)
-                              if dialogue != nil {
+                              if dialogue != nil && dialogue?.messages != "" {
                                    if let data = dialogue!.messages.data(using: .utf8) {
                                         do {
                                              messages = (try JSONSerialization.jsonObject(with: data, options: []) as? [[String: String]])!
