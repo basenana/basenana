@@ -1,41 +1,11 @@
 //
-//  DocumentView.swift
+//  DocumentItemView.swift
 //  basenana
 //
-//  Created by Hypo on 2024/3/2.
+//  Created by zww on 2024/4/1.
 //
 
-import Foundation
 import SwiftUI
-
-
-struct DocumentView: View {
-    @State private var selectedItem: DocumentModel?
-    @State private var docs: [DocumentModel] = []
-    @EnvironmentObject private var docService: DocumentService
-
-    var body: some View {
-        NavigationView{
-            List(docs, id: \.self, selection: $selectedItem) { document in
-                NavigationLink {
-                    Rectangle()
-                        .fill(Color.white)
-                        .overlay(
-                            HTMLStringView(htmlContent: selectedItem?.content ?? "")
-                        )
-                        .frame(minWidth: 0, idealWidth: 1000, maxWidth: .infinity)
-                        .layoutPriority(1)
-                } label: {
-                    DocumentItemView(doc: document)
-                }
-            }
-            .frame(minWidth: 300, idealWidth: 300)
-            .onAppear{
-                docs = docService.listDocuments()
-            }
-        }
-    }
-}
 
 struct DocumentItemView: View {
     var doc: DocumentModel
@@ -87,6 +57,3 @@ struct DocumentItemView: View {
     }
 }
 
-//#Preview {
-//    DocumentView(docs: buildDocs())
-//}
