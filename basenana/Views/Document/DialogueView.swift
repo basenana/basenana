@@ -6,19 +6,19 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct DialogueView: View {
      @Binding var isDrawerOpen: Bool
+     let docId: Int64
      
      @State private var isCloseHovering = false
      @State private var isEraserHovering = false
      @State var newMessage = ""
-     @State var messages = [
-          Message(user: "User", text: "Hello!"),
-          Message(user: "Robot", text: "Hi! How are you?"),
-          Message(user: "User", text: "I'm fine, thanks. And you?" ),
-          Message(user: "Robot", text: "I'm good too!"),
-     ]
+     @State private var dialogue: DialogueModel?
+     @State var messages : [[String:String]]=[]
+     
+     @EnvironmentObject private var dialogueService: DialogueService
      
      var body: some View {
           VStack {
@@ -32,53 +32,10 @@ struct DialogueView: View {
                     Spacer()
                     
                     // button of eraser ..
-                    Button {
-                         withAnimation(.easeInOut) { messages = [] }
-                    } label: {
-                         if isEraserHovering {
-                              Image(systemName: "eraser.fill").resizable().frame(width: 20, height: 20)
-                         } else {
-                              Image(systemName: "eraser").resizable().frame(width: 20, height: 20)
-                         }
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                    .onHover { hovering in isEraserHovering = hovering }
-                    .overlay(
-                         Group {
-                              if isEraserHovering {
-                                   Text("Clear")
-                                        .background(Color.white)
-                                        .foregroundColor(.black)
-                                        .frame(width: 200)
-                                        .offset(y: -20.0)
-                              }
-                         }
-                    )
-                    
+                    EraserButton(isEraserHovering: isEraserHovering, isDrawerOpen: $isDrawerOpen, docId: docId)
                     
                     // button of close ..
-                    Button {
-                         withAnimation(.easeInOut) { isDrawerOpen.toggle() }
-                    } label: {
-                         if isCloseHovering {
-                              Image(systemName: "xmark.circle.fill").resizable().frame(width: 20, height: 20)
-                         } else {
-                              Image(systemName: "xmark.circle").resizable().frame(width: 20, height: 20)
-                         }
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                    .onHover { hovering in isCloseHovering = hovering }
-                    .overlay(
-                         Group {
-                              if isCloseHovering {
-                                   Text("Close")
-                                        .background(Color.white)
-                                        .foregroundColor(.black)
-                                        .frame(width: 200)
-                                        .offset(y: -20.0)
-                              }
-                         }
-                    )
+                    CloseButton(isCloseHovering: isCloseHovering, isDrawerOpen: $isDrawerOpen)
                }
                .padding(10)
                
@@ -91,9 +48,21 @@ struct DialogueView: View {
                          
                          // message
                          ScrollView {
-                              ForEach(messages) { msg in
+                              ForEach( messages, id: \.self) { msg in
                                    HStack { MessageView(msg: msg) }
                                         .padding(.vertical, 5)
+                              }
+                         }
+                         .onAppear{
+                              dialogue = dialogueService.getDialogue(docId: docId)
+                              if dialogue != nil {
+                                   if let data = dialogue!.messages.data(using: .utf8) {
+                                        do {
+                                             messages = (try JSONSerialization.jsonObject(with: data, options: []) as? [[String: String]])!
+                                        } catch {
+                                             debugPrint("Error converting String to JSON: \(error)")
+                                        }
+                                   }
                               }
                          }
                          .padding()
@@ -124,7 +93,9 @@ struct DialogueView: View {
      
      func sendMessage() {
           if !newMessage.isEmpty {
-               messages.append(Message(user: "User", text: newMessage))
+               //               messages.append(Message(user: "User", text: newMessage))
+               messages.append(["user": "user", "content": newMessage])
+               dialogueService.saveMessage(docId: docId, user: "user", content: newMessage)
                DispatchQueue.main.async {
                     self.newMessage = ""
                }
@@ -133,18 +104,18 @@ struct DialogueView: View {
 }
 
 struct MessageView: View {
-     @State var msg : Message
+     @State var msg : [String:String]
      
      var body: some View {
-          if msg.user == "User" {
+          if msg["user"] == "user" {
                // message of user in right
                Spacer()
                VStack(alignment: .trailing) {
                     HStack{
-                         Text(msg.user).font(.headline)
+                         Text(msg["user"]!).font(.headline)
                          Text("😃").font(.title)
                     }
-                    Text(msg.text)
+                    Text(msg["content"]!)
                          .font(.body)
                          .padding(10)
                          .background(Color(red:222/255, green:241/255, blue: 245/255 ))
@@ -156,9 +127,9 @@ struct MessageView: View {
                VStack(alignment: .leading) {
                     HStack{
                          Text("🤖").font(.title)
-                         Text(msg.user).font(.headline)
+                         Text(msg["user"]!).font(.headline)
                     }
-                    Text(msg.text)
+                    Text(msg["content"]!)
                          .font(.body)
                          .padding(10)
                          .background(Color(red:228/255, green: 228/255, blue:228/255))
@@ -170,12 +141,78 @@ struct MessageView: View {
      }
 }
 
-struct Message: Identifiable {
-     let id = UUID()
-     let user: String
-     let text: String
+struct CloseButton: View {
+     @State var isCloseHovering = false
+     @Binding var isDrawerOpen: Bool
+     
+     var body: some View {
+          Button {
+               withAnimation(.easeInOut) { isDrawerOpen.toggle() }
+          } label: {
+               if isCloseHovering {
+                    Image(systemName: "xmark.circle.fill").resizable().frame(width: 20, height: 20)
+               } else {
+                    Image(systemName: "xmark.circle").resizable().frame(width: 20, height: 20)
+               }
+          }
+          .buttonStyle(PlainButtonStyle())
+          .onHover { hovering in isCloseHovering = hovering }
+          .overlay(
+               Group {
+                    if isCloseHovering {
+                         Text("Close")
+                              .background(Color.white)
+                              .foregroundColor(.black)
+                              .frame(width: 200)
+                              .offset(y: -20.0)
+                    }
+               }
+          )
+     }
 }
 
+struct EraserButton: View {
+     @State var isEraserHovering = false
+     @Binding var isDrawerOpen: Bool
+     let docId: Int64
+     
+     @EnvironmentObject private var dialogueService: DialogueService
+     
+     var body: some View {
+          Button {
+               withAnimation(.easeInOut) {
+                    dialogueService.clearMessage(docId: docId)
+               }
+          } label: {
+               if isEraserHovering {
+                    Image(systemName: "eraser.fill").resizable().frame(width: 20, height: 20)
+               } else {
+                    Image(systemName: "eraser").resizable().frame(width: 20, height: 20)
+               }
+          }
+          .buttonStyle(PlainButtonStyle())
+          .onHover { hovering in isEraserHovering = hovering }
+          .overlay(
+               Group {
+                    if isEraserHovering {
+                         Text("Clear")
+                              .background(Color.white)
+                              .foregroundColor(.black)
+                              .frame(width: 200)
+                              .offset(y: -20.0)
+                    }
+               }
+          )
+     }
+}
+
+
 #Preview {
-     DialogueView(isDrawerOpen: .constant(true))
+     let config = ModelConfiguration(isStoredInMemoryOnly: true)
+     let container = try! ModelContainer(for: DialogueModel.self, configurations: config)
+     
+     container.mainContext.insert(DialogueModel(id: 100, oid: 100, docid: 100, messages: "[{\"user\": \"user\", \"content\": \"hello\"}]"))
+     container.mainContext.insert(DialogueModel(id: 101, oid: 100, docid: 100, messages: "[{\"user\": \"assistant\", \"content\": \"can I help you?\"}]"))
+
+     return DialogueView(isDrawerOpen: .constant(true), docId: 100).environmentObject(DialogueService(modelContext: container.mainContext))
 }

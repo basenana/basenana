@@ -12,6 +12,7 @@ import SwiftData
 struct SidebarView: View {
     @EnvironmentObject private var groupService: GroupService
     @EnvironmentObject private var docService: DocumentService
+    @EnvironmentObject private var dialogueService: DialogueService
 
     var body: some View {
         List{

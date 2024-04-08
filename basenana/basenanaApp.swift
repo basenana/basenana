@@ -14,6 +14,7 @@ struct basenanaApp: App {
         let schema = Schema([
             EntryModel.self,
             DocumentModel.self,
+            DialogueModel.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         
@@ -33,5 +34,6 @@ struct basenanaApp: App {
         .environmentObject(EntryService(modelContext: sharedModelContainer.mainContext))
         .environmentObject(GroupService(modelContext: sharedModelContainer.mainContext))
         .environmentObject(DocumentService(modelContext: sharedModelContainer.mainContext))
+        .environmentObject(DialogueService(modelContext: sharedModelContainer.mainContext))
     }
 }

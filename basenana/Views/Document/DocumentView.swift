@@ -14,7 +14,6 @@ struct DocumentView: View {
     @State private var selectedItem: DocumentModel? = nil
     @State private var docs: [DocumentModel] = []
     @State var isDrawerOpen: Bool = false
-    @State private var splitViewRatio: CGFloat = 0.5
     
     @EnvironmentObject private var docService: DocumentService
     
@@ -39,7 +38,7 @@ struct DocumentView: View {
                                     
                                     if isDrawerOpen{
                                         // dialogue body
-                                        DialogueView(isDrawerOpen: $isDrawerOpen)
+                                        DialogueView(isDrawerOpen: $isDrawerOpen, docId: document.id)
                                             .frame(minWidth:200, idealWidth: 200, maxWidth: .infinity)
                                     }
                                     
