@@ -43,37 +43,10 @@ class DialogueService: ObservableObject {
         
         let newMessage = ["user": user, "content": content]
         if dialogue == nil {
-            do {
-                let jsonData = try JSONSerialization.data(withJSONObject: [newMessage], options: [])
-                let jsonString = String(data: jsonData, encoding: .utf8)
-                
-                dialogue = DialogueModel(id: genEntryID(), oid: docId, docid: docId, messages: jsonString!)
-                
-                modelContext.insert(dialogue!)
-            } catch {
-                debugPrint("Error converting dictionary to JSON: \(error)")
-                return
-            }
+            dialogue = DialogueModel(id: genEntryID(), oid: docId, docid: docId, messages: [newMessage])
+            modelContext.insert(dialogue!)
         } else {
-            do{
-                let messageString = dialogue?.messages
-                if messageString == "" {
-                    
-                    if let data = messageString?.data(using: .utf8) {
-                        var messages = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: String]]
-                        messages?.append(newMessage)
-                        
-                        let jsonData = try JSONSerialization.data(withJSONObject: messages, options: [])
-                        let jsonString = String(data: jsonData, encoding: .utf8)
-                        dialogue!.messages = jsonString!
-                        
-                    }
-                }
-                
-            } catch {
-                debugPrint("Error converting JSON to String: \(error)")
-                return
-            }
+            dialogue?.messages.append(newMessage)
         }
         
         do {
@@ -93,7 +66,7 @@ class DialogueService: ObservableObject {
                 return
             }
             dialogue = data.first!
-            dialogue.messages = ""
+            dialogue.messages = []
         }catch{
             debugPrint("get dialogue by docId \(docId) failed")
             return

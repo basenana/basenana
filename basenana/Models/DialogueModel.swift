@@ -13,12 +13,12 @@ class DialogueModel: Identifiable {
     @Attribute(.unique) var id: Int64
     var oid: Int64
     var docid: Int64
-    var messages: String
+    var messages: [[String: String]]=[]
     
     var createdAt: Date
     var changedAt: Date
     
-    init(id: Int64, oid: Int64, docid: Int64, messages: String) {
+    init(id: Int64, oid: Int64, docid: Int64, messages: [[String: String]]) {
         self.id = id
         self.oid = oid
         self.docid = docid

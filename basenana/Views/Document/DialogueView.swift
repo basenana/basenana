@@ -32,7 +32,7 @@ struct DialogueView: View {
                     Spacer()
                     
                     // button of eraser ..
-                    EraserButton(isEraserHovering: isEraserHovering, isDrawerOpen: $isDrawerOpen, docId: docId)
+                    EraserButton(isEraserHovering: isEraserHovering, isDrawerOpen: $isDrawerOpen, messages: $messages, docId: docId)
                     
                     // button of close ..
                     CloseButton(isCloseHovering: isCloseHovering, isDrawerOpen: $isDrawerOpen)
@@ -55,15 +55,7 @@ struct DialogueView: View {
                          }
                          .onAppear{
                               dialogue = dialogueService.getDialogue(docId: docId)
-                              if dialogue != nil && dialogue?.messages != "" {
-                                   if let data = dialogue!.messages.data(using: .utf8) {
-                                        do {
-                                             messages = (try JSONSerialization.jsonObject(with: data, options: []) as? [[String: String]])!
-                                        } catch {
-                                             debugPrint("Error converting String to JSON: \(error)")
-                                        }
-                                   }
-                              }
+                              messages = dialogue?.messages ?? []
                          }
                          .padding()
                          
@@ -93,9 +85,11 @@ struct DialogueView: View {
      
      func sendMessage() {
           if !newMessage.isEmpty {
-               //               messages.append(Message(user: "User", text: newMessage))
-               messages.append(["user": "user", "content": newMessage])
+               let mockAssisMsg = "I am a mock assistant."
                dialogueService.saveMessage(docId: docId, user: "user", content: newMessage)
+               dialogueService.saveMessage(docId: docId, user: "assistant", content: mockAssisMsg)
+               messages.append(["user": "User", "content": newMessage])
+               messages.append(["user": "Assistant", "content": mockAssisMsg])
                DispatchQueue.main.async {
                     self.newMessage = ""
                }
@@ -107,7 +101,7 @@ struct MessageView: View {
      @State var msg : [String:String]
      
      var body: some View {
-          if msg["user"] == "user" {
+          if msg["user"]?.lowercased() == "user" {
                // message of user in right
                Spacer()
                VStack(alignment: .trailing) {
@@ -174,6 +168,7 @@ struct CloseButton: View {
 struct EraserButton: View {
      @State var isEraserHovering = false
      @Binding var isDrawerOpen: Bool
+     @Binding var messages : [[String:String]]
      let docId: Int64
      
      @EnvironmentObject private var dialogueService: DialogueService
@@ -182,6 +177,7 @@ struct EraserButton: View {
           Button {
                withAnimation(.easeInOut) {
                     dialogueService.clearMessage(docId: docId)
+                    messages = []
                }
           } label: {
                if isEraserHovering {
@@ -211,8 +207,7 @@ struct EraserButton: View {
      let config = ModelConfiguration(isStoredInMemoryOnly: true)
      let container = try! ModelContainer(for: DialogueModel.self, configurations: config)
      
-     container.mainContext.insert(DialogueModel(id: 100, oid: 100, docid: 100, messages: "[{\"user\": \"user\", \"content\": \"hello\"}]"))
-     container.mainContext.insert(DialogueModel(id: 101, oid: 100, docid: 100, messages: "[{\"user\": \"assistant\", \"content\": \"can I help you?\"}]"))
-
+     container.mainContext.insert(DialogueModel(id: 100, oid: 100, docid: 100, messages: [["user": "User", "content": "hello"], ["user": "Assistant", "content": "can I help you?"]]))
+     
      return DialogueView(isDrawerOpen: .constant(true), docId: 100).environmentObject(DialogueService(modelContext: container.mainContext))
 }
