@@ -26,8 +26,10 @@ struct DialogueView: View {
                HStack {
                     // dialogue title ..
                     RoundedRectangle(cornerRadius: 10)
-                         .fill(Color(red: 241/255, green: 241/255, blue: 241/255))
-                         .overlay( Text("Assisted Reading") )
+                         .fill(Color.DialogBoxBackground())
+                         .overlay( Text("Assisted Reading")
+                              .font(.headline)
+                         )
                          .frame(height: 30)
                     Spacer()
                     
@@ -42,14 +44,14 @@ struct DialogueView: View {
                ZStack{
                     
                     // gray background
-                    RoundedRectangle(cornerRadius: 10).stroke(Color(red: 241/255, green: 241/255, blue: 241/255), lineWidth: 4)
+                    RoundedRectangle(cornerRadius: 10).stroke(Color.DialogBoxBackground(), lineWidth: 4)
                     
                     VStack{
                          
                          // message
                          ScrollView {
-                              ForEach( messages, id: \.self) { msg in
-                                   HStack { MessageView(msg: msg) }
+                              ForEach(messages.indices, id: \.self) { idx in
+                                   HStack { MessageView(msg: messages[idx]) }
                                         .padding(.vertical, 5)
                               }
                          }
@@ -68,7 +70,7 @@ struct DialogueView: View {
                               .frame(minHeight: 60, alignment: .center)
                               .background(
                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                        .fill(Color(red: 241/255, green: 241/255, blue: 241/255))
+                                        .fill(Color.DialogBoxBackground())
                                         .padding(.vertical, 8)
                                         .padding(.horizontal, 8)
                               )
@@ -79,7 +81,7 @@ struct DialogueView: View {
                }
                
           }
-          .background(Color.white)
+          .background(Color.DialogueBackground())
      }
      
      
@@ -112,7 +114,7 @@ struct MessageView: View {
                     Text(msg["content"]!)
                          .font(.body)
                          .padding(10)
-                         .background(Color(red:222/255, green:241/255, blue: 245/255 ))
+                         .background(Color.UserMsgBackground())
                          .clipShape(RoundedRectangle(cornerRadius: 10))
                          .textSelection(.enabled)
                }
@@ -126,7 +128,7 @@ struct MessageView: View {
                     Text(msg["content"]!)
                          .font(.body)
                          .padding(10)
-                         .background(Color(red:228/255, green: 228/255, blue:228/255))
+                         .background(Color.RobotMsgBackground())
                          .clipShape(RoundedRectangle(cornerRadius: 10))
                          .textSelection(.enabled)
                }
