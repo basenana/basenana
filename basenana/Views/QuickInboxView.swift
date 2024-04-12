@@ -7,11 +7,12 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 
 
 struct QuickInboxView: View{
     @EnvironmentObject private var entryService: EntryService
-
+    
     @Binding var isShowingQuickInbox: Bool
     @State private var urlInput: String = ""
     @State private var fileTypeOption = "webarchive"
@@ -20,8 +21,8 @@ struct QuickInboxView: View{
     var body: some View{
         Form{
             Section() {
-                Text("Save Web Page to Inbox")
-                                .font(.title2)
+                Text("Save Web Page to Inbox").font(.title2)
+                
                 TextField("URL", text: $urlInput)
                 
                 Picker("File", selection: $fileTypeOption) {
@@ -32,20 +33,38 @@ struct QuickInboxView: View{
                 Toggle("Clutter Free", isOn: $isClutterFree)
             }
             .padding(.horizontal, 50.0)
-            .padding(.top, 20)
+            .padding(10)
             .textFieldStyle(RoundedBorderTextFieldStyle())
             .frame(minWidth: 400, maxWidth: .infinity, minHeight: 20)
+            
             HStack {
-                Button("Cancel") {
+                Button {
                     isShowingQuickInbox = false
+                } label: {
+                    Text("Cancel")
+                        .font(.body)
+                        .padding(6)
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
+                .buttonStyle(PlainButtonStyle())
                 
-                Button("Submit") {
+                Spacer()
+                
+                Button {
                     quickInbox(urlStr: urlInput, fileType: fileTypeOption, isClusterFree: isClutterFree)
                     isShowingQuickInbox = false
+                } label: {
+                    Text("Submit")
+                        .font(.body)
+                        .padding(6)
+                        .foregroundColor(.white)
+                        .background(Color.blue)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
-                .buttonStyle(.borderedProminent)
-            }.padding()
+                .buttonStyle(PlainButtonStyle())
+            }
+            .padding(.horizontal, 50.0)
         }
         .formStyle(.grouped)
         .padding()
@@ -59,7 +78,7 @@ struct QuickInboxView: View{
 
 struct QuickDocumentView: View{
     @EnvironmentObject private var docService: DocumentService
-
+    
     @Binding var isShowingQuickDocument: Bool
     @State private var title: String = ""
     @State private var content: String = ""
@@ -67,11 +86,10 @@ struct QuickDocumentView: View{
     var body: some View{
         Form{
             Section() {
-                Text("Save Document")
-                                .font(.title2)
+                Text("Save Document").font(.title2)
                 TextField("Title", text: $title)
                 TextField("content", text: $content)
-
+                
             }
             .padding(.horizontal, 50.0)
             .padding(.top, 20)
@@ -99,6 +117,9 @@ struct QuickDocumentView: View{
     }
 }
 
-//#Preview {
-//    QuickInboxView(isShowingQuickInbox: null).environmentObject(EntryService())
-//}
+#Preview {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: EntryModel.self, configurations: config)
+    
+    return QuickInboxView(isShowingQuickInbox: .constant(true)).environmentObject(EntryService(modelContext: container.mainContext))
+}
