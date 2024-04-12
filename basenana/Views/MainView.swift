@@ -32,6 +32,16 @@ struct MainView: View{
                     Image(systemName: "sidebar.left")
                 })
             }
+            ToolbarItemGroup(placement: .status) {
+                Button(action: {
+                }, label: {
+                    Image(systemName: "arrow.triangle.2.circlepath.icloud.fill")
+                        .symbolEffect(.pulse.byLayer)
+                })
+            }
+            ToolbarItem {
+                Spacer()
+            }
             ToolbarItemGroup(placement: .primaryAction) {
                 Button(action: {
                     isShowingCreateDoc.toggle()

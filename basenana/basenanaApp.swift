@@ -30,6 +30,7 @@ struct basenanaApp: App {
             MainView()
                 .frame(minWidth: 1000, minHeight: 600)
         }
+//        .windowResizability(.automatic)
         .modelContainer(sharedModelContainer)
         .environmentObject(EntryService(modelContext: sharedModelContainer.mainContext))
         .environmentObject(GroupService(modelContext: sharedModelContainer.mainContext))
