@@ -13,34 +13,11 @@ import Frostflake
 
 class EntryService: ObservableObject {
     
-    let rootEntryID: Int64 = 1
-    let inboxEntryID: Int64 = 1024
-    
     private var modelContext: ModelContext
     
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
     }
-
-    func rootEntry() -> EntryModel {
-        var rootEntry: EntryModel
-        do {
-            let data = try modelContext.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.id == rootEntryID}))
-            
-            if data.first == nil{
-                rootEntry = initRootEntry()
-                modelContext.insert(rootEntry)
-                try modelContext.save()
-            }else{
-                rootEntry = data.first!
-            }
-        }catch{
-            debugPrint("fetch root entry failed")
-            return initRootEntry()
-        }
-        return  rootEntry
-    }
-    
     
     func inboxEntry() -> EntryModel {
         var inboxEntry: EntryModel

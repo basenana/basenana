@@ -18,6 +18,7 @@ class EntryModel: Identifiable {
     var aliases: String
     var parent: Int64
     var kind: String
+    var isGroup: Bool
     var size: Int64
     var version: Int64
     var namespace: String
