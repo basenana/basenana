@@ -12,7 +12,6 @@ struct GroupView: View{
     var groupID: Int64
     @State private var groupChileren: [EntryModel] = []
     @State private var selection: Set<EntryModel.ID> = []
-    @EnvironmentObject private var entryService: EntryService
     
     var body: some View {
         Table(of: EntryModel.self, selection: $selection) {

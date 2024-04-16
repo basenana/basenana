@@ -8,86 +8,38 @@
 import Foundation
 import SwiftData
 import SwiftUI
-import Frostflake
+import GRDB
 
+let entryService = EntryService()
 
-class EntryService: ObservableObject {
-    
-    private var modelContext: ModelContext
-    
-    init(modelContext: ModelContext) {
-        self.modelContext = modelContext
-    }
-    
-    func inboxEntry() -> EntryModel {
-        var inboxEntry: EntryModel
-        do {
-            let data = try modelContext.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.id == inboxEntryID}))
-            
-            if data.first == nil{
-                inboxEntry = initInboxEntry()
-                modelContext.insert(inboxEntry)
-                try modelContext.save()
-            }else{
-                inboxEntry = data.first!
-            }
-        }catch{
-            debugPrint("fetch inbox entry failed")
-            return initInboxEntry()
-        }
-        return inboxEntry
-    }
+class EntryService {
     
     func quickInbox(urlStr: String, fileType: String, isClusterFree:Bool) {
-        let newEntry = EntryModel(id: genEntryID(), name: urlStr, parent: inboxEntryID)
-        modelContext.insert(newEntry)
-        do {
-            try modelContext.save()
-        } catch {
-            debugPrint("insert entry to inbox failed")
-        }
-        return
+        
     }
     
     func getEntry(entryID: Int64) -> EntryModel? {
         do {
-            let data = try modelContext.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.id == entryID}))
-            if data.first == nil{
-                return nil
+            let data: EntryModel? = try dbInstance.queue.read{ db in
+                try EntryModel.all().filter(Column("id") == entryID).fetchOne(db)
+                
             }
-            return  data.first!
-        }catch{
-            debugPrint("fetch entry \(entryID) failed")
+            return data
+        } catch {
             return nil
         }
     }
     
     func listChildren(parentEntryID: Int64) -> [EntryModel]{
         do {
-            let rtn = try modelContext.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.parent == parentEntryID}))
-            return rtn
-        }catch{
-            debugPrint("fetch entry \(parentEntryID) children failed")
+            let data: [EntryModel] = try dbInstance.queue.read{ db in
+                try EntryModel.all().filter(Column("parent") == parentEntryID).fetchAll(db)
+                
+            }
+            return data
+        } catch {
             return []
         }
     }
-    
-    func genEntryID() -> Int64 {
-        return Int64(Frostflake(generatorIdentifier: 1).generate())
-    }
-    
-    func reflush() {
-        self.objectWillChange.send()
-    }
-}
-
-func initRootEntry() -> EntryModel {
-    debugPrint("init root entry")
-    return EntryModel(id: 1,name: "root", parent: 1, kind: "group")
-}
-
-func initInboxEntry() -> EntryModel {
-    debugPrint("init inbox entry")
-    return EntryModel(id: 1024,name: ".inbox", parent: 1, kind: "group")
 }
 

@@ -7,6 +7,7 @@
 
 import Foundation
 import GRPC
+import GRDB
 
 let syncService = SyncService()
 
@@ -17,11 +18,9 @@ class SyncService {
         self.clientSet = FsClientSet(host: "127.0.0.1", port: 7081)
     }
     
-    func getLatestSequence() -> EntryModel {
+    func getLatestSequence() {
         var request = Api_V1_GetLatestSequenceRequest()
         let option = CallOptions(eventLoopPreference: .indifferent)
         let unaryCall = clientSet.notify.getLatestSequence(request, callOptions: option)
-        
-        return EntryModel()
     }
 }

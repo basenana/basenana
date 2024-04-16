@@ -11,7 +11,6 @@ import SwiftData
 
 
 struct QuickInboxView: View{
-    @EnvironmentObject private var entryService: EntryService
     
     @Binding var isShowingQuickInbox: Bool
     @State private var urlInput: String = ""
@@ -72,12 +71,10 @@ struct QuickInboxView: View{
     
     func quickInbox(urlStr: String, fileType: String, isClusterFree:Bool) {
         entryService.quickInbox(urlStr: urlStr, fileType: fileType, isClusterFree: isClusterFree)
-        entryService.reflush()
     }
 }
 
 struct QuickDocumentView: View{
-    @EnvironmentObject private var docService: DocumentService
     
     @Binding var isShowingQuickDocument: Bool
     @State private var title: String = ""
@@ -112,14 +109,10 @@ struct QuickDocumentView: View{
     }
     
     func quickInbox() {
-        docService.saveDocument(name:title, content: content)
-        docService.reflush()
+        documentService.saveDocument(name:title, content: content)
     }
 }
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: EntryModel.self, configurations: config)
-    
-    return QuickInboxView(isShowingQuickInbox: .constant(true)).environmentObject(EntryService(modelContext: container.mainContext))
+    return QuickInboxView(isShowingQuickInbox: .constant(true))
 }

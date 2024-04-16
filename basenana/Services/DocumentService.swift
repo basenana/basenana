@@ -8,40 +8,35 @@
 import SwiftData
 import Foundation
 import SwiftUI
-import Frostflake
 
+let documentService = DocumentService()
 
-class DocumentService: ObservableObject {
-    
-    private var modelContext: ModelContext
-    
-    init(modelContext: ModelContext) {
-        self.modelContext = modelContext
-    }
+class DocumentService {
     
     func listDocuments() -> [DocumentModel]{
         // TODO: filter by unread
         do {
-            let rtn = try modelContext.fetch(FetchDescriptor<DocumentModel>())
-            return rtn
-        }catch{
-            debugPrint("fetch documents failed")
+            let data: [DocumentModel] = try dbInstance.queue.read{ db in
+                try DocumentModel.fetchAll(db)
+            }
+            return data
+        } catch {
             return []
         }
     }
     
     func saveDocument(name: String, content: String) {
-        let newDoc = DocumentModel(id: genEntryID(), oid: genEntryID(), name: name, parentEntryId: Int64(1), source: "collect", content: content, desync: false)
-        modelContext.insert(newDoc)
+        let mockedId = Int64(Date().timeIntervalSince1970)
+        var newDoc = DocumentModel(id: mockedId, oid: mockedId, name: name, parentEntry: Int64(1), source: "collect", content: content, createdAt: Date(), changedAt: Date())
+        
         do {
-            try modelContext.save()
+            try dbInstance.queue.write{ db in
+                try newDoc.insert(db)
+            }
         } catch {
-            debugPrint("insert document to inbox failed")
+            
         }
+        
         return
-    }
-    
-    func reflush() {
-        self.objectWillChange.send()
     }
 }

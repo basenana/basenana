@@ -7,14 +7,30 @@
 
 import Foundation
 import SwiftData
+import GRDB
 
-@Model
-class ConfigModel: Identifiable {
-    @Attribute(.unique) var id: String
+struct ConfigModel: Codable {
+    var id: Int64?
+    var name: String
     var value: String
+    var changedAt: Date
+}
+
+extension ConfigModel: TableRecord {
     
-    init(id: String, value: String) {
-        self.id = id
-        self.value = value
+    static var databaseTableName: String = "config"
+    
+    enum Columns {
+        static let id = Column(CodingKeys.id)
+        static let name = Column(CodingKeys.name)
+        static let value = Column(CodingKeys.value)
+    }
+}
+
+extension ConfigModel: FetchableRecord {}
+
+extension ConfigModel: MutablePersistableRecord {
+    mutating func didInsert(_ inserted: InsertionSuccess) {
+        id = inserted.rowID
     }
 }

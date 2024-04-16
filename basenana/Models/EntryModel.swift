@@ -7,13 +7,13 @@
 
 import SwiftData
 import Foundation
+import GRDB
 
 let rootEntryID: Int64 = 1
 let inboxEntryID: Int64 = 1024
 
-@Model
-class EntryModel: Identifiable {
-    @Attribute(.unique) var id: Int64
+struct EntryModel: Codable, Identifiable {
+    var id: Int64?
     var name: String
     var aliases: String
     var parent: Int64
@@ -33,33 +33,41 @@ class EntryModel: Identifiable {
     var modifiedAt: Date
     var accessAt: Date
     
-    init(id: Int64, name: String = "", aliases: String = "", parent: Int64 = 0, kind: String = "raw", namespace: String = "personal", storage: String = "local", uid: Int64 = 0, gid: Int64 = 0, permissions: [String] = []) {
-        self.id = id
-        self.name = name
-        self.aliases = aliases
-        self.parent = parent
-        self.kind = kind
-        self.size = 0
-        self.version = 0
-        self.namespace = namespace
-        self.storage = storage
-        self.uid = uid
-        self.gid = gid
-        self.permissions = permissions
-        
-        let nowAt = Date.now
-        self.createdAt = nowAt
-        self.changedAt = nowAt
-        self.modifiedAt = nowAt
-        self.accessAt = nowAt
-    }
-    
-    func isGroup() -> Bool {
-        return kind == "group"
-    }
-    
     func isVisitable() -> Bool{
         return !name.starts(with: ".")
+    }
+}
+
+
+extension EntryModel: TableRecord {
+    static var databaseTableName: String = "entry"
+    
+    enum Columns {
+        static let id = Column(CodingKeys.id)
+        static let name = Column(CodingKeys.name)
+        static let aliases = Column(CodingKeys.aliases)
+        static let parent = Column(CodingKeys.parent)
+        static let kind = Column(CodingKeys.kind)
+        static let isGroup = Column(CodingKeys.isGroup)
+        static let size = Column(CodingKeys.size)
+        static let version = Column(CodingKeys.version)
+        static let namespace = Column(CodingKeys.namespace)
+        static let storage = Column(CodingKeys.storage)
+        static let uid = Column(CodingKeys.uid)
+        static let gid = Column(CodingKeys.gid)
+        static let permissions = Column(CodingKeys.permissions)
+        static let createdAt = Column(CodingKeys.createdAt)
+        static let changedAt = Column(CodingKeys.changedAt)
+        static let modifiedAt = Column(CodingKeys.modifiedAt)
+        static let accessAt = Column(CodingKeys.accessAt)
+    }
+}
+
+extension EntryModel: FetchableRecord {}
+
+extension EntryModel: MutablePersistableRecord {
+    mutating func didInsert(_ inserted: InsertionSuccess) {
+        id = inserted.rowID
     }
 }
 

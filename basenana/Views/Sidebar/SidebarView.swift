@@ -10,9 +10,6 @@ import SwiftUI
 import SwiftData
 
 struct SidebarView: View {
-    @EnvironmentObject private var groupService: GroupService
-    @EnvironmentObject private var docService: DocumentService
-    @EnvironmentObject private var dialogueService: DialogueService
 
     var body: some View {
         List{
@@ -81,15 +78,5 @@ struct SidebarView: View {
 }
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: EntryModel.self, configurations: config)
-    
-    container.mainContext.insert(EntryModel(id: 100, name: "group1", parent: rootEntryID, kind: "group"))
-    
-    container.mainContext.insert(EntryModel(id: 101, name: "group1.1", parent: 100, kind: "group"))
-
-    container.mainContext.insert(EntryModel(id: 200, name: "group2", parent: rootEntryID, kind: "group"))
-    
     return SidebarView()
-        .environmentObject(GroupService(modelContext: container.mainContext))
 }

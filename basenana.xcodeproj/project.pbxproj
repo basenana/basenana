@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3F0AEC702B9F2C55000DA928 /* Frostflake in Frameworks */ = {isa = PBXBuildFile; productRef = 3F0AEC6F2B9F2C55000DA928 /* Frostflake */; };
-		3F0AEC722B9F2C55000DA928 /* flake in Frameworks */ = {isa = PBXBuildFile; productRef = 3F0AEC712B9F2C55000DA928 /* flake */; };
-		3F0AEC742BA0A807000DA928 /* EntryHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEC732BA0A807000DA928 /* EntryHelpers.swift */; };
 		3F0AEC762BA48EC7000DA928 /* GroupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEC752BA48EC7000DA928 /* GroupService.swift */; };
 		3F1BBE1D2B8E147F005D533F /* basenanaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE1C2B8E147F005D533F /* basenanaApp.swift */; };
 		3F1BBE232B8E1480005D533F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F1BBE222B8E1480005D533F /* Assets.xcassets */; };
@@ -30,7 +27,7 @@
 		3F4A78CF2BCC2A660035F90F /* FsClientSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78CE2BCC2A660035F90F /* FsClientSet.swift */; };
 		3F4A78D12BCD7EEF0035F90F /* ConfigModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78D02BCD7EEF0035F90F /* ConfigModel.swift */; };
 		3F4A78D42BCD82290035F90F /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4A78D32BCD82290035F90F /* GRDB */; };
-		3F4A78D62BCD82290035F90F /* GRDB-dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4A78D52BCD82290035F90F /* GRDB-dynamic */; };
+		3F4A78D82BCD853C0035F90F /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78D72BCD853C0035F90F /* Database.swift */; };
 		3F81C9C52BAF1A6D00FEE130 /* GroupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C42BAF1A6D00FEE130 /* GroupModel.swift */; };
 		3F81C9C72BAFCB8900FEE130 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C62BAFCB8900FEE130 /* MainView.swift */; };
 		3FB782412BC1A82700327191 /* CGRPCZlib in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782402BC1A82700327191 /* CGRPCZlib */; };
@@ -40,7 +37,6 @@
 		3FB782492BC1A82700327191 /* protoc-gen-grpc-swift in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782482BC1A82700327191 /* protoc-gen-grpc-swift */; };
 		3FB782542BC2D0F600327191 /* fsapi-v1.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB782502BC2D0F600327191 /* fsapi-v1.grpc.swift */; };
 		3FB782552BC2D0F600327191 /* fsapi-v1.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB782512BC2D0F600327191 /* fsapi-v1.pb.swift */; };
-		3FB782562BC2D0F600327191 /* fsapi-v1.proto in Sources */ = {isa = PBXBuildFile; fileRef = 3FB782522BC2D0F600327191 /* fsapi-v1.proto */; };
 		ED47907B2BB129FF00FEA8D4 /* DocumentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED47907A2BB129FF00FEA8D4 /* DocumentService.swift */; };
 		ED72603E2BC2E25D005F1166 /* DialogueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED72603D2BC2E25D005F1166 /* DialogueModel.swift */; };
 		ED7260402BC2E34A005F1166 /* DialogueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED72603F2BC2E34A005F1166 /* DialogueService.swift */; };
@@ -68,7 +64,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3F0AEC732BA0A807000DA928 /* EntryHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryHelpers.swift; sourceTree = "<group>"; };
 		3F0AEC752BA48EC7000DA928 /* GroupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupService.swift; sourceTree = "<group>"; };
 		3F1BBE192B8E147F005D533F /* basenana.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = basenana.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F1BBE1C2B8E147F005D533F /* basenanaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = basenanaApp.swift; sourceTree = "<group>"; };
@@ -92,11 +87,11 @@
 		3F4A78CC2BCC20B40035F90F /* SyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncService.swift; sourceTree = "<group>"; };
 		3F4A78CE2BCC2A660035F90F /* FsClientSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FsClientSet.swift; sourceTree = "<group>"; };
 		3F4A78D02BCD7EEF0035F90F /* ConfigModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigModel.swift; sourceTree = "<group>"; };
+		3F4A78D72BCD853C0035F90F /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		3F81C9C42BAF1A6D00FEE130 /* GroupModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupModel.swift; sourceTree = "<group>"; };
 		3F81C9C62BAFCB8900FEE130 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		3FB782502BC2D0F600327191 /* fsapi-v1.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "fsapi-v1.grpc.swift"; sourceTree = "<group>"; };
 		3FB782512BC2D0F600327191 /* fsapi-v1.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "fsapi-v1.pb.swift"; sourceTree = "<group>"; };
-		3FB782522BC2D0F600327191 /* fsapi-v1.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.protobuf; path = "fsapi-v1.proto"; sourceTree = "<group>"; };
 		ED47907A2BB129FF00FEA8D4 /* DocumentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentService.swift; sourceTree = "<group>"; };
 		ED72603D2BC2E25D005F1166 /* DialogueModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueModel.swift; sourceTree = "<group>"; };
 		ED72603F2BC2E34A005F1166 /* DialogueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueService.swift; sourceTree = "<group>"; };
@@ -115,10 +110,7 @@
 				3FB782452BC1A82700327191 /* GRPCReflectionService in Frameworks */,
 				3FB782472BC1A82700327191 /* _GRPCCore in Frameworks */,
 				3F4A78D42BCD82290035F90F /* GRDB in Frameworks */,
-				3F4A78D62BCD82290035F90F /* GRDB-dynamic in Frameworks */,
 				3FB782432BC1A82700327191 /* GRPC in Frameworks */,
-				3F0AEC722B9F2C55000DA928 /* flake in Frameworks */,
-				3F0AEC702B9F2C55000DA928 /* Frostflake in Frameworks */,
 				3FB782412BC1A82700327191 /* CGRPCZlib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -222,6 +214,7 @@
 				3F81C9C42BAF1A6D00FEE130 /* GroupModel.swift */,
 				ED72603D2BC2E25D005F1166 /* DialogueModel.swift */,
 				3F4A78D02BCD7EEF0035F90F /* ConfigModel.swift */,
+				3F4A78D72BCD853C0035F90F /* Database.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -242,7 +235,6 @@
 			isa = PBXGroup;
 			children = (
 				3F1BBE5D2B93664E005D533F /* HTMLStringView.swift */,
-				3F0AEC732BA0A807000DA928 /* EntryHelpers.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -262,7 +254,6 @@
 			children = (
 				3FB782502BC2D0F600327191 /* fsapi-v1.grpc.swift */,
 				3FB782512BC2D0F600327191 /* fsapi-v1.pb.swift */,
-				3FB782522BC2D0F600327191 /* fsapi-v1.proto */,
 				3F4A78CE2BCC2A660035F90F /* FsClientSet.swift */,
 			);
 			path = fsapi;
@@ -303,15 +294,12 @@
 			);
 			name = basenana;
 			packageProductDependencies = (
-				3F0AEC6F2B9F2C55000DA928 /* Frostflake */,
-				3F0AEC712B9F2C55000DA928 /* flake */,
 				3FB782402BC1A82700327191 /* CGRPCZlib */,
 				3FB782422BC1A82700327191 /* GRPC */,
 				3FB782442BC1A82700327191 /* GRPCReflectionService */,
 				3FB782462BC1A82700327191 /* _GRPCCore */,
 				3FB782482BC1A82700327191 /* protoc-gen-grpc-swift */,
 				3F4A78D32BCD82290035F90F /* GRDB */,
-				3F4A78D52BCD82290035F90F /* GRDB-dynamic */,
 			);
 			productName = basenana;
 			productReference = 3F1BBE192B8E147F005D533F /* basenana.app */;
@@ -386,7 +374,6 @@
 			);
 			mainGroup = 3F1BBE102B8E147F005D533F;
 			packageReferences = (
-				3F0AEC6E2B9F2C55000DA928 /* XCRemoteSwiftPackageReference "package-frostflake" */,
 				3FB7823F2BC1A82700327191 /* XCRemoteSwiftPackageReference "grpc-swift" */,
 				3F4A78D22BCD82290035F90F /* XCRemoteSwiftPackageReference "GRDB.swift" */,
 			);
@@ -439,19 +426,18 @@
 				3F1BBE572B90CD59005D533F /* EntryModel.swift in Sources */,
 				3F4A78C82BC99D160035F90F /* SidebarGroupsView.swift in Sources */,
 				3F1BBE602B94BAF9005D533F /* QuickInboxView.swift in Sources */,
-				3FB782562BC2D0F600327191 /* fsapi-v1.proto in Sources */,
 				3F1BBE5E2B93664E005D533F /* HTMLStringView.swift in Sources */,
 				3FB782552BC2D0F600327191 /* fsapi-v1.pb.swift in Sources */,
 				3F1BBE592B932251005D533F /* GroupView.swift in Sources */,
 				ED917E782B9607BE004FCB9A /* DocumentModel.swift in Sources */,
 				ED72603E2BC2E25D005F1166 /* DialogueModel.swift in Sources */,
+				3F4A78D82BCD853C0035F90F /* Database.swift in Sources */,
 				EDEF16382BC8DD93000BC25C /* Color.swift in Sources */,
 				3F1BBE4F2B90C4D5005D533F /* SidebarView.swift in Sources */,
 				3F4A78CF2BCC2A660035F90F /* FsClientSet.swift in Sources */,
 				3F81C9C52BAF1A6D00FEE130 /* GroupModel.swift in Sources */,
 				3F2CB97D2B9A02B600ADDDED /* EntryService.swift in Sources */,
 				3F0AEC762BA48EC7000DA928 /* GroupService.swift in Sources */,
-				3F0AEC742BA0A807000DA928 /* EntryHelpers.swift in Sources */,
 				3FB782542BC2D0F600327191 /* fsapi-v1.grpc.swift in Sources */,
 				3F1BBE1D2B8E147F005D533F /* basenanaApp.swift in Sources */,
 				ED85A3C32BBAB3BD0040598E /* DocumentItemView.swift in Sources */,
@@ -817,14 +803,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		3F0AEC6E2B9F2C55000DA928 /* XCRemoteSwiftPackageReference "package-frostflake" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ordo-one/package-frostflake";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.1.0;
-			};
-		};
 		3F4A78D22BCD82290035F90F /* XCRemoteSwiftPackageReference "GRDB.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/groue/GRDB.swift.git";
@@ -844,25 +822,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3F0AEC6F2B9F2C55000DA928 /* Frostflake */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3F0AEC6E2B9F2C55000DA928 /* XCRemoteSwiftPackageReference "package-frostflake" */;
-			productName = Frostflake;
-		};
-		3F0AEC712B9F2C55000DA928 /* flake */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3F0AEC6E2B9F2C55000DA928 /* XCRemoteSwiftPackageReference "package-frostflake" */;
-			productName = flake;
-		};
 		3F4A78D32BCD82290035F90F /* GRDB */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3F4A78D22BCD82290035F90F /* XCRemoteSwiftPackageReference "GRDB.swift" */;
 			productName = GRDB;
-		};
-		3F4A78D52BCD82290035F90F /* GRDB-dynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3F4A78D22BCD82290035F90F /* XCRemoteSwiftPackageReference "GRDB.swift" */;
-			productName = "GRDB-dynamic";
 		};
 		3FB782402BC1A82700327191 /* CGRPCZlib */ = {
 			isa = XCSwiftPackageProductDependency;

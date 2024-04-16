@@ -7,15 +7,11 @@
 
 import Foundation
 import SwiftData
+import GRDB
 
+let groupService = GroupService()
 
-class GroupService: ObservableObject {
-    
-    private var modelContext: ModelContext
-    
-    init(modelContext: ModelContext) {
-        self.modelContext = modelContext
-    }
+class GroupService {
     
     func initGroupTree() {
         var needInitGroups = [GroupRoot]
@@ -24,13 +20,17 @@ class GroupService: ObservableObject {
             let nextGroup = needInitGroups[0]
             needInitGroups.remove(at: 0)
             let gid = nextGroup.groupID
-            do{
-                nextGroup.children = try modelContext.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{ en in
-                    en.parent == gid && en.kind == "group" && !en.name.starts(with: ".")
-                })).map({
-                    GroupModel(groupID: $0.id, groupName: $0.name)
-                })
-            }catch{
+            do {
+                let children = try dbInstance.queue.read{ db in
+                    try EntryModel.filter(Column("parent") == gid && Column("isGroup") == true).fetchAll(db)
+                }
+                nextGroup.children = children.compactMap{ en in
+                    if !en.name.starts(with: "."){
+                        return GroupModel(groupID: en.id!, groupName: en.name)
+                    }
+                    return nil
+                }
+            } catch {
                 print("query group \(nextGroup.groupID) children failed")
             }
             
@@ -41,11 +41,6 @@ class GroupService: ObservableObject {
             
             for subGroup in nextGroup.children!{
                 needInitGroups.append(subGroup)
-            }
-        }
-    }
-    
-    func reflush() {
-        self.objectWillChange.send()
+            }}
     }
 }
