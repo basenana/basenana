@@ -27,6 +27,14 @@ struct SidebarButtonView: View {
                 Image(systemName: "doc")
             })
             .buttonStyle(.accessoryBar)
+            
+            Spacer()
+            Button(action: {
+                syncService.resync()
+            }, label: {
+                Image(systemName: syncService.isSyncing ? "arrow.triangle.2.circlepath.icloud" : "checkmark.icloud")
+            })
+            .buttonStyle(.accessoryBar)
         })
         .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/,alignment: .leading)
         .padding(5)

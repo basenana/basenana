@@ -62,7 +62,8 @@ func migrateDbInit(db: GRDB.Database) throws {
         t.column("changedAt", .datetime)
         t.column("modifiedAt", .datetime)
         t.column("accessAt", .datetime)
-        
+        t.column("syncAt", .datetime)
+
         t.primaryKey(["id"])
     }
     

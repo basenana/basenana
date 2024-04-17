@@ -10,6 +10,8 @@ import GRPC
 import NIO
 
 
+var clientSet = FsClientSet(host: "127.0.0.1", port: 7081)
+
 class FsClientSet {
     var inbox: Api_V1_InboxClientProtocol
     var entries: Api_V1_EntriesClientProtocol

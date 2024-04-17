@@ -32,6 +32,7 @@ struct EntryModel: Codable, Identifiable {
     var changedAt: Date
     var modifiedAt: Date
     var accessAt: Date
+    var syncAt: Date
     
     func isVisitable() -> Bool{
         return !name.starts(with: ".")
@@ -60,6 +61,7 @@ extension EntryModel: TableRecord {
         static let changedAt = Column(CodingKeys.changedAt)
         static let modifiedAt = Column(CodingKeys.modifiedAt)
         static let accessAt = Column(CodingKeys.accessAt)
+        static let syncAt = Column(CodingKeys.syncAt)
     }
 }
 
@@ -67,7 +69,9 @@ extension EntryModel: FetchableRecord {}
 
 extension EntryModel: MutablePersistableRecord {
     mutating func didInsert(_ inserted: InsertionSuccess) {
-        id = inserted.rowID
+        if id == nil {
+            id = inserted.rowID
+        }
     }
 }
 

@@ -44,6 +44,8 @@ extension DocumentModel: FetchableRecord {}
 
 extension DocumentModel: MutablePersistableRecord {
     mutating func didInsert(_ inserted: InsertionSuccess) {
-        id = inserted.rowID
+        if id == nil{
+            id = inserted.rowID
+        }
     }
 }

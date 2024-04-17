@@ -38,6 +38,8 @@ extension DialogueModel: FetchableRecord {}
 
 extension DialogueModel: MutablePersistableRecord {
     mutating func didInsert(_ inserted: InsertionSuccess) {
-        id = inserted.rowID
+        if id == nil {
+            id = inserted.rowID
+        }
     }
 }
