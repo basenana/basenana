@@ -7,24 +7,19 @@
 
 import Foundation
 import SwiftData
+import GRDB
+
+let dialogueService = DialogueService()
 
 class DialogueService: ObservableObject {
     
-    private var modelContext: ModelContext
-    
-    init(modelContext: ModelContext) {
-        self.modelContext = modelContext
-    }
-    
     func getDialogue(docId: Int64) -> DialogueModel? {
         do {
-            let data = try modelContext.fetch(FetchDescriptor<DialogueModel>(predicate: #Predicate{$0.docid == docId}))
-            if data.first == nil{
-                return nil
+            let data: DialogueModel? = try dbInstance.queue.read{ db in
+                try DialogueModel.filter(Column("docid") == docId).fetchOne(db)
             }
-            return  data.first!
-        }catch{
-            debugPrint("get dialogue by docId \(docId) failed")
+            return data
+        } catch {
             return nil
         }
     }
@@ -32,25 +27,26 @@ class DialogueService: ObservableObject {
     func saveMessage(docId: Int64, user: String, content: String) {
         var dialogue: DialogueModel?
         do {
-            let data = try modelContext.fetch(FetchDescriptor<DialogueModel>(predicate: #Predicate{$0.docid == docId}))
-            if data.first != nil{
-                dialogue = data.first!
+            let data: DialogueModel? = try dbInstance.queue.read{ db in
+                try DialogueModel.filter(Column("docid") == docId).fetchOne(db)
             }
-        }catch{
-            debugPrint("get dialogue by docId \(docId) failed")
+            dialogue = data
+        } catch {
             return
         }
         
         let newMessage = ["user": user, "content": content]
         if dialogue == nil {
-            dialogue = DialogueModel(id: genEntryID(), oid: docId, docid: docId, messages: [newMessage])
-            modelContext.insert(dialogue!)
+            let mockedId = Int64(Date().timeIntervalSince1970)
+            dialogue = DialogueModel(id: mockedId, oid: docId, docid: docId, messages: [newMessage], createdAt: Date(), changedAt: Date())
         } else {
             dialogue?.messages.append(newMessage)
         }
         
         do {
-            try modelContext.save()
+            try dbInstance.queue.write{ db in
+                try dialogue?.save(db)
+            }
         } catch {
             debugPrint("insert document to inbox failed")
         }
@@ -59,28 +55,16 @@ class DialogueService: ObservableObject {
     
     
     func clearMessage(docId: Int64) {
-        var dialogue: DialogueModel
         do {
-            let data = try modelContext.fetch(FetchDescriptor<DialogueModel>(predicate: #Predicate{$0.docid == docId}))
-            if data.first == nil{
-                return
+            try dbInstance.queue.write{ db in
+                var dialogue: DialogueModel? = try DialogueModel.filter(Column("docid") == docId).fetchOne(db)
+                if dialogue != nil{
+                    dialogue?.messages = []
+                    try dialogue?.save(db)
+                }
             }
-            dialogue = data.first!
-            dialogue.messages = []
         }catch{
             debugPrint("get dialogue by docId \(docId) failed")
-            return
         }
-        
-        do {
-            try modelContext.save()
-        } catch {
-            debugPrint("insert document to inbox failed")
-        }
-        return
-    }
-    
-    func reflush() {
-        self.objectWillChange.send()
     }
 }

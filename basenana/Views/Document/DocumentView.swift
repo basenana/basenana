@@ -15,8 +15,6 @@ struct DocumentView: View {
     @State private var docs: [DocumentModel] = []
     @State var isDrawerOpen: Bool = false
     
-    @EnvironmentObject private var docService: DocumentService
-    
     var body: some View {
         NavigationView{
             List(docs, id: \.self, selection: $selectedItem) { document in
@@ -38,7 +36,7 @@ struct DocumentView: View {
                                     
                                     if isDrawerOpen{
                                         // dialogue body
-                                        DialogueView(isDrawerOpen: $isDrawerOpen, docId: document.id)
+                                        DialogueView(isDrawerOpen: $isDrawerOpen, docId: document.id!)
                                             .frame(minWidth:200, idealWidth: 200, maxWidth: .infinity)
                                     }
                                     
@@ -77,7 +75,7 @@ struct DocumentView: View {
             }
             .frame(minWidth: 300, idealWidth: 300)
             .onAppear{
-                docs = docService.listDocuments()
+                docs = documentService.listDocuments()
             }
         }
     }
@@ -85,11 +83,5 @@ struct DocumentView: View {
 
 
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: DocumentModel.self, configurations: config)
-    
-    container.mainContext.insert(DocumentModel(id: 100, oid: 100, name: "test document 1", parentEntryId: 1, source: "", keyWords: [], content: "Hello1", summary: "summary somethings", desync: false))
-    container.mainContext.insert(DocumentModel(id: 101, oid: 100, name: "test document 1", parentEntryId: 1, source: "", keyWords: [], content: "Hello2", summary: "summary somethings", desync: false))
-    
-    return DocumentView().environmentObject(DocumentService(modelContext: container.mainContext))
+    return DocumentView()
 }

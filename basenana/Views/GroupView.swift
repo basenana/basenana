@@ -12,13 +12,12 @@ struct GroupView: View{
     var groupID: Int64
     @State private var groupChileren: [EntryModel] = []
     @State private var selection: Set<EntryModel.ID> = []
-    @EnvironmentObject private var entryService: EntryService
     
     var body: some View {
         Table(of: EntryModel.self, selection: $selection) {
-            TableColumn("name", value: \.name)
-            TableColumn("email", value: \.kind)
-            TableColumn("size"){
+            TableColumn("Name", value: \.name)
+            TableColumn("Kind", value: \.kind)
+            TableColumn("Size"){
                 Text("\($0.size)")
             }
             TableColumn("Date Modified") {
@@ -41,11 +40,13 @@ struct GroupView: View{
             }
         }
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button(action: {
-                }, label: {
-                    Image(systemName: "ellipsis.message")
-                })
+            if groupID != inboxEntryID{
+                ToolbarItemGroup(placement: .secondaryAction) {
+                    Button(action: {
+                    }, label: {
+                        Image(systemName: "ellipsis.message")
+                    })
+                }
             }
         }
         .onAppear{

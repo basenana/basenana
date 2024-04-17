@@ -8,109 +8,76 @@
 import Foundation
 import SwiftData
 import SwiftUI
-import Frostflake
+import GRPC
+import GRDB
 
+let entryService = EntryService()
 
-class EntryService: ObservableObject {
-    
-    let rootEntryID: Int64 = 1
-    let inboxEntryID: Int64 = 1024
-    
-    private var modelContext: ModelContext
-    
-    init(modelContext: ModelContext) {
-        self.modelContext = modelContext
-    }
-
-    func rootEntry() -> EntryModel {
-        var rootEntry: EntryModel
-        do {
-            let data = try modelContext.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.id == rootEntryID}))
-            
-            if data.first == nil{
-                rootEntry = initRootEntry()
-                modelContext.insert(rootEntry)
-                try modelContext.save()
-            }else{
-                rootEntry = data.first!
-            }
-        }catch{
-            debugPrint("fetch root entry failed")
-            return initRootEntry()
-        }
-        return  rootEntry
-    }
-    
-    
-    func inboxEntry() -> EntryModel {
-        var inboxEntry: EntryModel
-        do {
-            let data = try modelContext.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.id == inboxEntryID}))
-            
-            if data.first == nil{
-                inboxEntry = initInboxEntry()
-                modelContext.insert(inboxEntry)
-                try modelContext.save()
-            }else{
-                inboxEntry = data.first!
-            }
-        }catch{
-            debugPrint("fetch inbox entry failed")
-            return initInboxEntry()
-        }
-        return inboxEntry
-    }
+class EntryService {
     
     func quickInbox(urlStr: String, fileType: String, isClusterFree:Bool) {
-        let newEntry = EntryModel(id: genEntryID(), name: urlStr, parent: inboxEntryID)
-        modelContext.insert(newEntry)
+        var request = Api_V1_QuickInboxRequest()
+        request.url = urlStr
+        request.fileType = .webArchiveFile
+        request.clutterFree = isClusterFree
+        let call = clientSet.inbox.quickInbox(request, callOptions: CallOptions(timeLimit: .timeout(.seconds(10))))
+        
         do {
-            try modelContext.save()
+            let response = try call.response.wait()
+            log.debug("[entryService] new entey inboxed \(response.entryID)")
+            try syncService.rewriteEntry(entryId: response.entryID)
         } catch {
-            debugPrint("insert entry to inbox failed")
+            log.error("[entryService] entey inbox failed \(error)")
         }
-        return
     }
     
     func getEntry(entryID: Int64) -> EntryModel? {
         do {
-            let data = try modelContext.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.id == entryID}))
-            if data.first == nil{
-                return nil
+            let data: EntryModel? = try dbInstance.queue.read{ db in
+                try EntryModel.all().filter(Column("id") == entryID).fetchOne(db)
+                
             }
-            return  data.first!
-        }catch{
-            debugPrint("fetch entry \(entryID) failed")
+            return data
+        } catch {
             return nil
         }
     }
     
     func listChildren(parentEntryID: Int64) -> [EntryModel]{
         do {
-            let rtn = try modelContext.fetch(FetchDescriptor<EntryModel>(predicate: #Predicate{$0.parent == parentEntryID}))
-            return rtn
-        }catch{
-            debugPrint("fetch entry \(parentEntryID) children failed")
+            let data: [EntryModel] = try dbInstance.queue.read{ db in
+                try EntryModel.all().filter(Column("parent") == parentEntryID).fetchAll(db)
+                
+            }
+            return data
+        } catch {
             return []
         }
     }
     
-    func genEntryID() -> Int64 {
-        return Int64(Frostflake(generatorIdentifier: 1).generate())
+    func saveLocalEntry(entry: EntryModel) {
+        var newEn = entry
+        do {
+            let _ = try dbInstance.queue.write{ db in
+                try newEn.save(db)
+            }
+        } catch {
+            log.error("[entryService] create local entry failed \(error)")
+        }
+        log.debug("[entryService] created new local entry \(newEn.id ?? -1)")
     }
-    
-    func reflush() {
-        self.objectWillChange.send()
+
+    func cleanupLocalEntry(entryID: Int64) {
+        log.debug("[entryService] cleanup local entry \(entryID)")
+        do {
+            let _ = try dbInstance.queue.write{ db in
+                try EntryModel.filter(Column("id") == entryID).deleteAll(db)
+                try DocumentModel.filter(Column("oid") == entryID).deleteAll(db)
+                try DialogueModel.filter(Column("oid") == entryID).deleteAll(db)
+            }
+        } catch {
+            log.error("[entryService] cleanup local entry \(entryID) failed \(error)")
+        }
     }
-}
-
-func initRootEntry() -> EntryModel {
-    debugPrint("init root entry")
-    return EntryModel(id: 1,name: "root", parent: 1, kind: "group")
-}
-
-func initInboxEntry() -> EntryModel {
-    debugPrint("init inbox entry")
-    return EntryModel(id: 1024,name: ".inbox", parent: 1, kind: "group")
 }
 

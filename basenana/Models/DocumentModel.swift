@@ -7,36 +7,45 @@
 
 import SwiftData
 import Foundation
+import GRDB
 
-@Model
-class DocumentModel: Identifiable{
-    @Attribute(.unique) var id: Int64
+struct DocumentModel: Codable, Identifiable, Hashable{
+    var id: Int64?
     var oid: Int64
     var name: String
-    var parentEntryId: Int64
+    var parentEntry: Int64
     var source: String?
     
     var keyWords : [String]?
     var content: String
     var summary: String?
-    var desync: Bool
     
     var createdAt: Date
     var changedAt: Date
+}
+
+extension DocumentModel: TableRecord {
+    static var databaseTableName: String = "document"
     
-    init(id: Int64, oid: Int64, name: String, parentEntryId: Int64, source: String, keyWords: [String]? = nil, content: String, summary: String? = nil, desync: Bool) {
-        self.id = id
-        self.oid = oid
-        self.name = name
-        self.parentEntryId = parentEntryId
-        self.source = source
-        self.keyWords = keyWords
-        self.content = content
-        self.summary = summary
-        self.desync = desync
-        
-        let nowAt = Date.now
-        self.createdAt = nowAt
-        self.changedAt = nowAt
+    enum Columns {
+        static let id = Column(CodingKeys.id)
+        static let oid = Column(CodingKeys.oid)
+        static let name = Column(CodingKeys.name)
+        static let parentEntry = Column(CodingKeys.parentEntry)
+        static let source = Column(CodingKeys.source)
+        static let keyWords = Column(CodingKeys.keyWords)
+        static let content = Column(CodingKeys.content)
+        static let createdAt = Column(CodingKeys.createdAt)
+        static let changedAt = Column(CodingKeys.changedAt)
+    }
+}
+
+extension DocumentModel: FetchableRecord {}
+
+extension DocumentModel: MutablePersistableRecord {
+    mutating func didInsert(_ inserted: InsertionSuccess) {
+        if id == nil{
+            id = inserted.rowID
+        }
     }
 }

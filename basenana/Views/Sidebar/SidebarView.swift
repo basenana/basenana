@@ -10,9 +10,6 @@ import SwiftUI
 import SwiftData
 
 struct SidebarView: View {
-    @EnvironmentObject private var groupService: GroupService
-    @EnvironmentObject private var docService: DocumentService
-    @EnvironmentObject private var dialogueService: DialogueService
 
     var body: some View {
         List{
@@ -76,42 +73,10 @@ struct SidebarView: View {
             }
         }
         .listStyle(.sidebar)
+        .overlay(alignment: .bottom, content: {SidebarButtonView()})
     }
 }
 
-struct SidebarGroupsView: View {
-    private var rootGroups = GroupRoot.children ?? []
-    
-    var body: some View {
-        OutlineGroup(rootGroups, children: \.children){ child in
-            NavigationLink {
-                GroupView(groupID: child.groupID).id(child.groupID)
-                    .navigationTitle(child.groupName)
-            } label: {
-                HStack{
-                    Image(systemName: "folder")
-                    Text("\(child.groupName)")
-                        .multilineTextAlignment(.leading)
-                }.padding(.vertical, 4)
-            }
-        }
-        .contextMenu {
-            Button(action: {
-                // perform some action
-                print("Button 1 clicked")
-            }) {
-                Text("Button 1")
-                Image(systemName: "1.circle")
-            }
-            
-            Button(action: {
-                // perform some action
-                print("Button 2 clicked")
-            }) {
-                Text("Button 2")
-                Image(systemName: "2.circle")
-            }
-        }
-    }
-    
+#Preview {
+    return SidebarView()
 }

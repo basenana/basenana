@@ -1,5 +1,5 @@
 //
-//  GroupModel.swift
+//  GroupViewModel.swift
 //  basenana
 //
 //  Created by Hypo on 2024/3/23.
@@ -7,13 +7,13 @@
 
 import Foundation
 
-var GroupRoot: GroupModel = GroupModel(groupID: rootEntryID, groupName: "root")
+var GroupRoot: GroupViewModel = GroupViewModel(groupID: rootEntryID, groupName: "root")
 
 @Observable
-class GroupModel: Identifiable {
+class GroupViewModel: Identifiable {
     var groupID: Int64
     var groupName: String
-    var children: [GroupModel]? = nil
+    var children: [GroupViewModel]? = nil
     
     init(groupID: Int64, groupName: String) {
         self.groupID = groupID

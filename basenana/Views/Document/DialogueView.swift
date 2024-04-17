@@ -18,8 +18,6 @@ struct DialogueView: View {
      @State private var dialogue: DialogueModel?
      @State var messages : [[String:String]]=[]
      
-     @EnvironmentObject private var dialogueService: DialogueService
-     
      var body: some View {
           VStack {
                
@@ -173,8 +171,6 @@ struct EraserButton: View {
      @Binding var messages : [[String:String]]
      let docId: Int64
      
-     @EnvironmentObject private var dialogueService: DialogueService
-     
      var body: some View {
           Button {
                withAnimation(.easeInOut) {
@@ -206,10 +202,5 @@ struct EraserButton: View {
 
 
 #Preview {
-     let config = ModelConfiguration(isStoredInMemoryOnly: true)
-     let container = try! ModelContainer(for: DialogueModel.self, configurations: config)
-     
-     container.mainContext.insert(DialogueModel(id: 100, oid: 100, docid: 100, messages: [["user": "User", "content": "hello"], ["user": "Assistant", "content": "can I help you?"]]))
-     
-     return DialogueView(isDrawerOpen: .constant(true), docId: 100).environmentObject(DialogueService(modelContext: container.mainContext))
+     return DialogueView(isDrawerOpen: .constant(true), docId: 100)
 }

@@ -7,25 +7,39 @@
 
 import Foundation
 import SwiftData
+import GRDB
 
-@Model
-class DialogueModel: Identifiable {
-    @Attribute(.unique) var id: Int64
+struct DialogueModel: Codable {
+    var id: Int64?
     var oid: Int64
     var docid: Int64
     var messages: [[String: String]]=[]
     
     var createdAt: Date
     var changedAt: Date
+}
+
+
+extension DialogueModel: TableRecord {
     
-    init(id: Int64, oid: Int64, docid: Int64, messages: [[String: String]]) {
-        self.id = id
-        self.oid = oid
-        self.docid = docid
-        self.messages = messages
-        
-        let nowAt = Date.now
-        self.createdAt = nowAt
-        self.changedAt = nowAt
+    static var databaseTableName: String = "dialogue"
+    
+    enum Columns {
+        static let id = Column(CodingKeys.id)
+        static let oid = Column(CodingKeys.oid)
+        static let docid = Column(CodingKeys.docid)
+        static let messages = Column(CodingKeys.messages)
+        static let createdAt = Column(CodingKeys.createdAt)
+        static let changedAt = Column(CodingKeys.changedAt)
+    }
+}
+
+extension DialogueModel: FetchableRecord {}
+
+extension DialogueModel: MutablePersistableRecord {
+    mutating func didInsert(_ inserted: InsertionSuccess) {
+        if id == nil {
+            id = inserted.rowID
+        }
     }
 }
