@@ -16,6 +16,7 @@ let deviceUUID = syncService.deviceID()
 @Observable
 class SyncService {
     public var isSyncing: Bool = false
+    private var queue = DispatchQueue(label: "org.basenana.sync")
     
     func deviceID() -> String {
         var deviceInfo: ConfigModel?
@@ -36,17 +37,25 @@ class SyncService {
             try dbInstance.queue.write{ db in
                 try deviceInfo?.save(db)
             }
+            return deviceInfo!.value
         } catch {
             log.error("[syncService] init device config failed \(error)")
         }
         return "unknown"
     }
     
-    func resync() {
+    func resyncBackground() {
         if isSyncing {
             return
         }
         
+        isSyncing = true
+        queue.async {
+            self.resync()
+        }
+    }
+    
+    private func resync() {
         isSyncing = true
         log.info("[syncService] start resync")
         defer {
@@ -95,7 +104,7 @@ class SyncService {
         
         do {
             if needRelist {
-                try self.relist()
+                try self.relist(parentID: 1)
             }else{
                 needSyncSeq = try self.syncUncommitedEvent(start: syncedSeqNum)
             }
@@ -122,14 +131,16 @@ class SyncService {
         } catch{
             log.error("[syncService] writeback sync config failed \(error)")
         }
+        
+        groupService.initGroupTree()
     }
     
-    func relist() throws {
-        log.info("[syncService] relist entrys")
+    private func relist(parentID: Int64) throws {
+        log.info("[syncService] relist entry \(parentID) children")
         let syncedStartAt = Date()
         
         var request = Api_V1_ListGroupChildrenRequest()
-        request.parentID = 1
+        request.parentID = parentID
         let call = clientSet.entries.listGroupChildren(request, callOptions: nil)
         
         var response: Api_V1_ListGroupChildrenResponse
@@ -138,15 +149,18 @@ class SyncService {
         } catch {
             log.error("[syncService] list root children failed \(error)")
             throw error
-        }            
+        }
         
         for en in response.entries{
             try self.rewriteEntry(entryId: en.id)
+            if en.isGroup{
+                try self.relist(parentID: en.id)
+            }
         }
         try self.cleanEntry(befor: syncedStartAt)
     }
     
-    func syncUncommitedEvent(start: Int64) throws -> Int64 {
+    private func syncUncommitedEvent(start: Int64) throws -> Int64 {
         log.info("[syncService] sync evnet start from \(start)")
         var request = Api_V1_ListUnSyncedEventRequest()
         request.startSequence = start
@@ -156,6 +170,7 @@ class SyncService {
         do {
             let response = try call.response.wait()
             for evt in response.events {
+                log.info(evt)
                 if evt.refType != "entry"{
                     continue
                 }
@@ -202,7 +217,7 @@ class SyncService {
         }
     }
     
-    func cleanEntry(befor: Date) throws {
+    private func cleanEntry(befor: Date) throws {
         var entryList: [EntryModel]
         do {
             entryList = try dbInstance.queue.read{ db in

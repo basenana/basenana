@@ -14,6 +14,7 @@ let groupService = GroupService()
 class GroupService {
     
     func initGroupTree() {
+        log.debug("[GroupService] init group tree")
         var needInitGroups = [GroupRoot]
         
         while !needInitGroups.isEmpty{
@@ -26,7 +27,7 @@ class GroupService {
                 }
                 nextGroup.children = children.compactMap{ en in
                     if !en.name.starts(with: "."){
-                        return GroupModel(groupID: en.id!, groupName: en.name)
+                        return GroupViewModel(groupID: en.id!, groupName: en.name)
                     }
                     return nil
                 }

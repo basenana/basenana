@@ -30,7 +30,7 @@ struct SidebarButtonView: View {
             
             Spacer()
             Button(action: {
-                syncService.resync()
+                syncService.resyncBackground()
             }, label: {
                 Image(systemName: syncService.isSyncing ? "arrow.triangle.2.circlepath.icloud" : "checkmark.icloud")
             })

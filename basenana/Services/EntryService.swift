@@ -20,13 +20,14 @@ class EntryService {
         request.url = urlStr
         request.fileType = .webArchiveFile
         request.clutterFree = isClusterFree
-        let call = clientSet.inbox.quickInbox(request, callOptions: CallOptions())
+        let call = clientSet.inbox.quickInbox(request, callOptions: CallOptions(timeLimit: .timeout(.seconds(10))))
         
         do {
             let response = try call.response.wait()
-            print("response: entry \(response.entryID)")
+            log.debug("[entryService] new entey inboxed \(response.entryID)")
+            try syncService.rewriteEntry(entryId: response.entryID)
         } catch {
-            print("error: \(error)")
+            log.error("[entryService] entey inbox failed \(error)")
         }
     }
     

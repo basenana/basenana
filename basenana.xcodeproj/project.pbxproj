@@ -30,7 +30,7 @@
 		3F4A78D82BCD853C0035F90F /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78D72BCD853C0035F90F /* Database.swift */; };
 		3F4A78DB2BCF7FFB0035F90F /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4A78DA2BCF7FFB0035F90F /* SwiftyBeaver */; };
 		3F4A78DD2BCF80080035F90F /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78DC2BCF80080035F90F /* Logging.swift */; };
-		3F81C9C52BAF1A6D00FEE130 /* GroupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C42BAF1A6D00FEE130 /* GroupModel.swift */; };
+		3F81C9C52BAF1A6D00FEE130 /* GroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C42BAF1A6D00FEE130 /* GroupViewModel.swift */; };
 		3F81C9C72BAFCB8900FEE130 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C62BAFCB8900FEE130 /* MainView.swift */; };
 		3FB782412BC1A82700327191 /* CGRPCZlib in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782402BC1A82700327191 /* CGRPCZlib */; };
 		3FB782432BC1A82700327191 /* GRPC in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782422BC1A82700327191 /* GRPC */; };
@@ -91,7 +91,7 @@
 		3F4A78D02BCD7EEF0035F90F /* ConfigModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigModel.swift; sourceTree = "<group>"; };
 		3F4A78D72BCD853C0035F90F /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		3F4A78DC2BCF80080035F90F /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
-		3F81C9C42BAF1A6D00FEE130 /* GroupModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupModel.swift; sourceTree = "<group>"; };
+		3F81C9C42BAF1A6D00FEE130 /* GroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewModel.swift; sourceTree = "<group>"; };
 		3F81C9C62BAFCB8900FEE130 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		3FB782502BC2D0F600327191 /* fsapi-v1.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "fsapi-v1.grpc.swift"; sourceTree = "<group>"; };
 		3FB782512BC2D0F600327191 /* fsapi-v1.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "fsapi-v1.pb.swift"; sourceTree = "<group>"; };
@@ -164,6 +164,7 @@
 				3F1BBE4D2B90C3EA005D533F /* Helpers */,
 				3F1BBE4C2B90C3DD005D533F /* Services */,
 				3F1BBE4A2B90C3A2005D533F /* Models */,
+				3F4A78DE2BCFAB7D0035F90F /* ViewModels */,
 				3F1BBE492B90C393005D533F /* Views */,
 				3F1BBE1C2B8E147F005D533F /* basenanaApp.swift */,
 				3F1BBE222B8E1480005D533F /* Assets.xcassets */,
@@ -215,7 +216,6 @@
 			children = (
 				ED917E772B9607BE004FCB9A /* DocumentModel.swift */,
 				3F1BBE562B90CD59005D533F /* EntryModel.swift */,
-				3F81C9C42BAF1A6D00FEE130 /* GroupModel.swift */,
 				ED72603D2BC2E25D005F1166 /* DialogueModel.swift */,
 				3F4A78D02BCD7EEF0035F90F /* ConfigModel.swift */,
 				3F4A78D72BCD853C0035F90F /* Database.swift */,
@@ -252,6 +252,14 @@
 				3F4A78C92BC99D600035F90F /* SidebarButtonView.swift */,
 			);
 			path = Sidebar;
+			sourceTree = "<group>";
+		};
+		3F4A78DE2BCFAB7D0035F90F /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				3F81C9C42BAF1A6D00FEE130 /* GroupViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		3FB782532BC2D0F600327191 /* fsapi */ = {
@@ -443,7 +451,7 @@
 				EDEF16382BC8DD93000BC25C /* Color.swift in Sources */,
 				3F1BBE4F2B90C4D5005D533F /* SidebarView.swift in Sources */,
 				3F4A78CF2BCC2A660035F90F /* FsClientSet.swift in Sources */,
-				3F81C9C52BAF1A6D00FEE130 /* GroupModel.swift in Sources */,
+				3F81C9C52BAF1A6D00FEE130 /* GroupViewModel.swift in Sources */,
 				3F2CB97D2B9A02B600ADDDED /* EntryService.swift in Sources */,
 				3F0AEC762BA48EC7000DA928 /* GroupService.swift in Sources */,
 				3FB782542BC2D0F600327191 /* fsapi-v1.grpc.swift in Sources */,
