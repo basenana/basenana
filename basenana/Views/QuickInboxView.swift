@@ -74,45 +74,6 @@ struct QuickInboxView: View{
     }
 }
 
-struct QuickDocumentView: View{
-    
-    @Binding var isShowingQuickDocument: Bool
-    @State private var title: String = ""
-    @State private var content: String = ""
-    
-    var body: some View{
-        Form{
-            Section() {
-                Text("Save Document").font(.title2)
-                TextField("Title", text: $title)
-                TextField("content", text: $content)
-                
-            }
-            .padding(.horizontal, 50.0)
-            .padding(.top, 20)
-            .textFieldStyle(RoundedBorderTextFieldStyle())
-            .frame(minWidth: 400, maxWidth: .infinity, minHeight: 20)
-            HStack {
-                Button("Cancel") {
-                    isShowingQuickDocument = false
-                }
-                
-                Button("Submit") {
-                    quickInbox()
-                    isShowingQuickDocument = false
-                }
-                .buttonStyle(.borderedProminent)
-            }.padding()
-        }
-        .formStyle(.grouped)
-        .padding()
-    }
-    
-    func quickInbox() {
-        documentService.saveDocument(name:title, content: content)
-    }
-}
-
 #Preview {
     return QuickInboxView(isShowingQuickInbox: .constant(true))
 }

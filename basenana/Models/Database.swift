@@ -73,14 +73,17 @@ func migrateDbInit(db: GRDB.Database) throws {
         t.column("name", .text)
         t.column("parentEntry", .integer)
         t.column("source", .text)
-        
+        t.column("marked", .boolean)
+        t.column("unread", .boolean)
+
         t.column("keyWords", .jsonText)
         t.column("content", .text)
         t.column("summary", .text)
         
         t.column("createdAt", .datetime)
         t.column("changedAt", .datetime)
-        
+        t.column("syncAt", .datetime)
+
         t.primaryKey(["id"])
     }
     

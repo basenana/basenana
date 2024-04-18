@@ -40,9 +40,6 @@ struct SidebarButtonView: View {
         .padding(5)
         .background(Color.background)
         
-        .sheet(isPresented: $isShowingCreateDoc) {
-            QuickDocumentView(isShowingQuickDocument: $isShowingCreateDoc)
-        }
         .sheet(isPresented: $isShowingQuickInbox) {
             QuickInboxView(isShowingQuickInbox: $isShowingQuickInbox)
         }
