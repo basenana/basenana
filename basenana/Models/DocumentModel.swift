@@ -10,11 +10,13 @@ import Foundation
 import GRDB
 
 struct DocumentModel: Codable, Identifiable, Hashable{
-    var id: Int64?
+    var id: Int64
     var oid: Int64
     var name: String
     var parentEntry: Int64
     var source: String?
+    var marked: Bool
+    var unread: Bool
     
     var keyWords : [String]?
     var content: String
@@ -22,6 +24,7 @@ struct DocumentModel: Codable, Identifiable, Hashable{
     
     var createdAt: Date
     var changedAt: Date
+    var syncAt: Date
 }
 
 extension DocumentModel: TableRecord {
@@ -33,6 +36,8 @@ extension DocumentModel: TableRecord {
         static let name = Column(CodingKeys.name)
         static let parentEntry = Column(CodingKeys.parentEntry)
         static let source = Column(CodingKeys.source)
+        static let marked = Column(CodingKeys.marked)
+        static let unread = Column(CodingKeys.unread)
         static let keyWords = Column(CodingKeys.keyWords)
         static let content = Column(CodingKeys.content)
         static let createdAt = Column(CodingKeys.createdAt)
@@ -42,10 +47,4 @@ extension DocumentModel: TableRecord {
 
 extension DocumentModel: FetchableRecord {}
 
-extension DocumentModel: MutablePersistableRecord {
-    mutating func didInsert(_ inserted: InsertionSuccess) {
-        if id == nil{
-            id = inserted.rowID
-        }
-    }
-}
+extension DocumentModel: MutablePersistableRecord {}

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SidebarButtonView: View {
     @State private var isShowingQuickInbox = false
-    @State private var isShowingCreateDoc = false
 
     @Environment(\.colorScheme) var colorScheme
     
@@ -19,12 +18,6 @@ struct SidebarButtonView: View {
                 isShowingQuickInbox.toggle()
             }, label: {
                 Image(systemName: "plus")
-            })
-            .buttonStyle(.accessoryBar)
-            Button(action: {
-                isShowingCreateDoc.toggle()
-            }, label: {
-                Image(systemName: "doc")
             })
             .buttonStyle(.accessoryBar)
             
@@ -40,9 +33,6 @@ struct SidebarButtonView: View {
         .padding(5)
         .background(Color.background)
         
-        .sheet(isPresented: $isShowingCreateDoc) {
-            QuickDocumentView(isShowingQuickDocument: $isShowingCreateDoc)
-        }
         .sheet(isPresented: $isShowingQuickInbox) {
             QuickInboxView(isShowingQuickInbox: $isShowingQuickInbox)
         }

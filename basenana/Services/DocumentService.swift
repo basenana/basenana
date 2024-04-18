@@ -8,6 +8,8 @@
 import SwiftData
 import Foundation
 import SwiftUI
+import GRPC
+import GRDB
 
 let documentService = DocumentService()
 
@@ -25,18 +27,30 @@ class DocumentService {
         }
     }
     
-    func saveDocument(name: String, content: String) {
-        let mockedId = Int64(Date().timeIntervalSince1970)
-        var newDoc = DocumentModel(id: mockedId, oid: mockedId, name: name, parentEntry: Int64(1), source: "collect", content: content, createdAt: Date(), changedAt: Date())
-        
+    func saveDocument(doc: DocumentModel) {
+        var newDoc = doc
         do {
-            try dbInstance.queue.write{ db in
-                try newDoc.insert(db)
+            let _ = try dbInstance.queue.write{ db in
+                try newDoc.save(db)
             }
         } catch {
-            
+            log.error("[documentService] create local docuemnt failed \(error)")
         }
         
+        log.debug("[documentService] created new local ducument \(newDoc.id)")
+        
         return
+    }
+    
+    func cleanupLocalDocument(documentID: Int64) {
+        log.debug("[documentService] cleanup local document \(documentID)")
+        do {
+            let _ = try dbInstance.queue.write{ db in
+                try DocumentModel.filter(Column("id") == documentID ).deleteAll(db)
+                try DialogueModel.filter(Column("docid") == documentID).deleteAll(db)
+            }
+        } catch {
+            log.error("[documentService] cleanup local document \(documentID) failed \(error)")
+        }
     }
 }
