@@ -32,7 +32,7 @@ class GroupService {
                     return nil
                 }
             } catch {
-                print("query group \(nextGroup.groupID) children failed")
+                log.error("query group \(nextGroup.groupID) children failed")
             }
             
             if nextGroup.children == nil || nextGroup.children!.isEmpty{

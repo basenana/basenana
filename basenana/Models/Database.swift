@@ -15,7 +15,6 @@ class Database {
     var queue: DatabaseQueue
 
     init(){
-        print("opening db")
         let fileManager = FileManager.default
         let appSupportURL = try! fileManager.url(
             for: .applicationSupportDirectory, in: .userDomainMask,
@@ -25,7 +24,7 @@ class Database {
 
         // Open or create the database
         let databaseURL = directoryURL.appendingPathComponent("basenana.sqlite")
-        print("database path \(databaseURL.path)")
+        log.debug("database path \(databaseURL.path)")
         self.queue = try! DatabaseQueue(path: databaseURL.path)
         
         let migrator = buildMigration()
