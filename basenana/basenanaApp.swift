@@ -10,8 +10,8 @@ import SwiftData
 
 @main
 struct basenanaApp: App {
+    
     var body: some Scene {
-        let _ = setupLogging()
         WindowGroup {
             MainView()
                 .frame(minWidth: 1000, minHeight: 600)

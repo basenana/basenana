@@ -11,6 +11,188 @@ import NIOConcurrencyHelpers
 import SwiftProtobuf
 
 
+/// Usage: instantiate `Api_V1_AuthClient`, then call methods of this protocol to make API calls.
+internal protocol Api_V1_AuthClientProtocol: GRPCClient {
+  var serviceName: String { get }
+  var interceptors: Api_V1_AuthClientInterceptorFactoryProtocol? { get }
+
+  func accessToken(
+    _ request: Api_V1_AccessTokenRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Api_V1_AccessTokenRequest, Api_V1_AccessTokenResponse>
+}
+
+extension Api_V1_AuthClientProtocol {
+  internal var serviceName: String {
+    return "api.v1.Auth"
+  }
+
+  /// Unary call to AccessToken
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to AccessToken.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  internal func accessToken(
+    _ request: Api_V1_AccessTokenRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Api_V1_AccessTokenRequest, Api_V1_AccessTokenResponse> {
+    return self.makeUnaryCall(
+      path: Api_V1_AuthClientMetadata.Methods.accessToken.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeAccessTokenInterceptors() ?? []
+    )
+  }
+}
+
+@available(*, deprecated)
+extension Api_V1_AuthClient: @unchecked Sendable {}
+
+@available(*, deprecated, renamed: "Api_V1_AuthNIOClient")
+internal final class Api_V1_AuthClient: Api_V1_AuthClientProtocol {
+  private let lock = Lock()
+  private var _defaultCallOptions: CallOptions
+  private var _interceptors: Api_V1_AuthClientInterceptorFactoryProtocol?
+  internal let channel: GRPCChannel
+  internal var defaultCallOptions: CallOptions {
+    get { self.lock.withLock { return self._defaultCallOptions } }
+    set { self.lock.withLockVoid { self._defaultCallOptions = newValue } }
+  }
+  internal var interceptors: Api_V1_AuthClientInterceptorFactoryProtocol? {
+    get { self.lock.withLock { return self._interceptors } }
+    set { self.lock.withLockVoid { self._interceptors = newValue } }
+  }
+
+  /// Creates a client for the api.v1.Auth service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  internal init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Api_V1_AuthClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self._defaultCallOptions = defaultCallOptions
+    self._interceptors = interceptors
+  }
+}
+
+internal struct Api_V1_AuthNIOClient: Api_V1_AuthClientProtocol {
+  internal var channel: GRPCChannel
+  internal var defaultCallOptions: CallOptions
+  internal var interceptors: Api_V1_AuthClientInterceptorFactoryProtocol?
+
+  /// Creates a client for the api.v1.Auth service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  internal init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Api_V1_AuthClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+internal protocol Api_V1_AuthAsyncClientProtocol: GRPCClient {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Api_V1_AuthClientInterceptorFactoryProtocol? { get }
+
+  func makeAccessTokenCall(
+    _ request: Api_V1_AccessTokenRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Api_V1_AccessTokenRequest, Api_V1_AccessTokenResponse>
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Api_V1_AuthAsyncClientProtocol {
+  internal static var serviceDescriptor: GRPCServiceDescriptor {
+    return Api_V1_AuthClientMetadata.serviceDescriptor
+  }
+
+  internal var interceptors: Api_V1_AuthClientInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  internal func makeAccessTokenCall(
+    _ request: Api_V1_AccessTokenRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Api_V1_AccessTokenRequest, Api_V1_AccessTokenResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Api_V1_AuthClientMetadata.Methods.accessToken.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeAccessTokenInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Api_V1_AuthAsyncClientProtocol {
+  internal func accessToken(
+    _ request: Api_V1_AccessTokenRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Api_V1_AccessTokenResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Api_V1_AuthClientMetadata.Methods.accessToken.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeAccessTokenInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+internal struct Api_V1_AuthAsyncClient: Api_V1_AuthAsyncClientProtocol {
+  internal var channel: GRPCChannel
+  internal var defaultCallOptions: CallOptions
+  internal var interceptors: Api_V1_AuthClientInterceptorFactoryProtocol?
+
+  internal init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Api_V1_AuthClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+internal protocol Api_V1_AuthClientInterceptorFactoryProtocol: Sendable {
+
+  /// - Returns: Interceptors to use when invoking 'accessToken'.
+  func makeAccessTokenInterceptors() -> [ClientInterceptor<Api_V1_AccessTokenRequest, Api_V1_AccessTokenResponse>]
+}
+
+internal enum Api_V1_AuthClientMetadata {
+  internal static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "Auth",
+    fullName: "api.v1.Auth",
+    methods: [
+      Api_V1_AuthClientMetadata.Methods.accessToken,
+    ]
+  )
+
+  internal enum Methods {
+    internal static let accessToken = GRPCMethodDescriptor(
+      name: "AccessToken",
+      path: "/api.v1.Auth/AccessToken",
+      type: GRPCCallType.unary
+    )
+  }
+}
+
 /// Usage: instantiate `Api_V1_InboxClient`, then call methods of this protocol to make API calls.
 internal protocol Api_V1_InboxClientProtocol: GRPCClient {
   var serviceName: String { get }
@@ -1677,6 +1859,110 @@ internal enum Api_V1_NotifyClientMetadata {
   }
 }
 
+/// To build a server, implement a class that conforms to this protocol.
+internal protocol Api_V1_AuthProvider: CallHandlerProvider {
+  var interceptors: Api_V1_AuthServerInterceptorFactoryProtocol? { get }
+
+  func accessToken(request: Api_V1_AccessTokenRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_AccessTokenResponse>
+}
+
+extension Api_V1_AuthProvider {
+  internal var serviceName: Substring {
+    return Api_V1_AuthServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  internal func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "AccessToken":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_AccessTokenRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_AccessTokenResponse>(),
+        interceptors: self.interceptors?.makeAccessTokenInterceptors() ?? [],
+        userFunction: self.accessToken(request:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+/// To implement a server, implement an object which conforms to this protocol.
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+internal protocol Api_V1_AuthAsyncProvider: CallHandlerProvider, Sendable {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Api_V1_AuthServerInterceptorFactoryProtocol? { get }
+
+  func accessToken(
+    request: Api_V1_AccessTokenRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Api_V1_AccessTokenResponse
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Api_V1_AuthAsyncProvider {
+  internal static var serviceDescriptor: GRPCServiceDescriptor {
+    return Api_V1_AuthServerMetadata.serviceDescriptor
+  }
+
+  internal var serviceName: Substring {
+    return Api_V1_AuthServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  internal var interceptors: Api_V1_AuthServerInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  internal func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "AccessToken":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_AccessTokenRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_AccessTokenResponse>(),
+        interceptors: self.interceptors?.makeAccessTokenInterceptors() ?? [],
+        wrapping: { try await self.accessToken(request: $0, context: $1) }
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+internal protocol Api_V1_AuthServerInterceptorFactoryProtocol: Sendable {
+
+  /// - Returns: Interceptors to use when handling 'accessToken'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeAccessTokenInterceptors() -> [ServerInterceptor<Api_V1_AccessTokenRequest, Api_V1_AccessTokenResponse>]
+}
+
+internal enum Api_V1_AuthServerMetadata {
+  internal static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "Auth",
+    fullName: "api.v1.Auth",
+    methods: [
+      Api_V1_AuthServerMetadata.Methods.accessToken,
+    ]
+  )
+
+  internal enum Methods {
+    internal static let accessToken = GRPCMethodDescriptor(
+      name: "AccessToken",
+      path: "/api.v1.Auth/AccessToken",
+      type: GRPCCallType.unary
+    )
+  }
+}
 /// To build a server, implement a class that conforms to this protocol.
 internal protocol Api_V1_InboxProvider: CallHandlerProvider {
   var interceptors: Api_V1_InboxServerInterceptorFactoryProtocol? { get }

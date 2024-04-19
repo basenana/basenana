@@ -20,6 +20,51 @@ fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAP
   typealias Version = _2
 }
 
+struct Api_V1_AccessTokenRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var accessTokenKey: String = String()
+
+  var secretToken: String = String()
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
+struct Api_V1_AccessTokenResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var namespace: String = String()
+
+  var uid: Int64 = 0
+
+  var gid: Int64 = 0
+
+  var clientCrt: String = String()
+
+  var clientKey: String = String()
+
+  var certExpiration: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _certExpiration ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_certExpiration = newValue}
+  }
+  /// Returns true if `certExpiration` has been explicitly set.
+  var hasCertExpiration: Bool {return self._certExpiration != nil}
+  /// Clears the value of `certExpiration`. Subsequent reads from it will return its default value.
+  mutating func clearCertExpiration() {self._certExpiration = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+
+  fileprivate var _certExpiration: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+}
+
 struct Api_V1_QuickInboxRequest {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -1030,7 +1075,7 @@ struct Api_V1_Event {
 
     var kind: String = String()
 
-    var kindMap: Int64 = 0
+    var isGroup: Bool = false
 
     var namespace: String = String()
 
@@ -1046,6 +1091,8 @@ struct Api_V1_Event {
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
+extension Api_V1_AccessTokenRequest: @unchecked Sendable {}
+extension Api_V1_AccessTokenResponse: @unchecked Sendable {}
 extension Api_V1_QuickInboxRequest: @unchecked Sendable {}
 extension Api_V1_QuickInboxRequest.SourceType: @unchecked Sendable {}
 extension Api_V1_QuickInboxRequest.FileType: @unchecked Sendable {}
@@ -1096,6 +1143,110 @@ extension Api_V1_Event.EventData: @unchecked Sendable {}
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "api.v1"
+
+extension Api_V1_AccessTokenRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".AccessTokenRequest"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "AccessTokenKey"),
+    2: .same(proto: "SecretToken"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.accessTokenKey) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.secretToken) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.accessTokenKey.isEmpty {
+      try visitor.visitSingularStringField(value: self.accessTokenKey, fieldNumber: 1)
+    }
+    if !self.secretToken.isEmpty {
+      try visitor.visitSingularStringField(value: self.secretToken, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_AccessTokenRequest, rhs: Api_V1_AccessTokenRequest) -> Bool {
+    if lhs.accessTokenKey != rhs.accessTokenKey {return false}
+    if lhs.secretToken != rhs.secretToken {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_AccessTokenResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".AccessTokenResponse"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "Namespace"),
+    2: .same(proto: "UID"),
+    3: .same(proto: "GID"),
+    4: .same(proto: "ClientCrt"),
+    5: .same(proto: "ClientKey"),
+    6: .same(proto: "CertExpiration"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.namespace) }()
+      case 2: try { try decoder.decodeSingularInt64Field(value: &self.uid) }()
+      case 3: try { try decoder.decodeSingularInt64Field(value: &self.gid) }()
+      case 4: try { try decoder.decodeSingularStringField(value: &self.clientCrt) }()
+      case 5: try { try decoder.decodeSingularStringField(value: &self.clientKey) }()
+      case 6: try { try decoder.decodeSingularMessageField(value: &self._certExpiration) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.namespace.isEmpty {
+      try visitor.visitSingularStringField(value: self.namespace, fieldNumber: 1)
+    }
+    if self.uid != 0 {
+      try visitor.visitSingularInt64Field(value: self.uid, fieldNumber: 2)
+    }
+    if self.gid != 0 {
+      try visitor.visitSingularInt64Field(value: self.gid, fieldNumber: 3)
+    }
+    if !self.clientCrt.isEmpty {
+      try visitor.visitSingularStringField(value: self.clientCrt, fieldNumber: 4)
+    }
+    if !self.clientKey.isEmpty {
+      try visitor.visitSingularStringField(value: self.clientKey, fieldNumber: 5)
+    }
+    try { if let v = self._certExpiration {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_AccessTokenResponse, rhs: Api_V1_AccessTokenResponse) -> Bool {
+    if lhs.namespace != rhs.namespace {return false}
+    if lhs.uid != rhs.uid {return false}
+    if lhs.gid != rhs.gid {return false}
+    if lhs.clientCrt != rhs.clientCrt {return false}
+    if lhs.clientKey != rhs.clientKey {return false}
+    if lhs._certExpiration != rhs._certExpiration {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
 
 extension Api_V1_QuickInboxRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".QuickInboxRequest"
@@ -3096,7 +3247,7 @@ extension Api_V1_Event.EventData: SwiftProtobuf.Message, SwiftProtobuf._MessageI
     1: .same(proto: "id"),
     2: .same(proto: "parentID"),
     3: .same(proto: "kind"),
-    4: .same(proto: "kindMap"),
+    4: .same(proto: "isGroup"),
     5: .same(proto: "namespace"),
   ]
 
@@ -3109,7 +3260,7 @@ extension Api_V1_Event.EventData: SwiftProtobuf.Message, SwiftProtobuf._MessageI
       case 1: try { try decoder.decodeSingularInt64Field(value: &self.id) }()
       case 2: try { try decoder.decodeSingularInt64Field(value: &self.parentID) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.kind) }()
-      case 4: try { try decoder.decodeSingularInt64Field(value: &self.kindMap) }()
+      case 4: try { try decoder.decodeSingularBoolField(value: &self.isGroup) }()
       case 5: try { try decoder.decodeSingularStringField(value: &self.namespace) }()
       default: break
       }
@@ -3126,8 +3277,8 @@ extension Api_V1_Event.EventData: SwiftProtobuf.Message, SwiftProtobuf._MessageI
     if !self.kind.isEmpty {
       try visitor.visitSingularStringField(value: self.kind, fieldNumber: 3)
     }
-    if self.kindMap != 0 {
-      try visitor.visitSingularInt64Field(value: self.kindMap, fieldNumber: 4)
+    if self.isGroup != false {
+      try visitor.visitSingularBoolField(value: self.isGroup, fieldNumber: 4)
     }
     if !self.namespace.isEmpty {
       try visitor.visitSingularStringField(value: self.namespace, fieldNumber: 5)
@@ -3139,7 +3290,7 @@ extension Api_V1_Event.EventData: SwiftProtobuf.Message, SwiftProtobuf._MessageI
     if lhs.id != rhs.id {return false}
     if lhs.parentID != rhs.parentID {return false}
     if lhs.kind != rhs.kind {return false}
-    if lhs.kindMap != rhs.kindMap {return false}
+    if lhs.isGroup != rhs.isGroup {return false}
     if lhs.namespace != rhs.namespace {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true

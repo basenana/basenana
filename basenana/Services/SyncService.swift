@@ -56,6 +56,11 @@ class SyncService {
     }
     
     private func resync() {
+        if clientSet == nil{
+            log.error("[syncService] unauthenticated")
+            return
+        }
+        
         isSyncing = true
         log.info("[syncService] start resync")
         defer {
@@ -83,7 +88,7 @@ class SyncService {
         var request = Api_V1_GetLatestSequenceRequest()
         request.startSequence = syncedSeqNum
         let option = CallOptions(timeLimit: .timeout(.seconds(5)), eventLoopPreference: .indifferent)
-        let unaryCall = clientSet.notify.getLatestSequence(request, callOptions: option)
+        let unaryCall = clientSet!.notify.getLatestSequence(request, callOptions: option)
         do {
             let response = try unaryCall.response.wait()
             if response.needRelist {
@@ -126,7 +131,7 @@ class SyncService {
             request.deviceID = deviceUUID
             request.sequence = needSyncSeq
             
-            let call = clientSet.notify.commitSyncedEvent(request, callOptions: nil)
+            let call = clientSet!.notify.commitSyncedEvent(request, callOptions: nil)
             let _ = try call.response.wait()
             log.info("[syncService] commit synced event to \(needSyncSeq)")
             
@@ -142,7 +147,7 @@ class SyncService {
         
         var request = Api_V1_ListGroupChildrenRequest()
         request.parentID = parentID
-        let call = clientSet.entries.listGroupChildren(request, callOptions: nil)
+        let call = clientSet!.entries.listGroupChildren(request, callOptions: nil)
         
         var response: Api_V1_ListGroupChildrenResponse
         do {
@@ -164,7 +169,7 @@ class SyncService {
         
         var doc_request = Api_V1_ListDocumentsRequest()
         doc_request.parentID = parentID
-        let doc_call = clientSet.document.listDocuments(doc_request, callOptions: nil)
+        let doc_call = clientSet!.document.listDocuments(doc_request, callOptions: nil)
         
         var doc_response: Api_V1_ListDocumentsResponse
         do {
@@ -183,7 +188,7 @@ class SyncService {
         log.info("[syncService] sync evnet start from \(start)")
         var request = Api_V1_ListUnSyncedEventRequest()
         request.startSequence = start
-        let call = clientSet.notify.listUnSyncedEvent(request, callOptions: nil)
+        let call = clientSet!.notify.listUnSyncedEvent(request, callOptions: nil)
         
         var commitedSeq = start
         do {
@@ -225,7 +230,7 @@ class SyncService {
     func rewriteEntry(entryId: Int64) throws {
         var request = Api_V1_GetEntryDetailRequest()
         request.entryID = entryId
-        let call = clientSet.entries.getEntryDetail(request, callOptions: nil)
+        let call = clientSet!.entries.getEntryDetail(request, callOptions: nil)
         
         do {
             let response = try call.response.wait()
@@ -246,7 +251,7 @@ class SyncService {
     func rewriteDocument(documentId: Int64) throws {
         var request = Api_V1_GetDocumentDetailRequest()
         request.documentID = documentId
-        let call = clientSet.document.getDocumentDetail(request, callOptions: nil)
+        let call = clientSet!.document.getDocumentDetail(request, callOptions: nil)
         
         do {
             let response = try call.response.wait()

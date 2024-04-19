@@ -48,7 +48,7 @@ class DialogueService: ObservableObject {
                 try dialogue?.save(db)
             }
         } catch {
-            debugPrint("insert document to inbox failed")
+            log.error("insert document to inbox failed \(error)")
         }
         return
     }
@@ -64,7 +64,7 @@ class DialogueService: ObservableObject {
                 }
             }
         }catch{
-            debugPrint("get dialogue by docId \(docId) failed")
+            log.error("get dialogue by docId \(docId) failed \(error)")
         }
     }
 }

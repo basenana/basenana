@@ -16,11 +16,15 @@ let entryService = EntryService()
 class EntryService {
     
     func quickInbox(urlStr: String, fileType: String, isClusterFree:Bool) {
+        if clientSet == nil{
+            log.error("[entryService] unauthenticated")
+            return
+        }
         var request = Api_V1_QuickInboxRequest()
         request.url = urlStr
         request.fileType = .webArchiveFile
         request.clutterFree = isClusterFree
-        let call = clientSet.inbox.quickInbox(request, callOptions: CallOptions(timeLimit: .timeout(.seconds(10))))
+        let call = clientSet!.inbox.quickInbox(request, callOptions: CallOptions(timeLimit: .timeout(.seconds(10))))
         
         do {
             let response = try call.response.wait()
