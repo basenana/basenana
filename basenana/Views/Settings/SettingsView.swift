@@ -1,0 +1,51 @@
+//
+//  SettingsView.swift
+//  basenana
+//
+//  Created by Hypo on 2024/4/19.
+//
+
+import SwiftUI
+
+struct SettingsView: View {
+    @AppStorage("org.basenana.nanafs.host")
+    private var serverHost:String = ""
+    
+    @AppStorage("org.basenana.nanafs.port")
+    private var serverPort:Int = 0
+    @State private var serverPortStr: String = ""
+    
+    @AppStorage("org.basenana.nanafs.auth.accessToken")
+    private var accessTokenKey:String = ""
+    
+    @AppStorage("org.basenana.nanafs.auth.secretToken")
+    private var secretToken:String = ""
+    
+    var body: some View {
+        Form {
+            Section("Authentication") {
+                TextField("Host", text: $serverHost)
+                TextField("Port", text: $serverPortStr, onCommit: {
+                    log.debug("parse port \(serverPortStr)")
+                    if let validNumber = Int(serverPortStr) {
+                        self.serverPort = validNumber
+                    }
+                }).onAppear{
+                    serverPortStr = "\(self.serverPort)"
+                }
+                TextField("AccessTokenKey", text: $accessTokenKey)
+                TextField("SecretToken", text: $secretToken)
+            }
+            
+            HStack {
+                Button {
+                    AuthClient().reflushToken()
+                } label: {
+                    Text("Submit")
+                }
+            }.frame(alignment: .bottomTrailing)
+        }
+        .padding(20)
+        .frame(minWidth: 500, minHeight: 300)
+    }
+}

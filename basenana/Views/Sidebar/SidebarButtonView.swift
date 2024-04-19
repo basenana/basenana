@@ -25,7 +25,7 @@ struct SidebarButtonView: View {
             Button(action: {
                 syncService.resyncBackground()
             }, label: {
-                Image(systemName: syncService.isSyncing ? "arrow.triangle.2.circlepath.icloud" : "checkmark.icloud")
+                Image(systemName: syncStatus.isSyncing ? "arrow.triangle.2.circlepath.icloud" : "checkmark.icloud")
             })
             .buttonStyle(.accessoryBar)
         })

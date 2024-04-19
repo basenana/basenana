@@ -5,6 +5,7 @@
 //  Created by Hypo on 2024/4/14.
 //
 
+import SwiftUI
 import Foundation
 import GRPC
 import GRDB
@@ -13,78 +14,50 @@ import BackgroundTasks
 let syncService = SyncService()
 let deviceUUID = syncService.deviceID()
 
-@Observable
 class SyncService {
-    public var isSyncing: Bool = false
     private var queue = DispatchQueue(label: "org.basenana.sync")
     
+    @AppStorage("org.basenana.device.uuid")
+    private var deviceUUID: String = ""
+    
+    @AppStorage("org.basenana.sync.sequence")
+    private var syncedSeqNum: String = "0"
+
     func deviceID() -> String {
-        var deviceInfo: ConfigModel?
-        do {
-            try dbInstance.queue.read{ db in
-                deviceInfo = try ConfigModel.filter(Column("name") == "org.basenana.device.uuid").fetchOne(db)
-            }
-        } catch {
-            log.error("[syncService] query device config failed \(error)")
+        if self.deviceUUID == "" {
+            self.deviceUUID = UUID().uuidString
         }
-        
-        if deviceInfo != nil{
-            return deviceInfo!.value
-        }
-        
-        deviceInfo = ConfigModel(id: nil, name: "org.basenana.device.uuid", value: UUID().uuidString, changedAt: Date())
-        do {
-            try dbInstance.queue.write{ db in
-                try deviceInfo?.save(db)
-            }
-            return deviceInfo!.value
-        } catch {
-            log.error("[syncService] init device config failed \(error)")
-        }
-        return "unknown"
+        return self.deviceUUID
     }
     
     func resyncBackground() {
-        if isSyncing {
+        if syncStatus.isSyncing {
             return
         }
         
-        isSyncing = true
+        syncStatus.isSyncing = true
         queue.async {
             self.resync()
         }
     }
     
     private func resync() {
+        syncStatus.isSyncing = true
+        log.info("[syncService] start resync")
+        defer {
+            syncStatus.isSyncing = false
+            log.info("[syncService] resync finish")
+        }
+        
         if clientSet == nil{
             log.error("[syncService] unauthenticated")
             return
         }
-        
-        isSyncing = true
-        log.info("[syncService] start resync")
-        defer {
-            isSyncing = false
-            log.info("[syncService] resync finish")
-        }
-        
-        var syncedSqe: ConfigModel?
-        do {
-            try dbInstance.queue.read{ db in
-                syncedSqe = try ConfigModel.filter(Column("name") == "org.basenana.sync.sequence").fetchOne(db)
-            }
-        } catch {
-            log.error("[syncService] query sync sequence failed \(error)")
-        }
-        
-        if syncedSqe == nil{
-            syncedSqe = ConfigModel(id: nil, name: "org.basenana.sync.sequence", value: "0", changedAt: Date())
-        }
-        
-        let syncedSeqNum = Int64(syncedSqe!.value) ?? 0
+
+        let syncedSeqNum = Int64(self.syncedSeqNum) ?? 0
         var needRelist: Bool = syncedSeqNum == 0
         var needSyncSeq: Int64
-        
+
         var request = Api_V1_GetLatestSequenceRequest()
         request.startSequence = syncedSeqNum
         let option = CallOptions(timeLimit: .timeout(.seconds(5)), eventLoopPreference: .indifferent)
@@ -121,12 +94,6 @@ class SyncService {
         }
         
         do {
-            syncedSqe?.value = "\(needSyncSeq)"
-            syncedSqe?.changedAt = Date()
-            try dbInstance.queue.write{ db in
-                try syncedSqe?.save(db)
-            }
-            
             var request = Api_V1_CommitSyncedEventRequest()
             request.deviceID = deviceUUID
             request.sequence = needSyncSeq
@@ -137,8 +104,10 @@ class SyncService {
             
         } catch{
             log.error("[syncService] writeback sync config failed \(error)")
+            return
         }
         
+        self.syncedSeqNum = String(needSyncSeq)
         groupService.initGroupTree()
     }
     
@@ -293,3 +262,12 @@ class SyncService {
         }
     }
 }
+
+
+@Observable
+class SyncStatus {
+    public var isSyncing: Bool = false
+}
+
+let syncStatus = SyncStatus()
+

@@ -9,6 +9,7 @@ import Foundation
 import GRPC
 import NIO
 import NIOSSL
+import SwiftUI
 
 
 var clientSet: FsClientSet? = nil
@@ -50,39 +51,68 @@ class FsClientSet {
 
 
 class AuthClient {
-    private var host: String
-    private var port: Int
-    private var accessTokenKey: String = ""
-    private var secretToken: String = ""
-    private var auth: Api_V1_AuthClientProtocol? = nil
+    @AppStorage("org.basenana.nanafs.host")
+    private var host: String = ""
     
-    init(host: String, port: Int) {
-        self.host = host
-        self.port = port
-    }
-
-    func reflushToken(accessTokenKey: String, secretToken: String) throws {
+    @AppStorage("org.basenana.nanafs.port")
+    private var port: Int = 0
+    
+    @AppStorage("org.basenana.nanafs.clientCrt")
+    private var encodedClientCrt: String = ""
+    
+    @AppStorage("org.basenana.nanafs.clientKey")
+    private var encodedClientKey: String = ""
+    
+    @AppStorage("org.basenana.nanafs.auth.accessToken")
+    private var accessTokenKey: String = ""
+    
+    @AppStorage("org.basenana.nanafs.auth.secretToken")
+    private var secretToken: String = ""
+    
+    func reflushToken() {
         log.info("reflush token")
         
-        self.accessTokenKey = accessTokenKey
-        self.secretToken = secretToken
+        if self.host == ""{
+            log.error("[authClient] host is empty")
+            return
+        }
         
-        let authChannel = ClientConnection
-            .usingTLSBackedByNIOSSL(on: clientEventLoopGroup)
-            .withTLS(certificateVerification: .none)
-            .connect(host: host, port: port)
+        if self.port == 0{
+            log.error("[authClient] port is 0")
+            return
+        }
         
-        self.auth = Api_V1_AuthNIOClient(channel: authChannel)
-
-        var request = Api_V1_AccessTokenRequest()
-        request.accessTokenKey = self.accessTokenKey
-        request.secretToken = self.secretToken
-        let call = self.auth!.accessToken(request, callOptions: CallOptions(timeLimit: .timeout(.seconds(10))))
+        if self.accessTokenKey == "" || self.secretToken == "" {
+            log.error("[authClient] accessTokenKey/secretToken is empty")
+            return
+        }
         
-        let response = try call.response.wait()
-        let clientCrt = try response.clientCrt.base64Decoded()
-        let clientKey = try response.clientKey.base64Decoded()
+        if self.encodedClientCrt == "" {
+            let authChannel = ClientConnection
+                .usingTLSBackedByNIOSSL(on: clientEventLoopGroup)
+                .withTLS(certificateVerification: .none)
+                .connect(host: host, port: port)
+            let auth = Api_V1_AuthNIOClient(channel: authChannel)
+            
+            var request = Api_V1_AccessTokenRequest()
+            request.accessTokenKey = self.accessTokenKey
+            request.secretToken = self.secretToken
+            let call = auth.accessToken(request, callOptions: CallOptions(timeLimit: .timeout(.seconds(10))))
+            do {
+                let response = try call.response.wait()
+                self.encodedClientCrt = response.clientCrt
+                self.encodedClientKey = response.clientKey
+            } catch {
+                log.error("[authClient] access token with ak \(self.accessTokenKey) failed: \(error)")
+                return
+            }
+        }
         
-        clientSet = FsClientSet(host: self.host, port: self.port, clientCrt: clientCrt, clientKey: clientKey)
+        do {
+            clientSet = FsClientSet(host: self.host, port: self.port, clientCrt: try self.encodedClientCrt.base64Decoded(), clientKey: try encodedClientKey.base64Decoded())
+            log.error("[authClient] create client set succeed")
+        } catch {
+            log.error("[authClient] create client set falied \(error)")
+        }
     }
 }

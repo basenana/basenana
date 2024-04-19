@@ -97,14 +97,5 @@ func migrateDbInit(db: GRDB.Database) throws {
         
         t.primaryKey(["id"])
     }
-    
-    try db.create(table: "config"){ t in
-        t.column("id", .integer)
-        t.column("name", .text)
-        t.column("value", .text)
-        t.column("changedAt", .datetime)
-        
-        t.primaryKey(["id"])
-    }
 }
 
