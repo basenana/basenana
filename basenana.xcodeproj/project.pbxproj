@@ -25,11 +25,11 @@
 		3F4A78CA2BC99D600035F90F /* SidebarButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78C92BC99D600035F90F /* SidebarButtonView.swift */; };
 		3F4A78CD2BCC20B40035F90F /* SyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78CC2BCC20B40035F90F /* SyncService.swift */; };
 		3F4A78CF2BCC2A660035F90F /* FsClientSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78CE2BCC2A660035F90F /* FsClientSet.swift */; };
-		3F4A78D12BCD7EEF0035F90F /* ConfigModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78D02BCD7EEF0035F90F /* ConfigModel.swift */; };
 		3F4A78D42BCD82290035F90F /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4A78D32BCD82290035F90F /* GRDB */; };
 		3F4A78D82BCD853C0035F90F /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78D72BCD853C0035F90F /* Database.swift */; };
 		3F4A78DB2BCF7FFB0035F90F /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4A78DA2BCF7FFB0035F90F /* SwiftyBeaver */; };
 		3F4A78DD2BCF80080035F90F /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78DC2BCF80080035F90F /* Logging.swift */; };
+		3F4A78E12BD299110035F90F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78E02BD299110035F90F /* SettingsView.swift */; };
 		3F81C9C52BAF1A6D00FEE130 /* GroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C42BAF1A6D00FEE130 /* GroupViewModel.swift */; };
 		3F81C9C72BAFCB8900FEE130 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C62BAFCB8900FEE130 /* MainView.swift */; };
 		3FB782412BC1A82700327191 /* CGRPCZlib in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782402BC1A82700327191 /* CGRPCZlib */; };
@@ -88,9 +88,9 @@
 		3F4A78C92BC99D600035F90F /* SidebarButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarButtonView.swift; sourceTree = "<group>"; };
 		3F4A78CC2BCC20B40035F90F /* SyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncService.swift; sourceTree = "<group>"; };
 		3F4A78CE2BCC2A660035F90F /* FsClientSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FsClientSet.swift; sourceTree = "<group>"; };
-		3F4A78D02BCD7EEF0035F90F /* ConfigModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigModel.swift; sourceTree = "<group>"; };
 		3F4A78D72BCD853C0035F90F /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		3F4A78DC2BCF80080035F90F /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
+		3F4A78E02BD299110035F90F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		3F81C9C42BAF1A6D00FEE130 /* GroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewModel.swift; sourceTree = "<group>"; };
 		3F81C9C62BAFCB8900FEE130 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		3FB782502BC2D0F600327191 /* fsapi-v1.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "fsapi-v1.grpc.swift"; sourceTree = "<group>"; };
@@ -202,6 +202,7 @@
 		3F1BBE492B90C393005D533F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				3F4A78DF2BD299040035F90F /* Settings */,
 				3F4A78C62BC99CE90035F90F /* Sidebar */,
 				ED85A3BF2BBAB2520040598E /* Document */,
 				3F1BBE582B932251005D533F /* GroupView.swift */,
@@ -217,7 +218,6 @@
 				ED917E772B9607BE004FCB9A /* DocumentModel.swift */,
 				3F1BBE562B90CD59005D533F /* EntryModel.swift */,
 				ED72603D2BC2E25D005F1166 /* DialogueModel.swift */,
-				3F4A78D02BCD7EEF0035F90F /* ConfigModel.swift */,
 				3F4A78D72BCD853C0035F90F /* Database.swift */,
 			);
 			path = Models;
@@ -260,6 +260,14 @@
 				3F81C9C42BAF1A6D00FEE130 /* GroupViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		3F4A78DF2BD299040035F90F /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				3F4A78E02BD299110035F90F /* SettingsView.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		3FB782532BC2D0F600327191 /* fsapi */ = {
@@ -455,11 +463,11 @@
 				3F2CB97D2B9A02B600ADDDED /* EntryService.swift in Sources */,
 				3F0AEC762BA48EC7000DA928 /* GroupService.swift in Sources */,
 				3FB782542BC2D0F600327191 /* fsapi-v1.grpc.swift in Sources */,
+				3F4A78E12BD299110035F90F /* SettingsView.swift in Sources */,
 				3F1BBE1D2B8E147F005D533F /* basenanaApp.swift in Sources */,
 				ED85A3C32BBAB3BD0040598E /* DocumentItemView.swift in Sources */,
 				3F81C9C72BAFCB8900FEE130 /* MainView.swift in Sources */,
 				3F1BBE5B2B93225E005D533F /* DocumentView.swift in Sources */,
-				3F4A78D12BCD7EEF0035F90F /* ConfigModel.swift in Sources */,
 				3F4A78CD2BCC20B40035F90F /* SyncService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
