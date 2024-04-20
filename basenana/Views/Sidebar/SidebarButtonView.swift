@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct SidebarButtonView: View {
-    @State private var isShowingQuickInbox = false
 
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.openWindow) var openWindow
     
     var body: some View {
         HStack(content: {
             Button(action: {
-                isShowingQuickInbox.toggle()
+                openWindow(id: "win-inbox")
             }, label: {
                 Image(systemName: "plus")
             })
@@ -32,10 +32,6 @@ struct SidebarButtonView: View {
         .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/,alignment: .leading)
         .padding(5)
         .background(Color.background)
-        
-        .sheet(isPresented: $isShowingQuickInbox) {
-            QuickInboxView(isShowingQuickInbox: $isShowingQuickInbox)
-        }
     }
     
 }
