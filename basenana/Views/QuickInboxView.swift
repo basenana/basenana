@@ -12,7 +12,6 @@ import SwiftData
 
 struct QuickInboxView: View{
     
-    @Binding var isShowingQuickInbox: Bool
     @State private var urlInput: String = ""
     @State private var fileTypeOption = "webarchive"
     @State private var isClutterFree = true
@@ -20,8 +19,6 @@ struct QuickInboxView: View{
     var body: some View{
         Form{
             Section() {
-                Text("Save Web Page to Inbox").font(.title2)
-                
                 TextField("URL", text: $urlInput)
                 
                 Picker("File", selection: $fileTypeOption) {
@@ -34,25 +31,11 @@ struct QuickInboxView: View{
             .padding(.horizontal, 50.0)
             .padding(10)
             .textFieldStyle(RoundedBorderTextFieldStyle())
-            .frame(minWidth: 400, maxWidth: .infinity, minHeight: 20)
+            .frame(minWidth: 400, maxWidth: .infinity, maxHeight: .infinity)
             
             HStack {
                 Button {
-                    isShowingQuickInbox = false
-                } label: {
-                    Text("Cancel")
-                        .font(.body)
-                        .padding(6)
-                        .background(Color.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                }
-                .buttonStyle(PlainButtonStyle())
-                
-                Spacer()
-                
-                Button {
                     quickInbox(urlStr: urlInput, fileType: fileTypeOption, isClusterFree: isClutterFree)
-                    isShowingQuickInbox = false
                 } label: {
                     Text("Submit")
                         .font(.body)
@@ -63,6 +46,7 @@ struct QuickInboxView: View{
                 }
                 .buttonStyle(PlainButtonStyle())
             }
+            .frame(maxWidth: .infinity, alignment: .trailing)
             .padding(.horizontal, 50.0)
         }
         .formStyle(.grouped)
@@ -75,5 +59,5 @@ struct QuickInboxView: View{
 }
 
 #Preview {
-    return QuickInboxView(isShowingQuickInbox: .constant(true))
+    return QuickInboxView()
 }

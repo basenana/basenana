@@ -36,6 +36,10 @@ struct SettingsView: View {
                 TextField("AccessTokenKey", text: $accessTokenKey)
                 TextField("SecretToken", text: $secretToken)
             }
+            .padding(.horizontal, 50.0)
+            .padding(10)
+            .textFieldStyle(RoundedBorderTextFieldStyle())
+            .frame(minWidth: 400, maxWidth: .infinity, minHeight: 20)
             
             HStack {
                 Button {
@@ -43,9 +47,11 @@ struct SettingsView: View {
                 } label: {
                     Text("Submit")
                 }
-            }.frame(alignment: .bottomTrailing)
+            }
+            .frame(maxWidth: .infinity, alignment: .trailing)
         }
+        .formStyle(.grouped)
         .padding(20)
-        .frame(minWidth: 500, minHeight: 300)
+        .frame(maxHeight: .infinity)
     }
 }
