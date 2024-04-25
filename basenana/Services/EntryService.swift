@@ -77,7 +77,8 @@ class EntryService {
             let _ = try dbInstance.queue.write{ db in
                 try EntryModel.filter(Column("id") == entryID).deleteAll(db)
                 try DocumentModel.filter(Column("oid") == entryID).deleteAll(db)
-                try DialogueModel.filter(Column("oid") == entryID).deleteAll(db)
+                try RoomModel.filter(Column("oid") == entryID).deleteAll(db)
+                // todo delete room message also
             }
         } catch {
             log.error("[entryService] cleanup local entry \(entryID) failed \(error)")

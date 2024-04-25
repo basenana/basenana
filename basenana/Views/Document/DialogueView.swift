@@ -8,15 +8,19 @@
 import SwiftUI
 import SwiftData
 
+let user = "User"
+let model = "Assistant"
+
 struct DialogueView: View {
      @Binding var isDrawerOpen: Bool
      let docId: Int64
+     let entryId: Int64
      
      @State private var isCloseHovering = false
      @State private var isEraserHovering = false
      @State var newMessage = ""
-     @State private var dialogue: DialogueModel?
-     @State var messages : [[String:String]]=[]
+     @State private var room: RoomViewModel?
+     @State var messages: [RoomMessageViewModel] = []
      
      var body: some View {
           VStack {
@@ -32,7 +36,7 @@ struct DialogueView: View {
                     Spacer()
                     
                     // button of eraser ..
-                    EraserButton(isEraserHovering: isEraserHovering, isDrawerOpen: $isDrawerOpen, messages: $messages, docId: docId)
+                    EraserButton(isEraserHovering: isEraserHovering, isDrawerOpen: $isDrawerOpen, messages: $messages, roomId: room?.id ?? 0)
                     
                     // button of close ..
                     CloseButton(isCloseHovering: isCloseHovering, isDrawerOpen: $isDrawerOpen)
@@ -45,17 +49,18 @@ struct DialogueView: View {
                     RoundedRectangle(cornerRadius: 10).stroke(Color.DialogBoxBackground(), lineWidth: 4)
                     
                     VStack{
-                         
                          // message
-                         ScrollView {
-                              ForEach(messages.indices, id: \.self) { idx in
-                                   HStack { MessageView(msg: messages[idx]) }
-                                        .padding(.vertical, 5)
+                         ScrollView(showsIndicators: false) {
+                              ForEach($messages) { msg in
+                                   MessageView(role: msg.sender.wrappedValue, message: msg.message).id(msg.id)
                               }
                          }
                          .onAppear{
-                              dialogue = dialogueService.getDialogue(docId: docId)
-                              messages = dialogue?.messages ?? []
+                              room = dialogueService.openRoom(docId: docId, entryId: entryId)
+                              let roomMessages = room?.messages ?? []
+                              for msg in roomMessages {
+                                   messages.append(RoomMessageViewModel(id: msg.id!, sender: msg.sender, message: msg.message, sendAt: msg.sendAt))
+                              }
                          }
                          .padding()
                          
@@ -84,13 +89,41 @@ struct DialogueView: View {
      
      
      func sendMessage() {
-          if !newMessage.isEmpty {
-               let mockAssisMsg = "I am a mock assistant."
-               dialogueService.saveMessage(docId: docId, user: "user", content: newMessage)
-               dialogueService.saveMessage(docId: docId, user: "assistant", content: mockAssisMsg)
-               messages.append(["user": "User", "content": newMessage])
-               messages.append(["user": "Assistant", "content": mockAssisMsg])
-               DispatchQueue.main.async {
+          if !self.newMessage.isEmpty {
+               DispatchQueue(label: "org.basenana.room.sendMessage").async {
+                    do {
+                         let messageNeedToSend = self.newMessage
+                         var requestNeedToSave = true
+                         try dialogueService.chatInRoom(
+                              roomId: room?.id ?? 0,
+                              newRequest: messageNeedToSend,
+                              callbackFn: {requestMsg,responseMsg in
+                                   if requestNeedToSave && requestMsg.id != nil && requestMsg.id != 0 {
+                                        requestNeedToSave = false
+                                        messages.append(RoomMessageViewModel(id: requestMsg.id!, sender: requestMsg.sender, message: requestMsg.message, sendAt: requestMsg.sendAt))
+                                   }
+                                   if let responseId = responseMsg.id, responseId != 0 {
+                                        var got: Bool = false
+                                        let count = messages.count > 10 ? 10:messages.count
+                                        for i in 0..<count{
+                                             var msg = messages[messages.count-1-i]
+                                             if msg.id == responseMsg.id {
+                                                  got = true
+                                                  msg.message = responseMsg.message
+                                                  messages[messages.count-1-i] = msg
+                                                  break
+                                             }
+                                        }
+                                        if !got{
+                                             messages.append(RoomMessageViewModel(id: responseMsg.id!, sender: responseMsg.sender, message: responseMsg.message, sendAt: responseMsg.sendAt))
+                                        }
+                                   }
+                              },
+                              whenSucceedFn: { responseMsg in
+                              })
+                    } catch {
+                         log.error("chat in room failed \(error)")
+                    }
                     self.newMessage = ""
                }
           }
@@ -98,39 +131,46 @@ struct DialogueView: View {
 }
 
 struct MessageView: View {
-     @State var msg : [String:String]
+     var role: String
+     @Binding var message: String
      
      var body: some View {
-          if msg["user"]?.lowercased() == "user" {
+          if role.lowercased() == "user" {
                // message of user in right
-               Spacer()
-               VStack(alignment: .trailing) {
-                    HStack{
-                         Text(msg["user"]!).font(.headline)
-                         Text("😃").font(.title)
+               HStack {
+                    VStack(alignment: .trailing) {
+                         HStack{
+                              Text(role).font(.headline)
+                              Text("😃").font(.title)
+                         }
+                         Text(message)
+                              .font(.body)
+                              .padding(10)
+                              .background(Color.UserMsgBackground())
+                              .clipShape(RoundedRectangle(cornerRadius: 10))
+                              .textSelection(.enabled)
                     }
-                    Text(msg["content"]!)
-                         .font(.body)
-                         .padding(10)
-                         .background(Color.UserMsgBackground())
-                         .clipShape(RoundedRectangle(cornerRadius: 10))
-                         .textSelection(.enabled)
                }
+               .frame(maxWidth: .infinity,alignment: .trailing)
+               .padding(.vertical, 5)
           } else {
                // message of robot in left
-               VStack(alignment: .leading) {
-                    HStack{
-                         Text("🤖").font(.title)
-                         Text(msg["user"]!).font(.headline)
+               HStack {
+                    VStack(alignment: .leading) {
+                         HStack{
+                              Text("🤖").font(.title)
+                              Text(role).font(.headline)
+                         }
+                         Text(message)
+                              .font(.body)
+                              .padding(10)
+                              .background(Color.RobotMsgBackground())
+                              .clipShape(RoundedRectangle(cornerRadius: 10))
+                              .textSelection(.enabled)
                     }
-                    Text(msg["content"]!)
-                         .font(.body)
-                         .padding(10)
-                         .background(Color.RobotMsgBackground())
-                         .clipShape(RoundedRectangle(cornerRadius: 10))
-                         .textSelection(.enabled)
                }
-               Spacer()
+               .frame(maxWidth:.infinity, alignment: .leading)
+               .padding(.vertical, 5)
           }
      }
 }
@@ -168,13 +208,13 @@ struct CloseButton: View {
 struct EraserButton: View {
      @State var isEraserHovering = false
      @Binding var isDrawerOpen: Bool
-     @Binding var messages : [[String:String]]
-     let docId: Int64
+     @Binding var messages : [RoomMessageViewModel]
+     let roomId: Int64
      
      var body: some View {
           Button {
                withAnimation(.easeInOut) {
-                    dialogueService.clearMessage(docId: docId)
+                    dialogueService.clearMessage(roomId: roomId)
                     messages = []
                }
           } label: {
@@ -202,5 +242,5 @@ struct EraserButton: View {
 
 
 #Preview {
-     return DialogueView(isDrawerOpen: .constant(true), docId: 100)
+     return DialogueView(isDrawerOpen: .constant(true), docId: 100, entryId: 100)
 }

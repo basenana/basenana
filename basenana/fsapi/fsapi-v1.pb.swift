@@ -667,6 +667,276 @@ struct Api_V1_GetDocumentDetailResponse {
   fileprivate var _document: Api_V1_DocumentDescribe? = nil
 }
 
+struct Api_V1_RoomInfo {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var id: Int64 = 0
+
+  var entryID: Int64 = 0
+
+  var title: String = String()
+
+  var prompt: String = String()
+
+  var namespace: String = String()
+
+  var messages: [Api_V1_RoomMessage] = []
+
+  var createdAt: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _createdAt ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_createdAt = newValue}
+  }
+  /// Returns true if `createdAt` has been explicitly set.
+  var hasCreatedAt: Bool {return self._createdAt != nil}
+  /// Clears the value of `createdAt`. Subsequent reads from it will return its default value.
+  mutating func clearCreatedAt() {self._createdAt = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+
+  fileprivate var _createdAt: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+}
+
+struct Api_V1_RoomMessage {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var id: Int64 = 0
+
+  var roomID: Int64 = 0
+
+  var sender: String = String()
+
+  var message: String = String()
+
+  var namespace: String = String()
+
+  var sendAt: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _sendAt ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_sendAt = newValue}
+  }
+  /// Returns true if `sendAt` has been explicitly set.
+  var hasSendAt: Bool {return self._sendAt != nil}
+  /// Clears the value of `sendAt`. Subsequent reads from it will return its default value.
+  mutating func clearSendAt() {self._sendAt = nil}
+
+  var createdAt: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _createdAt ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_createdAt = newValue}
+  }
+  /// Returns true if `createdAt` has been explicitly set.
+  var hasCreatedAt: Bool {return self._createdAt != nil}
+  /// Clears the value of `createdAt`. Subsequent reads from it will return its default value.
+  mutating func clearCreatedAt() {self._createdAt = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+
+  fileprivate var _sendAt: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+  fileprivate var _createdAt: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+}
+
+struct Api_V1_ListRoomsRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var entryID: Int64 = 0
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
+struct Api_V1_ListRoomsResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var rooms: [Api_V1_RoomInfo] = []
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
+struct Api_V1_OpenRoomRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var entryID: Int64 = 0
+
+  var roomID: Int64 = 0
+
+  var option: Api_V1_OpenRoomRequest.Option {
+    get {return _option ?? Api_V1_OpenRoomRequest.Option()}
+    set {_option = newValue}
+  }
+  /// Returns true if `option` has been explicitly set.
+  var hasOption: Bool {return self._option != nil}
+  /// Clears the value of `option`. Subsequent reads from it will return its default value.
+  mutating func clearOption() {self._option = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  struct Option {
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
+
+    var prompt: String = String()
+
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    init() {}
+  }
+
+  init() {}
+
+  fileprivate var _option: Api_V1_OpenRoomRequest.Option? = nil
+}
+
+struct Api_V1_OpenRoomResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var room: Api_V1_RoomInfo {
+    get {return _room ?? Api_V1_RoomInfo()}
+    set {_room = newValue}
+  }
+  /// Returns true if `room` has been explicitly set.
+  var hasRoom: Bool {return self._room != nil}
+  /// Clears the value of `room`. Subsequent reads from it will return its default value.
+  mutating func clearRoom() {self._room = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+
+  fileprivate var _room: Api_V1_RoomInfo? = nil
+}
+
+struct Api_V1_UpdateRoomRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var roomID: Int64 = 0
+
+  var prompt: String = String()
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
+struct Api_V1_UpdateRoomResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var roomID: Int64 = 0
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
+struct Api_V1_DeleteRoomRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var roomID: Int64 = 0
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
+struct Api_V1_DeleteRoomResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var roomID: Int64 = 0
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
+struct Api_V1_ChatRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var roomID: Int64 = 0
+
+  var newRequest: String = String()
+
+  var sendAt: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _sendAt ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_sendAt = newValue}
+  }
+  /// Returns true if `sendAt` has been explicitly set.
+  var hasSendAt: Bool {return self._sendAt != nil}
+  /// Clears the value of `sendAt`. Subsequent reads from it will return its default value.
+  mutating func clearSendAt() {self._sendAt = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+
+  fileprivate var _sendAt: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+}
+
+struct Api_V1_ChatResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var requestID: Int64 = 0
+
+  var responseID: Int64 = 0
+
+  var responseMessage: String = String()
+
+  var sender: String = String()
+
+  var sendAt: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _sendAt ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_sendAt = newValue}
+  }
+  /// Returns true if `sendAt` has been explicitly set.
+  var hasSendAt: Bool {return self._sendAt != nil}
+  /// Clears the value of `sendAt`. Subsequent reads from it will return its default value.
+  mutating func clearSendAt() {self._sendAt = nil}
+
+  var createdAt: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _createdAt ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_createdAt = newValue}
+  }
+  /// Returns true if `createdAt` has been explicitly set.
+  var hasCreatedAt: Bool {return self._createdAt != nil}
+  /// Clears the value of `createdAt`. Subsequent reads from it will return its default value.
+  mutating func clearCreatedAt() {self._createdAt = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+
+  fileprivate var _sendAt: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+  fileprivate var _createdAt: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+}
+
 struct Api_V1_GetLatestSequenceRequest {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -760,6 +1030,8 @@ struct Api_V1_DocumentInfo {
 
   var unread: Bool = false
 
+  var namespace: String = String()
+
   var createdAt: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _createdAt ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_createdAt = newValue}
@@ -804,6 +1076,8 @@ struct Api_V1_DocumentDescribe {
   var marked: Bool = false
 
   var unread: Bool = false
+
+  var namespace: String = String()
 
   var htmlContent: String = String()
 
@@ -1125,6 +1399,19 @@ extension Api_V1_ListDocumentsRequest: @unchecked Sendable {}
 extension Api_V1_ListDocumentsResponse: @unchecked Sendable {}
 extension Api_V1_GetDocumentDetailRequest: @unchecked Sendable {}
 extension Api_V1_GetDocumentDetailResponse: @unchecked Sendable {}
+extension Api_V1_RoomInfo: @unchecked Sendable {}
+extension Api_V1_RoomMessage: @unchecked Sendable {}
+extension Api_V1_ListRoomsRequest: @unchecked Sendable {}
+extension Api_V1_ListRoomsResponse: @unchecked Sendable {}
+extension Api_V1_OpenRoomRequest: @unchecked Sendable {}
+extension Api_V1_OpenRoomRequest.Option: @unchecked Sendable {}
+extension Api_V1_OpenRoomResponse: @unchecked Sendable {}
+extension Api_V1_UpdateRoomRequest: @unchecked Sendable {}
+extension Api_V1_UpdateRoomResponse: @unchecked Sendable {}
+extension Api_V1_DeleteRoomRequest: @unchecked Sendable {}
+extension Api_V1_DeleteRoomResponse: @unchecked Sendable {}
+extension Api_V1_ChatRequest: @unchecked Sendable {}
+extension Api_V1_ChatResponse: @unchecked Sendable {}
 extension Api_V1_GetLatestSequenceRequest: @unchecked Sendable {}
 extension Api_V1_GetLatestSequenceResponse: @unchecked Sendable {}
 extension Api_V1_ListUnSyncedEventRequest: @unchecked Sendable {}
@@ -2464,6 +2751,578 @@ extension Api_V1_GetDocumentDetailResponse: SwiftProtobuf.Message, SwiftProtobuf
   }
 }
 
+extension Api_V1_RoomInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".RoomInfo"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "id"),
+    2: .same(proto: "entryID"),
+    3: .same(proto: "title"),
+    4: .same(proto: "prompt"),
+    5: .same(proto: "namespace"),
+    10: .same(proto: "messages"),
+    11: .same(proto: "createdAt"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self.id) }()
+      case 2: try { try decoder.decodeSingularInt64Field(value: &self.entryID) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.title) }()
+      case 4: try { try decoder.decodeSingularStringField(value: &self.prompt) }()
+      case 5: try { try decoder.decodeSingularStringField(value: &self.namespace) }()
+      case 10: try { try decoder.decodeRepeatedMessageField(value: &self.messages) }()
+      case 11: try { try decoder.decodeSingularMessageField(value: &self._createdAt) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if self.id != 0 {
+      try visitor.visitSingularInt64Field(value: self.id, fieldNumber: 1)
+    }
+    if self.entryID != 0 {
+      try visitor.visitSingularInt64Field(value: self.entryID, fieldNumber: 2)
+    }
+    if !self.title.isEmpty {
+      try visitor.visitSingularStringField(value: self.title, fieldNumber: 3)
+    }
+    if !self.prompt.isEmpty {
+      try visitor.visitSingularStringField(value: self.prompt, fieldNumber: 4)
+    }
+    if !self.namespace.isEmpty {
+      try visitor.visitSingularStringField(value: self.namespace, fieldNumber: 5)
+    }
+    if !self.messages.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.messages, fieldNumber: 10)
+    }
+    try { if let v = self._createdAt {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_RoomInfo, rhs: Api_V1_RoomInfo) -> Bool {
+    if lhs.id != rhs.id {return false}
+    if lhs.entryID != rhs.entryID {return false}
+    if lhs.title != rhs.title {return false}
+    if lhs.prompt != rhs.prompt {return false}
+    if lhs.namespace != rhs.namespace {return false}
+    if lhs.messages != rhs.messages {return false}
+    if lhs._createdAt != rhs._createdAt {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_RoomMessage: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".RoomMessage"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "id"),
+    2: .same(proto: "roomID"),
+    3: .same(proto: "sender"),
+    4: .same(proto: "message"),
+    5: .same(proto: "namespace"),
+    6: .same(proto: "sendAt"),
+    10: .same(proto: "createdAt"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self.id) }()
+      case 2: try { try decoder.decodeSingularInt64Field(value: &self.roomID) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.sender) }()
+      case 4: try { try decoder.decodeSingularStringField(value: &self.message) }()
+      case 5: try { try decoder.decodeSingularStringField(value: &self.namespace) }()
+      case 6: try { try decoder.decodeSingularMessageField(value: &self._sendAt) }()
+      case 10: try { try decoder.decodeSingularMessageField(value: &self._createdAt) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if self.id != 0 {
+      try visitor.visitSingularInt64Field(value: self.id, fieldNumber: 1)
+    }
+    if self.roomID != 0 {
+      try visitor.visitSingularInt64Field(value: self.roomID, fieldNumber: 2)
+    }
+    if !self.sender.isEmpty {
+      try visitor.visitSingularStringField(value: self.sender, fieldNumber: 3)
+    }
+    if !self.message.isEmpty {
+      try visitor.visitSingularStringField(value: self.message, fieldNumber: 4)
+    }
+    if !self.namespace.isEmpty {
+      try visitor.visitSingularStringField(value: self.namespace, fieldNumber: 5)
+    }
+    try { if let v = self._sendAt {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+    } }()
+    try { if let v = self._createdAt {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_RoomMessage, rhs: Api_V1_RoomMessage) -> Bool {
+    if lhs.id != rhs.id {return false}
+    if lhs.roomID != rhs.roomID {return false}
+    if lhs.sender != rhs.sender {return false}
+    if lhs.message != rhs.message {return false}
+    if lhs.namespace != rhs.namespace {return false}
+    if lhs._sendAt != rhs._sendAt {return false}
+    if lhs._createdAt != rhs._createdAt {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_ListRoomsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".ListRoomsRequest"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "entryID"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self.entryID) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.entryID != 0 {
+      try visitor.visitSingularInt64Field(value: self.entryID, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_ListRoomsRequest, rhs: Api_V1_ListRoomsRequest) -> Bool {
+    if lhs.entryID != rhs.entryID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_ListRoomsResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".ListRoomsResponse"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "rooms"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeRepeatedMessageField(value: &self.rooms) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.rooms.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.rooms, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_ListRoomsResponse, rhs: Api_V1_ListRoomsResponse) -> Bool {
+    if lhs.rooms != rhs.rooms {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_OpenRoomRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".OpenRoomRequest"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "entryID"),
+    2: .same(proto: "roomID"),
+    3: .same(proto: "option"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self.entryID) }()
+      case 2: try { try decoder.decodeSingularInt64Field(value: &self.roomID) }()
+      case 3: try { try decoder.decodeSingularMessageField(value: &self._option) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if self.entryID != 0 {
+      try visitor.visitSingularInt64Field(value: self.entryID, fieldNumber: 1)
+    }
+    if self.roomID != 0 {
+      try visitor.visitSingularInt64Field(value: self.roomID, fieldNumber: 2)
+    }
+    try { if let v = self._option {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_OpenRoomRequest, rhs: Api_V1_OpenRoomRequest) -> Bool {
+    if lhs.entryID != rhs.entryID {return false}
+    if lhs.roomID != rhs.roomID {return false}
+    if lhs._option != rhs._option {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_OpenRoomRequest.Option: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = Api_V1_OpenRoomRequest.protoMessageName + ".Option"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "prompt"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.prompt) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.prompt.isEmpty {
+      try visitor.visitSingularStringField(value: self.prompt, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_OpenRoomRequest.Option, rhs: Api_V1_OpenRoomRequest.Option) -> Bool {
+    if lhs.prompt != rhs.prompt {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_OpenRoomResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".OpenRoomResponse"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "room"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._room) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._room {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_OpenRoomResponse, rhs: Api_V1_OpenRoomResponse) -> Bool {
+    if lhs._room != rhs._room {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_UpdateRoomRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".UpdateRoomRequest"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "roomID"),
+    2: .same(proto: "prompt"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self.roomID) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.prompt) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.roomID != 0 {
+      try visitor.visitSingularInt64Field(value: self.roomID, fieldNumber: 1)
+    }
+    if !self.prompt.isEmpty {
+      try visitor.visitSingularStringField(value: self.prompt, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_UpdateRoomRequest, rhs: Api_V1_UpdateRoomRequest) -> Bool {
+    if lhs.roomID != rhs.roomID {return false}
+    if lhs.prompt != rhs.prompt {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_UpdateRoomResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".UpdateRoomResponse"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "roomID"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self.roomID) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.roomID != 0 {
+      try visitor.visitSingularInt64Field(value: self.roomID, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_UpdateRoomResponse, rhs: Api_V1_UpdateRoomResponse) -> Bool {
+    if lhs.roomID != rhs.roomID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_DeleteRoomRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".DeleteRoomRequest"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "roomID"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self.roomID) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.roomID != 0 {
+      try visitor.visitSingularInt64Field(value: self.roomID, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_DeleteRoomRequest, rhs: Api_V1_DeleteRoomRequest) -> Bool {
+    if lhs.roomID != rhs.roomID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_DeleteRoomResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".DeleteRoomResponse"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "roomID"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self.roomID) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.roomID != 0 {
+      try visitor.visitSingularInt64Field(value: self.roomID, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_DeleteRoomResponse, rhs: Api_V1_DeleteRoomResponse) -> Bool {
+    if lhs.roomID != rhs.roomID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_ChatRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".ChatRequest"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "roomID"),
+    3: .same(proto: "newRequest"),
+    10: .same(proto: "sendAt"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self.roomID) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.newRequest) }()
+      case 10: try { try decoder.decodeSingularMessageField(value: &self._sendAt) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if self.roomID != 0 {
+      try visitor.visitSingularInt64Field(value: self.roomID, fieldNumber: 1)
+    }
+    if !self.newRequest.isEmpty {
+      try visitor.visitSingularStringField(value: self.newRequest, fieldNumber: 3)
+    }
+    try { if let v = self._sendAt {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_ChatRequest, rhs: Api_V1_ChatRequest) -> Bool {
+    if lhs.roomID != rhs.roomID {return false}
+    if lhs.newRequest != rhs.newRequest {return false}
+    if lhs._sendAt != rhs._sendAt {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_ChatResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".ChatResponse"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "requestID"),
+    2: .same(proto: "responseID"),
+    3: .same(proto: "responseMessage"),
+    4: .same(proto: "sender"),
+    10: .same(proto: "sendAt"),
+    11: .same(proto: "createdAt"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self.requestID) }()
+      case 2: try { try decoder.decodeSingularInt64Field(value: &self.responseID) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.responseMessage) }()
+      case 4: try { try decoder.decodeSingularStringField(value: &self.sender) }()
+      case 10: try { try decoder.decodeSingularMessageField(value: &self._sendAt) }()
+      case 11: try { try decoder.decodeSingularMessageField(value: &self._createdAt) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if self.requestID != 0 {
+      try visitor.visitSingularInt64Field(value: self.requestID, fieldNumber: 1)
+    }
+    if self.responseID != 0 {
+      try visitor.visitSingularInt64Field(value: self.responseID, fieldNumber: 2)
+    }
+    if !self.responseMessage.isEmpty {
+      try visitor.visitSingularStringField(value: self.responseMessage, fieldNumber: 3)
+    }
+    if !self.sender.isEmpty {
+      try visitor.visitSingularStringField(value: self.sender, fieldNumber: 4)
+    }
+    try { if let v = self._sendAt {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
+    } }()
+    try { if let v = self._createdAt {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_ChatResponse, rhs: Api_V1_ChatResponse) -> Bool {
+    if lhs.requestID != rhs.requestID {return false}
+    if lhs.responseID != rhs.responseID {return false}
+    if lhs.responseMessage != rhs.responseMessage {return false}
+    if lhs.sender != rhs.sender {return false}
+    if lhs._sendAt != rhs._sendAt {return false}
+    if lhs._createdAt != rhs._createdAt {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
 extension Api_V1_GetLatestSequenceRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".GetLatestSequenceRequest"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
@@ -2665,6 +3524,7 @@ extension Api_V1_DocumentInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     5: .same(proto: "source"),
     6: .same(proto: "marked"),
     7: .same(proto: "unread"),
+    8: .same(proto: "namespace"),
     30: .same(proto: "createdAt"),
     31: .same(proto: "changedAt"),
   ]
@@ -2682,6 +3542,7 @@ extension Api_V1_DocumentInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
       case 5: try { try decoder.decodeSingularStringField(value: &self.source) }()
       case 6: try { try decoder.decodeSingularBoolField(value: &self.marked) }()
       case 7: try { try decoder.decodeSingularBoolField(value: &self.unread) }()
+      case 8: try { try decoder.decodeSingularStringField(value: &self.namespace) }()
       case 30: try { try decoder.decodeSingularMessageField(value: &self._createdAt) }()
       case 31: try { try decoder.decodeSingularMessageField(value: &self._changedAt) }()
       default: break
@@ -2715,6 +3576,9 @@ extension Api_V1_DocumentInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     if self.unread != false {
       try visitor.visitSingularBoolField(value: self.unread, fieldNumber: 7)
     }
+    if !self.namespace.isEmpty {
+      try visitor.visitSingularStringField(value: self.namespace, fieldNumber: 8)
+    }
     try { if let v = self._createdAt {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 30)
     } }()
@@ -2732,6 +3596,7 @@ extension Api_V1_DocumentInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     if lhs.source != rhs.source {return false}
     if lhs.marked != rhs.marked {return false}
     if lhs.unread != rhs.unread {return false}
+    if lhs.namespace != rhs.namespace {return false}
     if lhs._createdAt != rhs._createdAt {return false}
     if lhs._changedAt != rhs._changedAt {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -2749,6 +3614,7 @@ extension Api_V1_DocumentDescribe: SwiftProtobuf.Message, SwiftProtobuf._Message
     5: .same(proto: "source"),
     6: .same(proto: "marked"),
     7: .same(proto: "unread"),
+    8: .same(proto: "namespace"),
     10: .same(proto: "htmlContent"),
     11: .same(proto: "keyWords"),
     12: .same(proto: "summary"),
@@ -2769,6 +3635,7 @@ extension Api_V1_DocumentDescribe: SwiftProtobuf.Message, SwiftProtobuf._Message
       case 5: try { try decoder.decodeSingularStringField(value: &self.source) }()
       case 6: try { try decoder.decodeSingularBoolField(value: &self.marked) }()
       case 7: try { try decoder.decodeSingularBoolField(value: &self.unread) }()
+      case 8: try { try decoder.decodeSingularStringField(value: &self.namespace) }()
       case 10: try { try decoder.decodeSingularStringField(value: &self.htmlContent) }()
       case 11: try { try decoder.decodeRepeatedStringField(value: &self.keyWords) }()
       case 12: try { try decoder.decodeSingularStringField(value: &self.summary) }()
@@ -2805,6 +3672,9 @@ extension Api_V1_DocumentDescribe: SwiftProtobuf.Message, SwiftProtobuf._Message
     if self.unread != false {
       try visitor.visitSingularBoolField(value: self.unread, fieldNumber: 7)
     }
+    if !self.namespace.isEmpty {
+      try visitor.visitSingularStringField(value: self.namespace, fieldNumber: 8)
+    }
     if !self.htmlContent.isEmpty {
       try visitor.visitSingularStringField(value: self.htmlContent, fieldNumber: 10)
     }
@@ -2831,6 +3701,7 @@ extension Api_V1_DocumentDescribe: SwiftProtobuf.Message, SwiftProtobuf._Message
     if lhs.source != rhs.source {return false}
     if lhs.marked != rhs.marked {return false}
     if lhs.unread != rhs.unread {return false}
+    if lhs.namespace != rhs.namespace {return false}
     if lhs.htmlContent != rhs.htmlContent {return false}
     if lhs.keyWords != rhs.keyWords {return false}
     if lhs.summary != rhs.summary {return false}
