@@ -9,37 +9,63 @@ import Foundation
 import SwiftData
 import GRDB
 
-struct DialogueModel: Codable {
+struct RoomModel: Codable {
     var id: Int64?
+    var namespace: String?
     var oid: Int64
     var docid: Int64
-    var messages: [[String: String]]=[]
+    var title: String?
+    var prompt: String?
     
     var createdAt: Date
-    var changedAt: Date
 }
 
 
-extension DialogueModel: TableRecord {
+extension RoomModel: TableRecord {
     
-    static var databaseTableName: String = "dialogue"
+    static var databaseTableName: String = "room"
     
     enum Columns {
         static let id = Column(CodingKeys.id)
+        static let namespace = Column(CodingKeys.namespace)
         static let oid = Column(CodingKeys.oid)
         static let docid = Column(CodingKeys.docid)
-        static let messages = Column(CodingKeys.messages)
+        static let title = Column(CodingKeys.title)
+        static let prompt = Column(CodingKeys.prompt)
         static let createdAt = Column(CodingKeys.createdAt)
-        static let changedAt = Column(CodingKeys.changedAt)
     }
 }
 
-extension DialogueModel: FetchableRecord {}
+extension RoomModel: FetchableRecord {}
 
-extension DialogueModel: MutablePersistableRecord {
-    mutating func didInsert(_ inserted: InsertionSuccess) {
-        if id == nil {
-            id = inserted.rowID
-        }
+extension RoomModel: MutablePersistableRecord {}
+
+struct RoomMessageModel: Codable, Identifiable {
+    var id: Int64?
+    var namespace: String?
+    var roomid: Int64
+    var sender: String
+    var message: String
+    
+    var sendAt: Date
+    var createdAt: Date
+}
+
+
+extension RoomMessageModel: TableRecord {
+    
+    static var databaseTableName: String = "room_message"
+    
+    enum Columns {
+        static let id = Column(CodingKeys.id)
+        static let namespace = Column(CodingKeys.namespace)
+        static let roomid = Column(CodingKeys.roomid)
+        static let sender = Column(CodingKeys.sender)
+        static let message = Column(CodingKeys.message)
+        static let createdAt = Column(CodingKeys.createdAt)
     }
 }
+
+extension RoomMessageModel: FetchableRecord {}
+
+extension RoomMessageModel: MutablePersistableRecord {}

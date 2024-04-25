@@ -210,6 +210,87 @@ message GetDocumentDetailResponse {
   DocumentDescribe document = 1;
 }
 
+service Room {
+  rpc ListRooms (ListRoomsRequest) returns (ListRoomsResponse) {}
+  rpc OpenRoom (OpenRoomRequest) returns (OpenRoomResponse) {}
+  rpc UpdateRoom (UpdateRoomRequest) returns (UpdateRoomResponse) {}
+  rpc DeleteRoom (DeleteRoomRequest) returns (DeleteRoomResponse) {}
+  rpc ChatInRoom (ChatRequest) returns (stream ChatResponse) {}
+}
+
+message RoomInfo {
+  int64 id = 1;
+  int64 entryID = 2;
+  string title = 3;
+  string prompt = 4;
+  string namespace = 5;
+  repeated RoomMessage messages = 10;
+  google.protobuf.Timestamp createdAt = 11;
+}
+
+message RoomMessage {
+  int64 id = 1;
+  int64 roomID = 2;
+  string sender = 3;
+  string message = 4;
+  string namespace = 5;
+  google.protobuf.Timestamp sendAt = 6;
+  google.protobuf.Timestamp createdAt = 10;
+}
+
+message ListRoomsRequest {
+  int64 entryID = 1;
+}
+
+message ListRoomsResponse {
+  repeated RoomInfo rooms = 1;
+}
+
+message OpenRoomRequest {
+  message Option {
+    string prompt = 1;
+  }
+  int64 entryID = 1;
+  int64 roomID = 2;
+  Option option = 3;
+}
+
+message OpenRoomResponse {
+  RoomInfo room = 1;
+}
+
+message UpdateRoomRequest {
+  int64 roomID = 1;
+  string prompt = 2;
+}
+
+message UpdateRoomResponse {
+  int64 roomID = 1;
+}
+
+message DeleteRoomRequest {
+  int64 roomID = 1;
+}
+
+message DeleteRoomResponse {
+  int64 roomID = 1;
+}
+
+message ChatRequest {
+  int64 roomID = 1;
+  string newRequest = 3;
+  google.protobuf.Timestamp sendAt = 10;
+}
+
+message ChatResponse {
+  int64 requestID = 1;
+  int64 responseID = 2;
+  string responseMessage = 3;
+  string sender = 4;
+  google.protobuf.Timestamp sendAt = 10;
+  google.protobuf.Timestamp createdAt = 11;
+}
+
 service Notify {
   rpc GetLatestSequence (GetLatestSequenceRequest) returns (GetLatestSequenceResponse) {}
   rpc ListUnSyncedEvent (ListUnSyncedEventRequest) returns (ListUnSyncedEventResponse) {}
@@ -248,6 +329,7 @@ message DocumentInfo {
   string source = 5;
   bool marked = 6;
   bool unread = 7;
+  string namespace = 8;
   google.protobuf.Timestamp createdAt = 30;
   google.protobuf.Timestamp changedAt = 31;
 }
@@ -260,6 +342,7 @@ message DocumentDescribe {
   string source = 5;
   bool marked = 6;
   bool unread = 7;
+  string namespace = 8;
 
   string htmlContent = 10;
   repeated string keyWords = 11;
@@ -327,4 +410,3 @@ message Event {
   string refType = 11;
   int64 sequence = 12;
 }
-

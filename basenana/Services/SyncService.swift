@@ -227,7 +227,7 @@ class SyncService {
             let doc = response.document
             
             documentService.saveDocument(doc: DocumentModel(
-                id: doc.id, oid: doc.entryID, name: doc.name, parentEntry: doc.parentEntryID, source: doc.source,
+                id: doc.id, oid: doc.entryID, name: doc.name, namespace: doc.namespace, parentEntry: doc.parentEntryID, source: doc.source,
                 marked: doc.marked, unread: doc.unread, keyWords: doc.keyWords, content: doc.htmlContent, summary: doc.summary,
                 createdAt: doc.createdAt.date, changedAt: doc.changedAt.date, syncAt: Date()))
         } catch{

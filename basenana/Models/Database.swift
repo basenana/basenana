@@ -70,6 +70,7 @@ func migrateDbInit(db: GRDB.Database) throws {
         t.column("id", .integer)
         t.column("oid", .integer)
         t.column("name", .text)
+        t.column("namespace", .text)
         t.column("parentEntry", .integer)
         t.column("source", .text)
         t.column("marked", .boolean)
@@ -86,15 +87,29 @@ func migrateDbInit(db: GRDB.Database) throws {
         t.primaryKey(["id"])
     }
     
-    try db.create(table: "dialogue"){ t in
+    try db.create(table: "room"){ t in
         t.column("id", .integer)
+        t.column("namespace", .text)
         t.column("oid", .integer)
         t.column("docid", .integer)
-        t.column("messages", .jsonText)
-        
+        t.column("title", .text)
+        t.column("prompt", .text)
+
         t.column("createdAt", .datetime)
-        t.column("changedAt", .datetime)
         
+        t.primaryKey(["id"])
+    }
+    
+    try db.create(table: "room_message"){ t in
+        t.column("id", .integer)
+        t.column("namespace", .text)
+        t.column("roomid", .integer)
+        t.column("sender", .text)
+        t.column("message", .text)
+
+        t.column("sendAt", .datetime)
+        t.column("createdAt", .datetime)
+
         t.primaryKey(["id"])
     }
 }

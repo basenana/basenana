@@ -13,6 +13,7 @@ struct DocumentModel: Codable, Identifiable, Hashable{
     var id: Int64
     var oid: Int64
     var name: String
+    var namespace: String
     var parentEntry: Int64
     var source: String?
     var marked: Bool
@@ -34,6 +35,7 @@ extension DocumentModel: TableRecord {
         static let id = Column(CodingKeys.id)
         static let oid = Column(CodingKeys.oid)
         static let name = Column(CodingKeys.name)
+        static let namespace = Column(CodingKeys.namespace)
         static let parentEntry = Column(CodingKeys.parentEntry)
         static let source = Column(CodingKeys.source)
         static let marked = Column(CodingKeys.marked)

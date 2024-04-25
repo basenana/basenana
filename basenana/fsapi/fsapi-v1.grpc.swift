@@ -1553,6 +1553,440 @@ internal enum Api_V1_DocumentClientMetadata {
   }
 }
 
+/// Usage: instantiate `Api_V1_RoomClient`, then call methods of this protocol to make API calls.
+internal protocol Api_V1_RoomClientProtocol: GRPCClient {
+  var serviceName: String { get }
+  var interceptors: Api_V1_RoomClientInterceptorFactoryProtocol? { get }
+
+  func listRooms(
+    _ request: Api_V1_ListRoomsRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Api_V1_ListRoomsRequest, Api_V1_ListRoomsResponse>
+
+  func openRoom(
+    _ request: Api_V1_OpenRoomRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Api_V1_OpenRoomRequest, Api_V1_OpenRoomResponse>
+
+  func updateRoom(
+    _ request: Api_V1_UpdateRoomRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Api_V1_UpdateRoomRequest, Api_V1_UpdateRoomResponse>
+
+  func deleteRoom(
+    _ request: Api_V1_DeleteRoomRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Api_V1_DeleteRoomRequest, Api_V1_DeleteRoomResponse>
+
+  func chatInRoom(
+    _ request: Api_V1_ChatRequest,
+    callOptions: CallOptions?,
+    handler: @escaping (Api_V1_ChatResponse) -> Void
+  ) -> ServerStreamingCall<Api_V1_ChatRequest, Api_V1_ChatResponse>
+}
+
+extension Api_V1_RoomClientProtocol {
+  internal var serviceName: String {
+    return "api.v1.Room"
+  }
+
+  /// Unary call to ListRooms
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to ListRooms.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  internal func listRooms(
+    _ request: Api_V1_ListRoomsRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Api_V1_ListRoomsRequest, Api_V1_ListRoomsResponse> {
+    return self.makeUnaryCall(
+      path: Api_V1_RoomClientMetadata.Methods.listRooms.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeListRoomsInterceptors() ?? []
+    )
+  }
+
+  /// Unary call to OpenRoom
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to OpenRoom.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  internal func openRoom(
+    _ request: Api_V1_OpenRoomRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Api_V1_OpenRoomRequest, Api_V1_OpenRoomResponse> {
+    return self.makeUnaryCall(
+      path: Api_V1_RoomClientMetadata.Methods.openRoom.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeOpenRoomInterceptors() ?? []
+    )
+  }
+
+  /// Unary call to UpdateRoom
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to UpdateRoom.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  internal func updateRoom(
+    _ request: Api_V1_UpdateRoomRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Api_V1_UpdateRoomRequest, Api_V1_UpdateRoomResponse> {
+    return self.makeUnaryCall(
+      path: Api_V1_RoomClientMetadata.Methods.updateRoom.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeUpdateRoomInterceptors() ?? []
+    )
+  }
+
+  /// Unary call to DeleteRoom
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to DeleteRoom.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  internal func deleteRoom(
+    _ request: Api_V1_DeleteRoomRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Api_V1_DeleteRoomRequest, Api_V1_DeleteRoomResponse> {
+    return self.makeUnaryCall(
+      path: Api_V1_RoomClientMetadata.Methods.deleteRoom.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeDeleteRoomInterceptors() ?? []
+    )
+  }
+
+  /// Server streaming call to ChatInRoom
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to ChatInRoom.
+  ///   - callOptions: Call options.
+  ///   - handler: A closure called when each response is received from the server.
+  /// - Returns: A `ServerStreamingCall` with futures for the metadata and status.
+  internal func chatInRoom(
+    _ request: Api_V1_ChatRequest,
+    callOptions: CallOptions? = nil,
+    handler: @escaping (Api_V1_ChatResponse) -> Void
+  ) -> ServerStreamingCall<Api_V1_ChatRequest, Api_V1_ChatResponse> {
+    return self.makeServerStreamingCall(
+      path: Api_V1_RoomClientMetadata.Methods.chatInRoom.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeChatInRoomInterceptors() ?? [],
+      handler: handler
+    )
+  }
+}
+
+@available(*, deprecated)
+extension Api_V1_RoomClient: @unchecked Sendable {}
+
+@available(*, deprecated, renamed: "Api_V1_RoomNIOClient")
+internal final class Api_V1_RoomClient: Api_V1_RoomClientProtocol {
+  private let lock = Lock()
+  private var _defaultCallOptions: CallOptions
+  private var _interceptors: Api_V1_RoomClientInterceptorFactoryProtocol?
+  internal let channel: GRPCChannel
+  internal var defaultCallOptions: CallOptions {
+    get { self.lock.withLock { return self._defaultCallOptions } }
+    set { self.lock.withLockVoid { self._defaultCallOptions = newValue } }
+  }
+  internal var interceptors: Api_V1_RoomClientInterceptorFactoryProtocol? {
+    get { self.lock.withLock { return self._interceptors } }
+    set { self.lock.withLockVoid { self._interceptors = newValue } }
+  }
+
+  /// Creates a client for the api.v1.Room service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  internal init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Api_V1_RoomClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self._defaultCallOptions = defaultCallOptions
+    self._interceptors = interceptors
+  }
+}
+
+internal struct Api_V1_RoomNIOClient: Api_V1_RoomClientProtocol {
+  internal var channel: GRPCChannel
+  internal var defaultCallOptions: CallOptions
+  internal var interceptors: Api_V1_RoomClientInterceptorFactoryProtocol?
+
+  /// Creates a client for the api.v1.Room service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  internal init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Api_V1_RoomClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+internal protocol Api_V1_RoomAsyncClientProtocol: GRPCClient {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Api_V1_RoomClientInterceptorFactoryProtocol? { get }
+
+  func makeListRoomsCall(
+    _ request: Api_V1_ListRoomsRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Api_V1_ListRoomsRequest, Api_V1_ListRoomsResponse>
+
+  func makeOpenRoomCall(
+    _ request: Api_V1_OpenRoomRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Api_V1_OpenRoomRequest, Api_V1_OpenRoomResponse>
+
+  func makeUpdateRoomCall(
+    _ request: Api_V1_UpdateRoomRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Api_V1_UpdateRoomRequest, Api_V1_UpdateRoomResponse>
+
+  func makeDeleteRoomCall(
+    _ request: Api_V1_DeleteRoomRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Api_V1_DeleteRoomRequest, Api_V1_DeleteRoomResponse>
+
+  func makeChatInRoomCall(
+    _ request: Api_V1_ChatRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncServerStreamingCall<Api_V1_ChatRequest, Api_V1_ChatResponse>
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Api_V1_RoomAsyncClientProtocol {
+  internal static var serviceDescriptor: GRPCServiceDescriptor {
+    return Api_V1_RoomClientMetadata.serviceDescriptor
+  }
+
+  internal var interceptors: Api_V1_RoomClientInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  internal func makeListRoomsCall(
+    _ request: Api_V1_ListRoomsRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Api_V1_ListRoomsRequest, Api_V1_ListRoomsResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Api_V1_RoomClientMetadata.Methods.listRooms.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeListRoomsInterceptors() ?? []
+    )
+  }
+
+  internal func makeOpenRoomCall(
+    _ request: Api_V1_OpenRoomRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Api_V1_OpenRoomRequest, Api_V1_OpenRoomResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Api_V1_RoomClientMetadata.Methods.openRoom.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeOpenRoomInterceptors() ?? []
+    )
+  }
+
+  internal func makeUpdateRoomCall(
+    _ request: Api_V1_UpdateRoomRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Api_V1_UpdateRoomRequest, Api_V1_UpdateRoomResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Api_V1_RoomClientMetadata.Methods.updateRoom.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeUpdateRoomInterceptors() ?? []
+    )
+  }
+
+  internal func makeDeleteRoomCall(
+    _ request: Api_V1_DeleteRoomRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Api_V1_DeleteRoomRequest, Api_V1_DeleteRoomResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Api_V1_RoomClientMetadata.Methods.deleteRoom.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeDeleteRoomInterceptors() ?? []
+    )
+  }
+
+  internal func makeChatInRoomCall(
+    _ request: Api_V1_ChatRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncServerStreamingCall<Api_V1_ChatRequest, Api_V1_ChatResponse> {
+    return self.makeAsyncServerStreamingCall(
+      path: Api_V1_RoomClientMetadata.Methods.chatInRoom.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeChatInRoomInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Api_V1_RoomAsyncClientProtocol {
+  internal func listRooms(
+    _ request: Api_V1_ListRoomsRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Api_V1_ListRoomsResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Api_V1_RoomClientMetadata.Methods.listRooms.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeListRoomsInterceptors() ?? []
+    )
+  }
+
+  internal func openRoom(
+    _ request: Api_V1_OpenRoomRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Api_V1_OpenRoomResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Api_V1_RoomClientMetadata.Methods.openRoom.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeOpenRoomInterceptors() ?? []
+    )
+  }
+
+  internal func updateRoom(
+    _ request: Api_V1_UpdateRoomRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Api_V1_UpdateRoomResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Api_V1_RoomClientMetadata.Methods.updateRoom.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeUpdateRoomInterceptors() ?? []
+    )
+  }
+
+  internal func deleteRoom(
+    _ request: Api_V1_DeleteRoomRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Api_V1_DeleteRoomResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Api_V1_RoomClientMetadata.Methods.deleteRoom.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeDeleteRoomInterceptors() ?? []
+    )
+  }
+
+  internal func chatInRoom(
+    _ request: Api_V1_ChatRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Api_V1_ChatResponse> {
+    return self.performAsyncServerStreamingCall(
+      path: Api_V1_RoomClientMetadata.Methods.chatInRoom.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeChatInRoomInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+internal struct Api_V1_RoomAsyncClient: Api_V1_RoomAsyncClientProtocol {
+  internal var channel: GRPCChannel
+  internal var defaultCallOptions: CallOptions
+  internal var interceptors: Api_V1_RoomClientInterceptorFactoryProtocol?
+
+  internal init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Api_V1_RoomClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+internal protocol Api_V1_RoomClientInterceptorFactoryProtocol: Sendable {
+
+  /// - Returns: Interceptors to use when invoking 'listRooms'.
+  func makeListRoomsInterceptors() -> [ClientInterceptor<Api_V1_ListRoomsRequest, Api_V1_ListRoomsResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'openRoom'.
+  func makeOpenRoomInterceptors() -> [ClientInterceptor<Api_V1_OpenRoomRequest, Api_V1_OpenRoomResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'updateRoom'.
+  func makeUpdateRoomInterceptors() -> [ClientInterceptor<Api_V1_UpdateRoomRequest, Api_V1_UpdateRoomResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'deleteRoom'.
+  func makeDeleteRoomInterceptors() -> [ClientInterceptor<Api_V1_DeleteRoomRequest, Api_V1_DeleteRoomResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'chatInRoom'.
+  func makeChatInRoomInterceptors() -> [ClientInterceptor<Api_V1_ChatRequest, Api_V1_ChatResponse>]
+}
+
+internal enum Api_V1_RoomClientMetadata {
+  internal static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "Room",
+    fullName: "api.v1.Room",
+    methods: [
+      Api_V1_RoomClientMetadata.Methods.listRooms,
+      Api_V1_RoomClientMetadata.Methods.openRoom,
+      Api_V1_RoomClientMetadata.Methods.updateRoom,
+      Api_V1_RoomClientMetadata.Methods.deleteRoom,
+      Api_V1_RoomClientMetadata.Methods.chatInRoom,
+    ]
+  )
+
+  internal enum Methods {
+    internal static let listRooms = GRPCMethodDescriptor(
+      name: "ListRooms",
+      path: "/api.v1.Room/ListRooms",
+      type: GRPCCallType.unary
+    )
+
+    internal static let openRoom = GRPCMethodDescriptor(
+      name: "OpenRoom",
+      path: "/api.v1.Room/OpenRoom",
+      type: GRPCCallType.unary
+    )
+
+    internal static let updateRoom = GRPCMethodDescriptor(
+      name: "UpdateRoom",
+      path: "/api.v1.Room/UpdateRoom",
+      type: GRPCCallType.unary
+    )
+
+    internal static let deleteRoom = GRPCMethodDescriptor(
+      name: "DeleteRoom",
+      path: "/api.v1.Room/DeleteRoom",
+      type: GRPCCallType.unary
+    )
+
+    internal static let chatInRoom = GRPCMethodDescriptor(
+      name: "ChatInRoom",
+      path: "/api.v1.Room/ChatInRoom",
+      type: GRPCCallType.serverStreaming
+    )
+  }
+}
+
 /// Usage: instantiate `Api_V1_NotifyClient`, then call methods of this protocol to make API calls.
 internal protocol Api_V1_NotifyClientProtocol: GRPCClient {
   var serviceName: String { get }
@@ -2737,6 +3171,255 @@ internal enum Api_V1_DocumentServerMetadata {
       name: "GetDocumentDetail",
       path: "/api.v1.Document/GetDocumentDetail",
       type: GRPCCallType.unary
+    )
+  }
+}
+/// To build a server, implement a class that conforms to this protocol.
+internal protocol Api_V1_RoomProvider: CallHandlerProvider {
+  var interceptors: Api_V1_RoomServerInterceptorFactoryProtocol? { get }
+
+  func listRooms(request: Api_V1_ListRoomsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_ListRoomsResponse>
+
+  func openRoom(request: Api_V1_OpenRoomRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_OpenRoomResponse>
+
+  func updateRoom(request: Api_V1_UpdateRoomRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_UpdateRoomResponse>
+
+  func deleteRoom(request: Api_V1_DeleteRoomRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_DeleteRoomResponse>
+
+  func chatInRoom(request: Api_V1_ChatRequest, context: StreamingResponseCallContext<Api_V1_ChatResponse>) -> EventLoopFuture<GRPCStatus>
+}
+
+extension Api_V1_RoomProvider {
+  internal var serviceName: Substring {
+    return Api_V1_RoomServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  internal func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "ListRooms":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_ListRoomsRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_ListRoomsResponse>(),
+        interceptors: self.interceptors?.makeListRoomsInterceptors() ?? [],
+        userFunction: self.listRooms(request:context:)
+      )
+
+    case "OpenRoom":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_OpenRoomRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_OpenRoomResponse>(),
+        interceptors: self.interceptors?.makeOpenRoomInterceptors() ?? [],
+        userFunction: self.openRoom(request:context:)
+      )
+
+    case "UpdateRoom":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_UpdateRoomRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_UpdateRoomResponse>(),
+        interceptors: self.interceptors?.makeUpdateRoomInterceptors() ?? [],
+        userFunction: self.updateRoom(request:context:)
+      )
+
+    case "DeleteRoom":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_DeleteRoomRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_DeleteRoomResponse>(),
+        interceptors: self.interceptors?.makeDeleteRoomInterceptors() ?? [],
+        userFunction: self.deleteRoom(request:context:)
+      )
+
+    case "ChatInRoom":
+      return ServerStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_ChatRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_ChatResponse>(),
+        interceptors: self.interceptors?.makeChatInRoomInterceptors() ?? [],
+        userFunction: self.chatInRoom(request:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+/// To implement a server, implement an object which conforms to this protocol.
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+internal protocol Api_V1_RoomAsyncProvider: CallHandlerProvider, Sendable {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Api_V1_RoomServerInterceptorFactoryProtocol? { get }
+
+  func listRooms(
+    request: Api_V1_ListRoomsRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Api_V1_ListRoomsResponse
+
+  func openRoom(
+    request: Api_V1_OpenRoomRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Api_V1_OpenRoomResponse
+
+  func updateRoom(
+    request: Api_V1_UpdateRoomRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Api_V1_UpdateRoomResponse
+
+  func deleteRoom(
+    request: Api_V1_DeleteRoomRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Api_V1_DeleteRoomResponse
+
+  func chatInRoom(
+    request: Api_V1_ChatRequest,
+    responseStream: GRPCAsyncResponseStreamWriter<Api_V1_ChatResponse>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Api_V1_RoomAsyncProvider {
+  internal static var serviceDescriptor: GRPCServiceDescriptor {
+    return Api_V1_RoomServerMetadata.serviceDescriptor
+  }
+
+  internal var serviceName: Substring {
+    return Api_V1_RoomServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  internal var interceptors: Api_V1_RoomServerInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  internal func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "ListRooms":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_ListRoomsRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_ListRoomsResponse>(),
+        interceptors: self.interceptors?.makeListRoomsInterceptors() ?? [],
+        wrapping: { try await self.listRooms(request: $0, context: $1) }
+      )
+
+    case "OpenRoom":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_OpenRoomRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_OpenRoomResponse>(),
+        interceptors: self.interceptors?.makeOpenRoomInterceptors() ?? [],
+        wrapping: { try await self.openRoom(request: $0, context: $1) }
+      )
+
+    case "UpdateRoom":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_UpdateRoomRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_UpdateRoomResponse>(),
+        interceptors: self.interceptors?.makeUpdateRoomInterceptors() ?? [],
+        wrapping: { try await self.updateRoom(request: $0, context: $1) }
+      )
+
+    case "DeleteRoom":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_DeleteRoomRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_DeleteRoomResponse>(),
+        interceptors: self.interceptors?.makeDeleteRoomInterceptors() ?? [],
+        wrapping: { try await self.deleteRoom(request: $0, context: $1) }
+      )
+
+    case "ChatInRoom":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_ChatRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_ChatResponse>(),
+        interceptors: self.interceptors?.makeChatInRoomInterceptors() ?? [],
+        wrapping: { try await self.chatInRoom(request: $0, responseStream: $1, context: $2) }
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+internal protocol Api_V1_RoomServerInterceptorFactoryProtocol: Sendable {
+
+  /// - Returns: Interceptors to use when handling 'listRooms'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeListRoomsInterceptors() -> [ServerInterceptor<Api_V1_ListRoomsRequest, Api_V1_ListRoomsResponse>]
+
+  /// - Returns: Interceptors to use when handling 'openRoom'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeOpenRoomInterceptors() -> [ServerInterceptor<Api_V1_OpenRoomRequest, Api_V1_OpenRoomResponse>]
+
+  /// - Returns: Interceptors to use when handling 'updateRoom'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeUpdateRoomInterceptors() -> [ServerInterceptor<Api_V1_UpdateRoomRequest, Api_V1_UpdateRoomResponse>]
+
+  /// - Returns: Interceptors to use when handling 'deleteRoom'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeDeleteRoomInterceptors() -> [ServerInterceptor<Api_V1_DeleteRoomRequest, Api_V1_DeleteRoomResponse>]
+
+  /// - Returns: Interceptors to use when handling 'chatInRoom'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeChatInRoomInterceptors() -> [ServerInterceptor<Api_V1_ChatRequest, Api_V1_ChatResponse>]
+}
+
+internal enum Api_V1_RoomServerMetadata {
+  internal static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "Room",
+    fullName: "api.v1.Room",
+    methods: [
+      Api_V1_RoomServerMetadata.Methods.listRooms,
+      Api_V1_RoomServerMetadata.Methods.openRoom,
+      Api_V1_RoomServerMetadata.Methods.updateRoom,
+      Api_V1_RoomServerMetadata.Methods.deleteRoom,
+      Api_V1_RoomServerMetadata.Methods.chatInRoom,
+    ]
+  )
+
+  internal enum Methods {
+    internal static let listRooms = GRPCMethodDescriptor(
+      name: "ListRooms",
+      path: "/api.v1.Room/ListRooms",
+      type: GRPCCallType.unary
+    )
+
+    internal static let openRoom = GRPCMethodDescriptor(
+      name: "OpenRoom",
+      path: "/api.v1.Room/OpenRoom",
+      type: GRPCCallType.unary
+    )
+
+    internal static let updateRoom = GRPCMethodDescriptor(
+      name: "UpdateRoom",
+      path: "/api.v1.Room/UpdateRoom",
+      type: GRPCCallType.unary
+    )
+
+    internal static let deleteRoom = GRPCMethodDescriptor(
+      name: "DeleteRoom",
+      path: "/api.v1.Room/DeleteRoom",
+      type: GRPCCallType.unary
+    )
+
+    internal static let chatInRoom = GRPCMethodDescriptor(
+      name: "ChatInRoom",
+      path: "/api.v1.Room/ChatInRoom",
+      type: GRPCCallType.serverStreaming
     )
   }
 }

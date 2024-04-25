@@ -19,7 +19,7 @@ class DocumentService {
         // TODO: filter by unread
         do {
             let data: [DocumentModel] = try dbInstance.queue.read{ db in
-                try DocumentModel.fetchAll(db)
+                try DocumentModel.order(Column("createdAt").desc).fetchAll(db)
             }
             return data
         } catch {
@@ -47,7 +47,7 @@ class DocumentService {
         do {
             let _ = try dbInstance.queue.write{ db in
                 try DocumentModel.filter(Column("id") == documentID ).deleteAll(db)
-                try DialogueModel.filter(Column("docid") == documentID).deleteAll(db)
+                try RoomModel.filter(Column("docid") == documentID).deleteAll(db)
             }
         } catch {
             log.error("[documentService] cleanup local document \(documentID) failed \(error)")

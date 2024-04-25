@@ -20,6 +20,7 @@ class FsClientSet {
     var entries: Api_V1_EntriesClientProtocol
     var properties: Api_V1_PropertiesClientProtocol
     var document: Api_V1_DocumentClientProtocol
+    var dialogue: Api_V1_RoomClientProtocol
     var notify: Api_V1_NotifyClientProtocol
     
     private var host: String
@@ -45,6 +46,7 @@ class FsClientSet {
         self.entries = Api_V1_EntriesNIOClient(channel: tlsChannel)
         self.properties = Api_V1_PropertiesNIOClient(channel: tlsChannel)
         self.document = Api_V1_DocumentNIOClient(channel: tlsChannel)
+        self.dialogue = Api_V1_RoomNIOClient(channel: tlsChannel)
         self.notify = Api_V1_NotifyNIOClient(channel: tlsChannel)
     }
 }

@@ -36,7 +36,7 @@ struct DocumentView: View {
                                     
                                     if isDrawerOpen{
                                         // dialogue body
-                                        DialogueView(isDrawerOpen: $isDrawerOpen, docId: document.id)
+                                        DialogueView(isDrawerOpen: $isDrawerOpen, docId: document.id, entryId: document.oid)
                                             .frame(minWidth:200, idealWidth: 200, maxWidth: .infinity)
                                     }
                                     
