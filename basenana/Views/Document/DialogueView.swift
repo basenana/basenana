@@ -28,7 +28,7 @@ struct DialogueView: View {
                HStack {
                     // dialogue title ..
                     RoundedRectangle(cornerRadius: 10)
-                         .fill(Color.DialogBoxBackground())
+                         .fill(Color.DialogBoxBackground)
                          .overlay( Text("Assisted Reading")
                               .font(.headline)
                          )
@@ -46,13 +46,13 @@ struct DialogueView: View {
                ZStack{
                     
                     // gray background
-                    RoundedRectangle(cornerRadius: 10).stroke(Color.DialogBoxBackground(), lineWidth: 4)
+                    RoundedRectangle(cornerRadius: 10).stroke(Color.DialogBoxBackground, lineWidth: 4)
                     
                     VStack{
                          // message
                          ScrollView(showsIndicators: false) {
                               ForEach($messages) { msg in
-                                   MessageView(role: msg.sender.wrappedValue, message: msg.message).id(msg.id)
+                                   MessageView(message: msg).id(msg.id)
                               }
                          }
                          .onAppear{
@@ -73,7 +73,7 @@ struct DialogueView: View {
                               .frame(minHeight: 60, alignment: .center)
                               .background(
                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                        .fill(Color.DialogBoxBackground())
+                                        .fill(Color.DialogBoxBackground)
                                         .padding(.vertical, 8)
                                         .padding(.horizontal, 8)
                               )
@@ -84,7 +84,7 @@ struct DialogueView: View {
                }
                
           }
-          .background(Color.DialogueBackground())
+          .background(Color.DialogueBackground)
      }
      
      
@@ -106,7 +106,7 @@ struct DialogueView: View {
                                         var got: Bool = false
                                         let count = messages.count > 10 ? 10:messages.count
                                         for i in 0..<count{
-                                             var msg = messages[messages.count-1-i]
+                                             let msg = messages[messages.count-1-i]
                                              if msg.id == responseMsg.id {
                                                   got = true
                                                   msg.message = responseMsg.message
@@ -118,8 +118,6 @@ struct DialogueView: View {
                                              messages.append(RoomMessageViewModel(id: responseMsg.id!, sender: responseMsg.sender, message: responseMsg.message, sendAt: responseMsg.sendAt))
                                         }
                                    }
-                              },
-                              whenSucceedFn: { responseMsg in
                               })
                     } catch {
                          log.error("chat in room failed \(error)")
@@ -131,24 +129,34 @@ struct DialogueView: View {
 }
 
 struct MessageView: View {
-     var role: String
-     @Binding var message: String
+     @Binding var message: RoomMessageViewModel
      
      var body: some View {
-          if role.lowercased() == "user" {
+          let dateFormatter: DateFormatter = {
+              let formatter = DateFormatter()
+              formatter.dateStyle = .short
+              formatter.timeStyle = .medium
+              return formatter
+          }()
+          
+          if message.sender.lowercased() == "user" {
                // message of user in right
                HStack {
                     VStack(alignment: .trailing) {
                          HStack{
-                              Text(role).font(.headline)
+                              Text(message.sender).font(.headline)
                               Text("😃").font(.title)
                          }
-                         Text(message)
+                         Text(message.message)
                               .font(.body)
                               .padding(10)
-                              .background(Color.UserMsgBackground())
+                              .background(Color.UserMsgBackground)
                               .clipShape(RoundedRectangle(cornerRadius: 10))
                               .textSelection(.enabled)
+                         
+                         Text(dateFormatter.string(from: message.sendAt))
+                             .font(.caption)
+                             .foregroundColor(Color.DateColor)
                     }
                }
                .frame(maxWidth: .infinity,alignment: .trailing)
@@ -159,14 +167,17 @@ struct MessageView: View {
                     VStack(alignment: .leading) {
                          HStack{
                               Text("🤖").font(.title)
-                              Text(role).font(.headline)
+                              Text(message.sender).font(.headline)
                          }
-                         Text(message)
+                         Text(message.message)
                               .font(.body)
                               .padding(10)
-                              .background(Color.RobotMsgBackground())
+                              .background(Color.RobotMsgBackground)
                               .clipShape(RoundedRectangle(cornerRadius: 10))
                               .textSelection(.enabled)
+                         Text(dateFormatter.string(from: message.sendAt))
+                             .font(.caption)
+                             .foregroundColor(Color.DateColor)
                     }
                }
                .frame(maxWidth:.infinity, alignment: .leading)

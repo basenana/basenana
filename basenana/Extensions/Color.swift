@@ -9,22 +9,16 @@ import Foundation
 import SwiftUI
 
 extension Color {
-    static func UserMsgBackground() -> Color {
-        Color("userMsgBackground")
-    }
+    static let UserMsgBackground = Color("userMsgBackground")
     
-    static func RobotMsgBackground() -> Color {
-        Color("robotMsgBackground")
-    }
+    static let RobotMsgBackground = Color("robotMsgBackground")
     
-    static func DialogueBackground() -> Color {
-        Color("dialogueBackground")
-    }
+    static let DialogueBackground = Color("dialogueBackground")
     
-    static func DialogBoxBackground() -> Color {
-        Color("dialogBoxBackground")
-    }
+    static let DialogBoxBackground = Color("dialogBoxBackground")
     
+    static let DateColor = Color("dateColor")
+
 #if os(macOS)
     static let background = Color(NSColor.windowBackgroundColor)
     static let secondaryBackground = Color(NSColor.underPageBackgroundColor)
