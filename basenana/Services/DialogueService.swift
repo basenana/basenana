@@ -49,7 +49,7 @@ class DialogueService: ObservableObject {
             }
             
             msgs = try dbInstance.queue.read{ db in
-                try RoomMessageModel.filter(Column("roomid") == data?.id).fetchAll(db)
+                try RoomMessageModel.filter(Column("roomid") == data?.id).order(Column("sendAt")).fetchAll(db)
             }
             return RoomViewModel(room: data!, messages: msgs!)
         } catch {
@@ -94,7 +94,7 @@ class DialogueService: ObservableObject {
     }
     
     
-    func chatInRoom(roomId: Int64, newRequest: String, callbackFn: @escaping (RoomMessageModel, RoomMessageModel) -> Void, whenSucceedFn: @escaping (RoomMessageModel) -> Void) throws {
+    func chatInRoom(roomId: Int64, newRequest: String, callbackFn: @escaping (RoomMessageModel, RoomMessageModel) -> Void) throws {
         var request = Api_V1_ChatRequest()
         let requestSendAt = Date()
         
@@ -131,13 +131,8 @@ class DialogueService: ObservableObject {
             responseMsg.createdAt = response.createdAt.date
             responseMsg.message = replyMsg
             callbackFn(requestMsg, responseMsg)
-        }
-        
-        call.status.whenSuccess{ val in
             dialogueService.saveMessage(message: responseMsg)
-            whenSucceedFn(responseMsg)
         }
-        
     }
     
     func clearMessage(roomId: Int64) {
