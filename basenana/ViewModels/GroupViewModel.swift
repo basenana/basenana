@@ -14,6 +14,7 @@ class GroupViewModel: Identifiable {
     var groupID: Int64
     var groupName: String
     var children: [GroupViewModel]? = nil
+    var updateAt: Date? = nil
     
     init(groupID: Int64, groupName: String) {
         self.groupID = groupID

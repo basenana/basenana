@@ -12,7 +12,6 @@ import GRDB
 import BackgroundTasks
 
 let syncService = SyncService()
-let deviceUUID = syncService.deviceID()
 
 class SyncService {
     private var queue = DispatchQueue(label: "org.basenana.sync")
@@ -26,6 +25,7 @@ class SyncService {
     func deviceID() -> String {
         if self.deviceUUID == "" {
             self.deviceUUID = UUID().uuidString
+            log.info("gen device \(self.deviceUUID)")
         }
         return self.deviceUUID
     }
@@ -95,7 +95,7 @@ class SyncService {
         
         do {
             var request = Api_V1_CommitSyncedEventRequest()
-            request.deviceID = deviceUUID
+            request.deviceID = deviceID()
             request.sequence = needSyncSeq
             
             let call = clientSet!.notify.commitSyncedEvent(request, callOptions: nil)

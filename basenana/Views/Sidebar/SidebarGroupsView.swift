@@ -20,7 +20,13 @@ struct SidebarGroupsView: View {
                     Image(systemName: "folder")
                     Text("\(child.groupName)")
                         .multilineTextAlignment(.leading)
-                }.padding(.vertical, 4)
+                }
+                .padding(.vertical, 4)
+                .draggable(IDHelper(kind: "group", id: child.groupID).Encode())
+                .dropDestination(for: String.self){ entryIDInfos, localtion in
+                    groupService.moveEntriesToGroup(entries: parseIDInfo(entryInfos: entryIDInfos), groupID: child.groupID)
+                    return false
+                }
             }
         }
         .contextMenu {

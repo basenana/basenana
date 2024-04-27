@@ -44,4 +44,40 @@ class GroupService {
                 needInitGroups.append(subGroup)
             }}
     }
+    
+    func moveEntriesToGroup(entries: [Int64], groupID: Int64) {
+        for entry in entries {
+            moveEntryToGroup(entryId: entry, groupID: groupID)
+        }
+    }
+    
+    func moveEntryToGroup(entryId: Int64, groupID: Int64) {
+        if clientSet == nil {
+            log.error("move entry \(entryId) failed, client not init")
+            return
+        }
+        
+        log.info("move \(entryId) -> \(groupID)")
+        var request = Api_V1_ChangeParentRequest()
+        request.entryID = entryId
+        request.newParentID = groupID
+        let call = clientSet!.entries.changeParent(request, callOptions: nil)
+        
+        do {
+            let _ = try call.response.wait()
+        } catch {
+            log.error("move entry \(entryId) failed \(error)")
+            return
+        }
+        
+        do {
+            try syncService.rewriteEntry(entryId: entryId)
+            try syncService.rewriteEntry(entryId: groupID)
+        } catch {
+            log.error("resync entry \(entryId) failed \(error)")
+        }
+
+        GroupRoot.updateAt = Date()
+    }
+        
 }
