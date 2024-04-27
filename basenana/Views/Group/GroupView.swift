@@ -37,7 +37,18 @@ struct GroupView: View{
                         Button("Delete", role: .destructive) {
                         }
                     }
+                    .draggable(IDHelper(kind: child.isGroup ? "group" : "entry", id: child.id!).Encode())
+                    .dropDestination(for: String.self){ entryInfos in
+                        if !child.isGroup {
+                            return
+                        }
+                        groupService.moveEntriesToGroup(entries: parseIDInfo(entryInfos: entryInfos), groupID: child.id!)
+                    }
             }
+        }
+        .dropDestination(for: String.self){ entryInfos, _ in
+            groupService.moveEntriesToGroup(entries: parseIDInfo(entryInfos: entryInfos), groupID: groupID)
+            return false
         }
         .toolbar {
             if groupID != inboxEntryID{
@@ -51,6 +62,10 @@ struct GroupView: View{
         }
         .onAppear{
             groupChileren = entryService.listChildren(parentEntryID: groupID)
+        }
+        .onChange(of: GroupRoot.updateAt){
+            groupChileren = entryService.listChildren(parentEntryID: groupID)
+            log.info("relist group \(groupID) children")
         }
     }
 }

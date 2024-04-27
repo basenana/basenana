@@ -21,6 +21,9 @@ struct SettingsView: View {
     @AppStorage("org.basenana.nanafs.auth.secretToken")
     private var secretToken:String = ""
     
+    @AppStorage("org.basenana.nanafs.clientCrt")
+    private var encodedClientCrt: String = ""
+    
     var body: some View {
         Form {
             Section("Authentication") {
@@ -43,6 +46,7 @@ struct SettingsView: View {
             
             HStack {
                 Button {
+                    encodedClientCrt = ""
                     AuthClient().reflushToken()
                 } label: {
                     Text("Submit")

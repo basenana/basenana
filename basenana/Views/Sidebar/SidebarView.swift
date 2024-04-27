@@ -36,28 +36,6 @@ struct SidebarView: View {
             }
             
             NavigationLink {
-                NavigationView {
-                    List {
-                        NavigationLink {
-                            Text("Marked")
-                        } label: {
-                            HStack{
-                                Image(systemName: "bookmark.fill").foregroundColor(.yellow)
-                                Text("Marked")
-                            }.frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.vertical, 5)
-                        }.tag("m1")
-                        NavigationLink {
-                            Text("Marked2")
-                        } label: {
-                            HStack{
-                                Image(systemName: "bookmark.fill").foregroundColor(.yellow)
-                                Text("Marked")
-                            }.frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.vertical, 5)
-                        }.tag("m2")
-                    }.listStyle(.sidebar)
-                }
             } label: {
                 HStack{
                     Image(systemName: "bookmark.fill").foregroundColor(.yellow)
