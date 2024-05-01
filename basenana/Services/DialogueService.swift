@@ -118,20 +118,27 @@ class DialogueService: ObservableObject {
         request.newRequest = newRequest
         request.sendAt = timestamp
         
-        let call = clientSet!.dialogue.chatInRoom(request, callOptions: nil) { response in
+        var waitingLLM = true
+        let _ = clientSet!.dialogue.chatInRoom(request, callOptions: nil) { response in
             replyLine = response.responseMessage
+            if response.sender != "" && response.sender != "thinking" && waitingLLM {
+                waitingLLM = false
+                replyMsg = ""
+            }
             replyMsg += replyLine
+
             if response.requestID != 0 {
                 requestMsg.id = response.requestID
                 dialogueService.saveMessage(message: requestMsg)
+            } else {
+                responseMsg.sender = response.sender
+                responseMsg.id = response.responseID
+                responseMsg.sendAt = response.sendAt.date
+                responseMsg.createdAt = response.createdAt.date
+                responseMsg.message = replyMsg
+                dialogueService.saveMessage(message: responseMsg)
             }
-            responseMsg.sender = response.sender
-            responseMsg.id = response.responseID
-            responseMsg.sendAt = response.sendAt.date
-            responseMsg.createdAt = response.createdAt.date
-            responseMsg.message = replyMsg
             callbackFn(requestMsg, responseMsg)
-            dialogueService.saveMessage(message: responseMsg)
         }
     }
     

@@ -19,6 +19,7 @@ struct DialogueView: View {
      @State private var isCloseHovering = false
      @State private var isEraserHovering = false
      @State var newMessage = ""
+     @State var waitingMessage = ""
      @State private var room: RoomViewModel?
      @State var messages: [RoomMessageViewModel] = []
      
@@ -62,6 +63,7 @@ struct DialogueView: View {
                                    messages.append(RoomMessageViewModel(id: msg.id!, sender: msg.sender, message: msg.message, sendAt: msg.sendAt))
                               }
                          }
+                         .defaultScrollAnchor(.bottomTrailing)
                          .padding()
                          
                          Spacer()
@@ -94,6 +96,7 @@ struct DialogueView: View {
                     do {
                          let messageNeedToSend = self.newMessage
                          var requestNeedToSave = true
+                         var hasApply = false
                          try dialogueService.chatInRoom(
                               roomId: room?.id ?? 0,
                               newRequest: messageNeedToSend,
@@ -103,19 +106,20 @@ struct DialogueView: View {
                                         messages.append(RoomMessageViewModel(id: requestMsg.id!, sender: requestMsg.sender, message: requestMsg.message, sendAt: requestMsg.sendAt))
                                    }
                                    if let responseId = responseMsg.id, responseId != 0 {
-                                        var got: Bool = false
-                                        let count = messages.count > 10 ? 10:messages.count
-                                        for i in 0..<count{
-                                             let msg = messages[messages.count-1-i]
-                                             if msg.id == responseMsg.id {
-                                                  got = true
-                                                  msg.message = responseMsg.message
-                                                  messages[messages.count-1-i] = msg
-                                                  break
-                                             }
-                                        }
-                                        if !got{
+                                        if !hasApply{
                                              messages.append(RoomMessageViewModel(id: responseMsg.id!, sender: responseMsg.sender, message: responseMsg.message, sendAt: responseMsg.sendAt))
+                                             hasApply = true
+                                        }else{
+                                             let count = messages.count > 10 ? 10:messages.count
+                                             for i in 0..<count{
+                                                  let msg = messages[messages.count-1-i]
+                                                  if msg.id == responseMsg.id {
+                                                       msg.sender = responseMsg.sender
+                                                       msg.message = responseMsg.message
+                                                       messages[messages.count-1-i] = msg
+                                                       break
+                                                  }
+                                             }
                                         }
                                    }
                               })
@@ -133,10 +137,10 @@ struct MessageView: View {
      
      var body: some View {
           let dateFormatter: DateFormatter = {
-              let formatter = DateFormatter()
-              formatter.dateStyle = .short
-              formatter.timeStyle = .medium
-              return formatter
+               let formatter = DateFormatter()
+               formatter.dateStyle = .short
+               formatter.timeStyle = .medium
+               return formatter
           }()
           
           if message.sender.lowercased() == "user" {
@@ -155,8 +159,8 @@ struct MessageView: View {
                               .textSelection(.enabled)
                          
                          Text(dateFormatter.string(from: message.sendAt))
-                             .font(.caption)
-                             .foregroundColor(Color.DateColor)
+                              .font(.caption)
+                              .foregroundColor(Color.DateColor)
                     }
                }
                .frame(maxWidth: .infinity,alignment: .trailing)
@@ -176,8 +180,8 @@ struct MessageView: View {
                               .clipShape(RoundedRectangle(cornerRadius: 10))
                               .textSelection(.enabled)
                          Text(dateFormatter.string(from: message.sendAt))
-                             .font(.caption)
-                             .foregroundColor(Color.DateColor)
+                              .font(.caption)
+                              .foregroundColor(Color.DateColor)
                     }
                }
                .frame(maxWidth:.infinity, alignment: .leading)
