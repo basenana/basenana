@@ -46,6 +46,7 @@ class DocumentService {
         log.debug("[documentService] cleanup local document \(documentID)")
         do {
             let _ = try dbInstance.queue.write{ db in
+                try db.execute(sql: "DELETE FROM room_message WHERE roomid IN (SELECT id FROM room WHERE docid = ?)", arguments: [documentID])
                 try DocumentModel.filter(Column("id") == documentID ).deleteAll(db)
                 try RoomModel.filter(Column("docid") == documentID).deleteAll(db)
             }
