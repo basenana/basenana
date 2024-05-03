@@ -144,8 +144,12 @@ class DialogueService: ObservableObject {
     
     func clearMessage(roomId: Int64) {
         do {
-            try dbInstance.queue.write{ db in
-                try RoomModel.filter(Column("id") == roomId).deleteAll(db)
+            var request = Api_V1_ClearRoomRequest()
+            request.roomID = roomId
+            let call = clientSet!.dialogue.clearRoom(request, callOptions: nil)
+            let _ = try call.response.wait()
+            
+            try _ = dbInstance.queue.write{ db in
                 try RoomMessageModel.filter(Column("roomid") == roomId).deleteAll(db)
             }
         }catch{

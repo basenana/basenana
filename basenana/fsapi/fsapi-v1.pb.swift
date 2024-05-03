@@ -78,6 +78,8 @@ struct Api_V1_QuickInboxRequest {
 
   var url: String = String()
 
+  var data: Data = Data()
+
   /// url source
   var clutterFree: Bool = false
 
@@ -170,6 +172,22 @@ struct Api_V1_QuickInboxResponse {
   var entryID: Int64 = 0
 
   var jobID: String = String()
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
+struct Api_V1_FindEntryDetailRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var root: Bool = false
+
+  var parentID: Int64 = 0
+
+  var name: String = String()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -861,7 +879,31 @@ struct Api_V1_DeleteRoomRequest {
   init() {}
 }
 
+struct Api_V1_ClearRoomRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var roomID: Int64 = 0
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
 struct Api_V1_DeleteRoomResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var roomID: Int64 = 0
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
+struct Api_V1_ClearRoomResponse {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -1005,6 +1047,79 @@ struct Api_V1_CommitSyncedEventResponse {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
+struct Api_V1_TriggerWorkflowRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var workflowID: String = String()
+
+  var target: Api_V1_TriggerWorkflowRequest.WorkflowTarget {
+    get {return _target ?? Api_V1_TriggerWorkflowRequest.WorkflowTarget()}
+    set {_target = newValue}
+  }
+  /// Returns true if `target` has been explicitly set.
+  var hasTarget: Bool {return self._target != nil}
+  /// Clears the value of `target`. Subsequent reads from it will return its default value.
+  mutating func clearTarget() {self._target = nil}
+
+  var attr: Api_V1_TriggerWorkflowRequest.WorkflowJobAttr {
+    get {return _attr ?? Api_V1_TriggerWorkflowRequest.WorkflowJobAttr()}
+    set {_attr = newValue}
+  }
+  /// Returns true if `attr` has been explicitly set.
+  var hasAttr: Bool {return self._attr != nil}
+  /// Clears the value of `attr`. Subsequent reads from it will return its default value.
+  mutating func clearAttr() {self._attr = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  struct WorkflowTarget {
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
+
+    var entryID: Int64 = 0
+
+    var parentEntryID: Int64 = 0
+
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    init() {}
+  }
+
+  struct WorkflowJobAttr {
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
+
+    var reason: String = String()
+
+    var timeout: Int64 = 0
+
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    init() {}
+  }
+
+  init() {}
+
+  fileprivate var _target: Api_V1_TriggerWorkflowRequest.WorkflowTarget? = nil
+  fileprivate var _attr: Api_V1_TriggerWorkflowRequest.WorkflowJobAttr? = nil
+}
+
+struct Api_V1_TriggerWorkflowResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var jobID: String = String()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -1371,6 +1486,7 @@ extension Api_V1_QuickInboxRequest: @unchecked Sendable {}
 extension Api_V1_QuickInboxRequest.SourceType: @unchecked Sendable {}
 extension Api_V1_QuickInboxRequest.FileType: @unchecked Sendable {}
 extension Api_V1_QuickInboxResponse: @unchecked Sendable {}
+extension Api_V1_FindEntryDetailRequest: @unchecked Sendable {}
 extension Api_V1_GetEntryDetailRequest: @unchecked Sendable {}
 extension Api_V1_GetEntryDetailResponse: @unchecked Sendable {}
 extension Api_V1_CreateEntryRequest: @unchecked Sendable {}
@@ -1409,7 +1525,9 @@ extension Api_V1_OpenRoomResponse: @unchecked Sendable {}
 extension Api_V1_UpdateRoomRequest: @unchecked Sendable {}
 extension Api_V1_UpdateRoomResponse: @unchecked Sendable {}
 extension Api_V1_DeleteRoomRequest: @unchecked Sendable {}
+extension Api_V1_ClearRoomRequest: @unchecked Sendable {}
 extension Api_V1_DeleteRoomResponse: @unchecked Sendable {}
+extension Api_V1_ClearRoomResponse: @unchecked Sendable {}
 extension Api_V1_ChatRequest: @unchecked Sendable {}
 extension Api_V1_ChatResponse: @unchecked Sendable {}
 extension Api_V1_GetLatestSequenceRequest: @unchecked Sendable {}
@@ -1418,6 +1536,10 @@ extension Api_V1_ListUnSyncedEventRequest: @unchecked Sendable {}
 extension Api_V1_ListUnSyncedEventResponse: @unchecked Sendable {}
 extension Api_V1_CommitSyncedEventRequest: @unchecked Sendable {}
 extension Api_V1_CommitSyncedEventResponse: @unchecked Sendable {}
+extension Api_V1_TriggerWorkflowRequest: @unchecked Sendable {}
+extension Api_V1_TriggerWorkflowRequest.WorkflowTarget: @unchecked Sendable {}
+extension Api_V1_TriggerWorkflowRequest.WorkflowJobAttr: @unchecked Sendable {}
+extension Api_V1_TriggerWorkflowResponse: @unchecked Sendable {}
 extension Api_V1_DocumentInfo: @unchecked Sendable {}
 extension Api_V1_DocumentDescribe: @unchecked Sendable {}
 extension Api_V1_EntryInfo: @unchecked Sendable {}
@@ -1542,6 +1664,7 @@ extension Api_V1_QuickInboxRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
     2: .same(proto: "fileType"),
     3: .same(proto: "filename"),
     4: .same(proto: "url"),
+    5: .same(proto: "data"),
     10: .same(proto: "clutterFree"),
   ]
 
@@ -1555,6 +1678,7 @@ extension Api_V1_QuickInboxRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
       case 2: try { try decoder.decodeSingularEnumField(value: &self.fileType) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.filename) }()
       case 4: try { try decoder.decodeSingularStringField(value: &self.url) }()
+      case 5: try { try decoder.decodeSingularBytesField(value: &self.data) }()
       case 10: try { try decoder.decodeSingularBoolField(value: &self.clutterFree) }()
       default: break
       }
@@ -1574,6 +1698,9 @@ extension Api_V1_QuickInboxRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
     if !self.url.isEmpty {
       try visitor.visitSingularStringField(value: self.url, fieldNumber: 4)
     }
+    if !self.data.isEmpty {
+      try visitor.visitSingularBytesField(value: self.data, fieldNumber: 5)
+    }
     if self.clutterFree != false {
       try visitor.visitSingularBoolField(value: self.clutterFree, fieldNumber: 10)
     }
@@ -1585,6 +1712,7 @@ extension Api_V1_QuickInboxRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
     if lhs.fileType != rhs.fileType {return false}
     if lhs.filename != rhs.filename {return false}
     if lhs.url != rhs.url {return false}
+    if lhs.data != rhs.data {return false}
     if lhs.clutterFree != rhs.clutterFree {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -1638,6 +1766,50 @@ extension Api_V1_QuickInboxResponse: SwiftProtobuf.Message, SwiftProtobuf._Messa
   static func ==(lhs: Api_V1_QuickInboxResponse, rhs: Api_V1_QuickInboxResponse) -> Bool {
     if lhs.entryID != rhs.entryID {return false}
     if lhs.jobID != rhs.jobID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_FindEntryDetailRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".FindEntryDetailRequest"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "root"),
+    2: .same(proto: "parentID"),
+    3: .same(proto: "name"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularBoolField(value: &self.root) }()
+      case 2: try { try decoder.decodeSingularInt64Field(value: &self.parentID) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.name) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.root != false {
+      try visitor.visitSingularBoolField(value: self.root, fieldNumber: 1)
+    }
+    if self.parentID != 0 {
+      try visitor.visitSingularInt64Field(value: self.parentID, fieldNumber: 2)
+    }
+    if !self.name.isEmpty {
+      try visitor.visitSingularStringField(value: self.name, fieldNumber: 3)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_FindEntryDetailRequest, rhs: Api_V1_FindEntryDetailRequest) -> Bool {
+    if lhs.root != rhs.root {return false}
+    if lhs.parentID != rhs.parentID {return false}
+    if lhs.name != rhs.name {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -3177,6 +3349,38 @@ extension Api_V1_DeleteRoomRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
   }
 }
 
+extension Api_V1_ClearRoomRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".ClearRoomRequest"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "roomID"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self.roomID) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.roomID != 0 {
+      try visitor.visitSingularInt64Field(value: self.roomID, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_ClearRoomRequest, rhs: Api_V1_ClearRoomRequest) -> Bool {
+    if lhs.roomID != rhs.roomID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
 extension Api_V1_DeleteRoomResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".DeleteRoomResponse"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
@@ -3203,6 +3407,38 @@ extension Api_V1_DeleteRoomResponse: SwiftProtobuf.Message, SwiftProtobuf._Messa
   }
 
   static func ==(lhs: Api_V1_DeleteRoomResponse, rhs: Api_V1_DeleteRoomResponse) -> Bool {
+    if lhs.roomID != rhs.roomID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_ClearRoomResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".ClearRoomResponse"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "roomID"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self.roomID) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.roomID != 0 {
+      try visitor.visitSingularInt64Field(value: self.roomID, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_ClearRoomResponse, rhs: Api_V1_ClearRoomResponse) -> Bool {
     if lhs.roomID != rhs.roomID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -3509,6 +3745,162 @@ extension Api_V1_CommitSyncedEventResponse: SwiftProtobuf.Message, SwiftProtobuf
   }
 
   static func ==(lhs: Api_V1_CommitSyncedEventResponse, rhs: Api_V1_CommitSyncedEventResponse) -> Bool {
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_TriggerWorkflowRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".TriggerWorkflowRequest"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "workflowID"),
+    2: .same(proto: "target"),
+    3: .same(proto: "attr"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.workflowID) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._target) }()
+      case 3: try { try decoder.decodeSingularMessageField(value: &self._attr) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.workflowID.isEmpty {
+      try visitor.visitSingularStringField(value: self.workflowID, fieldNumber: 1)
+    }
+    try { if let v = self._target {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try { if let v = self._attr {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_TriggerWorkflowRequest, rhs: Api_V1_TriggerWorkflowRequest) -> Bool {
+    if lhs.workflowID != rhs.workflowID {return false}
+    if lhs._target != rhs._target {return false}
+    if lhs._attr != rhs._attr {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_TriggerWorkflowRequest.WorkflowTarget: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = Api_V1_TriggerWorkflowRequest.protoMessageName + ".WorkflowTarget"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "entryID"),
+    2: .same(proto: "parentEntryID"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self.entryID) }()
+      case 2: try { try decoder.decodeSingularInt64Field(value: &self.parentEntryID) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.entryID != 0 {
+      try visitor.visitSingularInt64Field(value: self.entryID, fieldNumber: 1)
+    }
+    if self.parentEntryID != 0 {
+      try visitor.visitSingularInt64Field(value: self.parentEntryID, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_TriggerWorkflowRequest.WorkflowTarget, rhs: Api_V1_TriggerWorkflowRequest.WorkflowTarget) -> Bool {
+    if lhs.entryID != rhs.entryID {return false}
+    if lhs.parentEntryID != rhs.parentEntryID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_TriggerWorkflowRequest.WorkflowJobAttr: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = Api_V1_TriggerWorkflowRequest.protoMessageName + ".WorkflowJobAttr"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "reason"),
+    2: .same(proto: "timeout"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.reason) }()
+      case 2: try { try decoder.decodeSingularInt64Field(value: &self.timeout) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.reason.isEmpty {
+      try visitor.visitSingularStringField(value: self.reason, fieldNumber: 1)
+    }
+    if self.timeout != 0 {
+      try visitor.visitSingularInt64Field(value: self.timeout, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_TriggerWorkflowRequest.WorkflowJobAttr, rhs: Api_V1_TriggerWorkflowRequest.WorkflowJobAttr) -> Bool {
+    if lhs.reason != rhs.reason {return false}
+    if lhs.timeout != rhs.timeout {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_TriggerWorkflowResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".TriggerWorkflowResponse"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "jobID"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.jobID) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.jobID.isEmpty {
+      try visitor.visitSingularStringField(value: self.jobID, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_TriggerWorkflowResponse, rhs: Api_V1_TriggerWorkflowResponse) -> Bool {
+    if lhs.jobID != rhs.jobID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

@@ -28,13 +28,19 @@ struct DialogueView: View {
                
                HStack {
                     // dialogue title ..
-                    RoundedRectangle(cornerRadius: 10)
-                         .fill(Color.DialogBoxBackground)
-                         .overlay( Text("Assisted Reading")
-                              .font(.headline)
-                         )
-                         .frame(height: 30)
+                    Text("Assisted Reading")
+                    .font(.headline)
+                    
+//                    RoundedRectangle(cornerRadius: 10)
+//                         .fill(Color.DialogBoxBackground)
+//                         .overlay( 
+//                              Text("Assisted Reading")
+//                              .font(.headline)
+//                         )
+//                         .frame(height: 30)
                     Spacer()
+                    
+                    IngestButton(isDrawerOpen: $isDrawerOpen, entryId: entryId)
                     
                     // button of eraser ..
                     EraserButton(isEraserHovering: isEraserHovering, isDrawerOpen: $isDrawerOpen, messages: $messages, roomId: room?.id ?? 0)
@@ -255,6 +261,38 @@ struct EraserButton: View {
      }
 }
 
+struct IngestButton: View {
+     @State var isIngestHovering = false
+     @Binding var isDrawerOpen: Bool
+     let entryId: Int64
+     
+     var body: some View {
+          Button {
+               withAnimation(.easeInOut) {
+                    documentService.ingestDocument(entryId: entryId)
+               }
+          } label: {
+               if isIngestHovering {
+                    Image(systemName: "square.and.arrow.down.fill").resizable().frame(width: 20, height: 20)
+               } else {
+                    Image(systemName: "square.and.arrow.down").resizable().frame(width: 20, height: 20)
+               }
+          }
+          .buttonStyle(PlainButtonStyle())
+          .onHover { hovering in isIngestHovering = hovering }
+          .overlay(
+               Group {
+                    if isIngestHovering {
+                         Text("Ingest")
+                              .background(Color.white)
+                              .foregroundColor(.black)
+                              .frame(width: 200)
+                              .offset(y: -20.0)
+                    }
+               }
+          )
+     }
+}
 
 #Preview {
      return DialogueView(isDrawerOpen: .constant(true), docId: 100, entryId: 100)
