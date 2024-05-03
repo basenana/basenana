@@ -380,6 +380,11 @@ internal protocol Api_V1_EntriesClientProtocol: GRPCClient {
   var serviceName: String { get }
   var interceptors: Api_V1_EntriesClientInterceptorFactoryProtocol? { get }
 
+  func findEntryDetail(
+    _ request: Api_V1_FindEntryDetailRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Api_V1_FindEntryDetailRequest, Api_V1_GetEntryDetailResponse>
+
   func getEntryDetail(
     _ request: Api_V1_GetEntryDetailRequest,
     callOptions: CallOptions?
@@ -424,6 +429,24 @@ internal protocol Api_V1_EntriesClientProtocol: GRPCClient {
 extension Api_V1_EntriesClientProtocol {
   internal var serviceName: String {
     return "api.v1.Entries"
+  }
+
+  /// Unary call to FindEntryDetail
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to FindEntryDetail.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  internal func findEntryDetail(
+    _ request: Api_V1_FindEntryDetailRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Api_V1_FindEntryDetailRequest, Api_V1_GetEntryDetailResponse> {
+    return self.makeUnaryCall(
+      path: Api_V1_EntriesClientMetadata.Methods.findEntryDetail.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeFindEntryDetailInterceptors() ?? []
+    )
   }
 
   /// Unary call to GetEntryDetail
@@ -636,6 +659,11 @@ internal protocol Api_V1_EntriesAsyncClientProtocol: GRPCClient {
   static var serviceDescriptor: GRPCServiceDescriptor { get }
   var interceptors: Api_V1_EntriesClientInterceptorFactoryProtocol? { get }
 
+  func makeFindEntryDetailCall(
+    _ request: Api_V1_FindEntryDetailRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Api_V1_FindEntryDetailRequest, Api_V1_GetEntryDetailResponse>
+
   func makeGetEntryDetailCall(
     _ request: Api_V1_GetEntryDetailRequest,
     callOptions: CallOptions?
@@ -684,6 +712,18 @@ extension Api_V1_EntriesAsyncClientProtocol {
 
   internal var interceptors: Api_V1_EntriesClientInterceptorFactoryProtocol? {
     return nil
+  }
+
+  internal func makeFindEntryDetailCall(
+    _ request: Api_V1_FindEntryDetailRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Api_V1_FindEntryDetailRequest, Api_V1_GetEntryDetailResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Api_V1_EntriesClientMetadata.Methods.findEntryDetail.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeFindEntryDetailInterceptors() ?? []
+    )
   }
 
   internal func makeGetEntryDetailCall(
@@ -783,6 +823,18 @@ extension Api_V1_EntriesAsyncClientProtocol {
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 extension Api_V1_EntriesAsyncClientProtocol {
+  internal func findEntryDetail(
+    _ request: Api_V1_FindEntryDetailRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Api_V1_GetEntryDetailResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Api_V1_EntriesClientMetadata.Methods.findEntryDetail.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeFindEntryDetailInterceptors() ?? []
+    )
+  }
+
   internal func getEntryDetail(
     _ request: Api_V1_GetEntryDetailRequest,
     callOptions: CallOptions? = nil
@@ -911,6 +963,9 @@ internal struct Api_V1_EntriesAsyncClient: Api_V1_EntriesAsyncClientProtocol {
 
 internal protocol Api_V1_EntriesClientInterceptorFactoryProtocol: Sendable {
 
+  /// - Returns: Interceptors to use when invoking 'findEntryDetail'.
+  func makeFindEntryDetailInterceptors() -> [ClientInterceptor<Api_V1_FindEntryDetailRequest, Api_V1_GetEntryDetailResponse>]
+
   /// - Returns: Interceptors to use when invoking 'getEntryDetail'.
   func makeGetEntryDetailInterceptors() -> [ClientInterceptor<Api_V1_GetEntryDetailRequest, Api_V1_GetEntryDetailResponse>]
 
@@ -941,6 +996,7 @@ internal enum Api_V1_EntriesClientMetadata {
     name: "Entries",
     fullName: "api.v1.Entries",
     methods: [
+      Api_V1_EntriesClientMetadata.Methods.findEntryDetail,
       Api_V1_EntriesClientMetadata.Methods.getEntryDetail,
       Api_V1_EntriesClientMetadata.Methods.createEntry,
       Api_V1_EntriesClientMetadata.Methods.updateEntry,
@@ -953,6 +1009,12 @@ internal enum Api_V1_EntriesClientMetadata {
   )
 
   internal enum Methods {
+    internal static let findEntryDetail = GRPCMethodDescriptor(
+      name: "FindEntryDetail",
+      path: "/api.v1.Entries/FindEntryDetail",
+      type: GRPCCallType.unary
+    )
+
     internal static let getEntryDetail = GRPCMethodDescriptor(
       name: "GetEntryDetail",
       path: "/api.v1.Entries/GetEntryDetail",
@@ -1578,6 +1640,11 @@ internal protocol Api_V1_RoomClientProtocol: GRPCClient {
     callOptions: CallOptions?
   ) -> UnaryCall<Api_V1_DeleteRoomRequest, Api_V1_DeleteRoomResponse>
 
+  func clearRoom(
+    _ request: Api_V1_ClearRoomRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Api_V1_ClearRoomRequest, Api_V1_ClearRoomResponse>
+
   func chatInRoom(
     _ request: Api_V1_ChatRequest,
     callOptions: CallOptions?,
@@ -1659,6 +1726,24 @@ extension Api_V1_RoomClientProtocol {
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeDeleteRoomInterceptors() ?? []
+    )
+  }
+
+  /// Unary call to ClearRoom
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to ClearRoom.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  internal func clearRoom(
+    _ request: Api_V1_ClearRoomRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Api_V1_ClearRoomRequest, Api_V1_ClearRoomResponse> {
+    return self.makeUnaryCall(
+      path: Api_V1_RoomClientMetadata.Methods.clearRoom.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeClearRoomInterceptors() ?? []
     )
   }
 
@@ -1766,6 +1851,11 @@ internal protocol Api_V1_RoomAsyncClientProtocol: GRPCClient {
     callOptions: CallOptions?
   ) -> GRPCAsyncUnaryCall<Api_V1_DeleteRoomRequest, Api_V1_DeleteRoomResponse>
 
+  func makeClearRoomCall(
+    _ request: Api_V1_ClearRoomRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Api_V1_ClearRoomRequest, Api_V1_ClearRoomResponse>
+
   func makeChatInRoomCall(
     _ request: Api_V1_ChatRequest,
     callOptions: CallOptions?
@@ -1827,6 +1917,18 @@ extension Api_V1_RoomAsyncClientProtocol {
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeDeleteRoomInterceptors() ?? []
+    )
+  }
+
+  internal func makeClearRoomCall(
+    _ request: Api_V1_ClearRoomRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Api_V1_ClearRoomRequest, Api_V1_ClearRoomResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Api_V1_RoomClientMetadata.Methods.clearRoom.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeClearRoomInterceptors() ?? []
     )
   }
 
@@ -1893,6 +1995,18 @@ extension Api_V1_RoomAsyncClientProtocol {
     )
   }
 
+  internal func clearRoom(
+    _ request: Api_V1_ClearRoomRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Api_V1_ClearRoomResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Api_V1_RoomClientMetadata.Methods.clearRoom.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeClearRoomInterceptors() ?? []
+    )
+  }
+
   internal func chatInRoom(
     _ request: Api_V1_ChatRequest,
     callOptions: CallOptions? = nil
@@ -1937,6 +2051,9 @@ internal protocol Api_V1_RoomClientInterceptorFactoryProtocol: Sendable {
   /// - Returns: Interceptors to use when invoking 'deleteRoom'.
   func makeDeleteRoomInterceptors() -> [ClientInterceptor<Api_V1_DeleteRoomRequest, Api_V1_DeleteRoomResponse>]
 
+  /// - Returns: Interceptors to use when invoking 'clearRoom'.
+  func makeClearRoomInterceptors() -> [ClientInterceptor<Api_V1_ClearRoomRequest, Api_V1_ClearRoomResponse>]
+
   /// - Returns: Interceptors to use when invoking 'chatInRoom'.
   func makeChatInRoomInterceptors() -> [ClientInterceptor<Api_V1_ChatRequest, Api_V1_ChatResponse>]
 }
@@ -1950,6 +2067,7 @@ internal enum Api_V1_RoomClientMetadata {
       Api_V1_RoomClientMetadata.Methods.openRoom,
       Api_V1_RoomClientMetadata.Methods.updateRoom,
       Api_V1_RoomClientMetadata.Methods.deleteRoom,
+      Api_V1_RoomClientMetadata.Methods.clearRoom,
       Api_V1_RoomClientMetadata.Methods.chatInRoom,
     ]
   )
@@ -1976,6 +2094,12 @@ internal enum Api_V1_RoomClientMetadata {
     internal static let deleteRoom = GRPCMethodDescriptor(
       name: "DeleteRoom",
       path: "/api.v1.Room/DeleteRoom",
+      type: GRPCCallType.unary
+    )
+
+    internal static let clearRoom = GRPCMethodDescriptor(
+      name: "ClearRoom",
+      path: "/api.v1.Room/ClearRoom",
       type: GRPCCallType.unary
     )
 
@@ -2293,6 +2417,188 @@ internal enum Api_V1_NotifyClientMetadata {
   }
 }
 
+/// Usage: instantiate `Api_V1_WorkflowClient`, then call methods of this protocol to make API calls.
+internal protocol Api_V1_WorkflowClientProtocol: GRPCClient {
+  var serviceName: String { get }
+  var interceptors: Api_V1_WorkflowClientInterceptorFactoryProtocol? { get }
+
+  func triggerWorkflow(
+    _ request: Api_V1_TriggerWorkflowRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Api_V1_TriggerWorkflowRequest, Api_V1_TriggerWorkflowResponse>
+}
+
+extension Api_V1_WorkflowClientProtocol {
+  internal var serviceName: String {
+    return "api.v1.Workflow"
+  }
+
+  /// Unary call to TriggerWorkflow
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to TriggerWorkflow.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  internal func triggerWorkflow(
+    _ request: Api_V1_TriggerWorkflowRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Api_V1_TriggerWorkflowRequest, Api_V1_TriggerWorkflowResponse> {
+    return self.makeUnaryCall(
+      path: Api_V1_WorkflowClientMetadata.Methods.triggerWorkflow.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeTriggerWorkflowInterceptors() ?? []
+    )
+  }
+}
+
+@available(*, deprecated)
+extension Api_V1_WorkflowClient: @unchecked Sendable {}
+
+@available(*, deprecated, renamed: "Api_V1_WorkflowNIOClient")
+internal final class Api_V1_WorkflowClient: Api_V1_WorkflowClientProtocol {
+  private let lock = Lock()
+  private var _defaultCallOptions: CallOptions
+  private var _interceptors: Api_V1_WorkflowClientInterceptorFactoryProtocol?
+  internal let channel: GRPCChannel
+  internal var defaultCallOptions: CallOptions {
+    get { self.lock.withLock { return self._defaultCallOptions } }
+    set { self.lock.withLockVoid { self._defaultCallOptions = newValue } }
+  }
+  internal var interceptors: Api_V1_WorkflowClientInterceptorFactoryProtocol? {
+    get { self.lock.withLock { return self._interceptors } }
+    set { self.lock.withLockVoid { self._interceptors = newValue } }
+  }
+
+  /// Creates a client for the api.v1.Workflow service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  internal init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Api_V1_WorkflowClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self._defaultCallOptions = defaultCallOptions
+    self._interceptors = interceptors
+  }
+}
+
+internal struct Api_V1_WorkflowNIOClient: Api_V1_WorkflowClientProtocol {
+  internal var channel: GRPCChannel
+  internal var defaultCallOptions: CallOptions
+  internal var interceptors: Api_V1_WorkflowClientInterceptorFactoryProtocol?
+
+  /// Creates a client for the api.v1.Workflow service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  internal init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Api_V1_WorkflowClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+internal protocol Api_V1_WorkflowAsyncClientProtocol: GRPCClient {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Api_V1_WorkflowClientInterceptorFactoryProtocol? { get }
+
+  func makeTriggerWorkflowCall(
+    _ request: Api_V1_TriggerWorkflowRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Api_V1_TriggerWorkflowRequest, Api_V1_TriggerWorkflowResponse>
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Api_V1_WorkflowAsyncClientProtocol {
+  internal static var serviceDescriptor: GRPCServiceDescriptor {
+    return Api_V1_WorkflowClientMetadata.serviceDescriptor
+  }
+
+  internal var interceptors: Api_V1_WorkflowClientInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  internal func makeTriggerWorkflowCall(
+    _ request: Api_V1_TriggerWorkflowRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Api_V1_TriggerWorkflowRequest, Api_V1_TriggerWorkflowResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Api_V1_WorkflowClientMetadata.Methods.triggerWorkflow.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeTriggerWorkflowInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Api_V1_WorkflowAsyncClientProtocol {
+  internal func triggerWorkflow(
+    _ request: Api_V1_TriggerWorkflowRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Api_V1_TriggerWorkflowResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Api_V1_WorkflowClientMetadata.Methods.triggerWorkflow.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeTriggerWorkflowInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+internal struct Api_V1_WorkflowAsyncClient: Api_V1_WorkflowAsyncClientProtocol {
+  internal var channel: GRPCChannel
+  internal var defaultCallOptions: CallOptions
+  internal var interceptors: Api_V1_WorkflowClientInterceptorFactoryProtocol?
+
+  internal init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Api_V1_WorkflowClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+internal protocol Api_V1_WorkflowClientInterceptorFactoryProtocol: Sendable {
+
+  /// - Returns: Interceptors to use when invoking 'triggerWorkflow'.
+  func makeTriggerWorkflowInterceptors() -> [ClientInterceptor<Api_V1_TriggerWorkflowRequest, Api_V1_TriggerWorkflowResponse>]
+}
+
+internal enum Api_V1_WorkflowClientMetadata {
+  internal static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "Workflow",
+    fullName: "api.v1.Workflow",
+    methods: [
+      Api_V1_WorkflowClientMetadata.Methods.triggerWorkflow,
+    ]
+  )
+
+  internal enum Methods {
+    internal static let triggerWorkflow = GRPCMethodDescriptor(
+      name: "TriggerWorkflow",
+      path: "/api.v1.Workflow/TriggerWorkflow",
+      type: GRPCCallType.unary
+    )
+  }
+}
+
 /// To build a server, implement a class that conforms to this protocol.
 internal protocol Api_V1_AuthProvider: CallHandlerProvider {
   var interceptors: Api_V1_AuthServerInterceptorFactoryProtocol? { get }
@@ -2505,6 +2811,8 @@ internal enum Api_V1_InboxServerMetadata {
 internal protocol Api_V1_EntriesProvider: CallHandlerProvider {
   var interceptors: Api_V1_EntriesServerInterceptorFactoryProtocol? { get }
 
+  func findEntryDetail(request: Api_V1_FindEntryDetailRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_GetEntryDetailResponse>
+
   func getEntryDetail(request: Api_V1_GetEntryDetailRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_GetEntryDetailResponse>
 
   func createEntry(request: Api_V1_CreateEntryRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_CreateEntryResponse>
@@ -2534,6 +2842,15 @@ extension Api_V1_EntriesProvider {
     context: CallHandlerContext
   ) -> GRPCServerHandlerProtocol? {
     switch name {
+    case "FindEntryDetail":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_FindEntryDetailRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_GetEntryDetailResponse>(),
+        interceptors: self.interceptors?.makeFindEntryDetailInterceptors() ?? [],
+        userFunction: self.findEntryDetail(request:context:)
+      )
+
     case "GetEntryDetail":
       return UnaryServerHandler(
         context: context,
@@ -2618,6 +2935,11 @@ internal protocol Api_V1_EntriesAsyncProvider: CallHandlerProvider, Sendable {
   static var serviceDescriptor: GRPCServiceDescriptor { get }
   var interceptors: Api_V1_EntriesServerInterceptorFactoryProtocol? { get }
 
+  func findEntryDetail(
+    request: Api_V1_FindEntryDetailRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Api_V1_GetEntryDetailResponse
+
   func getEntryDetail(
     request: Api_V1_GetEntryDetailRequest,
     context: GRPCAsyncServerCallContext
@@ -2679,6 +3001,15 @@ extension Api_V1_EntriesAsyncProvider {
     context: CallHandlerContext
   ) -> GRPCServerHandlerProtocol? {
     switch name {
+    case "FindEntryDetail":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_FindEntryDetailRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_GetEntryDetailResponse>(),
+        interceptors: self.interceptors?.makeFindEntryDetailInterceptors() ?? [],
+        wrapping: { try await self.findEntryDetail(request: $0, context: $1) }
+      )
+
     case "GetEntryDetail":
       return GRPCAsyncServerHandler(
         context: context,
@@ -2759,6 +3090,10 @@ extension Api_V1_EntriesAsyncProvider {
 
 internal protocol Api_V1_EntriesServerInterceptorFactoryProtocol: Sendable {
 
+  /// - Returns: Interceptors to use when handling 'findEntryDetail'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeFindEntryDetailInterceptors() -> [ServerInterceptor<Api_V1_FindEntryDetailRequest, Api_V1_GetEntryDetailResponse>]
+
   /// - Returns: Interceptors to use when handling 'getEntryDetail'.
   ///   Defaults to calling `self.makeInterceptors()`.
   func makeGetEntryDetailInterceptors() -> [ServerInterceptor<Api_V1_GetEntryDetailRequest, Api_V1_GetEntryDetailResponse>]
@@ -2797,6 +3132,7 @@ internal enum Api_V1_EntriesServerMetadata {
     name: "Entries",
     fullName: "api.v1.Entries",
     methods: [
+      Api_V1_EntriesServerMetadata.Methods.findEntryDetail,
       Api_V1_EntriesServerMetadata.Methods.getEntryDetail,
       Api_V1_EntriesServerMetadata.Methods.createEntry,
       Api_V1_EntriesServerMetadata.Methods.updateEntry,
@@ -2809,6 +3145,12 @@ internal enum Api_V1_EntriesServerMetadata {
   )
 
   internal enum Methods {
+    internal static let findEntryDetail = GRPCMethodDescriptor(
+      name: "FindEntryDetail",
+      path: "/api.v1.Entries/FindEntryDetail",
+      type: GRPCCallType.unary
+    )
+
     internal static let getEntryDetail = GRPCMethodDescriptor(
       name: "GetEntryDetail",
       path: "/api.v1.Entries/GetEntryDetail",
@@ -3186,6 +3528,8 @@ internal protocol Api_V1_RoomProvider: CallHandlerProvider {
 
   func deleteRoom(request: Api_V1_DeleteRoomRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_DeleteRoomResponse>
 
+  func clearRoom(request: Api_V1_ClearRoomRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_ClearRoomResponse>
+
   func chatInRoom(request: Api_V1_ChatRequest, context: StreamingResponseCallContext<Api_V1_ChatResponse>) -> EventLoopFuture<GRPCStatus>
 }
 
@@ -3237,6 +3581,15 @@ extension Api_V1_RoomProvider {
         userFunction: self.deleteRoom(request:context:)
       )
 
+    case "ClearRoom":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_ClearRoomRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_ClearRoomResponse>(),
+        interceptors: self.interceptors?.makeClearRoomInterceptors() ?? [],
+        userFunction: self.clearRoom(request:context:)
+      )
+
     case "ChatInRoom":
       return ServerStreamingServerHandler(
         context: context,
@@ -3277,6 +3630,11 @@ internal protocol Api_V1_RoomAsyncProvider: CallHandlerProvider, Sendable {
     request: Api_V1_DeleteRoomRequest,
     context: GRPCAsyncServerCallContext
   ) async throws -> Api_V1_DeleteRoomResponse
+
+  func clearRoom(
+    request: Api_V1_ClearRoomRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Api_V1_ClearRoomResponse
 
   func chatInRoom(
     request: Api_V1_ChatRequest,
@@ -3340,6 +3698,15 @@ extension Api_V1_RoomAsyncProvider {
         wrapping: { try await self.deleteRoom(request: $0, context: $1) }
       )
 
+    case "ClearRoom":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_ClearRoomRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_ClearRoomResponse>(),
+        interceptors: self.interceptors?.makeClearRoomInterceptors() ?? [],
+        wrapping: { try await self.clearRoom(request: $0, context: $1) }
+      )
+
     case "ChatInRoom":
       return GRPCAsyncServerHandler(
         context: context,
@@ -3373,6 +3740,10 @@ internal protocol Api_V1_RoomServerInterceptorFactoryProtocol: Sendable {
   ///   Defaults to calling `self.makeInterceptors()`.
   func makeDeleteRoomInterceptors() -> [ServerInterceptor<Api_V1_DeleteRoomRequest, Api_V1_DeleteRoomResponse>]
 
+  /// - Returns: Interceptors to use when handling 'clearRoom'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeClearRoomInterceptors() -> [ServerInterceptor<Api_V1_ClearRoomRequest, Api_V1_ClearRoomResponse>]
+
   /// - Returns: Interceptors to use when handling 'chatInRoom'.
   ///   Defaults to calling `self.makeInterceptors()`.
   func makeChatInRoomInterceptors() -> [ServerInterceptor<Api_V1_ChatRequest, Api_V1_ChatResponse>]
@@ -3387,6 +3758,7 @@ internal enum Api_V1_RoomServerMetadata {
       Api_V1_RoomServerMetadata.Methods.openRoom,
       Api_V1_RoomServerMetadata.Methods.updateRoom,
       Api_V1_RoomServerMetadata.Methods.deleteRoom,
+      Api_V1_RoomServerMetadata.Methods.clearRoom,
       Api_V1_RoomServerMetadata.Methods.chatInRoom,
     ]
   )
@@ -3413,6 +3785,12 @@ internal enum Api_V1_RoomServerMetadata {
     internal static let deleteRoom = GRPCMethodDescriptor(
       name: "DeleteRoom",
       path: "/api.v1.Room/DeleteRoom",
+      type: GRPCCallType.unary
+    )
+
+    internal static let clearRoom = GRPCMethodDescriptor(
+      name: "ClearRoom",
+      path: "/api.v1.Room/ClearRoom",
       type: GRPCCallType.unary
     )
 
@@ -3595,6 +3973,110 @@ internal enum Api_V1_NotifyServerMetadata {
     internal static let commitSyncedEvent = GRPCMethodDescriptor(
       name: "CommitSyncedEvent",
       path: "/api.v1.Notify/CommitSyncedEvent",
+      type: GRPCCallType.unary
+    )
+  }
+}
+/// To build a server, implement a class that conforms to this protocol.
+internal protocol Api_V1_WorkflowProvider: CallHandlerProvider {
+  var interceptors: Api_V1_WorkflowServerInterceptorFactoryProtocol? { get }
+
+  func triggerWorkflow(request: Api_V1_TriggerWorkflowRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_TriggerWorkflowResponse>
+}
+
+extension Api_V1_WorkflowProvider {
+  internal var serviceName: Substring {
+    return Api_V1_WorkflowServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  internal func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "TriggerWorkflow":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_TriggerWorkflowRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_TriggerWorkflowResponse>(),
+        interceptors: self.interceptors?.makeTriggerWorkflowInterceptors() ?? [],
+        userFunction: self.triggerWorkflow(request:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+/// To implement a server, implement an object which conforms to this protocol.
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+internal protocol Api_V1_WorkflowAsyncProvider: CallHandlerProvider, Sendable {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Api_V1_WorkflowServerInterceptorFactoryProtocol? { get }
+
+  func triggerWorkflow(
+    request: Api_V1_TriggerWorkflowRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Api_V1_TriggerWorkflowResponse
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Api_V1_WorkflowAsyncProvider {
+  internal static var serviceDescriptor: GRPCServiceDescriptor {
+    return Api_V1_WorkflowServerMetadata.serviceDescriptor
+  }
+
+  internal var serviceName: Substring {
+    return Api_V1_WorkflowServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  internal var interceptors: Api_V1_WorkflowServerInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  internal func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "TriggerWorkflow":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_TriggerWorkflowRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_TriggerWorkflowResponse>(),
+        interceptors: self.interceptors?.makeTriggerWorkflowInterceptors() ?? [],
+        wrapping: { try await self.triggerWorkflow(request: $0, context: $1) }
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+internal protocol Api_V1_WorkflowServerInterceptorFactoryProtocol: Sendable {
+
+  /// - Returns: Interceptors to use when handling 'triggerWorkflow'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeTriggerWorkflowInterceptors() -> [ServerInterceptor<Api_V1_TriggerWorkflowRequest, Api_V1_TriggerWorkflowResponse>]
+}
+
+internal enum Api_V1_WorkflowServerMetadata {
+  internal static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "Workflow",
+    fullName: "api.v1.Workflow",
+    methods: [
+      Api_V1_WorkflowServerMetadata.Methods.triggerWorkflow,
+    ]
+  )
+
+  internal enum Methods {
+    internal static let triggerWorkflow = GRPCMethodDescriptor(
+      name: "TriggerWorkflow",
+      path: "/api.v1.Workflow/TriggerWorkflow",
       type: GRPCCallType.unary
     )
   }

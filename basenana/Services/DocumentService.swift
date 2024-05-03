@@ -54,4 +54,18 @@ class DocumentService {
             log.error("[documentService] cleanup local document \(documentID) failed \(error)")
         }
     }
+    
+    func ingestDocument(entryId: Int64){
+        var requset = Api_V1_TriggerWorkflowRequest()
+        requset.workflowID = "buildin.ingest"
+        requset.target.entryID = entryId
+        
+        do {
+            let call = clientSet!.workflow.triggerWorkflow(requset, callOptions: nil)
+            let _ = try call.response.wait()
+        } catch {
+            log.error("trigger workflow failed \(error)")
+            return
+        }
+    }
 }
