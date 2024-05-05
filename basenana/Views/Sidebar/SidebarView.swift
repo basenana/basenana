@@ -10,7 +10,8 @@ import SwiftUI
 import SwiftData
 
 struct SidebarView: View {
-
+    @State var selection = Set<GroupViewModel.ID>()
+    
     var body: some View {
         List{
             NavigationLink {
@@ -18,7 +19,7 @@ struct SidebarView: View {
                     .navigationTitle("Inbox")
             } label: {
                 HStack{
-                    Image(systemName: "tray.fill").foregroundColor(.blue)
+                    Image(systemName: "tray.full.fill").foregroundColor(.blue)
                     Text("Inbox")
                 }.frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.vertical, 5)

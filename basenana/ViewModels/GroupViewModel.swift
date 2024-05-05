@@ -10,7 +10,7 @@ import Foundation
 var GroupRoot: GroupViewModel = GroupViewModel(groupID: rootEntryID, groupName: "root")
 
 @Observable
-class GroupViewModel: Identifiable {
+class GroupViewModel: Identifiable, Hashable {
     var groupID: Int64
     var groupName: String
     var children: [GroupViewModel]? = nil
@@ -19,5 +19,14 @@ class GroupViewModel: Identifiable {
     init(groupID: Int64, groupName: String) {
         self.groupID = groupID
         self.groupName = groupName
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(groupID)
+        hasher.combine(groupName)
+    }
+    
+    static func == (lhs: GroupViewModel, rhs: GroupViewModel) -> Bool {
+        return lhs.groupID == rhs.groupID
     }
 }

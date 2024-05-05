@@ -63,6 +63,11 @@ service Entries {
   rpc WriteFile (stream WriteFileRequest) returns (WriteFileResponse) {}
   rpc ReadFile (ReadFileRequest) returns (stream ReadFileResponse) {}
 }
+message FindEntryDetailRequest {
+  bool root = 1;
+  int64 parentID = 2;
+  string name = 3;
+}
 
 message FindEntryDetailRequest {
   bool root = 1;
@@ -449,3 +454,4 @@ message Event {
   string refType = 11;
   int64 sequence = 12;
 }
+

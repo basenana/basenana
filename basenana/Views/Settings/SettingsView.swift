@@ -24,6 +24,9 @@ struct SettingsView: View {
     @AppStorage("org.basenana.nanafs.clientCrt")
     private var encodedClientCrt: String = ""
     
+    @AppStorage("org.basenana.sync.sequence")
+    private var syncedSeqNum: String = "0"
+    
     var body: some View {
         Form {
             Section("Authentication") {
@@ -47,6 +50,7 @@ struct SettingsView: View {
             HStack {
                 Button {
                     encodedClientCrt = ""
+                    syncedSeqNum = "0"
                     AuthClient().reflushToken()
                 } label: {
                     Text("Submit")

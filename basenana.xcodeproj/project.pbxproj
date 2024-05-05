@@ -30,6 +30,8 @@
 		3F4A78DB2BCF7FFB0035F90F /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4A78DA2BCF7FFB0035F90F /* SwiftyBeaver */; };
 		3F4A78DD2BCF80080035F90F /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78DC2BCF80080035F90F /* Logging.swift */; };
 		3F4A78E12BD299110035F90F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78E02BD299110035F90F /* SettingsView.swift */; };
+		3F7444B72BE3D1B000CC9C1E /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 3F7444B62BE3D1B000CC9C1E /* SwiftSoup */; };
+		3F7444B92BE50DE900CC9C1E /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3F7444B82BE50DE900CC9C1E /* Info.plist */; };
 		3F81C9C52BAF1A6D00FEE130 /* GroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C42BAF1A6D00FEE130 /* GroupViewModel.swift */; };
 		3F81C9C72BAFCB8900FEE130 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C62BAFCB8900FEE130 /* MainView.swift */; };
 		3FB782412BC1A82700327191 /* CGRPCZlib in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782402BC1A82700327191 /* CGRPCZlib */; };
@@ -39,9 +41,10 @@
 		3FB782492BC1A82700327191 /* protoc-gen-grpc-swift in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782482BC1A82700327191 /* protoc-gen-grpc-swift */; };
 		3FB782542BC2D0F600327191 /* fsapi-v1.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB782502BC2D0F600327191 /* fsapi-v1.grpc.swift */; };
 		3FB782552BC2D0F600327191 /* fsapi-v1.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB782512BC2D0F600327191 /* fsapi-v1.pb.swift */; };
-		ED1D72CE2BD2BDAD006CF95F /* DialogueViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1D72CD2BD2BDAD006CF95F /* DialogueViewModel.swift */; };
 		3FDC2EA12BDCEBC500344DF8 /* EntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA02BDCEBC500344DF8 /* EntryViewModel.swift */; };
 		3FDC2EA32BDCEEB200344DF8 /* IDHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA22BDCEEB200344DF8 /* IDHelper.swift */; };
+		3FDC2EA72BE3CC8C00344DF8 /* HTMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA62BE3CC8C00344DF8 /* HTMLParser.swift */; };
+		ED1D72CE2BD2BDAD006CF95F /* DialogueViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1D72CD2BD2BDAD006CF95F /* DialogueViewModel.swift */; };
 		ED47907B2BB129FF00FEA8D4 /* DocumentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED47907A2BB129FF00FEA8D4 /* DocumentService.swift */; };
 		ED72603E2BC2E25D005F1166 /* DialogueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED72603D2BC2E25D005F1166 /* DialogueModel.swift */; };
 		ED7260402BC2E34A005F1166 /* DialogueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED72603F2BC2E34A005F1166 /* DialogueService.swift */; };
@@ -94,14 +97,15 @@
 		3F4A78D72BCD853C0035F90F /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		3F4A78DC2BCF80080035F90F /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		3F4A78E02BD299110035F90F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		3F7444B82BE50DE900CC9C1E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3F81C9C42BAF1A6D00FEE130 /* GroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewModel.swift; sourceTree = "<group>"; };
 		3F81C9C62BAFCB8900FEE130 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		3FB782502BC2D0F600327191 /* fsapi-v1.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "fsapi-v1.grpc.swift"; sourceTree = "<group>"; };
 		3FB782512BC2D0F600327191 /* fsapi-v1.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "fsapi-v1.pb.swift"; sourceTree = "<group>"; };
-		ED1D72CD2BD2BDAD006CF95F /* DialogueViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueViewModel.swift; sourceTree = "<group>"; };
 		3FDC2EA02BDCEBC500344DF8 /* EntryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryViewModel.swift; sourceTree = "<group>"; };
 		3FDC2EA22BDCEEB200344DF8 /* IDHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDHelper.swift; sourceTree = "<group>"; };
-		3FDC2EA42BDD1D5100344DF8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		3FDC2EA62BE3CC8C00344DF8 /* HTMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLParser.swift; sourceTree = "<group>"; };
+		ED1D72CD2BD2BDAD006CF95F /* DialogueViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueViewModel.swift; sourceTree = "<group>"; };
 		ED47907A2BB129FF00FEA8D4 /* DocumentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentService.swift; sourceTree = "<group>"; };
 		ED72603D2BC2E25D005F1166 /* DialogueModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueModel.swift; sourceTree = "<group>"; };
 		ED72603F2BC2E34A005F1166 /* DialogueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueService.swift; sourceTree = "<group>"; };
@@ -121,6 +125,7 @@
 				3F4A78DB2BCF7FFB0035F90F /* SwiftyBeaver in Frameworks */,
 				3FB782472BC1A82700327191 /* _GRPCCore in Frameworks */,
 				3F4A78D42BCD82290035F90F /* GRDB in Frameworks */,
+				3F7444B72BE3D1B000CC9C1E /* SwiftSoup in Frameworks */,
 				3FB782432BC1A82700327191 /* GRPC in Frameworks */,
 				3FB782412BC1A82700327191 /* CGRPCZlib in Frameworks */,
 			);
@@ -166,7 +171,7 @@
 		3F1BBE1B2B8E147F005D533F /* basenana */ = {
 			isa = PBXGroup;
 			children = (
-				3FDC2EA42BDD1D5100344DF8 /* Info.plist */,
+				3F7444B82BE50DE900CC9C1E /* Info.plist */,
 				EDEF16362BC8DD7E000BC25C /* Extensions */,
 				3FB782532BC2D0F600327191 /* fsapi */,
 				3F1BBE4D2B90C3EA005D533F /* Helpers */,
@@ -210,11 +215,11 @@
 		3F1BBE492B90C393005D533F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				3F7444BA2BE7153400CC9C1E /* InboxView */,
 				3FDC2E9B2BDC030800344DF8 /* Group */,
 				3F4A78DF2BD299040035F90F /* Settings */,
 				3F4A78C62BC99CE90035F90F /* Sidebar */,
 				ED85A3BF2BBAB2520040598E /* Document */,
-				3F1BBE5F2B94BAF9005D533F /* QuickInboxView.swift */,
 				3F81C9C62BAFCB8900FEE130 /* MainView.swift */,
 			);
 			path = Views;
@@ -249,6 +254,7 @@
 				3F1BBE5D2B93664E005D533F /* HTMLStringView.swift */,
 				3FDC2EA22BDCEEB200344DF8 /* IDHelper.swift */,
 				3F4A78DC2BCF80080035F90F /* Logging.swift */,
+				3FDC2EA62BE3CC8C00344DF8 /* HTMLParser.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -279,6 +285,14 @@
 				3F4A78E02BD299110035F90F /* SettingsView.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		3F7444BA2BE7153400CC9C1E /* InboxView */ = {
+			isa = PBXGroup;
+			children = (
+				3F1BBE5F2B94BAF9005D533F /* QuickInboxView.swift */,
+			);
+			path = InboxView;
 			sourceTree = "<group>";
 		};
 		3FB782532BC2D0F600327191 /* fsapi */ = {
@@ -341,6 +355,7 @@
 				3FB782482BC1A82700327191 /* protoc-gen-grpc-swift */,
 				3F4A78D32BCD82290035F90F /* GRDB */,
 				3F4A78DA2BCF7FFB0035F90F /* SwiftyBeaver */,
+				3F7444B62BE3D1B000CC9C1E /* SwiftSoup */,
 			);
 			productName = basenana;
 			productReference = 3F1BBE192B8E147F005D533F /* basenana.app */;
@@ -418,6 +433,7 @@
 				3FB7823F2BC1A82700327191 /* XCRemoteSwiftPackageReference "grpc-swift" */,
 				3F4A78D22BCD82290035F90F /* XCRemoteSwiftPackageReference "GRDB.swift" */,
 				3F4A78D92BCF7FFB0035F90F /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
+				3FDC2EA52BE3CC2C00344DF8 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 			);
 			productRefGroup = 3F1BBE1A2B8E147F005D533F /* Products */;
 			projectDirPath = "";
@@ -437,6 +453,7 @@
 			files = (
 				3F1BBE272B8E1480005D533F /* Preview Assets.xcassets in Resources */,
 				3F1BBE232B8E1480005D533F /* Assets.xcassets in Resources */,
+				3F7444B92BE50DE900CC9C1E /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -479,6 +496,7 @@
 				3F4A78D82BCD853C0035F90F /* Database.swift in Sources */,
 				EDEF16382BC8DD93000BC25C /* Color.swift in Sources */,
 				3F1BBE4F2B90C4D5005D533F /* SidebarView.swift in Sources */,
+				3FDC2EA72BE3CC8C00344DF8 /* HTMLParser.swift in Sources */,
 				3F4A78CF2BCC2A660035F90F /* FsClientSet.swift in Sources */,
 				3FDC2EA12BDCEBC500344DF8 /* EntryViewModel.swift in Sources */,
 				3F81C9C52BAF1A6D00FEE130 /* GroupViewModel.swift in Sources */,
@@ -875,6 +893,14 @@
 				minimumVersion = 1.22.0;
 			};
 		};
+		3FDC2EA52BE3CC2C00344DF8 /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scinfu/SwiftSoup.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -887,6 +913,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3F4A78D92BCF7FFB0035F90F /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
 			productName = SwiftyBeaver;
+		};
+		3F7444B62BE3D1B000CC9C1E /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3FDC2EA52BE3CC2C00344DF8 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
 		};
 		3FB782402BC1A82700327191 /* CGRPCZlib */ = {
 			isa = XCSwiftPackageProductDependency;

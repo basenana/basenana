@@ -16,11 +16,7 @@ struct basenanaApp: App {
             MainView()
                 .frame(minWidth: 1000, minHeight: 600)
         }
-#if os(macOS)
-        Window("Inbox", id: "win-inbox"){
-            QuickInboxView()
-        }
-#endif
+        
         Settings {
             SettingsView()
         }

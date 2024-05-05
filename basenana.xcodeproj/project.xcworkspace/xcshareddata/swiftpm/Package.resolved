@@ -1,13 +1,13 @@
 {
-  "originHash" : "31fe0069e44c7a8b7a6cc1964393cf00aa904ac85c5685c87c1b04ba4bc5600d",
+  "originHash" : "255bac704dae08665c74a022af5f6ae077487905fd8736c713cdcc2882ee3863",
   "pins" : [
     {
       "identity" : "grdb.swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/groue/GRDB.swift.git",
       "state" : {
-        "revision" : "77b85bed259b7f107710a0b78c439b1c5839dc45",
-        "version" : "6.26.0"
+        "revision" : "639fa9168d36931b36a79e60dc06b7d23852f1f4",
+        "version" : "6.27.0"
       }
     },
     {
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/grpc/grpc-swift",
       "state" : {
-        "revision" : "393b02b1c39cc82fb24e57f24fa446f43e8124c9",
-        "version" : "1.22.0"
+        "revision" : "6a90b7e77e29f9bda6c2b3a4165a40d6c02cfda1",
+        "version" : "1.23.0"
       }
     },
     {
@@ -60,8 +60,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio.git",
       "state" : {
-        "revision" : "fc63f0cf4e55a4597407a9fc95b16a2bc44b4982",
-        "version" : "2.64.0"
+        "revision" : "359c461e5561d22c6334828806cc25d759ca7aa6",
+        "version" : "2.65.0"
       }
     },
     {
@@ -78,8 +78,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio-http2.git",
       "state" : {
-        "revision" : "0904bf0feb5122b7e5c3f15db7df0eabe623dd87",
-        "version" : "1.30.0"
+        "revision" : "c6afe04165c865faaa687b42c32ed76dfcc91076",
+        "version" : "1.31.0"
       }
     },
     {
@@ -119,12 +119,21 @@
       }
     },
     {
+      "identity" : "swiftsoup",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/scinfu/SwiftSoup.git",
+      "state" : {
+        "revision" : "028487d4a8a291b2fe1b4392b5425b6172056148",
+        "version" : "2.7.2"
+      }
+    },
+    {
       "identity" : "swiftybeaver",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SwiftyBeaver/SwiftyBeaver.git",
       "state" : {
-        "revision" : "9a83a973f5169062701cc9f11dd2b2042ecaa8b5",
-        "version" : "2.0.1"
+        "revision" : "1ae1f8fe06ce9e3bd84d1e821dcca5054dc6fb3c",
+        "version" : "2.1.0"
       }
     }
   ],
