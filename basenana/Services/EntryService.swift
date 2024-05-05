@@ -15,13 +15,15 @@ let entryService = EntryService()
 
 class EntryService {
     
-    func quickInbox(urlStr: String, fileType: String, isClusterFree:Bool) {
+    func quickInbox(urlStr: String, filename: String, fileType: String, isClusterFree:Bool) {
         if clientSet == nil{
             log.error("[entryService] unauthenticated")
             return
         }
+        
         var request = Api_V1_QuickInboxRequest()
         request.url = urlStr
+        request.filename = filename
         request.fileType = .webArchiveFile
         request.clutterFree = isClusterFree
         let call = clientSet!.inbox.quickInbox(request, callOptions: CallOptions(timeLimit: .timeout(.seconds(10))))
@@ -47,10 +49,60 @@ class EntryService {
         }
     }
     
+    func getRoot() -> EntryModel? {
+        var req = Api_V1_FindEntryDetailRequest()
+        req.root = true
+        
+        let call = clientSet!.entries.findEntryDetail(req, callOptions: CallOptions(timeLimit: .timeout(.seconds(10))))
+        
+        do {
+            let response = try call.response.wait()
+            return getEntry(entryID: response.entry.id)
+        } catch {
+            log.error("[entryService] get root entry failed \(error)")
+        }
+        
+        return nil
+    }
+    
+    func getInbox() -> EntryModel? {
+        return findChildren(parentID: 1, chName: ".inbox")
+    }
+        
+
+    func findChildren(parentID: Int64, chName: String) -> EntryModel? {
+        var req = Api_V1_FindEntryDetailRequest()
+        req.parentID = parentID
+        req.name = chName
+        
+        let call = clientSet!.entries.findEntryDetail(req, callOptions: CallOptions(timeLimit: .timeout(.seconds(10))))
+        do {
+            let response = try call.response.wait()
+            log.info(response)
+            return getEntry(entryID: response.entry.id)
+        } catch {
+            log.error("[entryService] get root entry failed \(error)")
+        }
+        
+        return nil
+    }
+
     func listChildren(parentEntryID: Int64) -> [EntryModel]{
+        var realParentID: Int64
+        switch parentEntryID {
+        case inboxEntryID:
+            realParentID = (getInbox()?.id!) ?? -1
+        default:
+            realParentID = parentEntryID
+        }
+        
+        if realParentID == -1{
+            log.warning("no real parent entry \(parentEntryID) find")
+        }
+        
         do {
             let data: [EntryModel] = try dbInstance.queue.read{ db in
-                try EntryModel.all().filter(Column("parent") == parentEntryID).fetchAll(db)
+                try EntryModel.all().filter(Column("parent") == realParentID).fetchAll(db)
                 
             }
             return data
@@ -70,7 +122,7 @@ class EntryService {
         }
         log.debug("[entryService] created new local entry \(newEn.id ?? -1)")
     }
-
+    
     func cleanupLocalEntry(entryID: Int64) {
         log.debug("[entryService] cleanup local entry \(entryID)")
         do {

@@ -380,6 +380,11 @@ internal protocol Api_V1_EntriesClientProtocol: GRPCClient {
   var serviceName: String { get }
   var interceptors: Api_V1_EntriesClientInterceptorFactoryProtocol? { get }
 
+  func findEntryDetail(
+    _ request: Api_V1_FindEntryDetailRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Api_V1_FindEntryDetailRequest, Api_V1_GetEntryDetailResponse>
+
   func getEntryDetail(
     _ request: Api_V1_GetEntryDetailRequest,
     callOptions: CallOptions?
@@ -424,6 +429,24 @@ internal protocol Api_V1_EntriesClientProtocol: GRPCClient {
 extension Api_V1_EntriesClientProtocol {
   internal var serviceName: String {
     return "api.v1.Entries"
+  }
+
+  /// Unary call to FindEntryDetail
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to FindEntryDetail.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  internal func findEntryDetail(
+    _ request: Api_V1_FindEntryDetailRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Api_V1_FindEntryDetailRequest, Api_V1_GetEntryDetailResponse> {
+    return self.makeUnaryCall(
+      path: Api_V1_EntriesClientMetadata.Methods.findEntryDetail.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeFindEntryDetailInterceptors() ?? []
+    )
   }
 
   /// Unary call to GetEntryDetail
@@ -636,6 +659,11 @@ internal protocol Api_V1_EntriesAsyncClientProtocol: GRPCClient {
   static var serviceDescriptor: GRPCServiceDescriptor { get }
   var interceptors: Api_V1_EntriesClientInterceptorFactoryProtocol? { get }
 
+  func makeFindEntryDetailCall(
+    _ request: Api_V1_FindEntryDetailRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Api_V1_FindEntryDetailRequest, Api_V1_GetEntryDetailResponse>
+
   func makeGetEntryDetailCall(
     _ request: Api_V1_GetEntryDetailRequest,
     callOptions: CallOptions?
@@ -684,6 +712,18 @@ extension Api_V1_EntriesAsyncClientProtocol {
 
   internal var interceptors: Api_V1_EntriesClientInterceptorFactoryProtocol? {
     return nil
+  }
+
+  internal func makeFindEntryDetailCall(
+    _ request: Api_V1_FindEntryDetailRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Api_V1_FindEntryDetailRequest, Api_V1_GetEntryDetailResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Api_V1_EntriesClientMetadata.Methods.findEntryDetail.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeFindEntryDetailInterceptors() ?? []
+    )
   }
 
   internal func makeGetEntryDetailCall(
@@ -783,6 +823,18 @@ extension Api_V1_EntriesAsyncClientProtocol {
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 extension Api_V1_EntriesAsyncClientProtocol {
+  internal func findEntryDetail(
+    _ request: Api_V1_FindEntryDetailRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Api_V1_GetEntryDetailResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Api_V1_EntriesClientMetadata.Methods.findEntryDetail.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeFindEntryDetailInterceptors() ?? []
+    )
+  }
+
   internal func getEntryDetail(
     _ request: Api_V1_GetEntryDetailRequest,
     callOptions: CallOptions? = nil
@@ -911,6 +963,9 @@ internal struct Api_V1_EntriesAsyncClient: Api_V1_EntriesAsyncClientProtocol {
 
 internal protocol Api_V1_EntriesClientInterceptorFactoryProtocol: Sendable {
 
+  /// - Returns: Interceptors to use when invoking 'findEntryDetail'.
+  func makeFindEntryDetailInterceptors() -> [ClientInterceptor<Api_V1_FindEntryDetailRequest, Api_V1_GetEntryDetailResponse>]
+
   /// - Returns: Interceptors to use when invoking 'getEntryDetail'.
   func makeGetEntryDetailInterceptors() -> [ClientInterceptor<Api_V1_GetEntryDetailRequest, Api_V1_GetEntryDetailResponse>]
 
@@ -941,6 +996,7 @@ internal enum Api_V1_EntriesClientMetadata {
     name: "Entries",
     fullName: "api.v1.Entries",
     methods: [
+      Api_V1_EntriesClientMetadata.Methods.findEntryDetail,
       Api_V1_EntriesClientMetadata.Methods.getEntryDetail,
       Api_V1_EntriesClientMetadata.Methods.createEntry,
       Api_V1_EntriesClientMetadata.Methods.updateEntry,
@@ -953,6 +1009,12 @@ internal enum Api_V1_EntriesClientMetadata {
   )
 
   internal enum Methods {
+    internal static let findEntryDetail = GRPCMethodDescriptor(
+      name: "FindEntryDetail",
+      path: "/api.v1.Entries/FindEntryDetail",
+      type: GRPCCallType.unary
+    )
+
     internal static let getEntryDetail = GRPCMethodDescriptor(
       name: "GetEntryDetail",
       path: "/api.v1.Entries/GetEntryDetail",
@@ -2505,6 +2567,8 @@ internal enum Api_V1_InboxServerMetadata {
 internal protocol Api_V1_EntriesProvider: CallHandlerProvider {
   var interceptors: Api_V1_EntriesServerInterceptorFactoryProtocol? { get }
 
+  func findEntryDetail(request: Api_V1_FindEntryDetailRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_GetEntryDetailResponse>
+
   func getEntryDetail(request: Api_V1_GetEntryDetailRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_GetEntryDetailResponse>
 
   func createEntry(request: Api_V1_CreateEntryRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_CreateEntryResponse>
@@ -2534,6 +2598,15 @@ extension Api_V1_EntriesProvider {
     context: CallHandlerContext
   ) -> GRPCServerHandlerProtocol? {
     switch name {
+    case "FindEntryDetail":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_FindEntryDetailRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_GetEntryDetailResponse>(),
+        interceptors: self.interceptors?.makeFindEntryDetailInterceptors() ?? [],
+        userFunction: self.findEntryDetail(request:context:)
+      )
+
     case "GetEntryDetail":
       return UnaryServerHandler(
         context: context,
@@ -2618,6 +2691,11 @@ internal protocol Api_V1_EntriesAsyncProvider: CallHandlerProvider, Sendable {
   static var serviceDescriptor: GRPCServiceDescriptor { get }
   var interceptors: Api_V1_EntriesServerInterceptorFactoryProtocol? { get }
 
+  func findEntryDetail(
+    request: Api_V1_FindEntryDetailRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Api_V1_GetEntryDetailResponse
+
   func getEntryDetail(
     request: Api_V1_GetEntryDetailRequest,
     context: GRPCAsyncServerCallContext
@@ -2679,6 +2757,15 @@ extension Api_V1_EntriesAsyncProvider {
     context: CallHandlerContext
   ) -> GRPCServerHandlerProtocol? {
     switch name {
+    case "FindEntryDetail":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_FindEntryDetailRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_GetEntryDetailResponse>(),
+        interceptors: self.interceptors?.makeFindEntryDetailInterceptors() ?? [],
+        wrapping: { try await self.findEntryDetail(request: $0, context: $1) }
+      )
+
     case "GetEntryDetail":
       return GRPCAsyncServerHandler(
         context: context,
@@ -2759,6 +2846,10 @@ extension Api_V1_EntriesAsyncProvider {
 
 internal protocol Api_V1_EntriesServerInterceptorFactoryProtocol: Sendable {
 
+  /// - Returns: Interceptors to use when handling 'findEntryDetail'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeFindEntryDetailInterceptors() -> [ServerInterceptor<Api_V1_FindEntryDetailRequest, Api_V1_GetEntryDetailResponse>]
+
   /// - Returns: Interceptors to use when handling 'getEntryDetail'.
   ///   Defaults to calling `self.makeInterceptors()`.
   func makeGetEntryDetailInterceptors() -> [ServerInterceptor<Api_V1_GetEntryDetailRequest, Api_V1_GetEntryDetailResponse>]
@@ -2797,6 +2888,7 @@ internal enum Api_V1_EntriesServerMetadata {
     name: "Entries",
     fullName: "api.v1.Entries",
     methods: [
+      Api_V1_EntriesServerMetadata.Methods.findEntryDetail,
       Api_V1_EntriesServerMetadata.Methods.getEntryDetail,
       Api_V1_EntriesServerMetadata.Methods.createEntry,
       Api_V1_EntriesServerMetadata.Methods.updateEntry,
@@ -2809,6 +2901,12 @@ internal enum Api_V1_EntriesServerMetadata {
   )
 
   internal enum Methods {
+    internal static let findEntryDetail = GRPCMethodDescriptor(
+      name: "FindEntryDetail",
+      path: "/api.v1.Entries/FindEntryDetail",
+      type: GRPCCallType.unary
+    )
+
     internal static let getEntryDetail = GRPCMethodDescriptor(
       name: "GetEntryDetail",
       path: "/api.v1.Entries/GetEntryDetail",

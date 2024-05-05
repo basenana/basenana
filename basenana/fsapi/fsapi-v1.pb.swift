@@ -176,6 +176,22 @@ struct Api_V1_QuickInboxResponse {
   init() {}
 }
 
+struct Api_V1_FindEntryDetailRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var root: Bool = false
+
+  var parentID: Int64 = 0
+
+  var name: String = String()
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
 struct Api_V1_GetEntryDetailRequest {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -1371,6 +1387,7 @@ extension Api_V1_QuickInboxRequest: @unchecked Sendable {}
 extension Api_V1_QuickInboxRequest.SourceType: @unchecked Sendable {}
 extension Api_V1_QuickInboxRequest.FileType: @unchecked Sendable {}
 extension Api_V1_QuickInboxResponse: @unchecked Sendable {}
+extension Api_V1_FindEntryDetailRequest: @unchecked Sendable {}
 extension Api_V1_GetEntryDetailRequest: @unchecked Sendable {}
 extension Api_V1_GetEntryDetailResponse: @unchecked Sendable {}
 extension Api_V1_CreateEntryRequest: @unchecked Sendable {}
@@ -1638,6 +1655,50 @@ extension Api_V1_QuickInboxResponse: SwiftProtobuf.Message, SwiftProtobuf._Messa
   static func ==(lhs: Api_V1_QuickInboxResponse, rhs: Api_V1_QuickInboxResponse) -> Bool {
     if lhs.entryID != rhs.entryID {return false}
     if lhs.jobID != rhs.jobID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_FindEntryDetailRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".FindEntryDetailRequest"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "root"),
+    2: .same(proto: "parentID"),
+    3: .same(proto: "name"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularBoolField(value: &self.root) }()
+      case 2: try { try decoder.decodeSingularInt64Field(value: &self.parentID) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.name) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.root != false {
+      try visitor.visitSingularBoolField(value: self.root, fieldNumber: 1)
+    }
+    if self.parentID != 0 {
+      try visitor.visitSingularInt64Field(value: self.parentID, fieldNumber: 2)
+    }
+    if !self.name.isEmpty {
+      try visitor.visitSingularStringField(value: self.name, fieldNumber: 3)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_FindEntryDetailRequest, rhs: Api_V1_FindEntryDetailRequest) -> Bool {
+    if lhs.root != rhs.root {return false}
+    if lhs.parentID != rhs.parentID {return false}
+    if lhs.name != rhs.name {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

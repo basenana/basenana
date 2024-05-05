@@ -50,16 +50,6 @@ struct GroupView: View{
             groupService.moveEntriesToGroup(entries: parseIDInfo(entryInfos: entryInfos), groupID: groupID)
             return false
         }
-        .toolbar {
-            if groupID != inboxEntryID{
-                ToolbarItemGroup(placement: .secondaryAction) {
-                    Button(action: {
-                    }, label: {
-                        Image(systemName: "ellipsis.message")
-                    })
-                }
-            }
-        }
         .onAppear{
             groupChileren = entryService.listChildren(parentEntryID: groupID)
         }

@@ -10,7 +10,7 @@ import Foundation
 import GRDB
 
 let rootEntryID: Int64 = 1
-let inboxEntryID: Int64 = 1024
+let inboxEntryID: Int64 = 2
 
 struct EntryModel: Codable, Identifiable {
     var id: Int64?
