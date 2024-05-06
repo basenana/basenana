@@ -87,6 +87,40 @@ class EntryService {
         return nil
     }
 
+    func getEntryProperty(entryID: Int64) -> [EntryPropertyModel] {
+        do {
+            let data: [EntryPropertyModel] = try dbInstance.queue.read{ db in
+                try EntryPropertyModel.all().filter(Column("oid") == entryID).fetchAll(db)
+            }
+            return data
+        } catch {
+            return []
+        }
+    }
+    
+    func syncEntryProperty(entryId: Int64) throws {
+        var request = Api_V1_GetEntryDetailRequest()
+        request.entryID = entryId
+        let call = clientSet!.entries.getEntryDetail(request, callOptions: nil)
+        
+        do {
+            let response = try call.response.wait()
+            let en = response.entry
+            let properties = response.properties
+            
+            for property in properties {
+                entryService.saveLocalEntryProperty(entryProperty: EntryPropertyModel(
+                    oid: entryId, key: property.key, value: property.value, encoded: property.encoded, syncAt: Date()))
+            }
+        } catch{
+            if error.localizedDescription.contains("not found") {
+                return
+            }
+            log.error("[entryService] sync entry property failed \(error)")
+            throw error
+        }
+    }
+
     func listChildren(parentEntryID: Int64) -> [EntryModel]{
         var realParentID: Int64
         switch parentEntryID {
@@ -123,14 +157,39 @@ class EntryService {
         log.debug("[entryService] created new local entry \(newEn.id ?? -1)")
     }
     
+    func saveLocalEntryProperty(entryProperty: EntryPropertyModel) {
+        var newEnp = entryProperty
+        var crtEnp: EntryPropertyModel?
+        do {
+            let crtEnps: [EntryPropertyModel] = try dbInstance.queue.read{ db in
+                try EntryPropertyModel.all().filter(Column("oid") == entryProperty.oid).fetchAll(db)
+            }
+            for c in crtEnps {
+                if c.key == entryProperty.key {
+                    crtEnp = c
+                    break
+                }
+            }
+            if let c = crtEnp {
+                newEnp.id = c.id
+            }
+            let _ = try dbInstance.queue.write{ db in
+                try newEnp.save(db)
+            }
+        } catch {
+            log.error("[entryService] create local entry property failed \(error)")
+        }
+    }
+
     func cleanupLocalEntry(entryID: Int64) {
         log.debug("[entryService] cleanup local entry \(entryID)")
         do {
             let _ = try dbInstance.queue.write{ db in
                 try EntryModel.filter(Column("id") == entryID).deleteAll(db)
+                try EntryPropertyModel.filter(Column("oid") == entryID).deleteAll(db)
                 try DocumentModel.filter(Column("oid") == entryID).deleteAll(db)
                 try RoomModel.filter(Column("oid") == entryID).deleteAll(db)
-                // todo delete room message also
+                try db.execute(sql: "DELETE FROM room_message WHERE roomid IN (SELECT id FROM room WHERE oid = ?)", arguments: [entryID])
             }
         } catch {
             log.error("[entryService] cleanup local entry \(entryID) failed \(error)")

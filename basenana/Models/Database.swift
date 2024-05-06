@@ -112,5 +112,16 @@ func migrateDbInit(db: GRDB.Database) throws {
 
         t.primaryKey(["id"])
     }
+    
+    try db.create(table: "entry_property"){ t in
+        t.column("id", .integer)
+        t.column("oid", .text)
+        t.column("key", .integer)
+        t.column("value", .text)
+        t.column("encoded", .text)
+        t.column("syncAt", .datetime)
+
+        t.primaryKey(["id"])
+    }
 }
 
