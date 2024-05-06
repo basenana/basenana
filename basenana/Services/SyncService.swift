@@ -21,7 +21,7 @@ class SyncService {
     
     @AppStorage("org.basenana.sync.sequence")
     private var syncedSeqNum: String = "0"
-
+    
     func deviceID() -> String {
         if self.deviceUUID == "" {
             self.deviceUUID = UUID().uuidString
@@ -53,11 +53,11 @@ class SyncService {
             log.error("[syncService] unauthenticated")
             return
         }
-
+        
         let syncedSeqNum = Int64(self.syncedSeqNum) ?? 0
         var needRelist: Bool = syncedSeqNum == 0
         var needSyncSeq: Int64
-
+        
         var request = Api_V1_GetLatestSequenceRequest()
         request.startSequence = syncedSeqNum
         let option = CallOptions(timeLimit: .timeout(.seconds(5)), eventLoopPreference: .indifferent)
@@ -204,6 +204,7 @@ class SyncService {
         do {
             let response = try call.response.wait()
             let en = response.entry
+            let properties = response.properties
             
             entryService.saveLocalEntry(entry: EntryModel(
                 id: entryId, name: en.name, aliases: en.aliases, parent: en.parent.id,
@@ -211,7 +212,15 @@ class SyncService {
                 namespace: en.namespace, storage: en.storage,
                 uid: en.access.uid, gid: en.access.gid, permissions: en.access.permissions,
                 createdAt: en.changedAt.date, changedAt: en.changedAt.date, modifiedAt: en.modifiedAt.date, accessAt: en.accessAt.date, syncAt: Date()))
+            
+            for property in properties {
+                entryService.saveLocalEntryProperty(entryProperty: EntryPropertyModel(
+                    oid: entryId, key: property.key, value: property.value, encoded: property.encoded, syncAt: Date()))
+            }
         } catch{
+            if error.localizedDescription.contains("not found") {
+                return
+            }
             log.error("[syncService] get entry detail failed \(error)")
             throw error
         }
@@ -231,6 +240,9 @@ class SyncService {
                 marked: doc.marked, unread: doc.unread, keyWords: doc.keyWords, content: doc.htmlContent, summary: doc.summary,
                 createdAt: doc.createdAt.date, changedAt: doc.changedAt.date, syncAt: Date()))
         } catch{
+            if error.localizedDescription.contains("not found") {
+                return
+            }
             log.error("[syncService] get document detail failed \(error)")
             throw error
         }

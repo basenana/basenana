@@ -22,31 +22,44 @@ struct DialogueView: View {
      @State var waitingMessage = ""
      @State private var room: RoomViewModel?
      @State var messages: [RoomMessageViewModel] = []
+     @State private var ingestState = ""
      
      var body: some View {
           VStack {
                
                HStack {
                     // dialogue title ..
-                    Text("Assisted Reading")
-                    .font(.headline)
+                    Text("辅助阅读")
+                         .font(.headline)
+                         .frame(height: 30)
                     
-//                    RoundedRectangle(cornerRadius: 10)
-//                         .fill(Color.DialogBoxBackground)
-//                         .overlay( 
-//                              Text("Assisted Reading")
-//                              .font(.headline)
-//                         )
-//                         .frame(height: 30)
+                    //                    RoundedRectangle(cornerRadius: 10)
+                    //                         .fill(Color.DialogBoxBackground)
+                    //                         .overlay(
+                    //                              Text("Assisted Reading")
+                    //                              .font(.headline)
+                    //                         )
+                    //                         .frame(height: 30)
                     Spacer()
                     
-                    IngestButton(isDrawerOpen: $isDrawerOpen, entryId: entryId)
+                    if ingestState != "finish"{
+                         IngestButton(ingestState: $ingestState, entryId: entryId)
+                    }
                     
                     // button of eraser ..
-                    EraserButton(isEraserHovering: isEraserHovering, isDrawerOpen: $isDrawerOpen, messages: $messages, roomId: room?.id ?? 0)
+                    EraserButton(isEraserHovering: isEraserHovering, messages: $messages, roomId: room?.id ?? 0)
                     
                     // button of close ..
                     CloseButton(isCloseHovering: isCloseHovering, isDrawerOpen: $isDrawerOpen)
+               }
+               .onAppear{
+                    let entryProperties = entryService.getEntryProperty(entryID: entryId)
+                    for entryProperty in entryProperties {
+                         if entryProperty.key == "org.basenana.friday/ingest" {
+                              ingestState = entryProperty.value
+                              log.debug("ingest state: \(ingestState)")
+                         }
+                    }
                }
                .padding(10)
                
@@ -216,8 +229,6 @@ struct CloseButton: View {
                Group {
                     if isCloseHovering {
                          Text("Close")
-                              .background(Color.white)
-                              .foregroundColor(.black)
                               .frame(width: 200)
                               .offset(y: -20.0)
                     }
@@ -228,7 +239,6 @@ struct CloseButton: View {
 
 struct EraserButton: View {
      @State var isEraserHovering = false
-     @Binding var isDrawerOpen: Bool
      @Binding var messages : [RoomMessageViewModel]
      let roomId: Int64
      
@@ -251,8 +261,6 @@ struct EraserButton: View {
                Group {
                     if isEraserHovering {
                          Text("Clear")
-                              .background(Color.white)
-                              .foregroundColor(.black)
                               .frame(width: 200)
                               .offset(y: -20.0)
                     }
@@ -263,31 +271,60 @@ struct EraserButton: View {
 
 struct IngestButton: View {
      @State var isIngestHovering = false
-     @Binding var isDrawerOpen: Bool
+     @Binding var ingestState: String
      let entryId: Int64
      
      var body: some View {
           Button {
                withAnimation(.easeInOut) {
                     documentService.ingestDocument(entryId: entryId)
+                    DispatchQueue(label: "org.basenana.room.syncIngest").async {
+                         while true {
+                              do {
+                                   try entryService.syncEntryProperty(entryId: entryId)
+                                   let entryProperties = entryService.getEntryProperty(entryID: entryId)
+                                   for entryProperty in entryProperties {
+                                        if entryProperty.key == "org.basenana.friday/ingest" {
+                                             ingestState = entryProperty.value
+                                             if entryProperty.value == "finish" {
+                                                  return
+                                             }
+                                        }
+                                   }
+                                   Thread.sleep(forTimeInterval: 1)
+                              } catch {
+                                   log.error("sync entry property failed: \(error)")
+                              }
+                         }
+                    }
                }
           } label: {
-               if isIngestHovering {
-                    Image(systemName: "square.and.arrow.down.fill").resizable().frame(width: 20, height: 20)
-               } else {
-                    Image(systemName: "square.and.arrow.down").resizable().frame(width: 20, height: 20)
+               if ingestState == "" {
+                    if isIngestHovering {
+                         Image(systemName: "square.and.arrow.down.fill").resizable().frame(width: 20, height: 20)
+                    } else {
+                         Image(systemName: "square.and.arrow.down").resizable().frame(width: 20, height: 20)
+                    }
+               } else if ingestState == "processing" {
+                    Image(systemName: "goforward").resizable().frame(width: 20, height: 20)
                }
           }
+          .disabled(ingestState == "processing")
           .buttonStyle(PlainButtonStyle())
           .onHover { hovering in isIngestHovering = hovering }
           .overlay(
                Group {
                     if isIngestHovering {
-                         Text("Ingest")
-                              .background(Color.white)
-                              .foregroundColor(.black)
-                              .frame(width: 200)
-                              .offset(y: -20.0)
+                         if ingestState == "processing" {
+                              Text("Ingesting")
+                                   .frame(width: 200)
+                                   .offset(y: -20.0)
+                              
+                         } else {
+                              Text("Ingest")
+                                   .frame(width: 200)
+                                   .offset(y: -20.0)
+                         }
                     }
                }
           )
