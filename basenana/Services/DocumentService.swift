@@ -15,6 +15,17 @@ let documentService = DocumentService()
 
 class DocumentService {
     
+    func getDocument(entryId: Int64) -> DocumentModel? {
+        do {
+            let data: DocumentModel? = try dbInstance.queue.read { db in
+                try DocumentModel.all().filter(Column("oid") == entryId).fetchOne(db)
+            }
+            return data
+        } catch {
+            return nil
+        }
+    }
+    
     func listDocuments() -> [DocumentModel]{
         // TODO: filter by unread
         do {
