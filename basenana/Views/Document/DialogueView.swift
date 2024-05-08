@@ -57,7 +57,6 @@ struct DialogueView: View {
                     for entryProperty in entryProperties {
                          if entryProperty.key == "org.basenana.friday/ingest" {
                               ingestState = entryProperty.value
-                              log.debug("ingest state: \(ingestState)")
                          }
                     }
                }
