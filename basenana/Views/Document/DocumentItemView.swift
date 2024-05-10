@@ -39,13 +39,15 @@ struct DocumentItemView: View {
         
         VStack(alignment: .leading) {
             HStack(alignment: .top) {
-                Text(doc.name)
-                    .font(.headline)
+                    Text(doc.name)
+                        .font(.headline)
+                        .foregroundColor(doc.unread ? Color.primary : Color.gray)
                 
                 Spacer()
                 
                 Text(dateFormatter.string(from: doc.createdAt))
                     .font(.caption)
+                    .foregroundColor(doc.unread ? Color.primary : Color.gray)
             }
             Text(contentSwapper(doc.content))
                 .font(.body)

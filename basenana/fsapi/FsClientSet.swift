@@ -114,7 +114,7 @@ class AuthClient {
         
         do {
             clientSet = FsClientSet(host: self.host, port: self.port, clientCrt: try self.encodedClientCrt.base64Decoded(), clientKey: try encodedClientKey.base64Decoded())
-            log.error("[authClient] create client set succeed")
+            log.info("[authClient] create client set succeed")
         } catch {
             log.error("[authClient] create client set falied \(error)")
         }

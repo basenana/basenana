@@ -1385,6 +1385,11 @@ internal protocol Api_V1_DocumentClientProtocol: GRPCClient {
     _ request: Api_V1_GetDocumentDetailRequest,
     callOptions: CallOptions?
   ) -> UnaryCall<Api_V1_GetDocumentDetailRequest, Api_V1_GetDocumentDetailResponse>
+
+  func updateDocument(
+    _ request: Api_V1_UpdateDocumentRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Api_V1_UpdateDocumentRequest, Api_V1_UpdateDocumentResponse>
 }
 
 extension Api_V1_DocumentClientProtocol {
@@ -1425,6 +1430,24 @@ extension Api_V1_DocumentClientProtocol {
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeGetDocumentDetailInterceptors() ?? []
+    )
+  }
+
+  /// Unary call to UpdateDocument
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to UpdateDocument.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  internal func updateDocument(
+    _ request: Api_V1_UpdateDocumentRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Api_V1_UpdateDocumentRequest, Api_V1_UpdateDocumentResponse> {
+    return self.makeUnaryCall(
+      path: Api_V1_DocumentClientMetadata.Methods.updateDocument.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeUpdateDocumentInterceptors() ?? []
     )
   }
 }
@@ -1500,6 +1523,11 @@ internal protocol Api_V1_DocumentAsyncClientProtocol: GRPCClient {
     _ request: Api_V1_GetDocumentDetailRequest,
     callOptions: CallOptions?
   ) -> GRPCAsyncUnaryCall<Api_V1_GetDocumentDetailRequest, Api_V1_GetDocumentDetailResponse>
+
+  func makeUpdateDocumentCall(
+    _ request: Api_V1_UpdateDocumentRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Api_V1_UpdateDocumentRequest, Api_V1_UpdateDocumentResponse>
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -1535,6 +1563,18 @@ extension Api_V1_DocumentAsyncClientProtocol {
       interceptors: self.interceptors?.makeGetDocumentDetailInterceptors() ?? []
     )
   }
+
+  internal func makeUpdateDocumentCall(
+    _ request: Api_V1_UpdateDocumentRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Api_V1_UpdateDocumentRequest, Api_V1_UpdateDocumentResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Api_V1_DocumentClientMetadata.Methods.updateDocument.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeUpdateDocumentInterceptors() ?? []
+    )
+  }
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -1560,6 +1600,18 @@ extension Api_V1_DocumentAsyncClientProtocol {
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeGetDocumentDetailInterceptors() ?? []
+    )
+  }
+
+  internal func updateDocument(
+    _ request: Api_V1_UpdateDocumentRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Api_V1_UpdateDocumentResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Api_V1_DocumentClientMetadata.Methods.updateDocument.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeUpdateDocumentInterceptors() ?? []
     )
   }
 }
@@ -1588,6 +1640,9 @@ internal protocol Api_V1_DocumentClientInterceptorFactoryProtocol: Sendable {
 
   /// - Returns: Interceptors to use when invoking 'getDocumentDetail'.
   func makeGetDocumentDetailInterceptors() -> [ClientInterceptor<Api_V1_GetDocumentDetailRequest, Api_V1_GetDocumentDetailResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'updateDocument'.
+  func makeUpdateDocumentInterceptors() -> [ClientInterceptor<Api_V1_UpdateDocumentRequest, Api_V1_UpdateDocumentResponse>]
 }
 
 internal enum Api_V1_DocumentClientMetadata {
@@ -1597,6 +1652,7 @@ internal enum Api_V1_DocumentClientMetadata {
     methods: [
       Api_V1_DocumentClientMetadata.Methods.listDocuments,
       Api_V1_DocumentClientMetadata.Methods.getDocumentDetail,
+      Api_V1_DocumentClientMetadata.Methods.updateDocument,
     ]
   )
 
@@ -1610,6 +1666,12 @@ internal enum Api_V1_DocumentClientMetadata {
     internal static let getDocumentDetail = GRPCMethodDescriptor(
       name: "GetDocumentDetail",
       path: "/api.v1.Document/GetDocumentDetail",
+      type: GRPCCallType.unary
+    )
+
+    internal static let updateDocument = GRPCMethodDescriptor(
+      name: "UpdateDocument",
+      path: "/api.v1.Document/UpdateDocument",
       type: GRPCCallType.unary
     )
   }
@@ -3383,6 +3445,8 @@ internal protocol Api_V1_DocumentProvider: CallHandlerProvider {
   func listDocuments(request: Api_V1_ListDocumentsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_ListDocumentsResponse>
 
   func getDocumentDetail(request: Api_V1_GetDocumentDetailRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_GetDocumentDetailResponse>
+
+  func updateDocument(request: Api_V1_UpdateDocumentRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_UpdateDocumentResponse>
 }
 
 extension Api_V1_DocumentProvider {
@@ -3415,6 +3479,15 @@ extension Api_V1_DocumentProvider {
         userFunction: self.getDocumentDetail(request:context:)
       )
 
+    case "UpdateDocument":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_UpdateDocumentRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_UpdateDocumentResponse>(),
+        interceptors: self.interceptors?.makeUpdateDocumentInterceptors() ?? [],
+        userFunction: self.updateDocument(request:context:)
+      )
+
     default:
       return nil
     }
@@ -3436,6 +3509,11 @@ internal protocol Api_V1_DocumentAsyncProvider: CallHandlerProvider, Sendable {
     request: Api_V1_GetDocumentDetailRequest,
     context: GRPCAsyncServerCallContext
   ) async throws -> Api_V1_GetDocumentDetailResponse
+
+  func updateDocument(
+    request: Api_V1_UpdateDocumentRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Api_V1_UpdateDocumentResponse
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -3475,6 +3553,15 @@ extension Api_V1_DocumentAsyncProvider {
         wrapping: { try await self.getDocumentDetail(request: $0, context: $1) }
       )
 
+    case "UpdateDocument":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_UpdateDocumentRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_UpdateDocumentResponse>(),
+        interceptors: self.interceptors?.makeUpdateDocumentInterceptors() ?? [],
+        wrapping: { try await self.updateDocument(request: $0, context: $1) }
+      )
+
     default:
       return nil
     }
@@ -3490,6 +3577,10 @@ internal protocol Api_V1_DocumentServerInterceptorFactoryProtocol: Sendable {
   /// - Returns: Interceptors to use when handling 'getDocumentDetail'.
   ///   Defaults to calling `self.makeInterceptors()`.
   func makeGetDocumentDetailInterceptors() -> [ServerInterceptor<Api_V1_GetDocumentDetailRequest, Api_V1_GetDocumentDetailResponse>]
+
+  /// - Returns: Interceptors to use when handling 'updateDocument'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeUpdateDocumentInterceptors() -> [ServerInterceptor<Api_V1_UpdateDocumentRequest, Api_V1_UpdateDocumentResponse>]
 }
 
 internal enum Api_V1_DocumentServerMetadata {
@@ -3499,6 +3590,7 @@ internal enum Api_V1_DocumentServerMetadata {
     methods: [
       Api_V1_DocumentServerMetadata.Methods.listDocuments,
       Api_V1_DocumentServerMetadata.Methods.getDocumentDetail,
+      Api_V1_DocumentServerMetadata.Methods.updateDocument,
     ]
   )
 
@@ -3512,6 +3604,12 @@ internal enum Api_V1_DocumentServerMetadata {
     internal static let getDocumentDetail = GRPCMethodDescriptor(
       name: "GetDocumentDetail",
       path: "/api.v1.Document/GetDocumentDetail",
+      type: GRPCCallType.unary
+    )
+
+    internal static let updateDocument = GRPCMethodDescriptor(
+      name: "UpdateDocument",
+      path: "/api.v1.Document/UpdateDocument",
       type: GRPCCallType.unary
     )
   }

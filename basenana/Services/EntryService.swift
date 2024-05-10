@@ -105,7 +105,6 @@ class EntryService {
         
         do {
             let response = try call.response.wait()
-            let en = response.entry
             let properties = response.properties
             
             for property in properties {
