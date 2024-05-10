@@ -685,6 +685,102 @@ struct Api_V1_GetDocumentDetailResponse {
   fileprivate var _document: Api_V1_DocumentDescribe? = nil
 }
 
+struct Api_V1_UpdateDocumentRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var document: Api_V1_DocumentDescribe {
+    get {return _document ?? Api_V1_DocumentDescribe()}
+    set {_document = newValue}
+  }
+  /// Returns true if `document` has been explicitly set.
+  var hasDocument: Bool {return self._document != nil}
+  /// Clears the value of `document`. Subsequent reads from it will return its default value.
+  mutating func clearDocument() {self._document = nil}
+
+  var setMark: Api_V1_UpdateDocumentRequest.DocumentMark = .unchanged
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  enum DocumentMark: SwiftProtobuf.Enum {
+    typealias RawValue = Int
+    case unchanged // = 0
+    case marked // = 1
+    case unmarked // = 2
+    case read // = 3
+    case unread // = 4
+    case UNRECOGNIZED(Int)
+
+    init() {
+      self = .unchanged
+    }
+
+    init?(rawValue: Int) {
+      switch rawValue {
+      case 0: self = .unchanged
+      case 1: self = .marked
+      case 2: self = .unmarked
+      case 3: self = .read
+      case 4: self = .unread
+      default: self = .UNRECOGNIZED(rawValue)
+      }
+    }
+
+    var rawValue: Int {
+      switch self {
+      case .unchanged: return 0
+      case .marked: return 1
+      case .unmarked: return 2
+      case .read: return 3
+      case .unread: return 4
+      case .UNRECOGNIZED(let i): return i
+      }
+    }
+
+  }
+
+  init() {}
+
+  fileprivate var _document: Api_V1_DocumentDescribe? = nil
+}
+
+#if swift(>=4.2)
+
+extension Api_V1_UpdateDocumentRequest.DocumentMark: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  static let allCases: [Api_V1_UpdateDocumentRequest.DocumentMark] = [
+    .unchanged,
+    .marked,
+    .unmarked,
+    .read,
+    .unread,
+  ]
+}
+
+#endif  // swift(>=4.2)
+
+struct Api_V1_UpdateDocumentResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var document: Api_V1_DocumentDescribe {
+    get {return _document ?? Api_V1_DocumentDescribe()}
+    set {_document = newValue}
+  }
+  /// Returns true if `document` has been explicitly set.
+  var hasDocument: Bool {return self._document != nil}
+  /// Clears the value of `document`. Subsequent reads from it will return its default value.
+  mutating func clearDocument() {self._document = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+
+  fileprivate var _document: Api_V1_DocumentDescribe? = nil
+}
+
 struct Api_V1_RoomInfo {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -1515,6 +1611,9 @@ extension Api_V1_ListDocumentsRequest: @unchecked Sendable {}
 extension Api_V1_ListDocumentsResponse: @unchecked Sendable {}
 extension Api_V1_GetDocumentDetailRequest: @unchecked Sendable {}
 extension Api_V1_GetDocumentDetailResponse: @unchecked Sendable {}
+extension Api_V1_UpdateDocumentRequest: @unchecked Sendable {}
+extension Api_V1_UpdateDocumentRequest.DocumentMark: @unchecked Sendable {}
+extension Api_V1_UpdateDocumentResponse: @unchecked Sendable {}
 extension Api_V1_RoomInfo: @unchecked Sendable {}
 extension Api_V1_RoomMessage: @unchecked Sendable {}
 extension Api_V1_ListRoomsRequest: @unchecked Sendable {}
@@ -2917,6 +3016,94 @@ extension Api_V1_GetDocumentDetailResponse: SwiftProtobuf.Message, SwiftProtobuf
   }
 
   static func ==(lhs: Api_V1_GetDocumentDetailResponse, rhs: Api_V1_GetDocumentDetailResponse) -> Bool {
+    if lhs._document != rhs._document {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_UpdateDocumentRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".UpdateDocumentRequest"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "document"),
+    2: .same(proto: "setMark"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._document) }()
+      case 2: try { try decoder.decodeSingularEnumField(value: &self.setMark) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._document {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    if self.setMark != .unchanged {
+      try visitor.visitSingularEnumField(value: self.setMark, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_UpdateDocumentRequest, rhs: Api_V1_UpdateDocumentRequest) -> Bool {
+    if lhs._document != rhs._document {return false}
+    if lhs.setMark != rhs.setMark {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_UpdateDocumentRequest.DocumentMark: SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "Unchanged"),
+    1: .same(proto: "Marked"),
+    2: .same(proto: "Unmarked"),
+    3: .same(proto: "Read"),
+    4: .same(proto: "Unread"),
+  ]
+}
+
+extension Api_V1_UpdateDocumentResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".UpdateDocumentResponse"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "document"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._document) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._document {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_UpdateDocumentResponse, rhs: Api_V1_UpdateDocumentResponse) -> Bool {
     if lhs._document != rhs._document {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
