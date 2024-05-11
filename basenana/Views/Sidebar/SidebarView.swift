@@ -26,7 +26,7 @@ struct SidebarView: View {
             }
             
             NavigationLink {
-                DocumentView()
+                UnreadView()
                     .navigationTitle("Unread")
             } label: {
                 HStack{
@@ -37,6 +37,8 @@ struct SidebarView: View {
             }
             
             NavigationLink {
+                MarkedView()
+                    .navigationTitle("Marked")
             } label: {
                 HStack{
                     Image(systemName: "bookmark.fill").foregroundColor(.yellow)

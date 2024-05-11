@@ -50,3 +50,14 @@ extension DocumentModel: TableRecord {
 extension DocumentModel: FetchableRecord {}
 
 extension DocumentModel: MutablePersistableRecord {}
+
+struct Docfilter {
+    var unread: Bool?
+    var marked: Bool?
+}
+
+struct DocumentUpdate {
+    var docId: Int64
+    var unread: Bool?
+    var marked: Bool?
+}
