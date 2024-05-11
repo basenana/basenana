@@ -26,10 +26,17 @@ class DocumentService {
         }
     }
     
-    func listDocuments() -> [DocumentModel]{
+    func listDocuments(filter: Docfilter) -> [DocumentModel]{
+        var data: [DocumentModel]
         do {
-            let data: [DocumentModel] = try dbInstance.queue.read{ db in
-                try DocumentModel.filter(Column("unread") == true).order(Column("createdAt").desc).fetchAll(db)
+            data = try dbInstance.queue.read{ db in
+                if let unread = filter.unread {
+                    try DocumentModel.filter(Column("unread") == unread).order(Column("createdAt").desc).fetchAll(db)
+                } else if let marked = filter.marked {
+                    try DocumentModel.filter(Column("marked") == marked).order(Column("createdAt").desc).fetchAll(db)
+                } else {
+                    try DocumentModel.order(Column("createdAt").desc).fetchAll(db)
+                }
             }
             return data
         } catch {
@@ -51,59 +58,39 @@ class DocumentService {
         return
     }
     
-    func readDocument(docId: Int64, unread: Bool) {
+    func updateDocument(docUpdate: DocumentUpdate) {
         var doc: DocumentModel?
         do {
             doc = try dbInstance.queue.read{ db in
-                try DocumentModel.filter(Column("id") == docId).fetchOne(db)
+                try DocumentModel.filter(Column("id") == docUpdate.docId).fetchOne(db)
             }
             
-            if doc?.unread == unread {
+            if doc == nil {
                 return
             }
             
             var request = Api_V1_UpdateDocumentRequest()
-            request.document.id = docId
-            request.setMark = unread ? Api_V1_UpdateDocumentRequest.DocumentMark.unread:Api_V1_UpdateDocumentRequest.DocumentMark.read
-            log.debug("update request \(request) doc: \(docId) unread: \(unread)")
-
+            request.document.id = docUpdate.docId
+            if let unread = docUpdate.unread {
+                request.setMark = unread ? Api_V1_UpdateDocumentRequest.DocumentMark.unread:Api_V1_UpdateDocumentRequest.DocumentMark.read
+                doc?.unread = unread
+            }
+            if let mark = docUpdate.marked {
+                request.setMark = mark ? Api_V1_UpdateDocumentRequest.DocumentMark.marked:Api_V1_UpdateDocumentRequest.DocumentMark.unmarked
+                doc?.marked = mark
+            }
+            
             let _ = clientSet?.document.updateDocument(request, callOptions: nil)
             
-            doc?.unread = unread
             let _ = try dbInstance.queue.write{db in
                 try doc?.save(db)
             }
         } catch {
-            log.error("[documentService] set docuemnt unread \(unread) failed \(error)")
+            log.error("[documentService] update docuemnt failed \(error)")
         }
         return
     }
     
-    func markDocument(docId: Int64, mark: Bool) {
-        var doc: DocumentModel?
-        do {
-            doc = try dbInstance.queue.read{ db in
-                try DocumentModel.filter(Column("id") == docId).fetchOne(db)
-            }
-            
-            if doc?.marked == mark {
-                return
-            }
-            
-            var request = Api_V1_UpdateDocumentRequest()
-            request.setMark = mark ? Api_V1_UpdateDocumentRequest.DocumentMark.marked:Api_V1_UpdateDocumentRequest.DocumentMark.unmarked
-            
-            let _ = clientSet?.document.updateDocument(request, callOptions: nil)
-            
-            let _ = try dbInstance.queue.write{db in
-                try doc?.save(db)
-            }
-        } catch {
-            log.error("[documentService] set docuemnt unread \(mark) failed \(error)")
-        }
-        return
-    }
-
     func cleanupLocalDocument(documentID: Int64) {
         log.debug("[documentService] cleanup local document \(documentID)")
         do {

@@ -9,9 +9,11 @@ import SwiftUI
 
 struct DocumentItemView: View {
     var doc: DocumentModel
+    var unreadPage: Bool
     
-    init(doc: DocumentModel) {
+    init(doc: DocumentModel, unreadPage: Bool) {
         self.doc = doc
+        self.unreadPage = unreadPage
     }
     
     var body: some View {
@@ -41,13 +43,13 @@ struct DocumentItemView: View {
             HStack(alignment: .top) {
                     Text(doc.name)
                         .font(.headline)
-                        .foregroundColor(doc.unread ? Color.primary : Color.gray)
+                        .foregroundColor(doc.unread || !unreadPage ? Color.primary : Color.gray)
                 
                 Spacer()
                 
                 Text(dateFormatter.string(from: doc.createdAt))
                     .font(.caption)
-                    .foregroundColor(doc.unread ? Color.primary : Color.gray)
+                    .foregroundColor(doc.unread || !unreadPage ? Color.primary : Color.gray)
             }
             Text(contentSwapper(doc.content))
                 .font(.body)
