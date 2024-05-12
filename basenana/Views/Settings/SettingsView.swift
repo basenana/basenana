@@ -49,8 +49,12 @@ struct SettingsView: View {
             
             HStack {
                 Button {
-                    encodedClientCrt = ""
                     syncedSeqNum = "0"
+                } label: {
+                    Text("Reset")
+                }
+                Button {
+                    encodedClientCrt = ""
                     AuthClient().reflushToken()
                 } label: {
                     Text("Submit")
