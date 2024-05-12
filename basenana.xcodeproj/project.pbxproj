@@ -76,7 +76,7 @@
 
 /* Begin PBXFileReference section */
 		3F0AEC752BA48EC7000DA928 /* GroupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupService.swift; sourceTree = "<group>"; };
-		3F1BBE192B8E147F005D533F /* basenana.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = basenana.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F1BBE192B8E147F005D533F /* Basenana.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Basenana.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F1BBE1C2B8E147F005D533F /* basenanaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = basenanaApp.swift; sourceTree = "<group>"; };
 		3F1BBE222B8E1480005D533F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3F1BBE242B8E1480005D533F /* basenana.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = basenana.entitlements; sourceTree = "<group>"; };
@@ -167,7 +167,7 @@
 		3F1BBE1A2B8E147F005D533F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3F1BBE192B8E147F005D533F /* basenana.app */,
+				3F1BBE192B8E147F005D533F /* Basenana.app */,
 				3F1BBE2C2B8E1480005D533F /* basenanaTests.xctest */,
 				3F1BBE362B8E1480005D533F /* basenanaUITests.xctest */,
 			);
@@ -367,7 +367,7 @@
 				3F7444B62BE3D1B000CC9C1E /* SwiftSoup */,
 			);
 			productName = basenana;
-			productReference = 3F1BBE192B8E147F005D533F /* basenana.app */;
+			productReference = 3F1BBE192B8E147F005D533F /* Basenana.app */;
 			productType = "com.apple.product-type.application";
 		};
 		3F1BBE2B2B8E1480005D533F /* basenanaTests */ = {
@@ -702,7 +702,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.basenana.app.basenana;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Basenana;
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -740,7 +740,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.basenana.app.basenana;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Basenana;
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
