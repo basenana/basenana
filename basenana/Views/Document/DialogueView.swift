@@ -29,7 +29,7 @@ struct DialogueView: View {
                
                HStack {
                     // dialogue title ..
-                    Text("辅助阅读")
+                    Text("Assisted Reading")
                          .font(.headline)
                          .frame(height: 30)
                     
