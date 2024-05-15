@@ -75,4 +75,9 @@ extension EntryModel: MutablePersistableRecord {
     }
 }
 
-
+enum EntryOrder {
+    case modifiedAt
+    case name
+    case kind
+    case size
+}
