@@ -68,8 +68,8 @@ class EntryService {
     func getInbox() -> EntryModel? {
         return findChildren(parentID: 1, chName: ".inbox")
     }
-        
-
+    
+    
     func findChildren(parentID: Int64, chName: String) -> EntryModel? {
         var req = Api_V1_FindEntryDetailRequest()
         req.parentID = parentID
@@ -86,7 +86,7 @@ class EntryService {
         
         return nil
     }
-
+    
     func getEntryProperty(entryID: Int64) -> [EntryPropertyModel] {
         do {
             let data: [EntryPropertyModel] = try dbInstance.queue.read{ db in
@@ -119,8 +119,8 @@ class EntryService {
             throw error
         }
     }
-
-    func listChildren(parentEntryID: Int64) -> [EntryModel]{
+    
+    func listChildren(parentEntryID: Int64, orderName: EntryOrder, desc: Bool) -> [EntryModel]{
         var realParentID: Int64
         switch parentEntryID {
         case inboxEntryID:
@@ -135,8 +135,18 @@ class EntryService {
         
         do {
             let data: [EntryModel] = try dbInstance.queue.read{ db in
-                try EntryModel.all().filter(Column("parent") == realParentID).fetchAll(db)
-                
+                let orderColumnMap = [
+                    EntryOrder.modifiedAt: "modifiedAt",
+                    EntryOrder.kind: "kind",
+                    EntryOrder.name: "name",
+                    EntryOrder.size: "size"
+                ]
+                var en = EntryModel.all().filter(Column("parent") == realParentID)
+                if let orderColumnName = orderColumnMap[orderName] {
+                    log.debug("list children column name: \(orderColumnName), desc: \(desc)")
+                    en = desc ? en.order(Column(orderColumnName).desc) : en.order(Column(orderColumnName))
+                }
+                return try en.fetchAll(db)
             }
             return data
         } catch {
@@ -179,7 +189,7 @@ class EntryService {
             log.error("[entryService] create local entry property failed \(error)")
         }
     }
-
+    
     func cleanupLocalEntry(entryID: Int64) {
         log.debug("[entryService] cleanup local entry \(entryID)")
         do {

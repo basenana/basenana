@@ -13,19 +13,29 @@ struct GroupView: View{
     @State private var groupChileren: [EntryModel] = []
     @State private var selection: Set<EntryModel.ID> = []
     @State private var selectedDoc: DocumentModel? = nil
+    @State var order: [KeyPathComparator<EntryModel>] = [.init(\.name, order: .forward)]
     
     var body: some View {
         GeometryReader { geometry in
             VStack{
                 
                 VSplitView(){
-                    Table(of: EntryModel.self, selection: $selection) {
-                        TableColumn("Name", value: \.name)
+                    Table(of: EntryModel.self, selection: $selection, sortOrder: $order) {
+                        TableColumn("Name", value: \.name) { entry in
+                            if entry.isGroup {
+                                HStack{
+                                    Image(systemName: "folder")
+                                    Text("\(entry.name)")
+                                }
+                            } else {
+                                Text("\(entry.name)")
+                            }
+                        }
                         TableColumn("Kind", value: \.kind)
-                        TableColumn("Size"){
+                        TableColumn("Size", value: \.size) {
                             Text("\($0.size)")
                         }
-                        TableColumn("Date Modified") {
+                        TableColumn("Date Modified", value: \.modifiedAt) {
                             Text("\($0.modifiedAt, format: Date.FormatStyle(date: .numeric, time: .standard))")
                         }
                     } rows: {
@@ -56,11 +66,16 @@ struct GroupView: View{
                         return false
                     }
                     .onAppear{
-                        groupChileren = entryService.listChildren(parentEntryID: groupID)
+                        groupChileren = entryService.listChildren(parentEntryID: groupID, orderName: EntryOrder.modifiedAt, desc: true)
                     }
                     .onChange(of: GroupRoot.updateAt){
-                        groupChileren = entryService.listChildren(parentEntryID: groupID)
+                        groupChileren = entryService.listChildren(parentEntryID: groupID, orderName: EntryOrder.modifiedAt, desc: true)
                         log.info("relist group \(groupID) children")
+                    }
+                    .onChange(of: order){
+                        withAnimation {
+                            groupChileren.sort(using: order)
+                        }
                     }
                     .frame(minHeight: 200, maxHeight: .infinity)
                     
