@@ -141,9 +141,8 @@ class EntryService {
                     EntryOrder.name: "name",
                     EntryOrder.size: "size"
                 ]
-                var en = EntryModel.all().filter(Column("parent") == realParentID)
+                var en = EntryModel.all().filter(Column("parent") == realParentID && !Column("name").like(".%"))
                 if let orderColumnName = orderColumnMap[orderName] {
-                    log.debug("list children column name: \(orderColumnName), desc: \(desc)")
                     en = desc ? en.order(Column(orderColumnName).desc) : en.order(Column(orderColumnName))
                 }
                 return try en.fetchAll(db)
