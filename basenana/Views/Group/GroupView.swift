@@ -23,12 +23,17 @@ struct GroupView: View{
                     Table(of: EntryModel.self, selection: $selection, sortOrder: $order) {
                         TableColumn("Name", value: \.name) { entry in
                             if entry.isGroup {
-                                HStack{
+                                HStack {
                                     Image(systemName: "folder")
+                                        .frame(width: 12, alignment: .center)
                                     Text("\(entry.name)")
                                 }
                             } else {
-                                Text("\(entry.name)")
+                                HStack {
+                                    Image(systemName: "doc.text")
+                                        .frame(width: 12, alignment: .center)
+                                    Text("\(entry.name)")
+                                }
                             }
                         }
                         TableColumn("Kind", value: \.kind)
