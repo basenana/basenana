@@ -55,22 +55,22 @@ class FsClientSet {
 
 
 class AuthClient {
-    @AppStorage("org.basenana.nanafs.host")
+    @AppStorage("org.basenana.nanafs.host", store: UserDefaults.standard)
     private var host: String = ""
     
-    @AppStorage("org.basenana.nanafs.port")
+    @AppStorage("org.basenana.nanafs.port", store: UserDefaults.standard)
     private var port: Int = 0
     
-    @AppStorage("org.basenana.nanafs.clientCrt")
+    @AppStorage("org.basenana.nanafs.clientCrt", store: UserDefaults.standard)
     private var encodedClientCrt: String = ""
     
-    @AppStorage("org.basenana.nanafs.clientKey")
+    @AppStorage("org.basenana.nanafs.clientKey", store: UserDefaults.standard)
     private var encodedClientKey: String = ""
     
-    @AppStorage("org.basenana.nanafs.auth.accessToken")
+    @AppStorage("org.basenana.nanafs.auth.accessToken", store: UserDefaults.standard)
     private var accessTokenKey: String = ""
     
-    @AppStorage("org.basenana.nanafs.auth.secretToken")
+    @AppStorage("org.basenana.nanafs.auth.secretToken", store: UserDefaults.standard)
     private var secretToken: String = ""
     
     func reflushToken() {

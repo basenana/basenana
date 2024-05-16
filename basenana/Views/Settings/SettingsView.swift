@@ -8,23 +8,23 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @AppStorage("org.basenana.nanafs.host")
+    @AppStorage("org.basenana.nanafs.host", store: UserDefaults.standard)
     private var serverHost:String = ""
     
-    @AppStorage("org.basenana.nanafs.port")
+    @AppStorage("org.basenana.nanafs.port", store: UserDefaults.standard)
     private var serverPort:Int = 0
     @State private var serverPortStr: String = ""
     
-    @AppStorage("org.basenana.nanafs.auth.accessToken")
+    @AppStorage("org.basenana.nanafs.auth.accessToken", store: UserDefaults.standard)
     private var accessTokenKey:String = ""
     
-    @AppStorage("org.basenana.nanafs.auth.secretToken")
+    @AppStorage("org.basenana.nanafs.auth.secretToken", store: UserDefaults.standard)
     private var secretToken:String = ""
     
-    @AppStorage("org.basenana.nanafs.clientCrt")
+    @AppStorage("org.basenana.nanafs.clientCrt", store: UserDefaults.standard)
     private var encodedClientCrt: String = ""
     
-    @AppStorage("org.basenana.sync.sequence")
+    @AppStorage("org.basenana.sync.sequence", store: UserDefaults.standard)
     private var syncedSeqNum: String = "0"
     
     var body: some View {
@@ -67,3 +67,10 @@ struct SettingsView: View {
         .frame(maxHeight: .infinity)
     }
 }
+
+public extension UserDefaults {
+    #if DEVELOPMENT
+    static let standard = UserDefaults(suiteName: "org.basenana-dev")!
+    #endif
+}
+
