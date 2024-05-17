@@ -10,6 +10,7 @@ import SwiftUI
 struct DocumentItemView: View {
     var doc: DocumentModel
     var unreadPage: Bool
+    @State var parent: EntryModel?
     
     init(doc: DocumentModel, unreadPage: Bool) {
         self.doc = doc
@@ -40,16 +41,23 @@ struct DocumentItemView: View {
         }
         
         VStack(alignment: .leading) {
-            HStack(alignment: .top) {
-                    Text(doc.name)
-                        .font(.headline)
+            VStack(alignment: .leading){
+                
+                HStack(alignment: .top) {
+                    Text(parent?.name ?? "")
+                        .foregroundColor(Color.gray)
+
+                    Spacer()
+                    
+                    Text(dateFormatter.string(from: doc.createdAt))
+                        .font(.caption)
                         .foregroundColor(doc.unread || !unreadPage ? Color.primary : Color.gray)
+                }
                 
-                Spacer()
-                
-                Text(dateFormatter.string(from: doc.createdAt))
-                    .font(.caption)
+                Text(doc.name)
+                    .font(.headline)
                     .foregroundColor(doc.unread || !unreadPage ? Color.primary : Color.gray)
+                    
             }
             Text(contentSwapper(doc.content))
                 .font(.body)
@@ -57,7 +65,10 @@ struct DocumentItemView: View {
                 .frame(minWidth: 0, idealWidth: 200, maxWidth: .infinity, alignment: .leading)
                 .frame(minHeight: 0, idealHeight: 50, alignment: .leading)
         }
-        
+        .onAppear{
+            let parentId = doc.parentEntry
+            self.parent = entryService.getEntry(entryID: parentId)
+        }
     }
 }
 
