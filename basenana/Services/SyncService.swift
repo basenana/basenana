@@ -16,10 +16,10 @@ let syncService = SyncService()
 class SyncService {
     private var queue = DispatchQueue(label: "org.basenana.sync")
     
-    @AppStorage("org.basenana.device.uuid")
+    @AppStorage("org.basenana.device.uuid", store: UserDefaults.standard)
     private var deviceUUID: String = ""
     
-    @AppStorage("org.basenana.sync.sequence")
+    @AppStorage("org.basenana.sync.sequence", store: UserDefaults.standard)
     private var syncedSeqNum: String = "0"
     
     func deviceID() -> String {
