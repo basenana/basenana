@@ -44,6 +44,50 @@
 		3FDC2EA12BDCEBC500344DF8 /* EntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA02BDCEBC500344DF8 /* EntryViewModel.swift */; };
 		3FDC2EA32BDCEEB200344DF8 /* IDHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA22BDCEEB200344DF8 /* IDHelper.swift */; };
 		3FDC2EA72BE3CC8C00344DF8 /* HTMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA62BE3CC8C00344DF8 /* HTMLParser.swift */; };
+		ED0CBB202BF656B90056E6AA /* DocumentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED47907A2BB129FF00FEA8D4 /* DocumentService.swift */; };
+		ED0CBB212BF656B90056E6AA /* IDHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA22BDCEEB200344DF8 /* IDHelper.swift */; };
+		ED0CBB222BF656B90056E6AA /* DialogueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED85A3BD2BBAB21A0040598E /* DialogueView.swift */; };
+		ED0CBB232BF656B90056E6AA /* DialogueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED72603F2BC2E34A005F1166 /* DialogueService.swift */; };
+		ED0CBB242BF656B90056E6AA /* SidebarButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78C92BC99D600035F90F /* SidebarButtonView.swift */; };
+		ED0CBB252BF656B90056E6AA /* EntryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE562B90CD59005D533F /* EntryModel.swift */; };
+		ED0CBB262BF656B90056E6AA /* SidebarGroupsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78C72BC99D160035F90F /* SidebarGroupsView.swift */; };
+		ED0CBB272BF656B90056E6AA /* QuickInboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE5F2B94BAF9005D533F /* QuickInboxView.swift */; };
+		ED0CBB282BF656B90056E6AA /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78DC2BCF80080035F90F /* Logging.swift */; };
+		ED0CBB292BF656B90056E6AA /* MarkedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF504782BEF008B00CB4B1C /* MarkedView.swift */; };
+		ED0CBB2A2BF656B90056E6AA /* DialogueViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1D72CD2BD2BDAD006CF95F /* DialogueViewModel.swift */; };
+		ED0CBB2B2BF656B90056E6AA /* EntryPropertyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED62B1742BE7D82A001AC523 /* EntryPropertyModel.swift */; };
+		ED0CBB2C2BF656B90056E6AA /* HTMLStringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE5D2B93664E005D533F /* HTMLStringView.swift */; };
+		ED0CBB2D2BF656B90056E6AA /* fsapi-v1.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB782512BC2D0F600327191 /* fsapi-v1.pb.swift */; };
+		ED0CBB2E2BF656B90056E6AA /* GroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE582B932251005D533F /* GroupView.swift */; };
+		ED0CBB2F2BF656B90056E6AA /* DocumentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED917E772B9607BE004FCB9A /* DocumentModel.swift */; };
+		ED0CBB302BF656B90056E6AA /* DialogueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED72603D2BC2E25D005F1166 /* DialogueModel.swift */; };
+		ED0CBB312BF656B90056E6AA /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78D72BCD853C0035F90F /* Database.swift */; };
+		ED0CBB322BF656B90056E6AA /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDEF16372BC8DD93000BC25C /* Color.swift */; };
+		ED0CBB332BF656B90056E6AA /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE4E2B90C4D5005D533F /* SidebarView.swift */; };
+		ED0CBB342BF656B90056E6AA /* HTMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA62BE3CC8C00344DF8 /* HTMLParser.swift */; };
+		ED0CBB352BF656B90056E6AA /* FsClientSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78CE2BCC2A660035F90F /* FsClientSet.swift */; };
+		ED0CBB362BF656B90056E6AA /* EntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA02BDCEBC500344DF8 /* EntryViewModel.swift */; };
+		ED0CBB372BF656B90056E6AA /* GroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C42BAF1A6D00FEE130 /* GroupViewModel.swift */; };
+		ED0CBB382BF656B90056E6AA /* EntryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2CB97C2B9A02B600ADDDED /* EntryService.swift */; };
+		ED0CBB392BF656B90056E6AA /* GroupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEC752BA48EC7000DA928 /* GroupService.swift */; };
+		ED0CBB3A2BF656B90056E6AA /* fsapi-v1.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB782502BC2D0F600327191 /* fsapi-v1.grpc.swift */; };
+		ED0CBB3B2BF656B90056E6AA /* DocumentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF504762BEB295700CB4B1C /* DocumentDetailView.swift */; };
+		ED0CBB3C2BF656B90056E6AA /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78E02BD299110035F90F /* SettingsView.swift */; };
+		ED0CBB3D2BF656B90056E6AA /* basenanaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE1C2B8E147F005D533F /* basenanaApp.swift */; };
+		ED0CBB3E2BF656B90056E6AA /* DocumentItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED85A3C22BBAB3BD0040598E /* DocumentItemView.swift */; };
+		ED0CBB3F2BF656B90056E6AA /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C62BAFCB8900FEE130 /* MainView.swift */; };
+		ED0CBB402BF656B90056E6AA /* UnreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE5A2B93225E005D533F /* UnreadView.swift */; };
+		ED0CBB412BF656B90056E6AA /* SyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78CC2BCC20B40035F90F /* SyncService.swift */; };
+		ED0CBB432BF656B90056E6AA /* protoc-gen-grpc-swift in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB182BF656B90056E6AA /* protoc-gen-grpc-swift */; };
+		ED0CBB442BF656B90056E6AA /* GRPCReflectionService in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB162BF656B90056E6AA /* GRPCReflectionService */; };
+		ED0CBB452BF656B90056E6AA /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB1B2BF656B90056E6AA /* SwiftyBeaver */; };
+		ED0CBB462BF656B90056E6AA /* _GRPCCore in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB172BF656B90056E6AA /* _GRPCCore */; };
+		ED0CBB472BF656B90056E6AA /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB192BF656B90056E6AA /* GRDB */; };
+		ED0CBB482BF656B90056E6AA /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB1D2BF656B90056E6AA /* SwiftSoup */; };
+		ED0CBB492BF656B90056E6AA /* GRPC in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB152BF656B90056E6AA /* GRPC */; };
+		ED0CBB4A2BF656B90056E6AA /* CGRPCZlib in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB132BF656B90056E6AA /* CGRPCZlib */; };
+		ED0CBB4C2BF656B90056E6AA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F1BBE262B8E1480005D533F /* Preview Assets.xcassets */; };
+		ED0CBB4D2BF656B90056E6AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F1BBE222B8E1480005D533F /* Assets.xcassets */; };
 		ED1D72CE2BD2BDAD006CF95F /* DialogueViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1D72CD2BD2BDAD006CF95F /* DialogueViewModel.swift */; };
 		ED47907B2BB129FF00FEA8D4 /* DocumentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED47907A2BB129FF00FEA8D4 /* DocumentService.swift */; };
 		ED62B1752BE7D82A001AC523 /* EntryPropertyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED62B1742BE7D82A001AC523 /* EntryPropertyModel.swift */; };
@@ -100,7 +144,7 @@
 		3F4A78D72BCD853C0035F90F /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		3F4A78DC2BCF80080035F90F /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		3F4A78E02BD299110035F90F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		3F7444B82BE50DE900CC9C1E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3F7444B82BE50DE900CC9C1E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = basenana/Info.plist; sourceTree = SOURCE_ROOT; };
 		3F81C9C42BAF1A6D00FEE130 /* GroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewModel.swift; sourceTree = "<group>"; };
 		3F81C9C62BAFCB8900FEE130 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		3FB782502BC2D0F600327191 /* fsapi-v1.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "fsapi-v1.grpc.swift"; sourceTree = "<group>"; };
@@ -108,6 +152,8 @@
 		3FDC2EA02BDCEBC500344DF8 /* EntryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryViewModel.swift; sourceTree = "<group>"; };
 		3FDC2EA22BDCEEB200344DF8 /* IDHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDHelper.swift; sourceTree = "<group>"; };
 		3FDC2EA62BE3CC8C00344DF8 /* HTMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLParser.swift; sourceTree = "<group>"; };
+		ED0CBB522BF656B90056E6AA /* basenana dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "basenana dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		ED0CBB532BF656BA0056E6AA /* Info-dev.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-dev.plist"; sourceTree = SOURCE_ROOT; };
 		ED1D72CD2BD2BDAD006CF95F /* DialogueViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueViewModel.swift; sourceTree = "<group>"; };
 		ED47907A2BB129FF00FEA8D4 /* DocumentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentService.swift; sourceTree = "<group>"; };
 		ED62B1742BE7D82A001AC523 /* EntryPropertyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryPropertyModel.swift; sourceTree = "<group>"; };
@@ -151,6 +197,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		ED0CBB422BF656B90056E6AA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED0CBB432BF656B90056E6AA /* protoc-gen-grpc-swift in Frameworks */,
+				ED0CBB442BF656B90056E6AA /* GRPCReflectionService in Frameworks */,
+				ED0CBB452BF656B90056E6AA /* SwiftyBeaver in Frameworks */,
+				ED0CBB462BF656B90056E6AA /* _GRPCCore in Frameworks */,
+				ED0CBB472BF656B90056E6AA /* GRDB in Frameworks */,
+				ED0CBB482BF656B90056E6AA /* SwiftSoup in Frameworks */,
+				ED0CBB492BF656B90056E6AA /* GRPC in Frameworks */,
+				ED0CBB4A2BF656B90056E6AA /* CGRPCZlib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -170,6 +231,7 @@
 				3F1BBE192B8E147F005D533F /* Basenana.app */,
 				3F1BBE2C2B8E1480005D533F /* basenanaTests.xctest */,
 				3F1BBE362B8E1480005D533F /* basenanaUITests.xctest */,
+				ED0CBB522BF656B90056E6AA /* basenana dev.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -177,6 +239,7 @@
 		3F1BBE1B2B8E147F005D533F /* basenana */ = {
 			isa = PBXGroup;
 			children = (
+				ED0CBB532BF656BA0056E6AA /* Info-dev.plist */,
 				3F7444B82BE50DE900CC9C1E /* Info.plist */,
 				EDEF16362BC8DD7E000BC25C /* Extensions */,
 				3FB782532BC2D0F600327191 /* fsapi */,
@@ -406,6 +469,33 @@
 			productReference = 3F1BBE362B8E1480005D533F /* basenanaUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		ED0CBB122BF656B90056E6AA /* basenana dev */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ED0CBB4F2BF656B90056E6AA /* Build configuration list for PBXNativeTarget "basenana dev" */;
+			buildPhases = (
+				ED0CBB1F2BF656B90056E6AA /* Sources */,
+				ED0CBB422BF656B90056E6AA /* Frameworks */,
+				ED0CBB4B2BF656B90056E6AA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "basenana dev";
+			packageProductDependencies = (
+				ED0CBB132BF656B90056E6AA /* CGRPCZlib */,
+				ED0CBB152BF656B90056E6AA /* GRPC */,
+				ED0CBB162BF656B90056E6AA /* GRPCReflectionService */,
+				ED0CBB172BF656B90056E6AA /* _GRPCCore */,
+				ED0CBB182BF656B90056E6AA /* protoc-gen-grpc-swift */,
+				ED0CBB192BF656B90056E6AA /* GRDB */,
+				ED0CBB1B2BF656B90056E6AA /* SwiftyBeaver */,
+				ED0CBB1D2BF656B90056E6AA /* SwiftSoup */,
+			);
+			productName = basenana;
+			productReference = ED0CBB522BF656B90056E6AA /* basenana dev.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -451,6 +541,7 @@
 				3F1BBE182B8E147F005D533F /* basenana */,
 				3F1BBE2B2B8E1480005D533F /* basenanaTests */,
 				3F1BBE352B8E1480005D533F /* basenanaUITests */,
+				ED0CBB122BF656B90056E6AA /* basenana dev */,
 			);
 		};
 /* End PBXProject section */
@@ -477,6 +568,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ED0CBB4B2BF656B90056E6AA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED0CBB4C2BF656B90056E6AA /* Preview Assets.xcassets in Resources */,
+				ED0CBB4D2BF656B90056E6AA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -538,6 +638,47 @@
 			files = (
 				3F1BBE3D2B8E1480005D533F /* basenanaUITestsLaunchTests.swift in Sources */,
 				3F1BBE3B2B8E1480005D533F /* basenanaUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ED0CBB1F2BF656B90056E6AA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED0CBB202BF656B90056E6AA /* DocumentService.swift in Sources */,
+				ED0CBB212BF656B90056E6AA /* IDHelper.swift in Sources */,
+				ED0CBB222BF656B90056E6AA /* DialogueView.swift in Sources */,
+				ED0CBB232BF656B90056E6AA /* DialogueService.swift in Sources */,
+				ED0CBB242BF656B90056E6AA /* SidebarButtonView.swift in Sources */,
+				ED0CBB252BF656B90056E6AA /* EntryModel.swift in Sources */,
+				ED0CBB262BF656B90056E6AA /* SidebarGroupsView.swift in Sources */,
+				ED0CBB272BF656B90056E6AA /* QuickInboxView.swift in Sources */,
+				ED0CBB282BF656B90056E6AA /* Logging.swift in Sources */,
+				ED0CBB292BF656B90056E6AA /* MarkedView.swift in Sources */,
+				ED0CBB2A2BF656B90056E6AA /* DialogueViewModel.swift in Sources */,
+				ED0CBB2B2BF656B90056E6AA /* EntryPropertyModel.swift in Sources */,
+				ED0CBB2C2BF656B90056E6AA /* HTMLStringView.swift in Sources */,
+				ED0CBB2D2BF656B90056E6AA /* fsapi-v1.pb.swift in Sources */,
+				ED0CBB2E2BF656B90056E6AA /* GroupView.swift in Sources */,
+				ED0CBB2F2BF656B90056E6AA /* DocumentModel.swift in Sources */,
+				ED0CBB302BF656B90056E6AA /* DialogueModel.swift in Sources */,
+				ED0CBB312BF656B90056E6AA /* Database.swift in Sources */,
+				ED0CBB322BF656B90056E6AA /* Color.swift in Sources */,
+				ED0CBB332BF656B90056E6AA /* SidebarView.swift in Sources */,
+				ED0CBB342BF656B90056E6AA /* HTMLParser.swift in Sources */,
+				ED0CBB352BF656B90056E6AA /* FsClientSet.swift in Sources */,
+				ED0CBB362BF656B90056E6AA /* EntryViewModel.swift in Sources */,
+				ED0CBB372BF656B90056E6AA /* GroupViewModel.swift in Sources */,
+				ED0CBB382BF656B90056E6AA /* EntryService.swift in Sources */,
+				ED0CBB392BF656B90056E6AA /* GroupService.swift in Sources */,
+				ED0CBB3A2BF656B90056E6AA /* fsapi-v1.grpc.swift in Sources */,
+				ED0CBB3B2BF656B90056E6AA /* DocumentDetailView.swift in Sources */,
+				ED0CBB3C2BF656B90056E6AA /* SettingsView.swift in Sources */,
+				ED0CBB3D2BF656B90056E6AA /* basenanaApp.swift in Sources */,
+				ED0CBB3E2BF656B90056E6AA /* DocumentItemView.swift in Sources */,
+				ED0CBB3F2BF656B90056E6AA /* MainView.swift in Sources */,
+				ED0CBB402BF656B90056E6AA /* UnreadView.swift in Sources */,
+				ED0CBB412BF656B90056E6AA /* SyncService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -701,6 +842,7 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = org.basenana.app.basenana;
 				PRODUCT_NAME = Basenana;
 				SDKROOT = auto;
@@ -839,6 +981,89 @@
 			};
 			name = Release;
 		};
+		ED0CBB502BF656B90056E6AA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = basenana/basenana.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"basenana/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Info-dev.plist";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				OTHER_SWIFT_FLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = org.basenana.app.basenana;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = "org.basenana.app.basenana-dev";
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = "org.basenana.app.basenana-dev";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEVELOPMENT;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		ED0CBB512BF656B90056E6AA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = basenana/basenana.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"basenana/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Info-dev.plist";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.basenana.app.basenana;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = "org.basenana.app.basenana-dev";
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = "org.basenana.app.basenana-dev";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEVELOPMENT;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -878,6 +1103,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		ED0CBB4F2BF656B90056E6AA /* Build configuration list for PBXNativeTarget "basenana dev" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ED0CBB502BF656B90056E6AA /* Debug */,
+				ED0CBB512BF656B90056E6AA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -906,6 +1140,38 @@
 			};
 		};
 		3FDC2EA52BE3CC2C00344DF8 /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scinfu/SwiftSoup.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.2;
+			};
+		};
+		ED0CBB142BF656B90056E6AA /* XCRemoteSwiftPackageReference "grpc-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/grpc/grpc-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.22.0;
+			};
+		};
+		ED0CBB1A2BF656B90056E6AA /* XCRemoteSwiftPackageReference "GRDB.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/groue/GRDB.swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+		ED0CBB1C2BF656B90056E6AA /* XCRemoteSwiftPackageReference "SwiftyBeaver" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyBeaver/SwiftyBeaver.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.1;
+			};
+		};
+		ED0CBB1E2BF656B90056E6AA /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/scinfu/SwiftSoup.git";
 			requirement = {
@@ -955,6 +1221,46 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3FB7823F2BC1A82700327191 /* XCRemoteSwiftPackageReference "grpc-swift" */;
 			productName = "protoc-gen-grpc-swift";
+		};
+		ED0CBB132BF656B90056E6AA /* CGRPCZlib */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ED0CBB142BF656B90056E6AA /* XCRemoteSwiftPackageReference "grpc-swift" */;
+			productName = CGRPCZlib;
+		};
+		ED0CBB152BF656B90056E6AA /* GRPC */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ED0CBB142BF656B90056E6AA /* XCRemoteSwiftPackageReference "grpc-swift" */;
+			productName = GRPC;
+		};
+		ED0CBB162BF656B90056E6AA /* GRPCReflectionService */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ED0CBB142BF656B90056E6AA /* XCRemoteSwiftPackageReference "grpc-swift" */;
+			productName = GRPCReflectionService;
+		};
+		ED0CBB172BF656B90056E6AA /* _GRPCCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ED0CBB142BF656B90056E6AA /* XCRemoteSwiftPackageReference "grpc-swift" */;
+			productName = _GRPCCore;
+		};
+		ED0CBB182BF656B90056E6AA /* protoc-gen-grpc-swift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ED0CBB142BF656B90056E6AA /* XCRemoteSwiftPackageReference "grpc-swift" */;
+			productName = "protoc-gen-grpc-swift";
+		};
+		ED0CBB192BF656B90056E6AA /* GRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ED0CBB1A2BF656B90056E6AA /* XCRemoteSwiftPackageReference "GRDB.swift" */;
+			productName = GRDB;
+		};
+		ED0CBB1B2BF656B90056E6AA /* SwiftyBeaver */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ED0CBB1C2BF656B90056E6AA /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
+			productName = SwiftyBeaver;
+		};
+		ED0CBB1D2BF656B90056E6AA /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ED0CBB1E2BF656B90056E6AA /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

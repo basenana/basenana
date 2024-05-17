@@ -10,6 +10,12 @@ import SwiftUI
 
 let dbInstance = Database()
 
+#if DEVELOPMENT
+let DATABASE_NAME = "basenana-dev.sqlite"
+#else
+let DATABASE_NAME = "basenana.sqlite"
+#endif
+
 class Database {
     
     var queue: DatabaseQueue
@@ -23,7 +29,7 @@ class Database {
         try! fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true)
 
         // Open or create the database
-        let databaseURL = directoryURL.appendingPathComponent("basenana.sqlite")
+        let databaseURL = directoryURL.appendingPathComponent(DATABASE_NAME)
         log.debug("database path \(databaseURL.path)")
         self.queue = try! DatabaseQueue(path: databaseURL.path)
         
