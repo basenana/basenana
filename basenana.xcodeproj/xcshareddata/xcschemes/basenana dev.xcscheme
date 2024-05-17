@@ -15,7 +15,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ED0CBAD02BF5FF9F0056E6AA"
+               BlueprintIdentifier = "ED0CBB122BF656B90056E6AA"
                BuildableName = "basenana dev.app"
                BlueprintName = "basenana dev"
                ReferencedContainer = "container:basenana.xcodeproj">
@@ -50,15 +50,6 @@
             ReferencedContainer = "container:basenana.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "ED0CBAD02BF5FF9F0056E6AA"
-            BuildableName = "basenana dev.app"
-            BlueprintName = "basenana dev"
-            ReferencedContainer = "container:basenana.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -70,21 +61,12 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "ED0CBAD02BF5FF9F0056E6AA"
+            BlueprintIdentifier = "ED0CBB122BF656B90056E6AA"
             BuildableName = "basenana dev.app"
             BlueprintName = "basenana dev"
             ReferencedContainer = "container:basenana.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "ED0CBAD02BF5FF9F0056E6AA"
-            BuildableName = "basenana dev.app"
-            BlueprintName = "basenana dev"
-            ReferencedContainer = "container:basenana.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
