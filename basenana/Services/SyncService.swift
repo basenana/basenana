@@ -217,9 +217,12 @@ class SyncService {
                 entryService.saveLocalEntryProperty(entryProperty: EntryPropertyModel(
                     oid: entryId, key: property.key, value: property.value, encoded: property.encoded, syncAt: Date()))
             }
-        } catch{
-            if error.localizedDescription.contains("not found") {
-                return
+        } catch {
+            if let status = error as? GRPCStatus {
+                let code = status.code
+                if code == GRPCStatus.Code.notFound {
+                    return
+                }
             }
             log.error("[syncService] get entry detail failed \(error)")
             throw error
@@ -240,8 +243,11 @@ class SyncService {
                 marked: doc.marked, unread: doc.unread, keyWords: doc.keyWords, content: doc.htmlContent, summary: doc.summary,
                 createdAt: doc.createdAt.date, changedAt: doc.changedAt.date, syncAt: Date()))
         } catch{
-            if error.localizedDescription.contains("not found") {
-                return
+            if let status = error as? GRPCStatus {
+                let code = status.code
+                if code == GRPCStatus.Code.notFound {
+                    return
+                }
             }
             log.error("[syncService] get document detail failed \(error)")
             throw error
