@@ -285,6 +285,7 @@ class SyncService {
 @Observable
 class SyncStatus {
     public var isSyncing: Bool = false
+    public var hasAccessToken: Bool = false
 }
 
 let syncStatus = SyncStatus()
