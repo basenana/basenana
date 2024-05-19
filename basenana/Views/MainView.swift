@@ -16,7 +16,7 @@ struct MainView: View{
     }
     
     var body: some View {
-        if clientSet == nil{
+        if !syncStatus.hasAccessToken {
             SettingsView()
         }else {
             NavigationView {
