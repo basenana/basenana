@@ -66,7 +66,7 @@ class EntryService {
     }
     
     func getInbox() -> EntryModel? {
-        return findChildren(parentID: 1, chName: ".inbox")
+        return findChildren(parentID: GroupRoot.groupID, chName: ".inbox")
     }
     
     
@@ -81,7 +81,7 @@ class EntryService {
             log.info(response)
             return getEntry(entryID: response.entry.id)
         } catch {
-            log.error("[entryService] get root entry failed \(error)")
+            log.error("[entryService] find children \(chName) of \(parentID) failed \(error)")
         }
         
         return nil

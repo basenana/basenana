@@ -82,8 +82,19 @@ class SyncService {
         
         do {
             if needRelist {
+                var request = Api_V1_FindEntryDetailRequest()
+                request.root = true
+                let call = clientSet!.entries.findEntryDetail(request, callOptions: nil)
+                let response = try call.response.wait()
+                
+                // rewrite root
+                log.info("[syncService] rewrite root entry \(response.entry.id)")
+                let root = response.entry
+                namespaceService.updateNamespace(ns: NamespaceModel(name: root.name, entryId: root.id))
+                
                 let syncedStartAt = Date()
-                try self.relist(parentID: 1)
+                
+                try self.relist(parentID: root.id)
                 try self.cleanOutmodedData(before: syncedStartAt)
             }else{
                 needSyncSeq = try self.syncUncommitedEvent(start: syncedSeqNum)

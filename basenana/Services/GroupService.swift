@@ -14,7 +14,9 @@ let groupService = GroupService()
 class GroupService {
     
     func initGroupTree() {
-        log.debug("[GroupService] init group tree")
+        log.debug("[GroupService] init group tree, id: \(GroupRoot.groupID), name: \(GroupRoot.groupName)")
+        genRootGroup()
+        
         var needInitGroups = [GroupRoot]
         
         while !needInitGroups.isEmpty{
@@ -43,6 +45,17 @@ class GroupService {
             for subGroup in nextGroup.children!{
                 needInitGroups.append(subGroup)
             }}
+    }
+    
+    func genRootGroup() {
+        do {
+            let ns: NamespaceModel? = try dbInstance.queue.read{ db in
+                try NamespaceModel.fetchOne(db)
+            }
+            GroupRoot = GroupViewModel(groupID: ns?.entryId ?? 1, groupName: ns?.name ?? "root")
+        } catch {
+            log.error("query root failed")
+        }
     }
     
     func moveEntriesToGroup(entries: [Int64], groupID: Int64) {

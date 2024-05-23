@@ -106,6 +106,7 @@ class AuthClient {
                 let response = try call.response.wait()
                 self.encodedClientCrt = response.clientCrt
                 self.encodedClientKey = response.clientKey
+                namespaceService.getOrSaveLocalNamespace(ns: NamespaceModel(name: response.namespace))
             } catch {
                 log.error("[authClient] access token with ak \(self.accessTokenKey) failed: \(error)")
                 return

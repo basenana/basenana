@@ -42,6 +42,9 @@ class Database {
         migrator.registerMigration("Db init") { db in
             try migrateDbInit(db: db)
         }
+        migrator.registerMigration("Db update 2014051800") { db in
+            try migrateDbUpdate2024051800(db: db)
+        }
         return migrator
     }
 }
@@ -128,6 +131,15 @@ func migrateDbInit(db: GRDB.Database) throws {
         t.column("syncAt", .datetime)
 
         t.primaryKey(["id"])
+    }
+}
+
+func migrateDbUpdate2024051800(db: GRDB.Database) throws {
+    try db.create(table: "namespace"){ t in
+        t.column("name", .text)
+        t.column("entryId", .integer)
+
+        t.primaryKey(["name"])
     }
 }
 
