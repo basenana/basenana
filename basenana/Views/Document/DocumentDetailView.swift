@@ -10,7 +10,11 @@ import SwiftUI
 
 struct DocumentDetailView: View {
     @State var isDrawerOpen: Bool = false
-    let doc: DocumentModel?
+    var doc: DocumentDetailModel? = nil
+    
+    init(entryId: Int64){
+        self.doc = documentService.getDocument(entryId: entryId)
+    }
     
     var body: some View{
         if let document = doc {

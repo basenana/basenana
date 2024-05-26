@@ -31,12 +31,12 @@ struct SidebarButtonView: View {
             .buttonStyle(.accessoryBar)
             
             Spacer()
-            Button(action: {
-                syncService.resyncBackground()
-            }, label: {
-                Image(systemName: syncStatus.isSyncing ? "arrow.triangle.2.circlepath.icloud" : "checkmark.icloud")
-            })
-            .buttonStyle(.accessoryBar)
+//            Button(action: {
+//                syncService.resyncBackground()
+//            }, label: {
+//                Image(systemName: syncStatus.isSyncing ? "arrow.triangle.2.circlepath.icloud" : "checkmark.icloud")
+//            })
+//            .buttonStyle(.accessoryBar)
         })
         .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/,alignment: .leading)
         .padding(5)

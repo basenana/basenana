@@ -8,10 +8,8 @@
 import SwiftUI
 
 struct SidebarGroupsView: View {
-    private var rootGroups = GroupRoot.children ?? []
-    
     var body: some View {
-        OutlineGroup(rootGroups, children: \.children){ child in
+        OutlineGroup(GroupRoot.children ?? [], children: \.children){ child in
             NavigationLink {
                 GroupView(groupID: child.groupID).id(child.groupID)
                     .navigationTitle(child.groupName)

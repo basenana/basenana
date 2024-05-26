@@ -10,17 +10,16 @@ import SwiftData
 
 struct GroupView: View{
     var groupID: Int64
-    @State private var groupChileren: [EntryModel] = []
-    @State private var selection: Set<EntryModel.ID> = []
-    @State private var selectedDoc: DocumentModel? = nil
-    @State var order: [KeyPathComparator<EntryModel>] = [.init(\.name, order: .forward)]
+    @State private var groupChileren: [EntryInfoModel] = []
+    @State private var selection: Set<EntryInfoModel.ID> = []
+    @State private var selectedDoc: DocumentInfoModel? = nil
+    @State var order: [KeyPathComparator<EntryInfoModel>] = [.init(\.name, order: .forward)]
     
     var body: some View {
         GeometryReader { geometry in
             VStack{
-                
                 VSplitView(){
-                    Table(of: EntryModel.self, selection: $selection, sortOrder: $order) {
+                    Table(of: EntryInfoModel.self, selection: $selection, sortOrder: $order) {
                         TableColumn("Name", value: \.name) { entry in
                             if entry.isGroup {
                                 HStack {
@@ -57,12 +56,12 @@ struct GroupView: View{
                                     Button("Delete", role: .destructive) {
                                     }
                                 }
-                                .draggable(IDHelper(kind: child.isGroup ? "group" : "entry", id: child.id!).Encode())
+                                .draggable(IDHelper(kind: child.isGroup ? "group" : "entry", id: child.id).Encode())
                                 .dropDestination(for: String.self){ entryInfos in
                                     if !child.isGroup {
                                         return
                                     }
-                                    groupService.moveEntriesToGroup(entries: parseIDInfo(entryInfos: entryInfos), groupID: child.id!)
+                                    groupService.moveEntriesToGroup(entries: parseIDInfo(entryInfos: entryInfos), groupID: child.id)
                                 }
                         }
                     }
@@ -73,10 +72,6 @@ struct GroupView: View{
                     .onAppear{
                         groupChileren = entryService.listChildren(parentEntryID: groupID, orderName: EntryOrder.modifiedAt, desc: true)
                     }
-                    .onChange(of: GroupRoot.updateAt){
-                        groupChileren = entryService.listChildren(parentEntryID: groupID, orderName: EntryOrder.modifiedAt, desc: true)
-                        log.info("relist group \(groupID) children")
-                    }
                     .onChange(of: order){
                         withAnimation {
                             groupChileren.sort(using: order)
@@ -86,8 +81,7 @@ struct GroupView: View{
                     
                     if selection.count == 1 {
                         if let unwrappedID = selection.first {
-                            let entryId: Int64 = unwrappedID ?? 0
-                            DocumentDetailView(doc: documentService.getDocument(entryId: entryId))
+                            DocumentDetailView(entryId: unwrappedID)
                                 .frame(minHeight: 300, idealHeight: geometry.size.height/2)
                                 .layoutPriority(1)
                         }

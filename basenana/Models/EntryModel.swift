@@ -12,8 +12,24 @@ import GRDB
 let rootEntryID: Int64 = 1
 let inboxEntryID: Int64 = 2
 
-struct EntryModel: Codable, Identifiable {
-    var id: Int64?
+struct EntryInfoModel: Codable, Identifiable {
+    var id: Int64
+    var name: String
+    var kind: String
+    var isGroup: Bool
+    var size: Int64
+
+    var createdAt: Date
+    var changedAt: Date
+    var modifiedAt: Date
+    var accessAt: Date
+    
+    func isVisitable() -> Bool{
+        return !name.starts(with: ".")
+    }
+}
+struct EntryDetailModel: Codable, Identifiable {
+    var id: Int64
     var name: String
     var aliases: String
     var parent: Int64
@@ -32,52 +48,23 @@ struct EntryModel: Codable, Identifiable {
     var changedAt: Date
     var modifiedAt: Date
     var accessAt: Date
-    var syncAt: Date
+    
+    var properties: [EntryPropertyModel]
     
     func isVisitable() -> Bool{
         return !name.starts(with: ".")
     }
 }
 
-
-extension EntryModel: TableRecord {
-    static var databaseTableName: String = "entry"
-    
-    enum Columns {
-        static let id = Column(CodingKeys.id)
-        static let name = Column(CodingKeys.name)
-        static let aliases = Column(CodingKeys.aliases)
-        static let parent = Column(CodingKeys.parent)
-        static let kind = Column(CodingKeys.kind)
-        static let isGroup = Column(CodingKeys.isGroup)
-        static let size = Column(CodingKeys.size)
-        static let version = Column(CodingKeys.version)
-        static let namespace = Column(CodingKeys.namespace)
-        static let storage = Column(CodingKeys.storage)
-        static let uid = Column(CodingKeys.uid)
-        static let gid = Column(CodingKeys.gid)
-        static let permissions = Column(CodingKeys.permissions)
-        static let createdAt = Column(CodingKeys.createdAt)
-        static let changedAt = Column(CodingKeys.changedAt)
-        static let modifiedAt = Column(CodingKeys.modifiedAt)
-        static let accessAt = Column(CodingKeys.accessAt)
-        static let syncAt = Column(CodingKeys.syncAt)
-    }
-}
-
-extension EntryModel: FetchableRecord {}
-
-extension EntryModel: MutablePersistableRecord {
-    mutating func didInsert(_ inserted: InsertionSuccess) {
-        if id == nil {
-            id = inserted.rowID
-        }
-    }
-}
-
 enum EntryOrder {
+    case createAt
     case modifiedAt
     case name
     case kind
     case size
 }
+
+struct EntryFilter {
+    var isGroup: Bool?
+}
+

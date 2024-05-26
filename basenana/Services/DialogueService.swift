@@ -14,85 +14,39 @@ let dialogueService = DialogueService()
 
 class DialogueService: ObservableObject {
     
-    func getRooms(docId: Int64, entryId: Int64) -> [RoomModel]? {
+    func getRooms(docId: Int64, entryId: Int64) -> [RoomModel] {
         do {
-            var data: [RoomModel]
-            data = try dbInstance.queue.read{ db in
-                try RoomModel.filter(Column("docid") == docId).fetchAll(db)
+            var request = Api_V1_ListRoomsRequest()
+            request.entryID = entryId
+            
+            let call = clientSet?.dialogue.listRooms(request, callOptions: nil)
+            let response = try call?.response.wait()
+            
+            var rooms: [RoomModel] = []
+            for room in response!.rooms {
+                rooms.append(room2Model(room: room))
             }
-            return data
+            return rooms
         } catch {
             log.error("get rooms failed \(error)")
-            return nil
+            return []
         }
     }
     
-    func openRoom(docId: Int64, entryId: Int64) -> RoomViewModel? {
+    func openRoom(docId: Int64, entryId: Int64) -> RoomModel? {
         do {
-            var data: RoomModel?
-            var msgs: [RoomMessageModel]? = []
-            data = try dbInstance.queue.read{ db in
-                try RoomModel.filter(Column("docid") == docId).fetchOne(db)
-            }
-            if data == nil {
-                log.info("no rooms of document \(docId), get from server")
-                var request = Api_V1_OpenRoomRequest()
-                request.entryID = entryId
-                let call = clientSet!.dialogue.openRoom(request, callOptions: nil)
-                
-                let response = try call.response.wait()
-                let room = response.room
-                
-                let r = RoomModel(id: room.id, namespace: room.namespace, oid: room.entryID, docid: docId, createdAt: room.createdAt.date)
-                saveRoom(room: r)
-                return RoomViewModel(room: r, messages: [])
-            }
+            var request = Api_V1_OpenRoomRequest()
+            request.entryID = entryId
+            let call = clientSet!.dialogue.openRoom(request, callOptions: nil)
+            let response = try call.response.wait()
             
-            msgs = try dbInstance.queue.read{ db in
-                try RoomMessageModel.filter(Column("roomid") == data?.id).order(Column("sendAt")).fetchAll(db)
-            }
-            return RoomViewModel(room: data!, messages: msgs!)
+            // todo: get message with pagination
+            return room2Model(room: response.room)
         } catch {
             log.error("get rooms or messages failed \(error)")
             return nil
         }
     }
-    
-    func saveRoom(room: RoomModel) {
-        var roomModel = room
-        do {
-            try dbInstance.queue.write{ db in
-                try roomModel.save(db)
-            }
-        } catch {
-            log.error("insert room failed \(error)")
-        }
-        return
-    }
-    
-    func getRoomMessage(roomId: Int64) -> [RoomMessageModel]? {
-        do {
-            let data: [RoomMessageModel]? = try dbInstance.queue.read{ db in
-                try RoomMessageModel.filter(Column("roomid") == roomId).fetchAll(db)
-            }
-            return data
-        } catch {
-            log.error("get room message failed \(error)")
-            return nil
-        }
-    }
-    func saveMessage(message: RoomMessageModel) {
-        do {
-            var msg: RoomMessageModel = message
-            try dbInstance.queue.write{ db in
-                try msg.save(db)
-            }
-        } catch {
-            log.error("insert room message failed \(error)")
-        }
-        return
-    }
-    
     
     func chatInRoom(roomId: Int64, newRequest: String, callbackFn: @escaping (RoomMessageModel, RoomMessageModel) -> Void) throws {
         var request = Api_V1_ChatRequest()
@@ -126,18 +80,6 @@ class DialogueService: ObservableObject {
                 replyMsg = ""
             }
             replyMsg += replyLine
-
-            if response.requestID != 0 {
-                requestMsg.id = response.requestID
-                dialogueService.saveMessage(message: requestMsg)
-            } else {
-                responseMsg.sender = response.sender
-                responseMsg.id = response.responseID
-                responseMsg.sendAt = response.sendAt.date
-                responseMsg.createdAt = response.createdAt.date
-                responseMsg.message = replyMsg
-                dialogueService.saveMessage(message: responseMsg)
-            }
             callbackFn(requestMsg, responseMsg)
         }
     }
@@ -148,12 +90,21 @@ class DialogueService: ObservableObject {
             request.roomID = roomId
             let call = clientSet!.dialogue.clearRoom(request, callOptions: nil)
             let _ = try call.response.wait()
-            
-            try _ = dbInstance.queue.write{ db in
-                try RoomMessageModel.filter(Column("roomid") == roomId).deleteAll(db)
-            }
         }catch{
             log.error("clear room & message by roomId \(roomId) failed")
         }
+    }
+    
+    func room2Model(room: Api_V1_RoomInfo) -> RoomModel {
+        let messages = room.messages
+        var ms: [RoomMessageModel] = []
+        for message in messages {
+            ms.append(RoomMessageModel(roomid: message.id, sender: message.sender, message: message.message, sendAt: message.sendAt.date, createdAt: message.createdAt.date))
+        }
+        return RoomModel(
+            id: room.id, namespace: room.namespace, oid: room.entryID,
+            title: room.title, prompt: room.prompt,
+            createdAt: room.createdAt.date, messages: ms
+        )
     }
 }

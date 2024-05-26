@@ -1390,6 +1390,11 @@ internal protocol Api_V1_DocumentClientProtocol: GRPCClient {
     _ request: Api_V1_UpdateDocumentRequest,
     callOptions: CallOptions?
   ) -> UnaryCall<Api_V1_UpdateDocumentRequest, Api_V1_UpdateDocumentResponse>
+
+  func searchDocuments(
+    _ request: Api_V1_SearchDocumentsRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Api_V1_SearchDocumentsRequest, Api_V1_SearchDocumentsResponse>
 }
 
 extension Api_V1_DocumentClientProtocol {
@@ -1448,6 +1453,24 @@ extension Api_V1_DocumentClientProtocol {
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeUpdateDocumentInterceptors() ?? []
+    )
+  }
+
+  /// Unary call to SearchDocuments
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to SearchDocuments.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  internal func searchDocuments(
+    _ request: Api_V1_SearchDocumentsRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Api_V1_SearchDocumentsRequest, Api_V1_SearchDocumentsResponse> {
+    return self.makeUnaryCall(
+      path: Api_V1_DocumentClientMetadata.Methods.searchDocuments.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeSearchDocumentsInterceptors() ?? []
     )
   }
 }
@@ -1528,6 +1551,11 @@ internal protocol Api_V1_DocumentAsyncClientProtocol: GRPCClient {
     _ request: Api_V1_UpdateDocumentRequest,
     callOptions: CallOptions?
   ) -> GRPCAsyncUnaryCall<Api_V1_UpdateDocumentRequest, Api_V1_UpdateDocumentResponse>
+
+  func makeSearchDocumentsCall(
+    _ request: Api_V1_SearchDocumentsRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Api_V1_SearchDocumentsRequest, Api_V1_SearchDocumentsResponse>
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -1575,6 +1603,18 @@ extension Api_V1_DocumentAsyncClientProtocol {
       interceptors: self.interceptors?.makeUpdateDocumentInterceptors() ?? []
     )
   }
+
+  internal func makeSearchDocumentsCall(
+    _ request: Api_V1_SearchDocumentsRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Api_V1_SearchDocumentsRequest, Api_V1_SearchDocumentsResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Api_V1_DocumentClientMetadata.Methods.searchDocuments.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeSearchDocumentsInterceptors() ?? []
+    )
+  }
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -1614,6 +1654,18 @@ extension Api_V1_DocumentAsyncClientProtocol {
       interceptors: self.interceptors?.makeUpdateDocumentInterceptors() ?? []
     )
   }
+
+  internal func searchDocuments(
+    _ request: Api_V1_SearchDocumentsRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Api_V1_SearchDocumentsResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Api_V1_DocumentClientMetadata.Methods.searchDocuments.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeSearchDocumentsInterceptors() ?? []
+    )
+  }
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -1643,6 +1695,9 @@ internal protocol Api_V1_DocumentClientInterceptorFactoryProtocol: Sendable {
 
   /// - Returns: Interceptors to use when invoking 'updateDocument'.
   func makeUpdateDocumentInterceptors() -> [ClientInterceptor<Api_V1_UpdateDocumentRequest, Api_V1_UpdateDocumentResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'searchDocuments'.
+  func makeSearchDocumentsInterceptors() -> [ClientInterceptor<Api_V1_SearchDocumentsRequest, Api_V1_SearchDocumentsResponse>]
 }
 
 internal enum Api_V1_DocumentClientMetadata {
@@ -1653,6 +1708,7 @@ internal enum Api_V1_DocumentClientMetadata {
       Api_V1_DocumentClientMetadata.Methods.listDocuments,
       Api_V1_DocumentClientMetadata.Methods.getDocumentDetail,
       Api_V1_DocumentClientMetadata.Methods.updateDocument,
+      Api_V1_DocumentClientMetadata.Methods.searchDocuments,
     ]
   )
 
@@ -1672,6 +1728,12 @@ internal enum Api_V1_DocumentClientMetadata {
     internal static let updateDocument = GRPCMethodDescriptor(
       name: "UpdateDocument",
       path: "/api.v1.Document/UpdateDocument",
+      type: GRPCCallType.unary
+    )
+
+    internal static let searchDocuments = GRPCMethodDescriptor(
+      name: "SearchDocuments",
+      path: "/api.v1.Document/SearchDocuments",
       type: GRPCCallType.unary
     )
   }
@@ -3447,6 +3509,8 @@ internal protocol Api_V1_DocumentProvider: CallHandlerProvider {
   func getDocumentDetail(request: Api_V1_GetDocumentDetailRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_GetDocumentDetailResponse>
 
   func updateDocument(request: Api_V1_UpdateDocumentRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_UpdateDocumentResponse>
+
+  func searchDocuments(request: Api_V1_SearchDocumentsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_SearchDocumentsResponse>
 }
 
 extension Api_V1_DocumentProvider {
@@ -3488,6 +3552,15 @@ extension Api_V1_DocumentProvider {
         userFunction: self.updateDocument(request:context:)
       )
 
+    case "SearchDocuments":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_SearchDocumentsRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_SearchDocumentsResponse>(),
+        interceptors: self.interceptors?.makeSearchDocumentsInterceptors() ?? [],
+        userFunction: self.searchDocuments(request:context:)
+      )
+
     default:
       return nil
     }
@@ -3514,6 +3587,11 @@ internal protocol Api_V1_DocumentAsyncProvider: CallHandlerProvider, Sendable {
     request: Api_V1_UpdateDocumentRequest,
     context: GRPCAsyncServerCallContext
   ) async throws -> Api_V1_UpdateDocumentResponse
+
+  func searchDocuments(
+    request: Api_V1_SearchDocumentsRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Api_V1_SearchDocumentsResponse
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -3562,6 +3640,15 @@ extension Api_V1_DocumentAsyncProvider {
         wrapping: { try await self.updateDocument(request: $0, context: $1) }
       )
 
+    case "SearchDocuments":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_SearchDocumentsRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_SearchDocumentsResponse>(),
+        interceptors: self.interceptors?.makeSearchDocumentsInterceptors() ?? [],
+        wrapping: { try await self.searchDocuments(request: $0, context: $1) }
+      )
+
     default:
       return nil
     }
@@ -3581,6 +3668,10 @@ internal protocol Api_V1_DocumentServerInterceptorFactoryProtocol: Sendable {
   /// - Returns: Interceptors to use when handling 'updateDocument'.
   ///   Defaults to calling `self.makeInterceptors()`.
   func makeUpdateDocumentInterceptors() -> [ServerInterceptor<Api_V1_UpdateDocumentRequest, Api_V1_UpdateDocumentResponse>]
+
+  /// - Returns: Interceptors to use when handling 'searchDocuments'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeSearchDocumentsInterceptors() -> [ServerInterceptor<Api_V1_SearchDocumentsRequest, Api_V1_SearchDocumentsResponse>]
 }
 
 internal enum Api_V1_DocumentServerMetadata {
@@ -3591,6 +3682,7 @@ internal enum Api_V1_DocumentServerMetadata {
       Api_V1_DocumentServerMetadata.Methods.listDocuments,
       Api_V1_DocumentServerMetadata.Methods.getDocumentDetail,
       Api_V1_DocumentServerMetadata.Methods.updateDocument,
+      Api_V1_DocumentServerMetadata.Methods.searchDocuments,
     ]
   )
 
@@ -3610,6 +3702,12 @@ internal enum Api_V1_DocumentServerMetadata {
     internal static let updateDocument = GRPCMethodDescriptor(
       name: "UpdateDocument",
       path: "/api.v1.Document/UpdateDocument",
+      type: GRPCCallType.unary
+    )
+
+    internal static let searchDocuments = GRPCMethodDescriptor(
+      name: "SearchDocuments",
+      path: "/api.v1.Document/SearchDocuments",
       type: GRPCCallType.unary
     )
   }

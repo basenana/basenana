@@ -178,6 +178,20 @@ struct Api_V1_QuickInboxResponse {
   init() {}
 }
 
+struct Api_V1_Pagination {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var page: Int64 = 0
+
+  var pageSize: Int64 = 0
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
 struct Api_V1_FindEntryDetailRequest {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -348,9 +362,20 @@ struct Api_V1_ListGroupChildrenRequest {
 
   var parentID: Int64 = 0
 
+  var pagination: Api_V1_Pagination {
+    get {return _pagination ?? Api_V1_Pagination()}
+    set {_pagination = newValue}
+  }
+  /// Returns true if `pagination` has been explicitly set.
+  var hasPagination: Bool {return self._pagination != nil}
+  /// Clears the value of `pagination`. Subsequent reads from it will return its default value.
+  mutating func clearPagination() {self._pagination = nil}
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
+
+  fileprivate var _pagination: Api_V1_Pagination? = nil
 }
 
 struct Api_V1_ListGroupChildrenResponse {
@@ -633,9 +658,20 @@ struct Api_V1_ListDocumentsRequest {
 
   var unread: Bool = false
 
+  var pagination: Api_V1_Pagination {
+    get {return _pagination ?? Api_V1_Pagination()}
+    set {_pagination = newValue}
+  }
+  /// Returns true if `pagination` has been explicitly set.
+  var hasPagination: Bool {return self._pagination != nil}
+  /// Clears the value of `pagination`. Subsequent reads from it will return its default value.
+  mutating func clearPagination() {self._pagination = nil}
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
+
+  fileprivate var _pagination: Api_V1_Pagination? = nil
 }
 
 struct Api_V1_ListDocumentsResponse {
@@ -779,6 +815,30 @@ struct Api_V1_UpdateDocumentResponse {
   init() {}
 
   fileprivate var _document: Api_V1_DocumentDescribe? = nil
+}
+
+struct Api_V1_SearchDocumentsRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var query: String = String()
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
+struct Api_V1_SearchDocumentsResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var documents: [Api_V1_DocumentInfo] = []
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
 }
 
 struct Api_V1_RoomInfo {
@@ -1243,6 +1303,8 @@ struct Api_V1_DocumentInfo {
 
   var namespace: String = String()
 
+  var subContent: String = String()
+
   var createdAt: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _createdAt ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
     set {_createdAt = newValue}
@@ -1274,52 +1336,93 @@ struct Api_V1_DocumentDescribe {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  var id: Int64 = 0
+  var id: Int64 {
+    get {return _storage._id}
+    set {_uniqueStorage()._id = newValue}
+  }
 
-  var name: String = String()
+  var name: String {
+    get {return _storage._name}
+    set {_uniqueStorage()._name = newValue}
+  }
 
-  var entryID: Int64 = 0
+  var entryID: Int64 {
+    get {return _storage._entryID}
+    set {_uniqueStorage()._entryID = newValue}
+  }
 
-  var parentEntryID: Int64 = 0
+  var parentEntryID: Int64 {
+    get {return _storage._parentEntryID}
+    set {_uniqueStorage()._parentEntryID = newValue}
+  }
 
-  var source: String = String()
+  var source: String {
+    get {return _storage._source}
+    set {_uniqueStorage()._source = newValue}
+  }
 
-  var marked: Bool = false
+  var marked: Bool {
+    get {return _storage._marked}
+    set {_uniqueStorage()._marked = newValue}
+  }
 
-  var unread: Bool = false
+  var unread: Bool {
+    get {return _storage._unread}
+    set {_uniqueStorage()._unread = newValue}
+  }
 
-  var namespace: String = String()
+  var namespace: String {
+    get {return _storage._namespace}
+    set {_uniqueStorage()._namespace = newValue}
+  }
 
-  var htmlContent: String = String()
+  var htmlContent: String {
+    get {return _storage._htmlContent}
+    set {_uniqueStorage()._htmlContent = newValue}
+  }
 
-  var keyWords: [String] = []
+  var keyWords: [String] {
+    get {return _storage._keyWords}
+    set {_uniqueStorage()._keyWords = newValue}
+  }
 
-  var summary: String = String()
+  var summary: String {
+    get {return _storage._summary}
+    set {_uniqueStorage()._summary = newValue}
+  }
+
+  var entryInfo: Api_V1_EntryInfo {
+    get {return _storage._entryInfo ?? Api_V1_EntryInfo()}
+    set {_uniqueStorage()._entryInfo = newValue}
+  }
+  /// Returns true if `entryInfo` has been explicitly set.
+  var hasEntryInfo: Bool {return _storage._entryInfo != nil}
+  /// Clears the value of `entryInfo`. Subsequent reads from it will return its default value.
+  mutating func clearEntryInfo() {_uniqueStorage()._entryInfo = nil}
 
   var createdAt: SwiftProtobuf.Google_Protobuf_Timestamp {
-    get {return _createdAt ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
-    set {_createdAt = newValue}
+    get {return _storage._createdAt ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_uniqueStorage()._createdAt = newValue}
   }
   /// Returns true if `createdAt` has been explicitly set.
-  var hasCreatedAt: Bool {return self._createdAt != nil}
+  var hasCreatedAt: Bool {return _storage._createdAt != nil}
   /// Clears the value of `createdAt`. Subsequent reads from it will return its default value.
-  mutating func clearCreatedAt() {self._createdAt = nil}
+  mutating func clearCreatedAt() {_uniqueStorage()._createdAt = nil}
 
   var changedAt: SwiftProtobuf.Google_Protobuf_Timestamp {
-    get {return _changedAt ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
-    set {_changedAt = newValue}
+    get {return _storage._changedAt ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_uniqueStorage()._changedAt = newValue}
   }
   /// Returns true if `changedAt` has been explicitly set.
-  var hasChangedAt: Bool {return self._changedAt != nil}
+  var hasChangedAt: Bool {return _storage._changedAt != nil}
   /// Clears the value of `changedAt`. Subsequent reads from it will return its default value.
-  mutating func clearChangedAt() {self._changedAt = nil}
+  mutating func clearChangedAt() {_uniqueStorage()._changedAt = nil}
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
 
-  fileprivate var _createdAt: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
-  fileprivate var _changedAt: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+  fileprivate var _storage = _StorageClass.defaultInstance
 }
 
 struct Api_V1_EntryInfo {
@@ -1334,6 +1437,8 @@ struct Api_V1_EntryInfo {
   var kind: String = String()
 
   var isGroup: Bool = false
+
+  var size: Int64 = 0
 
   var createdAt: SwiftProtobuf.Google_Protobuf_Timestamp {
     get {return _createdAt ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
@@ -1582,6 +1687,7 @@ extension Api_V1_QuickInboxRequest: @unchecked Sendable {}
 extension Api_V1_QuickInboxRequest.SourceType: @unchecked Sendable {}
 extension Api_V1_QuickInboxRequest.FileType: @unchecked Sendable {}
 extension Api_V1_QuickInboxResponse: @unchecked Sendable {}
+extension Api_V1_Pagination: @unchecked Sendable {}
 extension Api_V1_FindEntryDetailRequest: @unchecked Sendable {}
 extension Api_V1_GetEntryDetailRequest: @unchecked Sendable {}
 extension Api_V1_GetEntryDetailResponse: @unchecked Sendable {}
@@ -1614,6 +1720,8 @@ extension Api_V1_GetDocumentDetailResponse: @unchecked Sendable {}
 extension Api_V1_UpdateDocumentRequest: @unchecked Sendable {}
 extension Api_V1_UpdateDocumentRequest.DocumentMark: @unchecked Sendable {}
 extension Api_V1_UpdateDocumentResponse: @unchecked Sendable {}
+extension Api_V1_SearchDocumentsRequest: @unchecked Sendable {}
+extension Api_V1_SearchDocumentsResponse: @unchecked Sendable {}
 extension Api_V1_RoomInfo: @unchecked Sendable {}
 extension Api_V1_RoomMessage: @unchecked Sendable {}
 extension Api_V1_ListRoomsRequest: @unchecked Sendable {}
@@ -1865,6 +1973,44 @@ extension Api_V1_QuickInboxResponse: SwiftProtobuf.Message, SwiftProtobuf._Messa
   static func ==(lhs: Api_V1_QuickInboxResponse, rhs: Api_V1_QuickInboxResponse) -> Bool {
     if lhs.entryID != rhs.entryID {return false}
     if lhs.jobID != rhs.jobID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_Pagination: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".Pagination"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "page"),
+    2: .same(proto: "pageSize"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self.page) }()
+      case 2: try { try decoder.decodeSingularInt64Field(value: &self.pageSize) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.page != 0 {
+      try visitor.visitSingularInt64Field(value: self.page, fieldNumber: 1)
+    }
+    if self.pageSize != 0 {
+      try visitor.visitSingularInt64Field(value: self.pageSize, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_Pagination, rhs: Api_V1_Pagination) -> Bool {
+    if lhs.page != rhs.page {return false}
+    if lhs.pageSize != rhs.pageSize {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -2212,6 +2358,7 @@ extension Api_V1_ListGroupChildrenRequest: SwiftProtobuf.Message, SwiftProtobuf.
   static let protoMessageName: String = _protobuf_package + ".ListGroupChildrenRequest"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "parentID"),
+    10: .same(proto: "pagination"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -2221,20 +2368,29 @@ extension Api_V1_ListGroupChildrenRequest: SwiftProtobuf.Message, SwiftProtobuf.
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularInt64Field(value: &self.parentID) }()
+      case 10: try { try decoder.decodeSingularMessageField(value: &self._pagination) }()
       default: break
       }
     }
   }
 
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if self.parentID != 0 {
       try visitor.visitSingularInt64Field(value: self.parentID, fieldNumber: 1)
     }
+    try { if let v = self._pagination {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
   static func ==(lhs: Api_V1_ListGroupChildrenRequest, rhs: Api_V1_ListGroupChildrenRequest) -> Bool {
     if lhs.parentID != rhs.parentID {return false}
+    if lhs._pagination != rhs._pagination {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -2873,6 +3029,7 @@ extension Api_V1_ListDocumentsRequest: SwiftProtobuf.Message, SwiftProtobuf._Mes
     2: .same(proto: "parentID"),
     3: .same(proto: "marked"),
     4: .same(proto: "unread"),
+    10: .same(proto: "pagination"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -2885,12 +3042,17 @@ extension Api_V1_ListDocumentsRequest: SwiftProtobuf.Message, SwiftProtobuf._Mes
       case 2: try { try decoder.decodeSingularInt64Field(value: &self.parentID) }()
       case 3: try { try decoder.decodeSingularBoolField(value: &self.marked) }()
       case 4: try { try decoder.decodeSingularBoolField(value: &self.unread) }()
+      case 10: try { try decoder.decodeSingularMessageField(value: &self._pagination) }()
       default: break
       }
     }
   }
 
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if self.listAll != false {
       try visitor.visitSingularBoolField(value: self.listAll, fieldNumber: 1)
     }
@@ -2903,6 +3065,9 @@ extension Api_V1_ListDocumentsRequest: SwiftProtobuf.Message, SwiftProtobuf._Mes
     if self.unread != false {
       try visitor.visitSingularBoolField(value: self.unread, fieldNumber: 4)
     }
+    try { if let v = self._pagination {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -2911,6 +3076,7 @@ extension Api_V1_ListDocumentsRequest: SwiftProtobuf.Message, SwiftProtobuf._Mes
     if lhs.parentID != rhs.parentID {return false}
     if lhs.marked != rhs.marked {return false}
     if lhs.unread != rhs.unread {return false}
+    if lhs._pagination != rhs._pagination {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -3105,6 +3271,70 @@ extension Api_V1_UpdateDocumentResponse: SwiftProtobuf.Message, SwiftProtobuf._M
 
   static func ==(lhs: Api_V1_UpdateDocumentResponse, rhs: Api_V1_UpdateDocumentResponse) -> Bool {
     if lhs._document != rhs._document {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_SearchDocumentsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".SearchDocumentsRequest"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "query"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.query) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.query.isEmpty {
+      try visitor.visitSingularStringField(value: self.query, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_SearchDocumentsRequest, rhs: Api_V1_SearchDocumentsRequest) -> Bool {
+    if lhs.query != rhs.query {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_SearchDocumentsResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".SearchDocumentsResponse"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "documents"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeRepeatedMessageField(value: &self.documents) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.documents.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.documents, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_SearchDocumentsResponse, rhs: Api_V1_SearchDocumentsResponse) -> Bool {
+    if lhs.documents != rhs.documents {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -4104,6 +4334,7 @@ extension Api_V1_DocumentInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     6: .same(proto: "marked"),
     7: .same(proto: "unread"),
     8: .same(proto: "namespace"),
+    9: .same(proto: "subContent"),
     30: .same(proto: "createdAt"),
     31: .same(proto: "changedAt"),
   ]
@@ -4122,6 +4353,7 @@ extension Api_V1_DocumentInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
       case 6: try { try decoder.decodeSingularBoolField(value: &self.marked) }()
       case 7: try { try decoder.decodeSingularBoolField(value: &self.unread) }()
       case 8: try { try decoder.decodeSingularStringField(value: &self.namespace) }()
+      case 9: try { try decoder.decodeSingularStringField(value: &self.subContent) }()
       case 30: try { try decoder.decodeSingularMessageField(value: &self._createdAt) }()
       case 31: try { try decoder.decodeSingularMessageField(value: &self._changedAt) }()
       default: break
@@ -4158,6 +4390,9 @@ extension Api_V1_DocumentInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     if !self.namespace.isEmpty {
       try visitor.visitSingularStringField(value: self.namespace, fieldNumber: 8)
     }
+    if !self.subContent.isEmpty {
+      try visitor.visitSingularStringField(value: self.subContent, fieldNumber: 9)
+    }
     try { if let v = self._createdAt {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 30)
     } }()
@@ -4176,6 +4411,7 @@ extension Api_V1_DocumentInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     if lhs.marked != rhs.marked {return false}
     if lhs.unread != rhs.unread {return false}
     if lhs.namespace != rhs.namespace {return false}
+    if lhs.subContent != rhs.subContent {return false}
     if lhs._createdAt != rhs._createdAt {return false}
     if lhs._changedAt != rhs._changedAt {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -4197,95 +4433,167 @@ extension Api_V1_DocumentDescribe: SwiftProtobuf.Message, SwiftProtobuf._Message
     10: .same(proto: "htmlContent"),
     11: .same(proto: "keyWords"),
     12: .same(proto: "summary"),
+    20: .same(proto: "entryInfo"),
     30: .same(proto: "createdAt"),
     31: .same(proto: "changedAt"),
   ]
 
+  fileprivate class _StorageClass {
+    var _id: Int64 = 0
+    var _name: String = String()
+    var _entryID: Int64 = 0
+    var _parentEntryID: Int64 = 0
+    var _source: String = String()
+    var _marked: Bool = false
+    var _unread: Bool = false
+    var _namespace: String = String()
+    var _htmlContent: String = String()
+    var _keyWords: [String] = []
+    var _summary: String = String()
+    var _entryInfo: Api_V1_EntryInfo? = nil
+    var _createdAt: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+    var _changedAt: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+
+    #if swift(>=5.10)
+      // This property is used as the initial default value for new instances of the type.
+      // The type itself is protecting the reference to its storage via CoW semantics.
+      // This will force a copy to be made of this reference when the first mutation occurs;
+      // hence, it is safe to mark this as `nonisolated(unsafe)`.
+      static nonisolated(unsafe) let defaultInstance = _StorageClass()
+    #else
+      static let defaultInstance = _StorageClass()
+    #endif
+
+    private init() {}
+
+    init(copying source: _StorageClass) {
+      _id = source._id
+      _name = source._name
+      _entryID = source._entryID
+      _parentEntryID = source._parentEntryID
+      _source = source._source
+      _marked = source._marked
+      _unread = source._unread
+      _namespace = source._namespace
+      _htmlContent = source._htmlContent
+      _keyWords = source._keyWords
+      _summary = source._summary
+      _entryInfo = source._entryInfo
+      _createdAt = source._createdAt
+      _changedAt = source._changedAt
+    }
+  }
+
+  fileprivate mutating func _uniqueStorage() -> _StorageClass {
+    if !isKnownUniquelyReferenced(&_storage) {
+      _storage = _StorageClass(copying: _storage)
+    }
+    return _storage
+  }
+
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularInt64Field(value: &self.id) }()
-      case 2: try { try decoder.decodeSingularStringField(value: &self.name) }()
-      case 3: try { try decoder.decodeSingularInt64Field(value: &self.entryID) }()
-      case 4: try { try decoder.decodeSingularInt64Field(value: &self.parentEntryID) }()
-      case 5: try { try decoder.decodeSingularStringField(value: &self.source) }()
-      case 6: try { try decoder.decodeSingularBoolField(value: &self.marked) }()
-      case 7: try { try decoder.decodeSingularBoolField(value: &self.unread) }()
-      case 8: try { try decoder.decodeSingularStringField(value: &self.namespace) }()
-      case 10: try { try decoder.decodeSingularStringField(value: &self.htmlContent) }()
-      case 11: try { try decoder.decodeRepeatedStringField(value: &self.keyWords) }()
-      case 12: try { try decoder.decodeSingularStringField(value: &self.summary) }()
-      case 30: try { try decoder.decodeSingularMessageField(value: &self._createdAt) }()
-      case 31: try { try decoder.decodeSingularMessageField(value: &self._changedAt) }()
-      default: break
+    _ = _uniqueStorage()
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every case branch when no optimizations are
+        // enabled. https://github.com/apple/swift-protobuf/issues/1034
+        switch fieldNumber {
+        case 1: try { try decoder.decodeSingularInt64Field(value: &_storage._id) }()
+        case 2: try { try decoder.decodeSingularStringField(value: &_storage._name) }()
+        case 3: try { try decoder.decodeSingularInt64Field(value: &_storage._entryID) }()
+        case 4: try { try decoder.decodeSingularInt64Field(value: &_storage._parentEntryID) }()
+        case 5: try { try decoder.decodeSingularStringField(value: &_storage._source) }()
+        case 6: try { try decoder.decodeSingularBoolField(value: &_storage._marked) }()
+        case 7: try { try decoder.decodeSingularBoolField(value: &_storage._unread) }()
+        case 8: try { try decoder.decodeSingularStringField(value: &_storage._namespace) }()
+        case 10: try { try decoder.decodeSingularStringField(value: &_storage._htmlContent) }()
+        case 11: try { try decoder.decodeRepeatedStringField(value: &_storage._keyWords) }()
+        case 12: try { try decoder.decodeSingularStringField(value: &_storage._summary) }()
+        case 20: try { try decoder.decodeSingularMessageField(value: &_storage._entryInfo) }()
+        case 30: try { try decoder.decodeSingularMessageField(value: &_storage._createdAt) }()
+        case 31: try { try decoder.decodeSingularMessageField(value: &_storage._changedAt) }()
+        default: break
+        }
       }
     }
   }
 
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every if/case branch local when no optimizations
-    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
-    // https://github.com/apple/swift-protobuf/issues/1182
-    if self.id != 0 {
-      try visitor.visitSingularInt64Field(value: self.id, fieldNumber: 1)
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every if/case branch local when no optimizations
+      // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+      // https://github.com/apple/swift-protobuf/issues/1182
+      if _storage._id != 0 {
+        try visitor.visitSingularInt64Field(value: _storage._id, fieldNumber: 1)
+      }
+      if !_storage._name.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._name, fieldNumber: 2)
+      }
+      if _storage._entryID != 0 {
+        try visitor.visitSingularInt64Field(value: _storage._entryID, fieldNumber: 3)
+      }
+      if _storage._parentEntryID != 0 {
+        try visitor.visitSingularInt64Field(value: _storage._parentEntryID, fieldNumber: 4)
+      }
+      if !_storage._source.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._source, fieldNumber: 5)
+      }
+      if _storage._marked != false {
+        try visitor.visitSingularBoolField(value: _storage._marked, fieldNumber: 6)
+      }
+      if _storage._unread != false {
+        try visitor.visitSingularBoolField(value: _storage._unread, fieldNumber: 7)
+      }
+      if !_storage._namespace.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._namespace, fieldNumber: 8)
+      }
+      if !_storage._htmlContent.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._htmlContent, fieldNumber: 10)
+      }
+      if !_storage._keyWords.isEmpty {
+        try visitor.visitRepeatedStringField(value: _storage._keyWords, fieldNumber: 11)
+      }
+      if !_storage._summary.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._summary, fieldNumber: 12)
+      }
+      try { if let v = _storage._entryInfo {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 20)
+      } }()
+      try { if let v = _storage._createdAt {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 30)
+      } }()
+      try { if let v = _storage._changedAt {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 31)
+      } }()
     }
-    if !self.name.isEmpty {
-      try visitor.visitSingularStringField(value: self.name, fieldNumber: 2)
-    }
-    if self.entryID != 0 {
-      try visitor.visitSingularInt64Field(value: self.entryID, fieldNumber: 3)
-    }
-    if self.parentEntryID != 0 {
-      try visitor.visitSingularInt64Field(value: self.parentEntryID, fieldNumber: 4)
-    }
-    if !self.source.isEmpty {
-      try visitor.visitSingularStringField(value: self.source, fieldNumber: 5)
-    }
-    if self.marked != false {
-      try visitor.visitSingularBoolField(value: self.marked, fieldNumber: 6)
-    }
-    if self.unread != false {
-      try visitor.visitSingularBoolField(value: self.unread, fieldNumber: 7)
-    }
-    if !self.namespace.isEmpty {
-      try visitor.visitSingularStringField(value: self.namespace, fieldNumber: 8)
-    }
-    if !self.htmlContent.isEmpty {
-      try visitor.visitSingularStringField(value: self.htmlContent, fieldNumber: 10)
-    }
-    if !self.keyWords.isEmpty {
-      try visitor.visitRepeatedStringField(value: self.keyWords, fieldNumber: 11)
-    }
-    if !self.summary.isEmpty {
-      try visitor.visitSingularStringField(value: self.summary, fieldNumber: 12)
-    }
-    try { if let v = self._createdAt {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 30)
-    } }()
-    try { if let v = self._changedAt {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 31)
-    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
   static func ==(lhs: Api_V1_DocumentDescribe, rhs: Api_V1_DocumentDescribe) -> Bool {
-    if lhs.id != rhs.id {return false}
-    if lhs.name != rhs.name {return false}
-    if lhs.entryID != rhs.entryID {return false}
-    if lhs.parentEntryID != rhs.parentEntryID {return false}
-    if lhs.source != rhs.source {return false}
-    if lhs.marked != rhs.marked {return false}
-    if lhs.unread != rhs.unread {return false}
-    if lhs.namespace != rhs.namespace {return false}
-    if lhs.htmlContent != rhs.htmlContent {return false}
-    if lhs.keyWords != rhs.keyWords {return false}
-    if lhs.summary != rhs.summary {return false}
-    if lhs._createdAt != rhs._createdAt {return false}
-    if lhs._changedAt != rhs._changedAt {return false}
+    if lhs._storage !== rhs._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
+        let _storage = _args.0
+        let rhs_storage = _args.1
+        if _storage._id != rhs_storage._id {return false}
+        if _storage._name != rhs_storage._name {return false}
+        if _storage._entryID != rhs_storage._entryID {return false}
+        if _storage._parentEntryID != rhs_storage._parentEntryID {return false}
+        if _storage._source != rhs_storage._source {return false}
+        if _storage._marked != rhs_storage._marked {return false}
+        if _storage._unread != rhs_storage._unread {return false}
+        if _storage._namespace != rhs_storage._namespace {return false}
+        if _storage._htmlContent != rhs_storage._htmlContent {return false}
+        if _storage._keyWords != rhs_storage._keyWords {return false}
+        if _storage._summary != rhs_storage._summary {return false}
+        if _storage._entryInfo != rhs_storage._entryInfo {return false}
+        if _storage._createdAt != rhs_storage._createdAt {return false}
+        if _storage._changedAt != rhs_storage._changedAt {return false}
+        return true
+      }
+      if !storagesAreEqual {return false}
+    }
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -4298,6 +4606,7 @@ extension Api_V1_EntryInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
     2: .same(proto: "name"),
     3: .same(proto: "kind"),
     6: .same(proto: "isGroup"),
+    7: .same(proto: "size"),
     30: .same(proto: "createdAt"),
     31: .same(proto: "changedAt"),
     32: .same(proto: "modifiedAt"),
@@ -4314,6 +4623,7 @@ extension Api_V1_EntryInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
       case 2: try { try decoder.decodeSingularStringField(value: &self.name) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.kind) }()
       case 6: try { try decoder.decodeSingularBoolField(value: &self.isGroup) }()
+      case 7: try { try decoder.decodeSingularInt64Field(value: &self.size) }()
       case 30: try { try decoder.decodeSingularMessageField(value: &self._createdAt) }()
       case 31: try { try decoder.decodeSingularMessageField(value: &self._changedAt) }()
       case 32: try { try decoder.decodeSingularMessageField(value: &self._modifiedAt) }()
@@ -4340,6 +4650,9 @@ extension Api_V1_EntryInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
     if self.isGroup != false {
       try visitor.visitSingularBoolField(value: self.isGroup, fieldNumber: 6)
     }
+    if self.size != 0 {
+      try visitor.visitSingularInt64Field(value: self.size, fieldNumber: 7)
+    }
     try { if let v = self._createdAt {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 30)
     } }()
@@ -4360,6 +4673,7 @@ extension Api_V1_EntryInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
     if lhs.name != rhs.name {return false}
     if lhs.kind != rhs.kind {return false}
     if lhs.isGroup != rhs.isGroup {return false}
+    if lhs.size != rhs.size {return false}
     if lhs._createdAt != rhs._createdAt {return false}
     if lhs._changedAt != rhs._changedAt {return false}
     if lhs._modifiedAt != rhs._modifiedAt {return false}
