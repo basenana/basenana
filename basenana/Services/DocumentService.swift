@@ -15,60 +15,52 @@ let documentService = DocumentService()
 
 class DocumentService {
     
-    func getDocument(entryId: Int64) -> DocumentModel? {
+    func getDocument(entryId: Int64) -> DocumentDetailModel? {
+        var request = Api_V1_GetDocumentDetailRequest()
+        request.entryID = entryId
+        let call = clientSet!.document.getDocumentDetail(request, callOptions: nil)
+        
         do {
-            let data: DocumentModel? = try dbInstance.queue.read { db in
-                try DocumentModel.all().filter(Column("oid") == entryId).fetchOne(db)
-            }
-            return data
-        } catch {
+            let response = try call.response.wait()
+            return DocDetail2Model(doc: response.document)
+        } catch{
+            log.error("[documentService] get document detail failed \(error)")
             return nil
         }
     }
     
-    func listDocuments(filter: Docfilter) -> [DocumentModel]{
-        var data: [DocumentModel]
+    func listDocuments(filter: Docfilter, pages: Pagination? = nil) -> [DocumentInfoModel]{
         do {
-            data = try dbInstance.queue.read{ db in
-                if let unread = filter.unread {
-                    try DocumentModel.filter(Column("unread") == unread).order(Column("createdAt").desc).fetchAll(db)
-                } else if let marked = filter.marked {
-                    try DocumentModel.filter(Column("marked") == marked).order(Column("createdAt").desc).fetchAll(db)
-                } else {
-                    try DocumentModel.order(Column("createdAt").desc).fetchAll(db)
-                }
+            var request = Api_V1_ListDocumentsRequest()
+            if let marked = filter.marked {
+                request.marked = marked
+            } else if let unread = filter.unread {
+                request.unread = unread
             }
-            return data
+            
+            if let ps = pages {
+                request.pagination = Api_V1_Pagination()
+                request.pagination.page = ps.page
+                request.pagination.pageSize = ps.pageSize
+            }
+            let call = clientSet?.document.listDocuments(request, callOptions: nil)
+            let response =  try call?.response.wait()
+            
+            let documents = response!.documents
+            var docs: [DocumentInfoModel] = []
+            for doc in documents {
+                docs.append(DocInfo2Model(doc: doc))
+            }
+            return docs
         } catch {
+            log.error("[documentService] list docuemnt failed \(error)")
             return []
         }
     }
     
-    func saveDocument(doc: DocumentModel) {
-        var newDoc = doc
-        do {
-            let _ = try dbInstance.queue.write{ db in
-                try newDoc.save(db)
-            }
-        } catch {
-            log.error("[documentService] save local docuemnt failed \(error)")
-        }
-        
-        log.debug("[documentService] save new local ducument \(newDoc.id)")
-        return
-    }
-    
     func updateDocument(docUpdate: DocumentUpdate) {
-        var doc: DocumentModel?
+        var doc: DocumentInfoModel?
         do {
-            doc = try dbInstance.queue.read{ db in
-                try DocumentModel.filter(Column("id") == docUpdate.docId).fetchOne(db)
-            }
-            
-            if doc == nil {
-                return
-            }
-            
             var request = Api_V1_UpdateDocumentRequest()
             request.document.id = docUpdate.docId
             if let unread = docUpdate.unread {
@@ -80,28 +72,12 @@ class DocumentService {
                 doc?.marked = mark
             }
             
-            let _ = clientSet?.document.updateDocument(request, callOptions: nil)
-            
-            let _ = try dbInstance.queue.write{db in
-                try doc?.save(db)
-            }
+            let call = clientSet?.document.updateDocument(request, callOptions: nil)
+            let _ = try call?.response.wait()
         } catch {
             log.error("[documentService] update docuemnt failed \(error)")
         }
         return
-    }
-    
-    func cleanupLocalDocument(documentID: Int64) {
-        log.debug("[documentService] cleanup local document \(documentID)")
-        do {
-            let _ = try dbInstance.queue.write{ db in
-                try db.execute(sql: "DELETE FROM room_message WHERE roomid IN (SELECT id FROM room WHERE docid = ?)", arguments: [documentID])
-                try DocumentModel.filter(Column("id") == documentID ).deleteAll(db)
-                try RoomModel.filter(Column("docid") == documentID).deleteAll(db)
-            }
-        } catch {
-            log.error("[documentService] cleanup local document \(documentID) failed \(error)")
-        }
     }
     
     func ingestDocument(entryId: Int64){
@@ -116,5 +92,19 @@ class DocumentService {
             log.error("trigger workflow failed \(error)")
             return
         }
+    }
+    
+    func DocDetail2Model(doc: Api_V1_DocumentDescribe) -> DocumentDetailModel {
+        return DocumentDetailModel(
+            id: doc.id, oid: doc.entryID, parentId: doc.parentEntryID, name: doc.name, namespace: doc.namespace, source: doc.source,
+            marked: doc.marked, unread: doc.unread, keyWords: doc.keyWords, content: doc.htmlContent, summary: doc.summary,
+            createdAt: doc.createdAt.date, changedAt: doc.changedAt.date)
+    }
+    
+    func DocInfo2Model(doc: Api_V1_DocumentInfo) -> DocumentInfoModel{
+        return DocumentInfoModel(
+            id: doc.id, oid: doc.entryID, parentId: doc.parentEntryID, name: doc.name, namespace: doc.namespace, source: doc.source,
+            marked: doc.marked, unread: doc.unread, subContent: doc.subContent,
+            createdAt: doc.createdAt.date, changedAt: doc.changedAt.date)
     }
 }

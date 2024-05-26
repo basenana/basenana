@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct DocumentItemView: View {
-    var doc: DocumentModel
+    var doc: DocumentInfoModel
     var unreadPage: Bool
-    @State var parent: EntryModel?
+    @State var parent: EntryDetailModel?
     
-    init(doc: DocumentModel, unreadPage: Bool) {
+    init(doc: DocumentInfoModel, unreadPage: Bool) {
         self.doc = doc
         self.unreadPage = unreadPage
     }
@@ -59,14 +59,14 @@ struct DocumentItemView: View {
                     .foregroundColor(doc.unread || !unreadPage ? Color.primary : Color.gray)
                     
             }
-            Text(contentSwapper(doc.content))
+            Text(contentSwapper(doc.subContent))
                 .font(.body)
                 .foregroundColor(Color.gray)
                 .frame(minWidth: 0, idealWidth: 200, maxWidth: .infinity, alignment: .leading)
                 .frame(minHeight: 0, idealHeight: 50, alignment: .leading)
         }
         .onAppear{
-            let parentId = doc.parentEntry
+            let parentId = doc.parentId
             self.parent = entryService.getEntry(entryID: parentId)
         }
     }

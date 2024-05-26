@@ -20,7 +20,7 @@ struct DialogueView: View {
      @State private var isEraserHovering = false
      @State var newMessage = ""
      @State var waitingMessage = ""
-     @State private var room: RoomViewModel?
+     @State private var room: RoomModel?
      @State var messages: [RoomMessageViewModel] = []
      @State private var ingestState = ""
      
@@ -53,10 +53,11 @@ struct DialogueView: View {
                     CloseButton(isCloseHovering: isCloseHovering, isDrawerOpen: $isDrawerOpen)
                }
                .onAppear{
-                    let entryProperties = entryService.getEntryProperty(entryID: entryId)
-                    for entryProperty in entryProperties {
-                         if entryProperty.key == "org.basenana.friday/ingest" {
-                              ingestState = entryProperty.value
+                    if let entry = entryService.getEntry(entryID: entryId) {
+                         for entryProperty in entry.properties {
+                              if entryProperty.key == "org.basenana.friday/ingest" {
+                                   ingestState = entryProperty.value
+                              }
                          }
                     }
                }
@@ -280,13 +281,13 @@ struct IngestButton: View {
                     DispatchQueue(label: "org.basenana.room.syncIngest").async {
                          while true {
                               do {
-                                   try entryService.syncEntryProperty(entryId: entryId)
-                                   let entryProperties = entryService.getEntryProperty(entryID: entryId)
-                                   for entryProperty in entryProperties {
-                                        if entryProperty.key == "org.basenana.friday/ingest" {
-                                             ingestState = entryProperty.value
-                                             if entryProperty.value == "finish" {
-                                                  return
+                                   if let entry = entryService.getEntry(entryID: entryId) {
+                                        for entryProperty in entry.properties {
+                                             if entryProperty.key == "org.basenana.friday/ingest" {
+                                                  ingestState = entryProperty.value
+                                                  if entryProperty.value == "finish" {
+                                                       return
+                                                  }
                                              }
                                         }
                                    }

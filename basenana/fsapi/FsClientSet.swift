@@ -73,6 +73,9 @@ class AuthClient {
     @AppStorage("org.basenana.nanafs.auth.secretToken", store: UserDefaults.standard)
     private var secretToken: String = ""
     
+    @AppStorage("org.basenana.nanafs.namespace", store: UserDefaults.standard)
+    private var namespace: String = ""
+
     func reflushToken() {
         log.info("reflush token")
         
@@ -106,7 +109,7 @@ class AuthClient {
                 let response = try call.response.wait()
                 self.encodedClientCrt = response.clientCrt
                 self.encodedClientKey = response.clientKey
-                namespaceService.getOrSaveLocalNamespace(ns: NamespaceModel(name: response.namespace))
+                self.namespace = response.namespace
             } catch {
                 log.error("[authClient] access token with ak \(self.accessTokenKey) failed: \(error)")
                 return
@@ -116,9 +119,16 @@ class AuthClient {
         do {
             clientSet = FsClientSet(host: self.host, port: self.port, clientCrt: try self.encodedClientCrt.base64Decoded(), clientKey: try encodedClientKey.base64Decoded())
             log.info("[authClient] create client set succeed")
-            syncStatus.hasAccessToken = true
+            authStatus.hasAccessToken = true
         } catch {
             log.error("[authClient] create client set falied \(error)")
         }
     }
 }
+
+@Observable
+class AuthStatus {
+    public var hasAccessToken: Bool = false
+}
+
+let authStatus = AuthStatus()

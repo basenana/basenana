@@ -9,12 +9,27 @@ import SwiftData
 import Foundation
 import GRDB
 
-struct DocumentModel: Codable, Identifiable, Hashable{
+struct DocumentInfoModel: Codable, Identifiable, Hashable{
     var id: Int64
     var oid: Int64
+    var parentId: Int64
     var name: String
     var namespace: String
-    var parentEntry: Int64
+    var source: String?
+    var marked: Bool
+    var unread: Bool
+    var subContent: String
+    
+    var createdAt: Date
+    var changedAt: Date
+}
+
+struct DocumentDetailModel: Codable, Identifiable, Hashable{
+    var id: Int64
+    var oid: Int64
+    var parentId: Int64
+    var name: String
+    var namespace: String
     var source: String?
     var marked: Bool
     var unread: Bool
@@ -25,31 +40,7 @@ struct DocumentModel: Codable, Identifiable, Hashable{
     
     var createdAt: Date
     var changedAt: Date
-    var syncAt: Date
 }
-
-extension DocumentModel: TableRecord {
-    static var databaseTableName: String = "document"
-    
-    enum Columns {
-        static let id = Column(CodingKeys.id)
-        static let oid = Column(CodingKeys.oid)
-        static let name = Column(CodingKeys.name)
-        static let namespace = Column(CodingKeys.namespace)
-        static let parentEntry = Column(CodingKeys.parentEntry)
-        static let source = Column(CodingKeys.source)
-        static let marked = Column(CodingKeys.marked)
-        static let unread = Column(CodingKeys.unread)
-        static let keyWords = Column(CodingKeys.keyWords)
-        static let content = Column(CodingKeys.content)
-        static let createdAt = Column(CodingKeys.createdAt)
-        static let changedAt = Column(CodingKeys.changedAt)
-    }
-}
-
-extension DocumentModel: FetchableRecord {}
-
-extension DocumentModel: MutablePersistableRecord {}
 
 struct Docfilter {
     var unread: Bool?

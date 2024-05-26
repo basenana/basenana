@@ -10,17 +10,18 @@ import SwiftUI
 
 
 struct UnreadView: View {
-    @State private var docs: [DocumentModel] = []
-    @State private var docMaps: [Int64:DocumentModel] = [:]
+    @State private var docs: [DocumentInfoModel] = []
+    @State private var docMaps: [Int64:DocumentInfoModel] = [:]
     @State private var selectedId: Int64? = 0
     
     var body: some View {
         NavigationView{
             List(docs, id: \.id, selection: $selectedId) { document in
                 if let docId = selectedId {
-                    let selected = docMaps[docId]
                     NavigationLink {
-                        DocumentDetailView(doc: selected)
+                        if let selected = docMaps[docId] {
+                            DocumentDetailView(entryId: selected.oid)
+                        }
                     } label: {
                         // document items
                         DocumentItemView(doc: document, unreadPage: true)

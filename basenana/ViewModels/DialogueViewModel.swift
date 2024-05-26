@@ -7,29 +7,6 @@
 
 import Foundation
 
-class RoomViewModel: Codable {
-    var id: Int64
-    var oid: Int64
-    var docid: Int64
-    var title: String?
-    var prompt: String?
-    
-    var createdAt: Date
-    
-    var messages: [RoomMessageModel] = []
-    
-    
-    init(room: RoomModel, messages: [RoomMessageModel]) {
-        self.id = room.id!
-        self.oid = room.oid
-        self.docid = room.docid
-        self.title = room.title
-        self.prompt = room.prompt
-        self.createdAt = room.createdAt
-        self.messages = messages
-    }
-}
-
 @Observable
 class RoomMessageViewModel: Identifiable {
     var id: Int64
