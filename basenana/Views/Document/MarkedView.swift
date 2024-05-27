@@ -14,7 +14,7 @@ struct MarkedView: View {
     @State private var selectedId: Int64? = 0
     
     var body: some View {
-        NavigationView{
+        NavigationSplitView{
             List(docs, id: \.id, selection: $selectedId) { document in
                 if let docId = selectedId {
                     NavigationLink {
@@ -29,11 +29,15 @@ struct MarkedView: View {
             }
             .frame(minWidth: 300, idealWidth: 300)
             .onAppear{
-                docs = documentService.listDocuments(filter: Docfilter(marked: true))
-                for doc in docs {
-                    docMaps[doc.id] = doc
+                Task.detached{
+                    docs = documentService.listDocuments(filter: Docfilter(marked: true))
+                    for doc in docs {
+                        docMaps[doc.id] = doc
+                    }
                 }
             }
+            .listStyle(.inset)
+        }detail: {
         }
     }
 }

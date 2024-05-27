@@ -19,7 +19,7 @@ class DialogueService: ObservableObject {
             var request = Api_V1_ListRoomsRequest()
             request.entryID = entryId
             
-            let call = clientSet?.dialogue.listRooms(request, callOptions: nil)
+            let call = clientSet?.dialogue.listRooms(request, callOptions: defaultCallOptions)
             let response = try call?.response.wait()
             
             var rooms: [RoomModel] = []
@@ -37,7 +37,7 @@ class DialogueService: ObservableObject {
         do {
             var request = Api_V1_OpenRoomRequest()
             request.entryID = entryId
-            let call = clientSet!.dialogue.openRoom(request, callOptions: nil)
+            let call = clientSet!.dialogue.openRoom(request, callOptions: defaultCallOptions)
             let response = try call.response.wait()
             
             // todo: get message with pagination
@@ -88,7 +88,7 @@ class DialogueService: ObservableObject {
         do {
             var request = Api_V1_ClearRoomRequest()
             request.roomID = roomId
-            let call = clientSet!.dialogue.clearRoom(request, callOptions: nil)
+            let call = clientSet!.dialogue.clearRoom(request, callOptions: defaultCallOptions)
             let _ = try call.response.wait()
         }catch{
             log.error("clear room & message by roomId \(roomId) failed")

@@ -192,6 +192,60 @@ struct Api_V1_Pagination {
   init() {}
 }
 
+struct Api_V1_GetGroupTreeRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
+struct Api_V1_GetGroupTreeResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var root: Api_V1_GetGroupTreeResponse.GroupEntry {
+    get {return _root ?? Api_V1_GetGroupTreeResponse.GroupEntry()}
+    set {_root = newValue}
+  }
+  /// Returns true if `root` has been explicitly set.
+  var hasRoot: Bool {return self._root != nil}
+  /// Clears the value of `root`. Subsequent reads from it will return its default value.
+  mutating func clearRoot() {self._root = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  struct GroupEntry {
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
+
+    var entry: Api_V1_EntryInfo {
+      get {return _entry ?? Api_V1_EntryInfo()}
+      set {_entry = newValue}
+    }
+    /// Returns true if `entry` has been explicitly set.
+    var hasEntry: Bool {return self._entry != nil}
+    /// Clears the value of `entry`. Subsequent reads from it will return its default value.
+    mutating func clearEntry() {self._entry = nil}
+
+    var children: [Api_V1_GetGroupTreeResponse.GroupEntry] = []
+
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    init() {}
+
+    fileprivate var _entry: Api_V1_EntryInfo? = nil
+  }
+
+  init() {}
+
+  fileprivate var _root: Api_V1_GetGroupTreeResponse.GroupEntry? = nil
+}
+
 struct Api_V1_FindEntryDetailRequest {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -1688,6 +1742,9 @@ extension Api_V1_QuickInboxRequest.SourceType: @unchecked Sendable {}
 extension Api_V1_QuickInboxRequest.FileType: @unchecked Sendable {}
 extension Api_V1_QuickInboxResponse: @unchecked Sendable {}
 extension Api_V1_Pagination: @unchecked Sendable {}
+extension Api_V1_GetGroupTreeRequest: @unchecked Sendable {}
+extension Api_V1_GetGroupTreeResponse: @unchecked Sendable {}
+extension Api_V1_GetGroupTreeResponse.GroupEntry: @unchecked Sendable {}
 extension Api_V1_FindEntryDetailRequest: @unchecked Sendable {}
 extension Api_V1_GetEntryDetailRequest: @unchecked Sendable {}
 extension Api_V1_GetEntryDetailResponse: @unchecked Sendable {}
@@ -2011,6 +2068,103 @@ extension Api_V1_Pagination: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   static func ==(lhs: Api_V1_Pagination, rhs: Api_V1_Pagination) -> Bool {
     if lhs.page != rhs.page {return false}
     if lhs.pageSize != rhs.pageSize {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_GetGroupTreeRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".GetGroupTreeRequest"
+  static let _protobuf_nameMap = SwiftProtobuf._NameMap()
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let _ = try decoder.nextFieldNumber() {
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_GetGroupTreeRequest, rhs: Api_V1_GetGroupTreeRequest) -> Bool {
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_GetGroupTreeResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".GetGroupTreeResponse"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "root"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._root) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._root {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_GetGroupTreeResponse, rhs: Api_V1_GetGroupTreeResponse) -> Bool {
+    if lhs._root != rhs._root {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_GetGroupTreeResponse.GroupEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = Api_V1_GetGroupTreeResponse.protoMessageName + ".GroupEntry"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "entry"),
+    2: .same(proto: "children"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._entry) }()
+      case 2: try { try decoder.decodeRepeatedMessageField(value: &self.children) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._entry {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    if !self.children.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.children, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_GetGroupTreeResponse.GroupEntry, rhs: Api_V1_GetGroupTreeResponse.GroupEntry) -> Bool {
+    if lhs._entry != rhs._entry {return false}
+    if lhs.children != rhs.children {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

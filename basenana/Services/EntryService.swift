@@ -29,7 +29,7 @@ class EntryService {
         request.filename = filename
         request.fileType = .webArchiveFile
         request.clutterFree = isClusterFree
-        let call = clientSet!.inbox.quickInbox(request, callOptions: CallOptions(timeLimit: .timeout(.seconds(10))))
+        let call = clientSet!.inbox.quickInbox(request, callOptions: defaultCallOptions)
         
         do {
             let response = try call.response.wait()
@@ -43,7 +43,7 @@ class EntryService {
         do {
             var request = Api_V1_GetEntryDetailRequest()
             request.entryID = entryID
-            let call = clientSet!.entries.getEntryDetail(request, callOptions: nil)
+            let call = clientSet!.entries.getEntryDetail(request, callOptions: defaultCallOptions)
             let response = try call.response.wait()
             return entryDetail2Model(en: response.entry, properties: response.properties)
         } catch {
@@ -56,7 +56,7 @@ class EntryService {
         var req = Api_V1_FindEntryDetailRequest()
         req.root = true
         
-        let call = clientSet!.entries.findEntryDetail(req, callOptions: CallOptions(timeLimit: .timeout(.seconds(10))))
+        let call = clientSet!.entries.findEntryDetail(req, callOptions: defaultCallOptions)
         
         do {
             let response = try call.response.wait()
@@ -69,15 +69,16 @@ class EntryService {
     }
     
     func getInbox() -> EntryDetailModel? {
-        return findChildren(parentID: Int64(self.rootId), chName: ".inbox")
+        let rootEn = getRoot()
+        return findChildren(parentID: rootEn!.id, chName: ".inbox")
     }
-    
+
     func findChildren(parentID: Int64, chName: String) -> EntryDetailModel? {
         var req = Api_V1_FindEntryDetailRequest()
         req.parentID = parentID
         req.name = chName
         
-        let call = clientSet!.entries.findEntryDetail(req, callOptions: CallOptions(timeLimit: .timeout(.seconds(10))))
+        let call = clientSet!.entries.findEntryDetail(req, callOptions: defaultCallOptions)
         do {
             let response = try call.response.wait()
             return entryDetail2Model(en: response.entry, properties: response.properties)
@@ -117,7 +118,7 @@ class EntryService {
                 EntryOrder.size: "size"
             ]
             
-            let call = clientSet!.entries.listGroupChildren(req, callOptions: CallOptions(timeLimit: .timeout(.seconds(10))))
+            let call = clientSet!.entries.listGroupChildren(req, callOptions: defaultCallOptions)
             let response = try call.response.wait()
             var entries: [EntryInfoModel]=[]
             for entry in response.entries {

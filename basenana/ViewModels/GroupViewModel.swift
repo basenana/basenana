@@ -11,12 +11,14 @@ var GroupRoot: GroupViewModel = GroupViewModel(groupID: rootEntryID, groupName: 
 
 @Observable
 class GroupViewModel: Identifiable, Hashable {
+    var id: Int64
     var groupID: Int64
     var groupName: String
     var children: [GroupViewModel]? = nil
     var updateAt: Date? = nil
     
     init(groupID: Int64, groupName: String) {
+        self.id = groupID
         self.groupID = groupID
         self.groupName = groupName
     }

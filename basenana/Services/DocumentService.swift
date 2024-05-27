@@ -18,7 +18,7 @@ class DocumentService {
     func getDocument(entryId: Int64) -> DocumentDetailModel? {
         var request = Api_V1_GetDocumentDetailRequest()
         request.entryID = entryId
-        let call = clientSet!.document.getDocumentDetail(request, callOptions: nil)
+        let call = clientSet!.document.getDocumentDetail(request, callOptions: defaultCallOptions)
         
         do {
             let response = try call.response.wait()
@@ -43,7 +43,7 @@ class DocumentService {
                 request.pagination.page = ps.page
                 request.pagination.pageSize = ps.pageSize
             }
-            let call = clientSet?.document.listDocuments(request, callOptions: nil)
+            let call = clientSet?.document.listDocuments(request, callOptions: defaultCallOptions)
             let response =  try call?.response.wait()
             
             let documents = response!.documents
@@ -72,7 +72,7 @@ class DocumentService {
                 doc?.marked = mark
             }
             
-            let call = clientSet?.document.updateDocument(request, callOptions: nil)
+            let call = clientSet?.document.updateDocument(request, callOptions: defaultCallOptions)
             let _ = try call?.response.wait()
         } catch {
             log.error("[documentService] update docuemnt failed \(error)")
@@ -86,7 +86,7 @@ class DocumentService {
         requset.target.entryID = entryId
         
         do {
-            let call = clientSet!.workflow.triggerWorkflow(requset, callOptions: nil)
+            let call = clientSet!.workflow.triggerWorkflow(requset, callOptions: defaultCallOptions)
             let _ = try call.response.wait()
         } catch {
             log.error("trigger workflow failed \(error)")

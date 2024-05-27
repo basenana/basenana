@@ -15,7 +15,7 @@ struct UnreadView: View {
     @State private var selectedId: Int64? = 0
     
     var body: some View {
-        NavigationView{
+        NavigationSplitView{
             List(docs, id: \.id, selection: $selectedId) { document in
                 if let docId = selectedId {
                     NavigationLink {
@@ -35,18 +35,25 @@ struct UnreadView: View {
             }
             .frame(minWidth: 300, idealWidth: 300)
             .onAppear{
-                docs = documentService.listDocuments(filter: Docfilter(unread: true))
-                for doc in docs {
-                    docMaps[doc.id] = doc
+                Task.detached{
+                    docs = documentService.listDocuments(filter: Docfilter(unread: true))
+                    for doc in docs {
+                        docMaps[doc.id] = doc
+                    }
                 }
             }
             .onChange(of: selectedId) {
-                documentService.updateDocument(docUpdate: DocumentUpdate(docId: selectedId!, unread: false))
-                let selected = docMaps[selectedId!]
-                if let index = docs.firstIndex(of: selected!) {
-                    self.docs[index].unread = false
+                Task.detached{
+                    documentService.updateDocument(docUpdate: DocumentUpdate(docId: selectedId!, unread: false))
+                    let selected = docMaps[selectedId!]
+                    if let index = docs.firstIndex(of: selected!) {
+                        self.docs[index].unread = false
+                    }
                 }
             }
+            .listStyle(.inset)
+        } detail: {
+            
         }
     }
 }

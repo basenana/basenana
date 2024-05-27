@@ -38,9 +38,9 @@ struct QuickInboxView: View{
                     .padding(.vertical, 5)
                     
                     TextField("Title", text: $urlTitle)
-                    .textFieldStyle(.squareBorder)
-                    .padding(.vertical, 5)
-
+                        .textFieldStyle(.squareBorder)
+                        .padding(.vertical, 5)
+                    
                     Picker("Flile Type", selection: $fileTypeOption) {
                         Text("Webarchive").tag("webarchive")
                         Text("Html").tag("html")
@@ -85,7 +85,9 @@ struct QuickInboxView: View{
     }
     
     func quickInbox(urlStr: String, filename: String, fileType: String, isClusterFree:Bool) {
-        entryService.quickInbox(urlStr: urlStr, filename: filename, fileType: fileType, isClusterFree: isClusterFree)
+        Task.detached{
+            entryService.quickInbox(urlStr: urlStr, filename: filename, fileType: fileType, isClusterFree: isClusterFree)
+        }
     }
 }
 

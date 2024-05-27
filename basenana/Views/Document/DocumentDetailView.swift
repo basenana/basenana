@@ -54,7 +54,7 @@ struct DocumentDetailView: View {
                                 }, label: {
                                     Text("🍌")
                                         .font(.system(size: 30))
-                                        .offset(x: -5, y: -5)
+                                        .offset(x: -20, y: -10)
                                 })
                                 .buttonStyle(PlainButtonStyle())
                             }

@@ -46,7 +46,7 @@ struct DocumentItemView: View {
                 HStack(alignment: .top) {
                     Text(parent?.name ?? "")
                         .foregroundColor(Color.gray)
-
+                    
                     Spacer()
                     
                     Text(dateFormatter.string(from: doc.createdAt))
@@ -57,7 +57,7 @@ struct DocumentItemView: View {
                 Text(doc.name)
                     .font(.headline)
                     .foregroundColor(doc.unread || !unreadPage ? Color.primary : Color.gray)
-                    
+                
             }
             Text(contentSwapper(doc.subContent))
                 .font(.body)
@@ -66,8 +66,10 @@ struct DocumentItemView: View {
                 .frame(minHeight: 0, idealHeight: 50, alignment: .leading)
         }
         .onAppear{
-            let parentId = doc.parentId
-            self.parent = entryService.getEntry(entryID: parentId)
+            Task.detached{
+                let parentId = doc.parentId
+                self.parent = entryService.getEntry(entryID: parentId)
+            }
         }
     }
 }

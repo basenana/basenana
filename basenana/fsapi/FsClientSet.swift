@@ -104,7 +104,7 @@ class AuthClient {
             var request = Api_V1_AccessTokenRequest()
             request.accessTokenKey = self.accessTokenKey
             request.secretToken = self.secretToken
-            let call = auth.accessToken(request, callOptions: CallOptions(timeLimit: .timeout(.seconds(10))))
+            let call = auth.accessToken(request, callOptions: defaultCallOptions)
             do {
                 let response = try call.response.wait()
                 self.encodedClientCrt = response.clientCrt
@@ -132,3 +132,12 @@ class AuthStatus {
 }
 
 let authStatus = AuthStatus()
+
+
+let encodingConfiguration = ClientMessageEncoding.Configuration(
+  forRequests: .gzip,
+  decompressionLimit: .ratio(20)
+)
+
+
+let defaultCallOptions = CallOptions(timeLimit: .timeout(.seconds(10)), messageEncoding: .enabled(encodingConfiguration))
