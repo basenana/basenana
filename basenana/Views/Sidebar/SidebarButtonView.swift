@@ -11,6 +11,7 @@ struct SidebarButtonView: View {
     
     @Environment(\.colorScheme) var colorScheme
     @State private var showQuickInbox = false
+    @Binding var selection: Set<GroupViewModel.ID>
     
     var body: some View {
         HStack(content: {
@@ -25,6 +26,10 @@ struct SidebarButtonView: View {
             }
             
             Button(action: {
+                if let unwrappedID = selection.first {
+                    let entryId: Int64 = unwrappedID
+                    print("select: \(entryId)")
+                }
             }, label: {
                 Image(systemName: "folder.badge.plus")
             })

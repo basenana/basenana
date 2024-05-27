@@ -13,7 +13,7 @@ struct SidebarView: View {
     @State var selection = Set<GroupViewModel.ID>()
     
     var body: some View {
-        List{
+        List(selection: $selection){
             NavigationLink {
                 GroupView(groupID: inboxEntryID).id(inboxEntryID)
                     .navigationTitle("Inbox")
@@ -27,6 +27,7 @@ struct SidebarView: View {
             
             NavigationLink {
                 UnreadView()
+                    .toolbar(removing: .sidebarToggle)
                     .navigationTitle("Unread")
             } label: {
                 HStack{
@@ -38,6 +39,7 @@ struct SidebarView: View {
             
             NavigationLink {
                 MarkedView()
+                    .toolbar(removing: .sidebarToggle)
                     .navigationTitle("Marked")
             } label: {
                 HStack{
@@ -50,11 +52,13 @@ struct SidebarView: View {
                 SidebarGroupsView()
             }
             .onAppear{
-                groupService.initGroupTree()
+                Task.detached{
+                    groupService.initGroupTree()
+                }
             }
         }
         .listStyle(.sidebar)
-        .overlay(alignment: .bottom, content: {SidebarButtonView()})
+        .overlay(alignment: .bottom, content: {SidebarButtonView(selection: $selection)})
     }
 }
 

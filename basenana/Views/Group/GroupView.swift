@@ -70,7 +70,9 @@ struct GroupView: View{
                         return false
                     }
                     .onAppear{
-                        groupChileren = entryService.listChildren(parentEntryID: groupID, orderName: EntryOrder.modifiedAt, desc: true)
+                        Task.detached{
+                            groupChileren = entryService.listChildren(parentEntryID: groupID, orderName: EntryOrder.modifiedAt, desc: true)
+                        }
                     }
                     .onChange(of: order){
                         withAnimation {

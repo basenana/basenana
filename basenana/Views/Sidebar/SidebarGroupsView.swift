@@ -11,7 +11,8 @@ struct SidebarGroupsView: View {
     var body: some View {
         OutlineGroup(GroupRoot.children ?? [], children: \.children){ child in
             NavigationLink {
-                GroupView(groupID: child.groupID).id(child.groupID)
+                GroupView(groupID: child.groupID)
+                    .id(child.groupID)
                     .navigationTitle(child.groupName)
             } label: {
                 HStack{
@@ -21,6 +22,7 @@ struct SidebarGroupsView: View {
                 }
                 .padding(.vertical, 4)
             }
+            .id(child.groupID)
             .dropDestination(for: String.self){ entryIDInfos, localtion in
                 groupService.moveEntriesToGroup(entries: parseIDInfo(entryInfos: entryIDInfos), groupID: child.groupID)
                 return false

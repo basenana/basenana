@@ -380,6 +380,11 @@ internal protocol Api_V1_EntriesClientProtocol: GRPCClient {
   var serviceName: String { get }
   var interceptors: Api_V1_EntriesClientInterceptorFactoryProtocol? { get }
 
+  func groupTree(
+    _ request: Api_V1_GetGroupTreeRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Api_V1_GetGroupTreeRequest, Api_V1_GetGroupTreeResponse>
+
   func findEntryDetail(
     _ request: Api_V1_FindEntryDetailRequest,
     callOptions: CallOptions?
@@ -429,6 +434,24 @@ internal protocol Api_V1_EntriesClientProtocol: GRPCClient {
 extension Api_V1_EntriesClientProtocol {
   internal var serviceName: String {
     return "api.v1.Entries"
+  }
+
+  /// Unary call to GroupTree
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to GroupTree.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  internal func groupTree(
+    _ request: Api_V1_GetGroupTreeRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Api_V1_GetGroupTreeRequest, Api_V1_GetGroupTreeResponse> {
+    return self.makeUnaryCall(
+      path: Api_V1_EntriesClientMetadata.Methods.groupTree.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGroupTreeInterceptors() ?? []
+    )
   }
 
   /// Unary call to FindEntryDetail
@@ -659,6 +682,11 @@ internal protocol Api_V1_EntriesAsyncClientProtocol: GRPCClient {
   static var serviceDescriptor: GRPCServiceDescriptor { get }
   var interceptors: Api_V1_EntriesClientInterceptorFactoryProtocol? { get }
 
+  func makeGroupTreeCall(
+    _ request: Api_V1_GetGroupTreeRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Api_V1_GetGroupTreeRequest, Api_V1_GetGroupTreeResponse>
+
   func makeFindEntryDetailCall(
     _ request: Api_V1_FindEntryDetailRequest,
     callOptions: CallOptions?
@@ -712,6 +740,18 @@ extension Api_V1_EntriesAsyncClientProtocol {
 
   internal var interceptors: Api_V1_EntriesClientInterceptorFactoryProtocol? {
     return nil
+  }
+
+  internal func makeGroupTreeCall(
+    _ request: Api_V1_GetGroupTreeRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Api_V1_GetGroupTreeRequest, Api_V1_GetGroupTreeResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Api_V1_EntriesClientMetadata.Methods.groupTree.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGroupTreeInterceptors() ?? []
+    )
   }
 
   internal func makeFindEntryDetailCall(
@@ -823,6 +863,18 @@ extension Api_V1_EntriesAsyncClientProtocol {
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 extension Api_V1_EntriesAsyncClientProtocol {
+  internal func groupTree(
+    _ request: Api_V1_GetGroupTreeRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Api_V1_GetGroupTreeResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Api_V1_EntriesClientMetadata.Methods.groupTree.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGroupTreeInterceptors() ?? []
+    )
+  }
+
   internal func findEntryDetail(
     _ request: Api_V1_FindEntryDetailRequest,
     callOptions: CallOptions? = nil
@@ -963,6 +1015,9 @@ internal struct Api_V1_EntriesAsyncClient: Api_V1_EntriesAsyncClientProtocol {
 
 internal protocol Api_V1_EntriesClientInterceptorFactoryProtocol: Sendable {
 
+  /// - Returns: Interceptors to use when invoking 'groupTree'.
+  func makeGroupTreeInterceptors() -> [ClientInterceptor<Api_V1_GetGroupTreeRequest, Api_V1_GetGroupTreeResponse>]
+
   /// - Returns: Interceptors to use when invoking 'findEntryDetail'.
   func makeFindEntryDetailInterceptors() -> [ClientInterceptor<Api_V1_FindEntryDetailRequest, Api_V1_GetEntryDetailResponse>]
 
@@ -996,6 +1051,7 @@ internal enum Api_V1_EntriesClientMetadata {
     name: "Entries",
     fullName: "api.v1.Entries",
     methods: [
+      Api_V1_EntriesClientMetadata.Methods.groupTree,
       Api_V1_EntriesClientMetadata.Methods.findEntryDetail,
       Api_V1_EntriesClientMetadata.Methods.getEntryDetail,
       Api_V1_EntriesClientMetadata.Methods.createEntry,
@@ -1009,6 +1065,12 @@ internal enum Api_V1_EntriesClientMetadata {
   )
 
   internal enum Methods {
+    internal static let groupTree = GRPCMethodDescriptor(
+      name: "GroupTree",
+      path: "/api.v1.Entries/GroupTree",
+      type: GRPCCallType.unary
+    )
+
     internal static let findEntryDetail = GRPCMethodDescriptor(
       name: "FindEntryDetail",
       path: "/api.v1.Entries/FindEntryDetail",
@@ -2935,6 +2997,8 @@ internal enum Api_V1_InboxServerMetadata {
 internal protocol Api_V1_EntriesProvider: CallHandlerProvider {
   var interceptors: Api_V1_EntriesServerInterceptorFactoryProtocol? { get }
 
+  func groupTree(request: Api_V1_GetGroupTreeRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_GetGroupTreeResponse>
+
   func findEntryDetail(request: Api_V1_FindEntryDetailRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_GetEntryDetailResponse>
 
   func getEntryDetail(request: Api_V1_GetEntryDetailRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_GetEntryDetailResponse>
@@ -2966,6 +3030,15 @@ extension Api_V1_EntriesProvider {
     context: CallHandlerContext
   ) -> GRPCServerHandlerProtocol? {
     switch name {
+    case "GroupTree":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_GetGroupTreeRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_GetGroupTreeResponse>(),
+        interceptors: self.interceptors?.makeGroupTreeInterceptors() ?? [],
+        userFunction: self.groupTree(request:context:)
+      )
+
     case "FindEntryDetail":
       return UnaryServerHandler(
         context: context,
@@ -3059,6 +3132,11 @@ internal protocol Api_V1_EntriesAsyncProvider: CallHandlerProvider, Sendable {
   static var serviceDescriptor: GRPCServiceDescriptor { get }
   var interceptors: Api_V1_EntriesServerInterceptorFactoryProtocol? { get }
 
+  func groupTree(
+    request: Api_V1_GetGroupTreeRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Api_V1_GetGroupTreeResponse
+
   func findEntryDetail(
     request: Api_V1_FindEntryDetailRequest,
     context: GRPCAsyncServerCallContext
@@ -3125,6 +3203,15 @@ extension Api_V1_EntriesAsyncProvider {
     context: CallHandlerContext
   ) -> GRPCServerHandlerProtocol? {
     switch name {
+    case "GroupTree":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_GetGroupTreeRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_GetGroupTreeResponse>(),
+        interceptors: self.interceptors?.makeGroupTreeInterceptors() ?? [],
+        wrapping: { try await self.groupTree(request: $0, context: $1) }
+      )
+
     case "FindEntryDetail":
       return GRPCAsyncServerHandler(
         context: context,
@@ -3214,6 +3301,10 @@ extension Api_V1_EntriesAsyncProvider {
 
 internal protocol Api_V1_EntriesServerInterceptorFactoryProtocol: Sendable {
 
+  /// - Returns: Interceptors to use when handling 'groupTree'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGroupTreeInterceptors() -> [ServerInterceptor<Api_V1_GetGroupTreeRequest, Api_V1_GetGroupTreeResponse>]
+
   /// - Returns: Interceptors to use when handling 'findEntryDetail'.
   ///   Defaults to calling `self.makeInterceptors()`.
   func makeFindEntryDetailInterceptors() -> [ServerInterceptor<Api_V1_FindEntryDetailRequest, Api_V1_GetEntryDetailResponse>]
@@ -3256,6 +3347,7 @@ internal enum Api_V1_EntriesServerMetadata {
     name: "Entries",
     fullName: "api.v1.Entries",
     methods: [
+      Api_V1_EntriesServerMetadata.Methods.groupTree,
       Api_V1_EntriesServerMetadata.Methods.findEntryDetail,
       Api_V1_EntriesServerMetadata.Methods.getEntryDetail,
       Api_V1_EntriesServerMetadata.Methods.createEntry,
@@ -3269,6 +3361,12 @@ internal enum Api_V1_EntriesServerMetadata {
   )
 
   internal enum Methods {
+    internal static let groupTree = GRPCMethodDescriptor(
+      name: "GroupTree",
+      path: "/api.v1.Entries/GroupTree",
+      type: GRPCCallType.unary
+    )
+
     internal static let findEntryDetail = GRPCMethodDescriptor(
       name: "FindEntryDetail",
       path: "/api.v1.Entries/FindEntryDetail",

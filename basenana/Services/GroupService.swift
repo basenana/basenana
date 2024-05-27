@@ -6,8 +6,9 @@
 //
 
 import Foundation
-import GRDB
 import SwiftUI
+import GRPC
+import GRDB
 
 let groupService = GroupService()
 
@@ -19,43 +20,26 @@ class GroupService {
     private var rootId: Int = 0
     
     func initGroupTree() {
-        rootGroup()
-        log.debug("[GroupService] init group tree, id: \(GroupRoot.groupID), name: \(GroupRoot.groupName)")
-
-        var needInitGroups = [GroupRoot]
+        log.debug("[groupService] start init group tree, id: \(GroupRoot.groupID), name: \(GroupRoot.groupName)")
         
-        while !needInitGroups.isEmpty{
-            let nextGroup = needInitGroups[0]
-            needInitGroups.remove(at: 0)
-            let gid = nextGroup.groupID
-            let children = entryService.listChildren(parentEntryID: gid, filter: EntryFilter(isGroup: true))
-            
-            nextGroup.children = children.compactMap{ en in
-                if !en.name.starts(with: "."){
-                    return GroupViewModel(groupID: en.id, groupName: en.name)
-                }
-                return nil
+        let req = Api_V1_GetGroupTreeRequest()
+        let call = clientSet!.entries.groupTree(req, callOptions: defaultCallOptions)
+        do {
+            let response = try call.response.wait()
+            log.info("[groupService] find children failed \(response.root.children)")
+            GroupRoot.groupID = response.root.entry.id
+            GroupRoot.groupName = response.root.entry.name
+            GroupRoot.children = []
+            for grp in response.root.children {
+                GroupRoot.children?.append(buildGroupEntry(group: grp))
             }
-            
-            if nextGroup.children == nil || nextGroup.children!.isEmpty{
-                nextGroup.children = nil
-                continue
-            }
-            
-            for subGroup in nextGroup.children!{
-                needInitGroups.append(subGroup)
-            }}
-        
-        GroupRoot.updateAt = Date()
-    }
-    
-    func rootGroup() {
-        if self.rootId == 0 {
-            let rootEntry = entryService.getRoot()
-            self.rootId = Int(rootEntry?.id ?? 0)
+        } catch {
+            log.error("[groupService] find children failed \(error)")
+            return
         }
-        GroupRoot.groupID = Int64(self.rootId)
-        GroupRoot.groupName = self.namespace
+        
+        log.debug("[groupService] init group tree finish, id: \(GroupRoot.groupID), name: \(GroupRoot.groupName)")
+        GroupRoot.updateAt = Date()
     }
     
     func moveEntriesToGroup(entries: [Int64], groupID: Int64) {
@@ -74,7 +58,7 @@ class GroupService {
         var request = Api_V1_ChangeParentRequest()
         request.entryID = entryId
         request.newParentID = groupID
-        let call = clientSet!.entries.changeParent(request, callOptions: nil)
+        let call = clientSet!.entries.changeParent(request, callOptions: defaultCallOptions)
         
         do {
             let _ = try call.response.wait()
@@ -84,4 +68,15 @@ class GroupService {
         }
     }
     
+}
+
+func buildGroupEntry(group: Api_V1_GetGroupTreeResponse.GroupEntry) -> GroupViewModel{
+    let gvm = GroupViewModel(groupID: group.entry.id, groupName: group.entry.name)
+    if !group.children.isEmpty{
+        gvm.children = []
+        for grp in group.children {
+            gvm.children?.append(buildGroupEntry(group: grp))
+        }
+    }
+    return gvm
 }
