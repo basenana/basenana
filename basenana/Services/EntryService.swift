@@ -89,7 +89,7 @@ class EntryService {
         return nil
     }
     
-    func listChildren(parentEntryID: Int64, filter: EntryFilter? = nil, orderName: EntryOrder? = nil, desc: Bool? = nil, pages: Pagination? = nil) -> [EntryInfoModel]{
+    func listChildren(parentEntryID: Int64, filter: EntryFilter? = nil, order: EntryOrder? = nil, pages: Pagination? = nil) -> [EntryInfoModel]{
         var realParentID: Int64
         switch parentEntryID {
         case inboxEntryID:
@@ -111,12 +111,31 @@ class EntryService {
                 req.pagination.pageSize = ps.pageSize
             }
             
-            let orderColumnMap = [
-                EntryOrder.modifiedAt: "modifiedAt",
-                EntryOrder.kind: "kind",
-                EntryOrder.name: "name",
-                EntryOrder.size: "size"
-            ]
+            if let f = filter {
+                req.filter = Api_V1_EntryFilter()
+                if f.isGroup == true {
+                    req.filter.isGroup = Api_V1_EntryFilter.GroupFilter.group
+                }
+            }
+            
+            if let o = order {
+                switch o.order {
+                case EnOrder.createAt:
+                    req.order = Api_V1_ListGroupChildrenRequest.EntryOrder.createdAt
+                case .modifiedAt:
+                    req.order = Api_V1_ListGroupChildrenRequest.EntryOrder.modifiedAt
+                case .name:
+                    req.order = Api_V1_ListGroupChildrenRequest.EntryOrder.name
+                case .kind:
+                    req.order = Api_V1_ListGroupChildrenRequest.EntryOrder.kind
+                case .size:
+                    req.order = Api_V1_ListGroupChildrenRequest.EntryOrder.size
+                }
+                if o.desc == true {
+                    req.orderDesc = true
+                }
+
+            }
             
             let call = clientSet!.entries.listGroupChildren(req, callOptions: defaultCallOptions)
             let response = try call.response.wait()

@@ -47,6 +47,16 @@ struct Docfilter {
     var marked: Bool?
 }
 
+struct DocumentOrder {
+    var order: DocOrder
+    var desc: Bool
+}
+
+enum DocOrder {
+    case createAt
+    case name
+}
+
 struct DocumentUpdate {
     var docId: Int64
     var unread: Bool?

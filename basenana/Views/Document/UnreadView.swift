@@ -36,7 +36,7 @@ struct UnreadView: View {
             .frame(minWidth: 300, idealWidth: 300)
             .onAppear{
                 Task.detached{
-                    docs = documentService.listDocuments(filter: Docfilter(unread: true))
+                    docs = documentService.listDocuments(filter: Docfilter(unread: true), order: DocumentOrder(order: DocOrder.createAt, desc: true))
                     for doc in docs {
                         docMaps[doc.id] = doc
                     }

@@ -71,7 +71,7 @@ struct GroupView: View{
                     }
                     .onAppear{
                         Task.detached{
-                            groupChileren = entryService.listChildren(parentEntryID: groupID, orderName: EntryOrder.modifiedAt, desc: true)
+                            groupChileren = entryService.listChildren(parentEntryID: groupID, order: EntryOrder(order: EnOrder.modifiedAt, desc: true))
                         }
                     }
                     .onChange(of: order){
