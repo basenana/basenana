@@ -24,21 +24,6 @@ struct DocumentItemView: View {
             formatter.timeStyle = .short
             return formatter
         }()
-        let contentSwapper = { (content: String) -> String in
-            let htmlCharFilterRegexp = try! NSRegularExpression(pattern: #"</?[!\w]+((\s+[\w-]+(\s*=\s*(?:\\*".*?"|'.*?'|[^'">\s]+))?)+\s*|\s*)/?>"#)
-            
-            var updatedContent = content.trimmingCharacters(in: .whitespaces)
-            updatedContent = updatedContent.replacingOccurrences(of: "</p>", with: "</p>\n")
-            updatedContent = updatedContent.replacingOccurrences(of: "</P>", with: "</P>\n")
-            updatedContent = updatedContent.replacingOccurrences(of: "</div>", with: "</div>\n")
-            updatedContent = updatedContent.replacingOccurrences(of: "</DIV>", with: "</DIV>\n")
-            let range = NSRange(location: 0, length: updatedContent.utf16.count)
-            let trimContent = htmlCharFilterRegexp.stringByReplacingMatches(in: updatedContent, options: [], range: range, withTemplate: "")
-            
-            let subContents = trimContent.split(separator: "\n")
-            let result = subContents.prefix(5).joined(separator: "\n")
-            return String(result)
-        }
         
         VStack(alignment: .leading) {
             VStack(alignment: .leading){
@@ -59,7 +44,7 @@ struct DocumentItemView: View {
                     .foregroundColor(doc.unread || !unreadPage ? Color.primary : Color.gray)
                 
             }
-            Text(contentSwapper(doc.subContent))
+            Text(doc.subContent)
                 .font(.body)
                 .foregroundColor(Color.gray)
                 .frame(minWidth: 0, idealWidth: 200, maxWidth: .infinity, alignment: .leading)

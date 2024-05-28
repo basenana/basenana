@@ -52,14 +52,14 @@ class DialogueService: ObservableObject {
         var request = Api_V1_ChatRequest()
         let requestSendAt = Date()
         
-        var requestMsg: RoomMessageModel = RoomMessageModel(
+        let requestMsg: RoomMessageModel = RoomMessageModel(
             roomid: roomId, sender: "user",
             message: newRequest, sendAt: requestSendAt, createdAt: Date()
         )
         var replyMsg: String = ""
         var replyLine: String = ""
         
-        var responseMsg: RoomMessageModel = RoomMessageModel(
+        let responseMsg: RoomMessageModel = RoomMessageModel(
             roomid: roomId, sender: "",
             message: "", sendAt: Date(), createdAt: Date()
         )

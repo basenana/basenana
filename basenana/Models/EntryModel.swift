@@ -56,7 +56,12 @@ struct EntryDetailModel: Codable, Identifiable {
     }
 }
 
-enum EntryOrder {
+struct EntryOrder{
+    var order: EnOrder
+    var desc: Bool
+}
+
+enum EnOrder {
     case createAt
     case modifiedAt
     case name

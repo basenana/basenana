@@ -29,13 +29,17 @@ class DocumentService {
         }
     }
     
-    func listDocuments(filter: Docfilter, pages: Pagination? = nil) -> [DocumentInfoModel]{
+    func listDocuments(filter: Docfilter? = nil, order: DocumentOrder? = nil, pages: Pagination? = nil) -> [DocumentInfoModel]{
         do {
             var request = Api_V1_ListDocumentsRequest()
-            if let marked = filter.marked {
-                request.marked = marked
-            } else if let unread = filter.unread {
-                request.unread = unread
+            if let f = filter {
+                request.filter = Api_V1_DocumentFilter()
+                if let marked = f.marked {
+                    request.filter.marked = marked
+                }
+                if let unread = f.unread {
+                    request.filter.unread = unread
+                }
             }
             
             if let ps = pages {
@@ -43,6 +47,19 @@ class DocumentService {
                 request.pagination.page = ps.page
                 request.pagination.pageSize = ps.pageSize
             }
+            
+            if let o = order {
+                switch o.order {
+                case DocOrder.createAt:
+                    request.order = Api_V1_ListDocumentsRequest.DocumentOrder.createdAt
+                case .name:
+                    request.order = Api_V1_ListDocumentsRequest.DocumentOrder.name
+                }
+                if o.desc == true {
+                    request.orderDesc = true
+                }
+            }
+            
             let call = clientSet?.document.listDocuments(request, callOptions: defaultCallOptions)
             let response =  try call?.response.wait()
             

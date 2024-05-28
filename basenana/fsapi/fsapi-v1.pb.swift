@@ -409,6 +409,107 @@ struct Api_V1_DeleteEntryResponse {
   fileprivate var _entry: Api_V1_EntryDetail? = nil
 }
 
+struct Api_V1_EntryFilter {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var fuzzyName: String = String()
+
+  var kind: String = String()
+
+  var isGroup: Api_V1_EntryFilter.GroupFilter = .all
+
+  var createdAtStart: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _createdAtStart ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_createdAtStart = newValue}
+  }
+  /// Returns true if `createdAtStart` has been explicitly set.
+  var hasCreatedAtStart: Bool {return self._createdAtStart != nil}
+  /// Clears the value of `createdAtStart`. Subsequent reads from it will return its default value.
+  mutating func clearCreatedAtStart() {self._createdAtStart = nil}
+
+  var createdAtEnd: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _createdAtEnd ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_createdAtEnd = newValue}
+  }
+  /// Returns true if `createdAtEnd` has been explicitly set.
+  var hasCreatedAtEnd: Bool {return self._createdAtEnd != nil}
+  /// Clears the value of `createdAtEnd`. Subsequent reads from it will return its default value.
+  mutating func clearCreatedAtEnd() {self._createdAtEnd = nil}
+
+  var modifiedAtStart: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _modifiedAtStart ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_modifiedAtStart = newValue}
+  }
+  /// Returns true if `modifiedAtStart` has been explicitly set.
+  var hasModifiedAtStart: Bool {return self._modifiedAtStart != nil}
+  /// Clears the value of `modifiedAtStart`. Subsequent reads from it will return its default value.
+  mutating func clearModifiedAtStart() {self._modifiedAtStart = nil}
+
+  var modifiedAtEnd: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _modifiedAtEnd ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_modifiedAtEnd = newValue}
+  }
+  /// Returns true if `modifiedAtEnd` has been explicitly set.
+  var hasModifiedAtEnd: Bool {return self._modifiedAtEnd != nil}
+  /// Clears the value of `modifiedAtEnd`. Subsequent reads from it will return its default value.
+  mutating func clearModifiedAtEnd() {self._modifiedAtEnd = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  enum GroupFilter: SwiftProtobuf.Enum {
+    typealias RawValue = Int
+    case all // = 0
+    case group // = 1
+    case file // = 2
+    case UNRECOGNIZED(Int)
+
+    init() {
+      self = .all
+    }
+
+    init?(rawValue: Int) {
+      switch rawValue {
+      case 0: self = .all
+      case 1: self = .group
+      case 2: self = .file
+      default: self = .UNRECOGNIZED(rawValue)
+      }
+    }
+
+    var rawValue: Int {
+      switch self {
+      case .all: return 0
+      case .group: return 1
+      case .file: return 2
+      case .UNRECOGNIZED(let i): return i
+      }
+    }
+
+  }
+
+  init() {}
+
+  fileprivate var _createdAtStart: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+  fileprivate var _createdAtEnd: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+  fileprivate var _modifiedAtStart: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+  fileprivate var _modifiedAtEnd: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+}
+
+#if swift(>=4.2)
+
+extension Api_V1_EntryFilter.GroupFilter: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  static let allCases: [Api_V1_EntryFilter.GroupFilter] = [
+    .all,
+    .group,
+    .file,
+  ]
+}
+
+#endif  // swift(>=4.2)
+
 struct Api_V1_ListGroupChildrenRequest {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -425,12 +526,82 @@ struct Api_V1_ListGroupChildrenRequest {
   /// Clears the value of `pagination`. Subsequent reads from it will return its default value.
   mutating func clearPagination() {self._pagination = nil}
 
+  var order: Api_V1_ListGroupChildrenRequest.EntryOrder = .name
+
+  var orderDesc: Bool = false
+
+  var filter: Api_V1_EntryFilter {
+    get {return _filter ?? Api_V1_EntryFilter()}
+    set {_filter = newValue}
+  }
+  /// Returns true if `filter` has been explicitly set.
+  var hasFilter: Bool {return self._filter != nil}
+  /// Clears the value of `filter`. Subsequent reads from it will return its default value.
+  mutating func clearFilter() {self._filter = nil}
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  enum EntryOrder: SwiftProtobuf.Enum {
+    typealias RawValue = Int
+    case name // = 0
+    case kind // = 1
+    case isGroup // = 2
+    case size // = 3
+    case createdAt // = 4
+    case modifiedAt // = 5
+    case UNRECOGNIZED(Int)
+
+    init() {
+      self = .name
+    }
+
+    init?(rawValue: Int) {
+      switch rawValue {
+      case 0: self = .name
+      case 1: self = .kind
+      case 2: self = .isGroup
+      case 3: self = .size
+      case 4: self = .createdAt
+      case 5: self = .modifiedAt
+      default: self = .UNRECOGNIZED(rawValue)
+      }
+    }
+
+    var rawValue: Int {
+      switch self {
+      case .name: return 0
+      case .kind: return 1
+      case .isGroup: return 2
+      case .size: return 3
+      case .createdAt: return 4
+      case .modifiedAt: return 5
+      case .UNRECOGNIZED(let i): return i
+      }
+    }
+
+  }
 
   init() {}
 
   fileprivate var _pagination: Api_V1_Pagination? = nil
+  fileprivate var _filter: Api_V1_EntryFilter? = nil
 }
+
+#if swift(>=4.2)
+
+extension Api_V1_ListGroupChildrenRequest.EntryOrder: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  static let allCases: [Api_V1_ListGroupChildrenRequest.EntryOrder] = [
+    .name,
+    .kind,
+    .isGroup,
+    .size,
+    .createdAt,
+    .modifiedAt,
+  ]
+}
+
+#endif  // swift(>=4.2)
 
 struct Api_V1_ListGroupChildrenResponse {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -699,34 +870,168 @@ struct Api_V1_DeletePropertyResponse {
   fileprivate var _entry: Api_V1_EntryInfo? = nil
 }
 
-struct Api_V1_ListDocumentsRequest {
+struct Api_V1_DocumentFilter {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  var listAll: Bool = false
+  var fuzzyName: String = String()
 
-  var parentID: Int64 = 0
+  var parentEntryID: Int64 = 0
+
+  var source: String = String()
 
   var marked: Bool = false
 
   var unread: Bool = false
 
-  var pagination: Api_V1_Pagination {
-    get {return _pagination ?? Api_V1_Pagination()}
-    set {_pagination = newValue}
+  var createdAtStart: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _createdAtStart ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_createdAtStart = newValue}
   }
-  /// Returns true if `pagination` has been explicitly set.
-  var hasPagination: Bool {return self._pagination != nil}
-  /// Clears the value of `pagination`. Subsequent reads from it will return its default value.
-  mutating func clearPagination() {self._pagination = nil}
+  /// Returns true if `createdAtStart` has been explicitly set.
+  var hasCreatedAtStart: Bool {return self._createdAtStart != nil}
+  /// Clears the value of `createdAtStart`. Subsequent reads from it will return its default value.
+  mutating func clearCreatedAtStart() {self._createdAtStart = nil}
+
+  var createdAtEnd: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _createdAtEnd ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_createdAtEnd = newValue}
+  }
+  /// Returns true if `createdAtEnd` has been explicitly set.
+  var hasCreatedAtEnd: Bool {return self._createdAtEnd != nil}
+  /// Clears the value of `createdAtEnd`. Subsequent reads from it will return its default value.
+  mutating func clearCreatedAtEnd() {self._createdAtEnd = nil}
+
+  var changedAtStart: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _changedAtStart ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_changedAtStart = newValue}
+  }
+  /// Returns true if `changedAtStart` has been explicitly set.
+  var hasChangedAtStart: Bool {return self._changedAtStart != nil}
+  /// Clears the value of `changedAtStart`. Subsequent reads from it will return its default value.
+  mutating func clearChangedAtStart() {self._changedAtStart = nil}
+
+  var changedAtEnd: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _changedAtEnd ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_changedAtEnd = newValue}
+  }
+  /// Returns true if `changedAtEnd` has been explicitly set.
+  var hasChangedAtEnd: Bool {return self._changedAtEnd != nil}
+  /// Clears the value of `changedAtEnd`. Subsequent reads from it will return its default value.
+  mutating func clearChangedAtEnd() {self._changedAtEnd = nil}
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
 
-  fileprivate var _pagination: Api_V1_Pagination? = nil
+  fileprivate var _createdAtStart: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+  fileprivate var _createdAtEnd: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+  fileprivate var _changedAtStart: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+  fileprivate var _changedAtEnd: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
 }
+
+struct Api_V1_ListDocumentsRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var listAll: Bool {
+    get {return _storage._listAll}
+    set {_uniqueStorage()._listAll = newValue}
+  }
+
+  var parentID: Int64 {
+    get {return _storage._parentID}
+    set {_uniqueStorage()._parentID = newValue}
+  }
+
+  var pagination: Api_V1_Pagination {
+    get {return _storage._pagination ?? Api_V1_Pagination()}
+    set {_uniqueStorage()._pagination = newValue}
+  }
+  /// Returns true if `pagination` has been explicitly set.
+  var hasPagination: Bool {return _storage._pagination != nil}
+  /// Clears the value of `pagination`. Subsequent reads from it will return its default value.
+  mutating func clearPagination() {_uniqueStorage()._pagination = nil}
+
+  var order: Api_V1_ListDocumentsRequest.DocumentOrder {
+    get {return _storage._order}
+    set {_uniqueStorage()._order = newValue}
+  }
+
+  var orderDesc: Bool {
+    get {return _storage._orderDesc}
+    set {_uniqueStorage()._orderDesc = newValue}
+  }
+
+  var filter: Api_V1_DocumentFilter {
+    get {return _storage._filter ?? Api_V1_DocumentFilter()}
+    set {_uniqueStorage()._filter = newValue}
+  }
+  /// Returns true if `filter` has been explicitly set.
+  var hasFilter: Bool {return _storage._filter != nil}
+  /// Clears the value of `filter`. Subsequent reads from it will return its default value.
+  mutating func clearFilter() {_uniqueStorage()._filter = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  enum DocumentOrder: SwiftProtobuf.Enum {
+    typealias RawValue = Int
+    case name // = 0
+    case source // = 1
+    case marked // = 2
+    case unread // = 3
+    case createdAt // = 4
+    case UNRECOGNIZED(Int)
+
+    init() {
+      self = .name
+    }
+
+    init?(rawValue: Int) {
+      switch rawValue {
+      case 0: self = .name
+      case 1: self = .source
+      case 2: self = .marked
+      case 3: self = .unread
+      case 4: self = .createdAt
+      default: self = .UNRECOGNIZED(rawValue)
+      }
+    }
+
+    var rawValue: Int {
+      switch self {
+      case .name: return 0
+      case .source: return 1
+      case .marked: return 2
+      case .unread: return 3
+      case .createdAt: return 4
+      case .UNRECOGNIZED(let i): return i
+      }
+    }
+
+  }
+
+  init() {}
+
+  fileprivate var _storage = _StorageClass.defaultInstance
+}
+
+#if swift(>=4.2)
+
+extension Api_V1_ListDocumentsRequest.DocumentOrder: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  static let allCases: [Api_V1_ListDocumentsRequest.DocumentOrder] = [
+    .name,
+    .source,
+    .marked,
+    .unread,
+    .createdAt,
+  ]
+}
+
+#endif  // swift(>=4.2)
 
 struct Api_V1_ListDocumentsResponse {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -1754,7 +2059,10 @@ extension Api_V1_UpdateEntryRequest: @unchecked Sendable {}
 extension Api_V1_UpdateEntryResponse: @unchecked Sendable {}
 extension Api_V1_DeleteEntryRequest: @unchecked Sendable {}
 extension Api_V1_DeleteEntryResponse: @unchecked Sendable {}
+extension Api_V1_EntryFilter: @unchecked Sendable {}
+extension Api_V1_EntryFilter.GroupFilter: @unchecked Sendable {}
 extension Api_V1_ListGroupChildrenRequest: @unchecked Sendable {}
+extension Api_V1_ListGroupChildrenRequest.EntryOrder: @unchecked Sendable {}
 extension Api_V1_ListGroupChildrenResponse: @unchecked Sendable {}
 extension Api_V1_ChangeParentRequest: @unchecked Sendable {}
 extension Api_V1_ChangeParentRequest.Option: @unchecked Sendable {}
@@ -1770,7 +2078,9 @@ extension Api_V1_UpdatePropertyRequest: @unchecked Sendable {}
 extension Api_V1_UpdatePropertyResponse: @unchecked Sendable {}
 extension Api_V1_DeletePropertyRequest: @unchecked Sendable {}
 extension Api_V1_DeletePropertyResponse: @unchecked Sendable {}
+extension Api_V1_DocumentFilter: @unchecked Sendable {}
 extension Api_V1_ListDocumentsRequest: @unchecked Sendable {}
+extension Api_V1_ListDocumentsRequest.DocumentOrder: @unchecked Sendable {}
 extension Api_V1_ListDocumentsResponse: @unchecked Sendable {}
 extension Api_V1_GetDocumentDetailRequest: @unchecked Sendable {}
 extension Api_V1_GetDocumentDetailResponse: @unchecked Sendable {}
@@ -2508,11 +2818,94 @@ extension Api_V1_DeleteEntryResponse: SwiftProtobuf.Message, SwiftProtobuf._Mess
   }
 }
 
+extension Api_V1_EntryFilter: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".EntryFilter"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "fuzzyName"),
+    2: .same(proto: "kind"),
+    3: .same(proto: "isGroup"),
+    6: .same(proto: "createdAtStart"),
+    7: .same(proto: "createdAtEnd"),
+    8: .same(proto: "modifiedAtStart"),
+    9: .same(proto: "modifiedAtEnd"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.fuzzyName) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.kind) }()
+      case 3: try { try decoder.decodeSingularEnumField(value: &self.isGroup) }()
+      case 6: try { try decoder.decodeSingularMessageField(value: &self._createdAtStart) }()
+      case 7: try { try decoder.decodeSingularMessageField(value: &self._createdAtEnd) }()
+      case 8: try { try decoder.decodeSingularMessageField(value: &self._modifiedAtStart) }()
+      case 9: try { try decoder.decodeSingularMessageField(value: &self._modifiedAtEnd) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.fuzzyName.isEmpty {
+      try visitor.visitSingularStringField(value: self.fuzzyName, fieldNumber: 1)
+    }
+    if !self.kind.isEmpty {
+      try visitor.visitSingularStringField(value: self.kind, fieldNumber: 2)
+    }
+    if self.isGroup != .all {
+      try visitor.visitSingularEnumField(value: self.isGroup, fieldNumber: 3)
+    }
+    try { if let v = self._createdAtStart {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+    } }()
+    try { if let v = self._createdAtEnd {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
+    } }()
+    try { if let v = self._modifiedAtStart {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
+    } }()
+    try { if let v = self._modifiedAtEnd {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_EntryFilter, rhs: Api_V1_EntryFilter) -> Bool {
+    if lhs.fuzzyName != rhs.fuzzyName {return false}
+    if lhs.kind != rhs.kind {return false}
+    if lhs.isGroup != rhs.isGroup {return false}
+    if lhs._createdAtStart != rhs._createdAtStart {return false}
+    if lhs._createdAtEnd != rhs._createdAtEnd {return false}
+    if lhs._modifiedAtStart != rhs._modifiedAtStart {return false}
+    if lhs._modifiedAtEnd != rhs._modifiedAtEnd {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_EntryFilter.GroupFilter: SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "All"),
+    1: .same(proto: "Group"),
+    2: .same(proto: "File"),
+  ]
+}
+
 extension Api_V1_ListGroupChildrenRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".ListGroupChildrenRequest"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "parentID"),
     10: .same(proto: "pagination"),
+    11: .same(proto: "order"),
+    12: .same(proto: "OrderDesc"),
+    13: .same(proto: "filter"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -2523,6 +2916,9 @@ extension Api_V1_ListGroupChildrenRequest: SwiftProtobuf.Message, SwiftProtobuf.
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularInt64Field(value: &self.parentID) }()
       case 10: try { try decoder.decodeSingularMessageField(value: &self._pagination) }()
+      case 11: try { try decoder.decodeSingularEnumField(value: &self.order) }()
+      case 12: try { try decoder.decodeSingularBoolField(value: &self.orderDesc) }()
+      case 13: try { try decoder.decodeSingularMessageField(value: &self._filter) }()
       default: break
       }
     }
@@ -2539,15 +2935,38 @@ extension Api_V1_ListGroupChildrenRequest: SwiftProtobuf.Message, SwiftProtobuf.
     try { if let v = self._pagination {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
     } }()
+    if self.order != .name {
+      try visitor.visitSingularEnumField(value: self.order, fieldNumber: 11)
+    }
+    if self.orderDesc != false {
+      try visitor.visitSingularBoolField(value: self.orderDesc, fieldNumber: 12)
+    }
+    try { if let v = self._filter {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 13)
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
   static func ==(lhs: Api_V1_ListGroupChildrenRequest, rhs: Api_V1_ListGroupChildrenRequest) -> Bool {
     if lhs.parentID != rhs.parentID {return false}
     if lhs._pagination != rhs._pagination {return false}
+    if lhs.order != rhs.order {return false}
+    if lhs.orderDesc != rhs.orderDesc {return false}
+    if lhs._filter != rhs._filter {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
+}
+
+extension Api_V1_ListGroupChildrenRequest.EntryOrder: SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "Name"),
+    1: .same(proto: "Kind"),
+    2: .same(proto: "IsGroup"),
+    3: .same(proto: "Size"),
+    4: .same(proto: "CreatedAt"),
+    5: .same(proto: "ModifiedAt"),
+  ]
 }
 
 extension Api_V1_ListGroupChildrenResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
@@ -3176,14 +3595,18 @@ extension Api_V1_DeletePropertyResponse: SwiftProtobuf.Message, SwiftProtobuf._M
   }
 }
 
-extension Api_V1_ListDocumentsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = _protobuf_package + ".ListDocumentsRequest"
+extension Api_V1_DocumentFilter: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".DocumentFilter"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "listAll"),
-    2: .same(proto: "parentID"),
-    3: .same(proto: "marked"),
-    4: .same(proto: "unread"),
-    10: .same(proto: "pagination"),
+    1: .same(proto: "fuzzyName"),
+    2: .same(proto: "parentEntryID"),
+    3: .same(proto: "source"),
+    4: .same(proto: "marked"),
+    5: .same(proto: "unread"),
+    6: .same(proto: "createdAtStart"),
+    7: .same(proto: "createdAtEnd"),
+    8: .same(proto: "changedAtStart"),
+    9: .same(proto: "changedAtEnd"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -3192,11 +3615,15 @@ extension Api_V1_ListDocumentsRequest: SwiftProtobuf.Message, SwiftProtobuf._Mes
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularBoolField(value: &self.listAll) }()
-      case 2: try { try decoder.decodeSingularInt64Field(value: &self.parentID) }()
-      case 3: try { try decoder.decodeSingularBoolField(value: &self.marked) }()
-      case 4: try { try decoder.decodeSingularBoolField(value: &self.unread) }()
-      case 10: try { try decoder.decodeSingularMessageField(value: &self._pagination) }()
+      case 1: try { try decoder.decodeSingularStringField(value: &self.fuzzyName) }()
+      case 2: try { try decoder.decodeSingularInt64Field(value: &self.parentEntryID) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.source) }()
+      case 4: try { try decoder.decodeSingularBoolField(value: &self.marked) }()
+      case 5: try { try decoder.decodeSingularBoolField(value: &self.unread) }()
+      case 6: try { try decoder.decodeSingularMessageField(value: &self._createdAtStart) }()
+      case 7: try { try decoder.decodeSingularMessageField(value: &self._createdAtEnd) }()
+      case 8: try { try decoder.decodeSingularMessageField(value: &self._changedAtStart) }()
+      case 9: try { try decoder.decodeSingularMessageField(value: &self._changedAtEnd) }()
       default: break
       }
     }
@@ -3207,33 +3634,175 @@ extension Api_V1_ListDocumentsRequest: SwiftProtobuf.Message, SwiftProtobuf._Mes
     // allocates stack space for every if/case branch local when no optimizations
     // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
     // https://github.com/apple/swift-protobuf/issues/1182
-    if self.listAll != false {
-      try visitor.visitSingularBoolField(value: self.listAll, fieldNumber: 1)
+    if !self.fuzzyName.isEmpty {
+      try visitor.visitSingularStringField(value: self.fuzzyName, fieldNumber: 1)
     }
-    if self.parentID != 0 {
-      try visitor.visitSingularInt64Field(value: self.parentID, fieldNumber: 2)
+    if self.parentEntryID != 0 {
+      try visitor.visitSingularInt64Field(value: self.parentEntryID, fieldNumber: 2)
+    }
+    if !self.source.isEmpty {
+      try visitor.visitSingularStringField(value: self.source, fieldNumber: 3)
     }
     if self.marked != false {
-      try visitor.visitSingularBoolField(value: self.marked, fieldNumber: 3)
+      try visitor.visitSingularBoolField(value: self.marked, fieldNumber: 4)
     }
     if self.unread != false {
-      try visitor.visitSingularBoolField(value: self.unread, fieldNumber: 4)
+      try visitor.visitSingularBoolField(value: self.unread, fieldNumber: 5)
     }
-    try { if let v = self._pagination {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
+    try { if let v = self._createdAtStart {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+    } }()
+    try { if let v = self._createdAtEnd {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
+    } }()
+    try { if let v = self._changedAtStart {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
+    } }()
+    try { if let v = self._changedAtEnd {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
     } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: Api_V1_ListDocumentsRequest, rhs: Api_V1_ListDocumentsRequest) -> Bool {
-    if lhs.listAll != rhs.listAll {return false}
-    if lhs.parentID != rhs.parentID {return false}
+  static func ==(lhs: Api_V1_DocumentFilter, rhs: Api_V1_DocumentFilter) -> Bool {
+    if lhs.fuzzyName != rhs.fuzzyName {return false}
+    if lhs.parentEntryID != rhs.parentEntryID {return false}
+    if lhs.source != rhs.source {return false}
     if lhs.marked != rhs.marked {return false}
     if lhs.unread != rhs.unread {return false}
-    if lhs._pagination != rhs._pagination {return false}
+    if lhs._createdAtStart != rhs._createdAtStart {return false}
+    if lhs._createdAtEnd != rhs._createdAtEnd {return false}
+    if lhs._changedAtStart != rhs._changedAtStart {return false}
+    if lhs._changedAtEnd != rhs._changedAtEnd {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
+}
+
+extension Api_V1_ListDocumentsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".ListDocumentsRequest"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "listAll"),
+    2: .same(proto: "parentID"),
+    10: .same(proto: "pagination"),
+    11: .same(proto: "order"),
+    12: .same(proto: "OrderDesc"),
+    13: .same(proto: "filter"),
+  ]
+
+  fileprivate class _StorageClass {
+    var _listAll: Bool = false
+    var _parentID: Int64 = 0
+    var _pagination: Api_V1_Pagination? = nil
+    var _order: Api_V1_ListDocumentsRequest.DocumentOrder = .name
+    var _orderDesc: Bool = false
+    var _filter: Api_V1_DocumentFilter? = nil
+
+    #if swift(>=5.10)
+      // This property is used as the initial default value for new instances of the type.
+      // The type itself is protecting the reference to its storage via CoW semantics.
+      // This will force a copy to be made of this reference when the first mutation occurs;
+      // hence, it is safe to mark this as `nonisolated(unsafe)`.
+      static nonisolated(unsafe) let defaultInstance = _StorageClass()
+    #else
+      static let defaultInstance = _StorageClass()
+    #endif
+
+    private init() {}
+
+    init(copying source: _StorageClass) {
+      _listAll = source._listAll
+      _parentID = source._parentID
+      _pagination = source._pagination
+      _order = source._order
+      _orderDesc = source._orderDesc
+      _filter = source._filter
+    }
+  }
+
+  fileprivate mutating func _uniqueStorage() -> _StorageClass {
+    if !isKnownUniquelyReferenced(&_storage) {
+      _storage = _StorageClass(copying: _storage)
+    }
+    return _storage
+  }
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    _ = _uniqueStorage()
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every case branch when no optimizations are
+        // enabled. https://github.com/apple/swift-protobuf/issues/1034
+        switch fieldNumber {
+        case 1: try { try decoder.decodeSingularBoolField(value: &_storage._listAll) }()
+        case 2: try { try decoder.decodeSingularInt64Field(value: &_storage._parentID) }()
+        case 10: try { try decoder.decodeSingularMessageField(value: &_storage._pagination) }()
+        case 11: try { try decoder.decodeSingularEnumField(value: &_storage._order) }()
+        case 12: try { try decoder.decodeSingularBoolField(value: &_storage._orderDesc) }()
+        case 13: try { try decoder.decodeSingularMessageField(value: &_storage._filter) }()
+        default: break
+        }
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every if/case branch local when no optimizations
+      // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+      // https://github.com/apple/swift-protobuf/issues/1182
+      if _storage._listAll != false {
+        try visitor.visitSingularBoolField(value: _storage._listAll, fieldNumber: 1)
+      }
+      if _storage._parentID != 0 {
+        try visitor.visitSingularInt64Field(value: _storage._parentID, fieldNumber: 2)
+      }
+      try { if let v = _storage._pagination {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
+      } }()
+      if _storage._order != .name {
+        try visitor.visitSingularEnumField(value: _storage._order, fieldNumber: 11)
+      }
+      if _storage._orderDesc != false {
+        try visitor.visitSingularBoolField(value: _storage._orderDesc, fieldNumber: 12)
+      }
+      try { if let v = _storage._filter {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 13)
+      } }()
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_ListDocumentsRequest, rhs: Api_V1_ListDocumentsRequest) -> Bool {
+    if lhs._storage !== rhs._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
+        let _storage = _args.0
+        let rhs_storage = _args.1
+        if _storage._listAll != rhs_storage._listAll {return false}
+        if _storage._parentID != rhs_storage._parentID {return false}
+        if _storage._pagination != rhs_storage._pagination {return false}
+        if _storage._order != rhs_storage._order {return false}
+        if _storage._orderDesc != rhs_storage._orderDesc {return false}
+        if _storage._filter != rhs_storage._filter {return false}
+        return true
+      }
+      if !storagesAreEqual {return false}
+    }
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_ListDocumentsRequest.DocumentOrder: SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "Name"),
+    1: .same(proto: "Source"),
+    2: .same(proto: "Marked"),
+    3: .same(proto: "Unread"),
+    4: .same(proto: "CreatedAt"),
+  ]
 }
 
 extension Api_V1_ListDocumentsResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
