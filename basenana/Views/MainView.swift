@@ -24,7 +24,7 @@ struct MainView: View{
         }else {
             NavigationSplitView {
                 SidebarView()
-                    .frame(minWidth: 180,idealWidth: 180)
+                    .frame(minWidth: 180,idealWidth: 200)
             }detail: {
             }
             .searchable(text: $search) {}

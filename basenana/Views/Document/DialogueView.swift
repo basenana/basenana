@@ -280,21 +280,17 @@ struct IngestButton: View {
                     documentService.ingestDocument(entryId: entryId)
                     DispatchQueue(label: "org.basenana.room.syncIngest").async {
                          while true {
-                              do {
-                                   if let entry = entryService.getEntry(entryID: entryId) {
-                                        for entryProperty in entry.properties {
-                                             if entryProperty.key == "org.basenana.friday/ingest" {
-                                                  ingestState = entryProperty.value
-                                                  if entryProperty.value == "finish" {
-                                                       return
-                                                  }
+                              if let entry = entryService.getEntry(entryID: entryId) {
+                                   for entryProperty in entry.properties {
+                                        if entryProperty.key == "org.basenana.friday/ingest" {
+                                             ingestState = entryProperty.value
+                                             if entryProperty.value == "finish" {
+                                                  return
                                              }
                                         }
                                    }
-                                   Thread.sleep(forTimeInterval: 1)
-                              } catch {
-                                   log.error("sync entry property failed: \(error)")
                               }
+                              Thread.sleep(forTimeInterval: 1)
                          }
                     }
                }

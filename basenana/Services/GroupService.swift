@@ -26,7 +26,6 @@ class GroupService {
         let call = clientSet!.entries.groupTree(req, callOptions: defaultCallOptions)
         do {
             let response = try call.response.wait()
-            log.info("[groupService] find children failed \(response.root.children)")
             GroupRoot.groupID = response.root.entry.id
             GroupRoot.groupName = response.root.entry.name
             GroupRoot.children = []
