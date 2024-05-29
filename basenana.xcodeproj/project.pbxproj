@@ -94,6 +94,14 @@
 		ED85A3BE2BBAB21A0040598E /* DialogueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED85A3BD2BBAB21A0040598E /* DialogueView.swift */; };
 		ED85A3C32BBAB3BD0040598E /* DocumentItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED85A3C22BBAB3BD0040598E /* DocumentItemView.swift */; };
 		ED917E782B9607BE004FCB9A /* DocumentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED917E772B9607BE004FCB9A /* DocumentModel.swift */; };
+		EDC5AA7A2C06F738003B78AD /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC5AA792C06F738003B78AD /* MessageView.swift */; };
+		EDC5AA7C2C06F77C003B78AD /* CloseButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC5AA7B2C06F77C003B78AD /* CloseButtonView.swift */; };
+		EDC5AA7E2C06F7CF003B78AD /* EraserButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC5AA7D2C06F7CF003B78AD /* EraserButtonView.swift */; };
+		EDC5AA802C06F8FC003B78AD /* IngestButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC5AA7F2C06F8FC003B78AD /* IngestButtonView.swift */; };
+		EDC5AA812C06F925003B78AD /* CloseButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC5AA7B2C06F77C003B78AD /* CloseButtonView.swift */; };
+		EDC5AA822C06F92A003B78AD /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC5AA792C06F738003B78AD /* MessageView.swift */; };
+		EDC5AA832C06F933003B78AD /* IngestButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC5AA7F2C06F8FC003B78AD /* IngestButtonView.swift */; };
+		EDC5AA842C06F93A003B78AD /* EraserButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC5AA7D2C06F7CF003B78AD /* EraserButtonView.swift */; };
 		EDEF16382BC8DD93000BC25C /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDEF16372BC8DD93000BC25C /* Color.swift */; };
 		EDF504772BEB295700CB4B1C /* DocumentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF504762BEB295700CB4B1C /* DocumentDetailView.swift */; };
 		EDF504792BEF008B00CB4B1C /* MarkedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF504782BEF008B00CB4B1C /* MarkedView.swift */; };
@@ -159,6 +167,10 @@
 		ED85A3BD2BBAB21A0040598E /* DialogueView.swift */ = {isa = PBXFileReference; indentWidth = 5; lastKnownFileType = sourcecode.swift; path = DialogueView.swift; sourceTree = "<group>"; };
 		ED85A3C22BBAB3BD0040598E /* DocumentItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentItemView.swift; sourceTree = "<group>"; };
 		ED917E772B9607BE004FCB9A /* DocumentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentModel.swift; sourceTree = "<group>"; };
+		EDC5AA792C06F738003B78AD /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
+		EDC5AA7B2C06F77C003B78AD /* CloseButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseButtonView.swift; sourceTree = "<group>"; };
+		EDC5AA7D2C06F7CF003B78AD /* EraserButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EraserButtonView.swift; sourceTree = "<group>"; };
+		EDC5AA7F2C06F8FC003B78AD /* IngestButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngestButtonView.swift; sourceTree = "<group>"; };
 		EDEF16372BC8DD93000BC25C /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		EDF504762BEB295700CB4B1C /* DocumentDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentDetailView.swift; sourceTree = "<group>"; };
 		EDF504782BEF008B00CB4B1C /* MarkedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkedView.swift; sourceTree = "<group>"; };
@@ -286,6 +298,7 @@
 				3F4A78DF2BD299040035F90F /* Settings */,
 				3F4A78C62BC99CE90035F90F /* Sidebar */,
 				ED85A3BF2BBAB2520040598E /* Document */,
+				EDC5AA782C06F71D003B78AD /* Dialogue */,
 				3F81C9C62BAFCB8900FEE130 /* MainView.swift */,
 			);
 			path = Views;
@@ -382,13 +395,24 @@
 		ED85A3BF2BBAB2520040598E /* Document */ = {
 			isa = PBXGroup;
 			children = (
-				ED85A3BD2BBAB21A0040598E /* DialogueView.swift */,
 				3F1BBE5A2B93225E005D533F /* UnreadView.swift */,
 				ED85A3C22BBAB3BD0040598E /* DocumentItemView.swift */,
 				EDF504762BEB295700CB4B1C /* DocumentDetailView.swift */,
 				EDF504782BEF008B00CB4B1C /* MarkedView.swift */,
 			);
 			path = Document;
+			sourceTree = "<group>";
+		};
+		EDC5AA782C06F71D003B78AD /* Dialogue */ = {
+			isa = PBXGroup;
+			children = (
+				ED85A3BD2BBAB21A0040598E /* DialogueView.swift */,
+				EDC5AA792C06F738003B78AD /* MessageView.swift */,
+				EDC5AA7B2C06F77C003B78AD /* CloseButtonView.swift */,
+				EDC5AA7D2C06F7CF003B78AD /* EraserButtonView.swift */,
+				EDC5AA7F2C06F8FC003B78AD /* IngestButtonView.swift */,
+			);
+			path = Dialogue;
 			sourceTree = "<group>";
 		};
 		EDEF16362BC8DD7E000BC25C /* Extensions */ = {
@@ -605,14 +629,18 @@
 				3F1BBE4F2B90C4D5005D533F /* SidebarView.swift in Sources */,
 				3FDC2EA72BE3CC8C00344DF8 /* HTMLParser.swift in Sources */,
 				3F4A78CF2BCC2A660035F90F /* FsClientSet.swift in Sources */,
+				EDC5AA7A2C06F738003B78AD /* MessageView.swift in Sources */,
 				3FDC2EA12BDCEBC500344DF8 /* EntryViewModel.swift in Sources */,
 				3F81C9C52BAF1A6D00FEE130 /* GroupViewModel.swift in Sources */,
 				3F2CB97D2B9A02B600ADDDED /* EntryService.swift in Sources */,
+				EDC5AA7E2C06F7CF003B78AD /* EraserButtonView.swift in Sources */,
+				EDC5AA7C2C06F77C003B78AD /* CloseButtonView.swift in Sources */,
 				3F0AEC762BA48EC7000DA928 /* GroupService.swift in Sources */,
 				3FB782542BC2D0F600327191 /* fsapi-v1.grpc.swift in Sources */,
 				EDF504772BEB295700CB4B1C /* DocumentDetailView.swift in Sources */,
 				3F4A78E12BD299110035F90F /* SettingsView.swift in Sources */,
 				3F1BBE1D2B8E147F005D533F /* basenanaApp.swift in Sources */,
+				EDC5AA802C06F8FC003B78AD /* IngestButtonView.swift in Sources */,
 				ED85A3C32BBAB3BD0040598E /* DocumentItemView.swift in Sources */,
 				3F81C9C72BAFCB8900FEE130 /* MainView.swift in Sources */,
 				3F1BBE5B2B93225E005D533F /* UnreadView.swift in Sources */,
@@ -659,6 +687,7 @@
 				ED0CBB2F2BF656B90056E6AA /* DocumentModel.swift in Sources */,
 				ED0CBB302BF656B90056E6AA /* DialogueModel.swift in Sources */,
 				ED0CBB322BF656B90056E6AA /* Color.swift in Sources */,
+				EDC5AA822C06F92A003B78AD /* MessageView.swift in Sources */,
 				ED0CBB332BF656B90056E6AA /* SidebarView.swift in Sources */,
 				ED0CBB342BF656B90056E6AA /* HTMLParser.swift in Sources */,
 				ED0CBB352BF656B90056E6AA /* FsClientSet.swift in Sources */,
@@ -666,11 +695,14 @@
 				ED0CBB372BF656B90056E6AA /* GroupViewModel.swift in Sources */,
 				ED0CBB382BF656B90056E6AA /* EntryService.swift in Sources */,
 				ED0CBB392BF656B90056E6AA /* GroupService.swift in Sources */,
+				EDC5AA842C06F93A003B78AD /* EraserButtonView.swift in Sources */,
 				ED0CBB3A2BF656B90056E6AA /* fsapi-v1.grpc.swift in Sources */,
 				ED0CBB3B2BF656B90056E6AA /* DocumentDetailView.swift in Sources */,
 				ED0CBB3C2BF656B90056E6AA /* SettingsView.swift in Sources */,
+				EDC5AA832C06F933003B78AD /* IngestButtonView.swift in Sources */,
 				ED0CBB3D2BF656B90056E6AA /* basenanaApp.swift in Sources */,
 				ED0CBB3E2BF656B90056E6AA /* DocumentItemView.swift in Sources */,
+				EDC5AA812C06F925003B78AD /* CloseButtonView.swift in Sources */,
 				ED0CBB3F2BF656B90056E6AA /* MainView.swift in Sources */,
 				ED0CBB402BF656B90056E6AA /* UnreadView.swift in Sources */,
 			);
