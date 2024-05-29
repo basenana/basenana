@@ -151,9 +151,9 @@ class EntryService {
     }
     
     func entryDetail2Model(en: Api_V1_EntryDetail, properties: [Api_V1_Property]) -> EntryDetailModel{
-        var properties: [EntryPropertyModel]=[]
+        var enProperties: [EntryPropertyModel]=[]
         for property in properties {
-            properties.append(EntryPropertyModel(key: property.key, value: property.value, encoded: property.encoded))
+            enProperties.append(EntryPropertyModel(key: property.key, value: property.value, encoded: property.encoded))
         }
         return EntryDetailModel(
             id: en.id, name: en.name, aliases: en.aliases, parent: en.parent.id,
@@ -161,7 +161,7 @@ class EntryService {
             namespace: en.namespace, storage: en.storage,
             uid: en.access.uid, gid: en.access.gid, permissions: en.access.permissions,
             createdAt: en.changedAt.date, changedAt: en.changedAt.date, modifiedAt: en.modifiedAt.date, accessAt: en.accessAt.date,
-            properties: properties
+            properties: enProperties
         )
     }
     

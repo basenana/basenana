@@ -99,7 +99,15 @@ class DialogueService: ObservableObject {
         let messages = room.messages
         var ms: [RoomMessageModel] = []
         for message in messages {
-            ms.append(RoomMessageModel(roomid: message.id, sender: message.sender, message: message.message, sendAt: message.sendAt.date, createdAt: message.createdAt.date))
+            ms.append(RoomMessageModel(
+                id: message.id,
+                namespace: message.namespace,
+                roomid: message.id,
+                sender: message.sender,
+                message: message.message,
+                sendAt: message.sendAt.date,
+                createdAt: message.createdAt.date
+            ))
         }
         return RoomModel(
             id: room.id, namespace: room.namespace, oid: room.entryID,
