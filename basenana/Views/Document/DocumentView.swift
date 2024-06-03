@@ -50,24 +50,30 @@ struct DocumentView: View {
             }
             .contextMenu{
                 if let select = docMaps[selectedId ?? 0] {
-                    if select.marked {
-                        Button("Unmark") {
-                            documentService.updateDocument(docUpdate: DocumentUpdate(docId: selectedId!, marked: false))
+                    Button {
+                        withAnimation(.easeInOut) {
+                            documentService.updateDocument(docUpdate: DocumentUpdate(docId: selectedId!, unread: !select.unread))
+                        }
+                    } label: {
+                        if select.unread {
+                            Image(systemName: "circle").resizable().frame(width: 1, height: 1)
+                            Text("Read")
+                        }else{
+                            Image(systemName: "circle.fill").resizable().frame(width: 1, height: 1)
+                            Text("Unread")
                         }
                     }
-                    if !select.marked {
-                        Button("Mark") {
-                            documentService.updateDocument(docUpdate: DocumentUpdate(docId: selectedId!, marked: true))
+                    Button {
+                        withAnimation(.easeInOut) {
+                            documentService.updateDocument(docUpdate: DocumentUpdate(docId: selectedId!, marked: !select.marked))
                         }
-                    }
-                    if select.unread {
-                        Button("Read") {
-                            documentService.updateDocument(docUpdate: DocumentUpdate(docId: selectedId!, unread: false))
-                        }
-                    }
-                    if !select.unread{
-                        Button("Unread") {
-                            documentService.updateDocument(docUpdate: DocumentUpdate(docId: selectedId!, unread: true))
+                    } label: {
+                        if select.marked {
+                            Image(systemName: "star").resizable().frame(width: 1, height: 1)
+                            Text("Unmark")
+                        }else{
+                            Image(systemName: "star.fill").resizable().frame(width: 1, height: 1)
+                            Text("Mark")
                         }
                     }
                 }
@@ -75,7 +81,7 @@ struct DocumentView: View {
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Picker("select", selection: $parentSelected) {
-                        Text("Select Folder").tag(nil as String?)
+                        Text("Select").tag(nil as String?)
                         ForEach(parentNames, id: \.self) { option in
                             Text(option).tag(option as String?)
                         }
