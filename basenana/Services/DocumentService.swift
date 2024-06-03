@@ -40,6 +40,9 @@ class DocumentService {
                 if let unread = f.unread {
                     request.filter.unread = unread
                 }
+                if let parentId = f.parentId {
+                    request.parentID = parentId
+                }
             }
             
             if let ps = pages {

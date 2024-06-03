@@ -14,6 +14,7 @@ class GroupViewModel: Identifiable, Hashable {
     var id: Int64
     var groupID: Int64
     var groupName: String
+    var prefix: String?
     var children: [GroupViewModel]? = nil
     var updateAt: Date? = nil
     
@@ -32,3 +33,4 @@ class GroupViewModel: Identifiable, Hashable {
         return lhs.groupID == rhs.groupID
     }
 }
+

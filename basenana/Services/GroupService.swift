@@ -79,3 +79,23 @@ func buildGroupEntry(group: Api_V1_GetGroupTreeResponse.GroupEntry) -> GroupView
     }
     return gvm
 }
+
+func getLeafs(groupPrefix: String, group: GroupViewModel) -> [GroupViewModel] {
+    if group.children == nil {
+        group.prefix = groupPrefix
+        return [group]
+    }
+    
+    var result: [GroupViewModel] = []
+    for child in group.children! {
+        var prefix: String = groupPrefix
+        if prefix != "" && prefix != GroupRoot.groupName {
+            prefix = "\(prefix)/\(group.groupName)"
+        }
+        result.append(contentsOf: getLeafs(
+            groupPrefix: prefix,
+            group: child)
+        )
+    }
+    return result
+}

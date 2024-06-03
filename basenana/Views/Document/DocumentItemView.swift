@@ -29,7 +29,7 @@ struct DocumentItemView: View {
             VStack(alignment: .leading){
                 
                 HStack(alignment: .top) {
-                    Text(parent?.name ?? "")
+                    Text((parent?.name ?? "").hasPrefix(".") ? String((parent?.name ?? "").dropFirst(1)) : (parent?.name ?? ""))
                         .foregroundColor(Color.gray)
                     
                     Spacer()
