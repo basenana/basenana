@@ -60,6 +60,7 @@ struct DocumentDetailModel: Codable, Identifiable, Hashable{
 struct Docfilter {
     var unread: Bool?
     var marked: Bool?
+    var parentId: Int64?
 }
 
 struct DocumentOrder {

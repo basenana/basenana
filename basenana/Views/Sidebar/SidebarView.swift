@@ -26,7 +26,7 @@ struct SidebarView: View {
             }
             
             NavigationLink {
-                UnreadView()
+                DocumentView(filter: Docfilter(unread: true)).id("unread")
                     .toolbar(removing: .sidebarToggle)
                     .navigationTitle("Unread")
             } label: {
@@ -38,7 +38,7 @@ struct SidebarView: View {
             }
             
             NavigationLink {
-                MarkedView()
+                DocumentView(filter: Docfilter(marked: true)).id("marked")
                     .toolbar(removing: .sidebarToggle)
                     .navigationTitle("Marked")
             } label: {
