@@ -82,7 +82,7 @@ struct GroupView: View{
                         .onAppear{
                             Task.detached{
                                 groupChileren = entryService.listChildren(parentEntryID: groupID, order: EntryOrder(order: EnOrder.modifiedAt, desc: true))
-                                let docs = documentService.listDocuments(filter: Docfilter(parentId: groupID))
+                                let docs = documentService.listDocuments(filter: Docfilter(parentId: groupID), pages: Pagination(page: -1, pageSize: 20))
                                 for doc in docs {
                                     docMaps[doc.oid] = doc
                                 }
