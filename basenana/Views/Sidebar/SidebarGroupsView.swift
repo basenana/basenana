@@ -43,14 +43,17 @@ struct SidebarGroupsView: View {
                 }
             }
         }
-        .alert("Confirm Delete \(entryToDelete?.groupName ?? "") ?", isPresented: $showAlert) {
-            Button("Confirm", role: .destructive) {
-                if let entryId = entryToDelete?.groupID {
-                    Task.detached { entryService.deleteEntry(entryId: entryId) }
-                }
-            }
-            
-            Button("Cancel", role: .cancel) {}
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text("Confirm Delete"),
+                message: Text("Are you sure delete \"\(entryToDelete?.groupName ?? "")\" ?"),
+                primaryButton: .destructive(Text("Delete")) {
+                    if let entryId = entryToDelete?.groupID {
+                        Task.detached { entryService.deleteEntry(entryId: entryId) }
+                    }
+                },
+                secondaryButton: .cancel()
+            )
         }
     }
     
