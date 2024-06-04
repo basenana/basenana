@@ -33,10 +33,12 @@ struct DocumentView: View {
                             if let docId = selectedId {
                                 if let selected = docMaps[docId] {
                                     DocumentDetailView(entryId: selected.oid)
+                                        .id("\(selected.oid)/doc")
                                 }
                             }
                         } label: {
                             DocumentItemView(doc: document, unreadPage: true)
+                                .id("\(selected.oid)/docitem")
                         }
                         
                         if self.isLoading && self.docs.isLastItem(document) {
@@ -132,6 +134,7 @@ struct DocumentView: View {
             }
         } else {
             DocumentDetailView(entryId: searchEntry!)
+                .id("\(String(describing: searchEntry))/doc")
                 .layoutPriority(1)
         }
     }

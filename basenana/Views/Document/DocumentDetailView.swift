@@ -37,6 +37,7 @@ struct DocumentDetailView: View {
                             if isDrawerOpen{
                                 // dialogue body
                                 DialogueView(isDrawerOpen: $isDrawerOpen, docId: document.id, entryId: document.oid)
+                                    .id("\(document.oid)/room")
                                     .frame(minWidth:200, idealWidth: 200, maxWidth: .infinity)
                             }
                             

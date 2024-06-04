@@ -37,13 +37,16 @@ struct DialogueView: View {
                     
                     if ingestState != "finish"{
                          IngestButtonView(ingestState: $ingestState, entryId: entryId)
+                              .id("\(String(describing: room?.id))/ingestButton")
                     }
                     
                     // button of eraser ..
                     EraserButtonView(isEraserHovering: isEraserHovering, messages: $messages, roomId: room?.id ?? 0)
+                         .id("\(String(describing: room?.id))/eraserButton")
                     
                     // button of close ..
                     CloseButtonView(isCloseHovering: isCloseHovering, isDrawerOpen: $isDrawerOpen)
+                         .id("\(String(describing: room?.id))/closeButton")
                }
                .onAppear{
                     if let entry = entryService.getEntry(entryID: entryId) {

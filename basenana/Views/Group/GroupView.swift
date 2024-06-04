@@ -87,12 +87,14 @@ struct GroupView: View{
                         if selection.count == 1 {
                             if let unwrappedID = selection.first {
                                 DocumentDetailView(entryId: unwrappedID)
+                                    .id("\(unwrappedID)/doc")
                                     .frame(minHeight: 300, idealHeight: geometry.size.height/2)
                                     .layoutPriority(1)
                             }
                         }
                     } else {
                         DocumentDetailView(entryId: searchEntry!)
+                            .id("\(String(describing: searchEntry))/doc")
                     }
                 }
                 .layoutPriority(1)
