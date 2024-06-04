@@ -29,6 +29,7 @@ struct MainView: View{
             }detail: {
                 if searchEntry != nil{
                     DocumentDetailView(entryId: searchEntry!)
+                        .id("\(String(describing: searchEntry))/doc")
                 }
             }
             .searchable(text: $search) {
