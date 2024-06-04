@@ -171,7 +171,7 @@ class EntryService {
             let response = try call.response.wait()
             var entries: [EntryInfoModel]=[]
             for entry in response.entries {
-                entries.append(entryInfo2Model(en: entry))
+                if !entry.name.hasPrefix(".") { entries.append(entryInfo2Model(en: entry)) }
             }
             
             return entries
