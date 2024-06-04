@@ -135,6 +135,37 @@ class DocumentService {
         
     }
     
+    func listDocumentGroups(parentId: Int64?, filter: Docfilter?) -> [EntryInfoModel] {
+        do {
+            var request = Api_V1_GetDocumentParentsRequest()
+            if let f = filter {
+                request.filter = Api_V1_DocumentFilter()
+                if let marked = f.marked {
+                    request.filter.marked = marked
+                }
+                if let unread = f.unread {
+                    request.filter.unread = unread
+                }
+            }
+            if let pId = parentId {
+                request.parentID = pId
+            }
+
+            let call = clientSet?.document.getDocumentParents(request, callOptions: defaultCallOptions)
+            let response =  try call?.response.wait()
+            
+            var ens: [EntryInfoModel] = []
+            for en in response?.entries ?? [] {
+                ens.append(entryService.entryInfo2Model(en: en))
+            }
+            return ens
+        } catch {
+            log.error("[documentService] list docuemnt failed \(error)")
+            return []
+        }
+
+    }
+    
     func docDetail2Model(doc: Api_V1_DocumentDescribe) -> DocumentDetailModel {
         return DocumentDetailModel(
             id: doc.id, oid: doc.entryID, parentId: doc.parentEntryID, name: doc.name, namespace: doc.namespace, source: doc.source,

@@ -11,7 +11,6 @@ import SwiftData
 struct GroupView: View{
     var groupID: Int64
     @State private var groupChileren: [EntryInfoModel] = []
-    @State private var docMaps: [Int64:DocumentInfoModel] = [:]
     @State private var selection: Set<EntryInfoModel.ID> = []
     @State var order: [KeyPathComparator<EntryInfoModel>] = [.init(\.name, order: .forward)]
     
@@ -50,12 +49,13 @@ struct GroupView: View{
                             }
                         } rows: {
                             ForEach(groupChileren, id: \.id) { child in
-                                let childDoc = docMaps[child.id]
                                 TableRow(child)
                                     .contextMenu {
-                                        if let doc = childDoc {
-                                            DocumentButtonView(doc: doc).id(doc.id)
-                                            Divider()
+                                        if let unwrappedID = selection.first {
+                                            if let doc = documentService.getDocument(entryId: unwrappedID) {
+                                                DocumentButtonView(doc: documentService.docDetail2Info(doc: doc)).id(doc.id)
+                                                Divider()
+                                            }
                                         }
                                         
                                         Button(action: {
@@ -82,10 +82,6 @@ struct GroupView: View{
                         .onAppear{
                             Task.detached{
                                 groupChileren = entryService.listChildren(parentEntryID: groupID, order: EntryOrder(order: EnOrder.modifiedAt, desc: true))
-                                let docs = documentService.listDocuments(filter: Docfilter(parentId: groupID), pages: Pagination(page: -1, pageSize: 20))
-                                for doc in docs {
-                                    docMaps[doc.oid] = doc
-                                }
                             }
                         }
                         .onChange(of: order){
