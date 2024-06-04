@@ -11,6 +11,7 @@ import SwiftData
 struct GroupView: View{
     var groupID: Int64
     @State private var groupChileren: [EntryInfoModel] = []
+    @State private var docMaps: [Int64:DocumentInfoModel] = [:]
     @State private var selection: Set<EntryInfoModel.ID> = []
     @State var order: [KeyPathComparator<EntryInfoModel>] = [.init(\.name, order: .forward)]
     
@@ -49,11 +50,11 @@ struct GroupView: View{
                             }
                         } rows: {
                             ForEach(groupChileren, id: \.id) { child in
-                                let childDoc = documentService.getDocument(entryId: child.id)
+                                let childDoc = docMaps[child.id]
                                 TableRow(child)
                                     .contextMenu {
                                         if let doc = childDoc {
-                                            DocumentButtonView(doc: documentService.docDetail2Info(doc: doc)).id(doc.id)
+                                            DocumentButtonView(doc: doc).id(doc.id)
                                             Divider()
                                         }
                                         
@@ -81,6 +82,10 @@ struct GroupView: View{
                         .onAppear{
                             Task.detached{
                                 groupChileren = entryService.listChildren(parentEntryID: groupID, order: EntryOrder(order: EnOrder.modifiedAt, desc: true))
+                                let docs = documentService.listDocuments(filter: Docfilter(parentId: groupID))
+                                for doc in docs {
+                                    docMaps[doc.oid] = doc
+                                }
                             }
                         }
                         .onChange(of: order){
@@ -89,14 +94,17 @@ struct GroupView: View{
                             }
                         }
                         .frame(minHeight: 200, maxHeight: .infinity)
-                        .alert("Confirm Delete \(entryToDelete?.name ?? "") ?", isPresented: $showAlert) {
-                            Button("Confirm", role: .destructive) {
-                                if let entryId = entryToDelete?.id {
-                                    Task.detached { entryService.deleteEntry(entryId: entryId) }
-                                }
-                            }
-                            
-                            Button("Cancel", role: .cancel) {}
+                        .alert(isPresented: $showAlert) {
+                            Alert(
+                                title: Text("Confirm Delete"),
+                                message: Text("Are you sure delete \"\(entryToDelete?.name ?? "")\" ?"),
+                                primaryButton: .destructive(Text("Delete")) {
+                                    if let entryId = entryToDelete?.id {
+                                        Task.detached { entryService.deleteEntry(entryId: entryId) }
+                                    }
+                                },
+                                secondaryButton: .cancel()
+                            )
                         }
                         
                         
