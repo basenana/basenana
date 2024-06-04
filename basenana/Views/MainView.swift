@@ -11,6 +11,7 @@ import SwiftUI
 struct MainView: View{
     
     @State private var search: String = ""
+    @State private var searchEntry: Int64? = nil
     
     init(){
         setupLogging()
@@ -23,11 +24,28 @@ struct MainView: View{
             SettingsView()
         }else {
             NavigationSplitView {
-                SidebarView()
+                SidebarView(searchEntry: $searchEntry)
                     .frame(minWidth: 180,idealWidth: 200)
             }detail: {
+                if searchEntry != nil{
+                    DocumentDetailView(entryId: searchEntry!)
+                }
             }
-            .searchable(text: $search) {}
+            .searchable(text: $search) {
+                let docs = documentService.searchDocument(search: search)
+                ForEach(docs, id: \.id) { doc in
+                    Button {
+                        searchEntry = doc.oid
+                    } label: {
+                        Label(doc.name, systemImage: "doc.text")
+                    }
+                }
+            }
+            .onChange(of: search) {
+                if search.isEmpty {
+                    searchEntry = nil
+                }
+            }
         }
     }
 }

@@ -11,11 +11,13 @@ import SwiftData
 
 struct SidebarView: View {
     @State var selection = Set<GroupViewModel.ID>()
-    
+    @State private var search: String = ""
+    @Binding var searchEntry: Int64?
+
     var body: some View {
         List(selection: $selection){
             NavigationLink {
-                GroupView(groupID: inboxEntryID).id(inboxEntryID)
+                GroupView(groupID: inboxEntryID, searchEntry: $searchEntry).id(inboxEntryID)
                     .navigationTitle("Inbox")
             } label: {
                 HStack{
@@ -26,7 +28,7 @@ struct SidebarView: View {
             }
             
             NavigationLink {
-                DocumentView(filter: Docfilter(unread: true)).id("unread")
+                DocumentView(filter: Docfilter(unread: true), searchEntry: $searchEntry).id("unread")
                     .toolbar(removing: .sidebarToggle)
                     .navigationTitle("Unread")
             } label: {
@@ -38,7 +40,7 @@ struct SidebarView: View {
             }
             
             NavigationLink {
-                DocumentView(filter: Docfilter(marked: true)).id("marked")
+                DocumentView(filter: Docfilter(marked: true), searchEntry: $searchEntry).id("marked")
                     .toolbar(removing: .sidebarToggle)
                     .navigationTitle("Marked")
             } label: {
@@ -49,7 +51,7 @@ struct SidebarView: View {
                     .padding(.vertical, 5)
             }
             Section("GROUPS"){
-                SidebarGroupsView()
+                SidebarGroupsView(searchEntry: $searchEntry)
             }
             .onAppear{
                 Task.detached{
@@ -63,5 +65,5 @@ struct SidebarView: View {
 }
 
 #Preview {
-    return SidebarView()
+    return SidebarView( searchEntry: .constant(nil))
 }
