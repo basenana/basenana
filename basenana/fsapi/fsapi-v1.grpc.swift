@@ -1443,6 +1443,11 @@ internal protocol Api_V1_DocumentClientProtocol: GRPCClient {
     callOptions: CallOptions?
   ) -> UnaryCall<Api_V1_ListDocumentsRequest, Api_V1_ListDocumentsResponse>
 
+  func getDocumentParents(
+    _ request: Api_V1_GetDocumentParentsRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Api_V1_GetDocumentParentsRequest, Api_V1_GetDocumentParentsResponse>
+
   func getDocumentDetail(
     _ request: Api_V1_GetDocumentDetailRequest,
     callOptions: CallOptions?
@@ -1479,6 +1484,24 @@ extension Api_V1_DocumentClientProtocol {
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeListDocumentsInterceptors() ?? []
+    )
+  }
+
+  /// Unary call to GetDocumentParents
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to GetDocumentParents.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  internal func getDocumentParents(
+    _ request: Api_V1_GetDocumentParentsRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Api_V1_GetDocumentParentsRequest, Api_V1_GetDocumentParentsResponse> {
+    return self.makeUnaryCall(
+      path: Api_V1_DocumentClientMetadata.Methods.getDocumentParents.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetDocumentParentsInterceptors() ?? []
     )
   }
 
@@ -1604,6 +1627,11 @@ internal protocol Api_V1_DocumentAsyncClientProtocol: GRPCClient {
     callOptions: CallOptions?
   ) -> GRPCAsyncUnaryCall<Api_V1_ListDocumentsRequest, Api_V1_ListDocumentsResponse>
 
+  func makeGetDocumentParentsCall(
+    _ request: Api_V1_GetDocumentParentsRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Api_V1_GetDocumentParentsRequest, Api_V1_GetDocumentParentsResponse>
+
   func makeGetDocumentDetailCall(
     _ request: Api_V1_GetDocumentDetailRequest,
     callOptions: CallOptions?
@@ -1639,6 +1667,18 @@ extension Api_V1_DocumentAsyncClientProtocol {
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeListDocumentsInterceptors() ?? []
+    )
+  }
+
+  internal func makeGetDocumentParentsCall(
+    _ request: Api_V1_GetDocumentParentsRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Api_V1_GetDocumentParentsRequest, Api_V1_GetDocumentParentsResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Api_V1_DocumentClientMetadata.Methods.getDocumentParents.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetDocumentParentsInterceptors() ?? []
     )
   }
 
@@ -1690,6 +1730,18 @@ extension Api_V1_DocumentAsyncClientProtocol {
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeListDocumentsInterceptors() ?? []
+    )
+  }
+
+  internal func getDocumentParents(
+    _ request: Api_V1_GetDocumentParentsRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Api_V1_GetDocumentParentsResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Api_V1_DocumentClientMetadata.Methods.getDocumentParents.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetDocumentParentsInterceptors() ?? []
     )
   }
 
@@ -1752,6 +1804,9 @@ internal protocol Api_V1_DocumentClientInterceptorFactoryProtocol: Sendable {
   /// - Returns: Interceptors to use when invoking 'listDocuments'.
   func makeListDocumentsInterceptors() -> [ClientInterceptor<Api_V1_ListDocumentsRequest, Api_V1_ListDocumentsResponse>]
 
+  /// - Returns: Interceptors to use when invoking 'getDocumentParents'.
+  func makeGetDocumentParentsInterceptors() -> [ClientInterceptor<Api_V1_GetDocumentParentsRequest, Api_V1_GetDocumentParentsResponse>]
+
   /// - Returns: Interceptors to use when invoking 'getDocumentDetail'.
   func makeGetDocumentDetailInterceptors() -> [ClientInterceptor<Api_V1_GetDocumentDetailRequest, Api_V1_GetDocumentDetailResponse>]
 
@@ -1768,6 +1823,7 @@ internal enum Api_V1_DocumentClientMetadata {
     fullName: "api.v1.Document",
     methods: [
       Api_V1_DocumentClientMetadata.Methods.listDocuments,
+      Api_V1_DocumentClientMetadata.Methods.getDocumentParents,
       Api_V1_DocumentClientMetadata.Methods.getDocumentDetail,
       Api_V1_DocumentClientMetadata.Methods.updateDocument,
       Api_V1_DocumentClientMetadata.Methods.searchDocuments,
@@ -1778,6 +1834,12 @@ internal enum Api_V1_DocumentClientMetadata {
     internal static let listDocuments = GRPCMethodDescriptor(
       name: "ListDocuments",
       path: "/api.v1.Document/ListDocuments",
+      type: GRPCCallType.unary
+    )
+
+    internal static let getDocumentParents = GRPCMethodDescriptor(
+      name: "GetDocumentParents",
+      path: "/api.v1.Document/GetDocumentParents",
       type: GRPCCallType.unary
     )
 
@@ -3604,6 +3666,8 @@ internal protocol Api_V1_DocumentProvider: CallHandlerProvider {
 
   func listDocuments(request: Api_V1_ListDocumentsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_ListDocumentsResponse>
 
+  func getDocumentParents(request: Api_V1_GetDocumentParentsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_GetDocumentParentsResponse>
+
   func getDocumentDetail(request: Api_V1_GetDocumentDetailRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_GetDocumentDetailResponse>
 
   func updateDocument(request: Api_V1_UpdateDocumentRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_UpdateDocumentResponse>
@@ -3630,6 +3694,15 @@ extension Api_V1_DocumentProvider {
         responseSerializer: ProtobufSerializer<Api_V1_ListDocumentsResponse>(),
         interceptors: self.interceptors?.makeListDocumentsInterceptors() ?? [],
         userFunction: self.listDocuments(request:context:)
+      )
+
+    case "GetDocumentParents":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_GetDocumentParentsRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_GetDocumentParentsResponse>(),
+        interceptors: self.interceptors?.makeGetDocumentParentsInterceptors() ?? [],
+        userFunction: self.getDocumentParents(request:context:)
       )
 
     case "GetDocumentDetail":
@@ -3676,6 +3749,11 @@ internal protocol Api_V1_DocumentAsyncProvider: CallHandlerProvider, Sendable {
     context: GRPCAsyncServerCallContext
   ) async throws -> Api_V1_ListDocumentsResponse
 
+  func getDocumentParents(
+    request: Api_V1_GetDocumentParentsRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Api_V1_GetDocumentParentsResponse
+
   func getDocumentDetail(
     request: Api_V1_GetDocumentDetailRequest,
     context: GRPCAsyncServerCallContext
@@ -3720,6 +3798,15 @@ extension Api_V1_DocumentAsyncProvider {
         wrapping: { try await self.listDocuments(request: $0, context: $1) }
       )
 
+    case "GetDocumentParents":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_GetDocumentParentsRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_GetDocumentParentsResponse>(),
+        interceptors: self.interceptors?.makeGetDocumentParentsInterceptors() ?? [],
+        wrapping: { try await self.getDocumentParents(request: $0, context: $1) }
+      )
+
     case "GetDocumentDetail":
       return GRPCAsyncServerHandler(
         context: context,
@@ -3759,6 +3846,10 @@ internal protocol Api_V1_DocumentServerInterceptorFactoryProtocol: Sendable {
   ///   Defaults to calling `self.makeInterceptors()`.
   func makeListDocumentsInterceptors() -> [ServerInterceptor<Api_V1_ListDocumentsRequest, Api_V1_ListDocumentsResponse>]
 
+  /// - Returns: Interceptors to use when handling 'getDocumentParents'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetDocumentParentsInterceptors() -> [ServerInterceptor<Api_V1_GetDocumentParentsRequest, Api_V1_GetDocumentParentsResponse>]
+
   /// - Returns: Interceptors to use when handling 'getDocumentDetail'.
   ///   Defaults to calling `self.makeInterceptors()`.
   func makeGetDocumentDetailInterceptors() -> [ServerInterceptor<Api_V1_GetDocumentDetailRequest, Api_V1_GetDocumentDetailResponse>]
@@ -3778,6 +3869,7 @@ internal enum Api_V1_DocumentServerMetadata {
     fullName: "api.v1.Document",
     methods: [
       Api_V1_DocumentServerMetadata.Methods.listDocuments,
+      Api_V1_DocumentServerMetadata.Methods.getDocumentParents,
       Api_V1_DocumentServerMetadata.Methods.getDocumentDetail,
       Api_V1_DocumentServerMetadata.Methods.updateDocument,
       Api_V1_DocumentServerMetadata.Methods.searchDocuments,
@@ -3788,6 +3880,12 @@ internal enum Api_V1_DocumentServerMetadata {
     internal static let listDocuments = GRPCMethodDescriptor(
       name: "ListDocuments",
       path: "/api.v1.Document/ListDocuments",
+      type: GRPCCallType.unary
+    )
+
+    internal static let getDocumentParents = GRPCMethodDescriptor(
+      name: "GetDocumentParents",
+      path: "/api.v1.Document/GetDocumentParents",
       type: GRPCCallType.unary
     )
 

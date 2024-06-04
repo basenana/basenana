@@ -17,7 +17,7 @@ struct DocumentView: View {
     
     @State private var parentNames: [String] = []
     @State private var parentSelected: String?
-    @State private var parentMaps: [String:GroupViewModel] = [:]
+    @State private var parentMaps: [String:EntryInfoModel] = [:]
     
     @State private var isLoading: Bool = false
     @State private var page: Int = 1
@@ -71,16 +71,11 @@ struct DocumentView: View {
                 .onAppear{
                     Task.detached{
                         loadNextPageDocuments()
-                        let groups = getLeafs(groupPrefix: "", group: GroupRoot)
+                        let groups = documentService.listDocumentGroups(parentId: nil, filter: filter)
                         for group in groups {
-                            var groupName = group.groupName
-                            if group.prefix != nil && group.prefix != "" {
-                                groupName = "\(group.prefix ?? "")/\(group.groupName)"
-                            }
-                            parentNames.append(groupName)
-                            parentMaps[groupName] = group
+                            parentNames.append(group.name)
+                            parentMaps[group.name] = group
                         }
-                        
                     }
                 }
                 .onChange(of: selectedId) {
@@ -124,12 +119,12 @@ struct DocumentView: View {
     }
     
     private func loadNextPageDocuments() {
-        var parent: GroupViewModel?
+        var parent: EntryInfoModel?
         if let parentNameSelect = parentSelected {
             parent = parentMaps[parentNameSelect]
         }
         var f = self.filter
-        f.parentId = parent?.groupID
+        f.parentId = parent?.id
         let moreDocs = documentService.listDocuments(
             filter: f,
             order: DocumentOrder(order: DocOrder.createAt, desc: true),

@@ -1033,6 +1033,41 @@ extension Api_V1_ListDocumentsRequest.DocumentOrder: CaseIterable {
 
 #endif  // swift(>=4.2)
 
+struct Api_V1_GetDocumentParentsRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var parentID: Int64 = 0
+
+  var filter: Api_V1_DocumentFilter {
+    get {return _filter ?? Api_V1_DocumentFilter()}
+    set {_filter = newValue}
+  }
+  /// Returns true if `filter` has been explicitly set.
+  var hasFilter: Bool {return self._filter != nil}
+  /// Clears the value of `filter`. Subsequent reads from it will return its default value.
+  mutating func clearFilter() {self._filter = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+
+  fileprivate var _filter: Api_V1_DocumentFilter? = nil
+}
+
+struct Api_V1_GetDocumentParentsResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var entries: [Api_V1_EntryInfo] = []
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
 struct Api_V1_ListDocumentsResponse {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -2081,6 +2116,8 @@ extension Api_V1_DeletePropertyResponse: @unchecked Sendable {}
 extension Api_V1_DocumentFilter: @unchecked Sendable {}
 extension Api_V1_ListDocumentsRequest: @unchecked Sendable {}
 extension Api_V1_ListDocumentsRequest.DocumentOrder: @unchecked Sendable {}
+extension Api_V1_GetDocumentParentsRequest: @unchecked Sendable {}
+extension Api_V1_GetDocumentParentsResponse: @unchecked Sendable {}
 extension Api_V1_ListDocumentsResponse: @unchecked Sendable {}
 extension Api_V1_GetDocumentDetailRequest: @unchecked Sendable {}
 extension Api_V1_GetDocumentDetailResponse: @unchecked Sendable {}
@@ -3803,6 +3840,80 @@ extension Api_V1_ListDocumentsRequest.DocumentOrder: SwiftProtobuf._ProtoNamePro
     3: .same(proto: "Unread"),
     4: .same(proto: "CreatedAt"),
   ]
+}
+
+extension Api_V1_GetDocumentParentsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".GetDocumentParentsRequest"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "parentId"),
+    10: .same(proto: "filter"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularInt64Field(value: &self.parentID) }()
+      case 10: try { try decoder.decodeSingularMessageField(value: &self._filter) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if self.parentID != 0 {
+      try visitor.visitSingularInt64Field(value: self.parentID, fieldNumber: 1)
+    }
+    try { if let v = self._filter {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_GetDocumentParentsRequest, rhs: Api_V1_GetDocumentParentsRequest) -> Bool {
+    if lhs.parentID != rhs.parentID {return false}
+    if lhs._filter != rhs._filter {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_GetDocumentParentsResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".GetDocumentParentsResponse"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "entries"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeRepeatedMessageField(value: &self.entries) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.entries.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.entries, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_GetDocumentParentsResponse, rhs: Api_V1_GetDocumentParentsResponse) -> Bool {
+    if lhs.entries != rhs.entries {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
 }
 
 extension Api_V1_ListDocumentsResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
