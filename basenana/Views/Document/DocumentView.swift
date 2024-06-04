@@ -54,34 +54,7 @@ struct DocumentView: View {
                     }
                 }
                 .contextMenu{
-                    if let select = docMaps[selectedId ?? 0] {
-                        Button {
-                            withAnimation(.easeInOut) {
-                                documentService.updateDocument(docUpdate: DocumentUpdate(docId: selectedId!, unread: !select.unread))
-                            }
-                        } label: {
-                            if select.unread {
-                                Image(systemName: "circle").resizable().frame(width: 1, height: 1)
-                                Text("Read")
-                            }else{
-                                Image(systemName: "circle.fill").resizable().frame(width: 1, height: 1)
-                                Text("Unread")
-                            }
-                        }
-                        Button {
-                            withAnimation(.easeInOut) {
-                                documentService.updateDocument(docUpdate: DocumentUpdate(docId: selectedId!, marked: !select.marked))
-                            }
-                        } label: {
-                            if select.marked {
-                                Image(systemName: "star").resizable().frame(width: 1, height: 1)
-                                Text("Unmark")
-                            }else{
-                                Image(systemName: "star.fill").resizable().frame(width: 1, height: 1)
-                                Text("Mark")
-                            }
-                        }
-                    }
+                    if let select = docMaps[selectedId ?? 0] { DocumentButtonView(doc: select).id(select.id) }
                 }
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {

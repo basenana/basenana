@@ -39,6 +39,36 @@ class EntryService {
         }
     }
     
+    func createGroup(groupName: String, parentId: Int64) {
+        var request = Api_V1_CreateEntryRequest()
+        request.kind = "group"
+        request.name = groupName
+        request.parentID = parentId
+        
+        let call = clientSet?.entries.createEntry(request, callOptions: defaultCallOptions)
+        
+        do {
+            let _ = try call?.response.wait()
+            GroupRoot.updateAt = Date()
+        } catch {
+            log.error("[entryService] create group failed \(error)")
+        }
+    }
+    
+    func deleteEntry(entryId: Int64) {
+        var request = Api_V1_DeleteEntryRequest()
+        request.entryID = entryId
+        
+        let call = clientSet?.entries.deleteEntry(request, callOptions: defaultCallOptions)
+        
+        do {
+            let _ = try call?.response.wait()
+            GroupRoot.updateAt = Date()
+        } catch {
+            log.error("[entryService] delete entry failed \(error)")
+        }
+    }
+
     func getEntry(entryID: Int64) -> EntryDetailModel? {
         do {
             var request = Api_V1_GetEntryDetailRequest()

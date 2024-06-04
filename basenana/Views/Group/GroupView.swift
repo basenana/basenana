@@ -12,10 +12,12 @@ struct GroupView: View{
     var groupID: Int64
     @State private var groupChileren: [EntryInfoModel] = []
     @State private var selection: Set<EntryInfoModel.ID> = []
-    @State private var selectedDoc: DocumentInfoModel? = nil
     @State var order: [KeyPathComparator<EntryInfoModel>] = [.init(\.name, order: .forward)]
     
     @Binding var searchEntry: Int64?
+    
+    @State private var showAlert = false
+    @State private var entryToDelete: EntryInfoModel? = nil
     
     var body: some View {
         GeometryReader { geometry in
@@ -46,17 +48,21 @@ struct GroupView: View{
                                 Text("\($0.modifiedAt, format: Date.FormatStyle(date: .numeric, time: .standard))")
                             }
                         } rows: {
-                            ForEach(groupChileren) { child in
+                            ForEach(groupChileren, id: \.id) { child in
+                                let childDoc = documentService.getDocument(entryId: child.id)
                                 TableRow(child)
                                     .contextMenu {
-                                        Button("Edit") {
-                                            // TODO open editor in inspector
+                                        if let doc = childDoc {
+                                            DocumentButtonView(doc: documentService.docDetail2Info(doc: doc)).id(doc.id)
+                                            Divider()
                                         }
-                                        Button("See Details") {
-                                            // TODO open detai view
-                                        }
-                                        Divider()
-                                        Button("Delete", role: .destructive) {
+                                        
+                                        Button(action: {
+                                            showAlert = true
+                                            entryToDelete = child
+                                        }) {
+                                            Text("Delete")
+                                            Image(systemName: "trash")
                                         }
                                     }
                                     .draggable(IDHelper(kind: child.isGroup ? "group" : "entry", id: child.id).Encode())
@@ -83,6 +89,16 @@ struct GroupView: View{
                             }
                         }
                         .frame(minHeight: 200, maxHeight: .infinity)
+                        .alert("Confirm Delete \(entryToDelete?.name ?? "") ?", isPresented: $showAlert) {
+                            Button("Confirm", role: .destructive) {
+                                if let entryId = entryToDelete?.id {
+                                    Task.detached { entryService.deleteEntry(entryId: entryId) }
+                                }
+                            }
+                            
+                            Button("Cancel", role: .cancel) {}
+                        }
+                        
                         
                         if selection.count == 1 {
                             if let unwrappedID = selection.first {

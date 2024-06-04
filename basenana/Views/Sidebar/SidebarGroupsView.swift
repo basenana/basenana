@@ -10,6 +10,9 @@ import SwiftUI
 struct SidebarGroupsView: View {
     @Binding var searchEntry: Int64?
     
+    @State private var showAlert = false
+    @State private var entryToDelete: GroupViewModel? = nil
+    
     var body: some View {
         OutlineGroup(GroupRoot.children ?? [], children: \.children){ child in
             NavigationLink {
@@ -30,21 +33,24 @@ struct SidebarGroupsView: View {
                 return false
             }
             .draggable(IDHelper(kind: "group", id: child.groupID).Encode())
+            .contextMenu {
+                Button(action: {
+                    showAlert = true
+                    entryToDelete = child
+                }) {
+                    Text("Delete")
+                    Image(systemName: "trash")
+                }
+            }
         }
-        .contextMenu {
-            Button(action: {
-                // perform some action
-            }) {
-                Text("Button 1")
-                Image(systemName: "1.circle")
+        .alert("Confirm Delete \(entryToDelete?.groupName ?? "") ?", isPresented: $showAlert) {
+            Button("Confirm", role: .destructive) {
+                if let entryId = entryToDelete?.groupID {
+                    Task.detached { entryService.deleteEntry(entryId: entryId) }
+                }
             }
             
-            Button(action: {
-                // perform some action
-            }) {
-                Text("Button 2")
-                Image(systemName: "2.circle")
-            }
+            Button("Cancel", role: .cancel) {}
         }
     }
     
