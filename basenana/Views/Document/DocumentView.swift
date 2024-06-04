@@ -38,7 +38,7 @@ struct DocumentView: View {
                             }
                         } label: {
                             DocumentItemView(doc: document, unreadPage: true)
-                                .id("\(selected.oid)/docitem")
+                                .id("\(document.oid)/docitem")
                         }
                         
                         if self.isLoading && self.docs.isLastItem(document) {
