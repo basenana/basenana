@@ -22,7 +22,7 @@ class DocumentService {
         
         do {
             let response = try call.response.wait()
-            return DocDetail2Model(doc: response.document)
+            return docDetail2Model(doc: response.document)
         } catch{
             log.error("[documentService] get document detail failed \(error)")
             return nil
@@ -69,7 +69,7 @@ class DocumentService {
             let documents = response!.documents
             var docs: [DocumentInfoModel] = []
             for doc in documents {
-                docs.append(DocInfo2Model(doc: doc))
+                docs.append(docInfo2Model(doc: doc))
             }
             return docs
         } catch {
@@ -125,7 +125,7 @@ class DocumentService {
             var docs: [DocumentInfoModel] = []
             
             for d in response.documents {
-                docs.append(DocInfo2Model(doc: d))
+                docs.append(docInfo2Model(doc: d))
             }
             return docs
         } catch {
@@ -135,17 +135,24 @@ class DocumentService {
         
     }
     
-    func DocDetail2Model(doc: Api_V1_DocumentDescribe) -> DocumentDetailModel {
+    func docDetail2Model(doc: Api_V1_DocumentDescribe) -> DocumentDetailModel {
         return DocumentDetailModel(
             id: doc.id, oid: doc.entryID, parentId: doc.parentEntryID, name: doc.name, namespace: doc.namespace, source: doc.source,
             marked: doc.marked, unread: doc.unread, keyWords: doc.keyWords, content: doc.htmlContent, summary: doc.summary,
             createdAt: doc.createdAt.date, changedAt: doc.changedAt.date)
     }
     
-    func DocInfo2Model(doc: Api_V1_DocumentInfo) -> DocumentInfoModel{
+    func docInfo2Model(doc: Api_V1_DocumentInfo) -> DocumentInfoModel{
         return DocumentInfoModel(
             id: doc.id, oid: doc.entryID, parentId: doc.parentEntryID, name: doc.name, namespace: doc.namespace, source: doc.source,
             marked: doc.marked, unread: doc.unread, subContent: doc.subContent,
             createdAt: doc.createdAt.date, changedAt: doc.changedAt.date)
+    }
+    
+    func docDetail2Info(doc: DocumentDetailModel) -> DocumentInfoModel {
+        return DocumentInfoModel(
+            id: doc.id, oid: doc.oid, parentId: doc.parentId, name: doc.name, namespace: doc.namespace, source: doc.source,
+            marked: doc.marked, unread: doc.unread, subContent: doc.content,
+            createdAt: doc.createdAt, changedAt: doc.changedAt)
     }
 }

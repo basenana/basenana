@@ -11,6 +11,7 @@ struct SidebarButtonView: View {
     
     @Environment(\.colorScheme) var colorScheme
     @State private var showQuickInbox = false
+    @State private var showCreateGroup = false
     @Binding var selection: Set<GroupViewModel.ID>
     
     var body: some View {
@@ -27,21 +28,23 @@ struct SidebarButtonView: View {
             
             Button(action: {
                 if let unwrappedID = selection.first {
-                    let entryId: Int64 = unwrappedID
-                    print("select: \(entryId)")
+                    showCreateGroup = true
                 }
             }, label: {
                 Image(systemName: "folder.badge.plus")
             })
             .buttonStyle(.accessoryBar)
+            .sheet(isPresented: $showCreateGroup){
+                if let unwrappedID = selection.first {
+                    let entryId: Int64 = unwrappedID
+                    let parent = entryService.getEntry(entryID: entryId)
+                    if let p = parent {
+                        GroupCreateView(showCreateGroup: $showCreateGroup, parent: p)
+                    }
+                }
+            }
             
             Spacer()
-//            Button(action: {
-//                syncService.resyncBackground()
-//            }, label: {
-//                Image(systemName: syncStatus.isSyncing ? "arrow.triangle.2.circlepath.icloud" : "checkmark.icloud")
-//            })
-//            .buttonStyle(.accessoryBar)
         })
         .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/,alignment: .leading)
         .padding(5)

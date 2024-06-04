@@ -88,6 +88,10 @@
 		ED54F0542C0D808700EE2C2E /* DocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED54F0532C0D808700EE2C2E /* DocumentView.swift */; };
 		ED54F0552C0D81C600EE2C2E /* DocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED54F0532C0D808700EE2C2E /* DocumentView.swift */; };
 		ED62B1752BE7D82A001AC523 /* EntryPropertyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED62B1742BE7D82A001AC523 /* EntryPropertyModel.swift */; };
+		ED6B17162C0ED30F00FEABE6 /* GroupCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6B17152C0ED30F00FEABE6 /* GroupCreateView.swift */; };
+		ED6B17172C0ED50800FEABE6 /* GroupCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6B17152C0ED30F00FEABE6 /* GroupCreateView.swift */; };
+		ED6B17192C0EE76900FEABE6 /* DocumentButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6B17182C0EE76900FEABE6 /* DocumentButtonView.swift */; };
+		ED6B171A2C0EE80D00FEABE6 /* DocumentButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6B17182C0EE76900FEABE6 /* DocumentButtonView.swift */; };
 		ED72603E2BC2E25D005F1166 /* DialogueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED72603D2BC2E25D005F1166 /* DialogueModel.swift */; };
 		ED7260402BC2E34A005F1166 /* DialogueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED72603F2BC2E34A005F1166 /* DialogueService.swift */; };
 		ED85A3BE2BBAB21A0040598E /* DialogueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED85A3BD2BBAB21A0040598E /* DialogueView.swift */; };
@@ -160,6 +164,8 @@
 		ED47907A2BB129FF00FEA8D4 /* DocumentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentService.swift; sourceTree = "<group>"; };
 		ED54F0532C0D808700EE2C2E /* DocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentView.swift; sourceTree = "<group>"; };
 		ED62B1742BE7D82A001AC523 /* EntryPropertyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryPropertyModel.swift; sourceTree = "<group>"; };
+		ED6B17152C0ED30F00FEABE6 /* GroupCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCreateView.swift; sourceTree = "<group>"; };
+		ED6B17182C0EE76900FEABE6 /* DocumentButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentButtonView.swift; sourceTree = "<group>"; };
 		ED72603D2BC2E25D005F1166 /* DialogueModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueModel.swift; sourceTree = "<group>"; };
 		ED72603F2BC2E34A005F1166 /* DialogueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueService.swift; sourceTree = "<group>"; };
 		ED85A3BD2BBAB21A0040598E /* DialogueView.swift */ = {isa = PBXFileReference; indentWidth = 5; lastKnownFileType = sourcecode.swift; path = DialogueView.swift; sourceTree = "<group>"; };
@@ -385,6 +391,7 @@
 			isa = PBXGroup;
 			children = (
 				3F1BBE582B932251005D533F /* GroupView.swift */,
+				ED6B17152C0ED30F00FEABE6 /* GroupCreateView.swift */,
 			);
 			path = Group;
 			sourceTree = "<group>";
@@ -395,6 +402,7 @@
 				ED85A3C22BBAB3BD0040598E /* DocumentItemView.swift */,
 				EDF504762BEB295700CB4B1C /* DocumentDetailView.swift */,
 				ED54F0532C0D808700EE2C2E /* DocumentView.swift */,
+				ED6B17182C0EE76900FEABE6 /* DocumentButtonView.swift */,
 			);
 			path = Document;
 			sourceTree = "<group>";
@@ -632,11 +640,13 @@
 				EDC5AA7E2C06F7CF003B78AD /* EraserButtonView.swift in Sources */,
 				EDC5AA7C2C06F77C003B78AD /* CloseButtonView.swift in Sources */,
 				3F0AEC762BA48EC7000DA928 /* GroupService.swift in Sources */,
+				ED6B17162C0ED30F00FEABE6 /* GroupCreateView.swift in Sources */,
 				3FB782542BC2D0F600327191 /* fsapi-v1.grpc.swift in Sources */,
 				EDF504772BEB295700CB4B1C /* DocumentDetailView.swift in Sources */,
 				3F4A78E12BD299110035F90F /* SettingsView.swift in Sources */,
 				3F1BBE1D2B8E147F005D533F /* basenanaApp.swift in Sources */,
 				EDC5AA802C06F8FC003B78AD /* IngestButtonView.swift in Sources */,
+				ED6B17192C0EE76900FEABE6 /* DocumentButtonView.swift in Sources */,
 				ED85A3C32BBAB3BD0040598E /* DocumentItemView.swift in Sources */,
 				3F81C9C72BAFCB8900FEE130 /* MainView.swift in Sources */,
 			);
@@ -692,11 +702,13 @@
 				ED0CBB392BF656B90056E6AA /* GroupService.swift in Sources */,
 				EDC5AA842C06F93A003B78AD /* EraserButtonView.swift in Sources */,
 				ED0CBB3A2BF656B90056E6AA /* fsapi-v1.grpc.swift in Sources */,
+				ED6B17172C0ED50800FEABE6 /* GroupCreateView.swift in Sources */,
 				ED0CBB3B2BF656B90056E6AA /* DocumentDetailView.swift in Sources */,
 				ED0CBB3C2BF656B90056E6AA /* SettingsView.swift in Sources */,
 				EDC5AA832C06F933003B78AD /* IngestButtonView.swift in Sources */,
 				ED0CBB3D2BF656B90056E6AA /* basenanaApp.swift in Sources */,
 				ED0CBB3E2BF656B90056E6AA /* DocumentItemView.swift in Sources */,
+				ED6B171A2C0EE80D00FEABE6 /* DocumentButtonView.swift in Sources */,
 				EDC5AA812C06F925003B78AD /* CloseButtonView.swift in Sources */,
 				ED0CBB3F2BF656B90056E6AA /* MainView.swift in Sources */,
 			);
