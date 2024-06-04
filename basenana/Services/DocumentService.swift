@@ -114,6 +114,27 @@ class DocumentService {
         }
     }
     
+    func searchDocument(search: String) -> [DocumentInfoModel] {
+        
+        do {
+            var request = Api_V1_SearchDocumentsRequest()
+            request.query = search
+
+            let call = clientSet!.document.searchDocuments(request, callOptions: defaultCallOptions)
+            let response = try call.response.wait()
+            var docs: [DocumentInfoModel] = []
+            
+            for d in response.documents {
+                docs.append(DocInfo2Model(doc: d))
+            }
+            return docs
+        } catch {
+            log.error("search document failed \(error)")
+            return []
+        }
+        
+    }
+    
     func DocDetail2Model(doc: Api_V1_DocumentDescribe) -> DocumentDetailModel {
         return DocumentDetailModel(
             id: doc.id, oid: doc.entryID, parentId: doc.parentEntryID, name: doc.name, namespace: doc.namespace, source: doc.source,

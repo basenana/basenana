@@ -544,4 +544,3 @@ message Event {
   string refType = 11;
   int64 sequence = 12;
 }
-
