@@ -85,6 +85,19 @@ class EntryService {
         }
     }
     
+    func updateEntry(en: EntryDetailModel) {
+        do {
+            var request = Api_V1_UpdateEntryRequest()
+            request.entry = model2EntryDetail(en: en)
+            let call = clientSet!.entries.updateEntry(request, callOptions: defaultCallOptions)
+            let _ = try call.response.wait()
+            return
+        } catch {
+            log.error("[EntryService] update entry \(en.id) failed \(error)")
+            return
+        }
+    }
+
     func getRoot() -> EntryDetailModel? {
         var req = Api_V1_FindEntryDetailRequest()
         req.root = true
@@ -198,6 +211,14 @@ class EntryService {
         )
     }
     
+    func model2EntryDetail(en: EntryDetailModel) -> Api_V1_EntryDetail {
+        var entry = Api_V1_EntryDetail()
+        entry.id = en.id
+        // update name only
+        entry.name = en.name != "" ? en.name : ""
+        return entry
+    }
+
     func entryInfo2Model(en: Api_V1_EntryInfo) -> EntryInfoModel{
         return EntryInfoModel(
             id: en.id, name: en.name, kind: en.kind, isGroup: en.isGroup, size: en.size,

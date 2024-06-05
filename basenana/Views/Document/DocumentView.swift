@@ -32,7 +32,7 @@ struct DocumentView: View {
                         NavigationLink {
                             if let docId = selectedId {
                                 if let selected = docMaps[docId] {
-                                    DocumentDetailView(entryId: selected.oid)
+                                    DocumentDetailView(entryId: selected.oid, doc: nil)
                                         .id("\(selected.oid)/doc")
                                 }
                             }
@@ -101,7 +101,7 @@ struct DocumentView: View {
             } detail: {
             }
         } else {
-            DocumentDetailView(entryId: searchEntry!)
+            DocumentDetailView(entryId: searchEntry!, doc: nil)
                 .id("\(String(describing: searchEntry))/doc")
                 .layoutPriority(1)
         }

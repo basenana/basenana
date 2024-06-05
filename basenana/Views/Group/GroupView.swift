@@ -12,6 +12,7 @@ struct GroupView: View{
     var groupID: Int64
     @State private var groupChileren: [EntryInfoModel] = []
     @State private var selection: Set<EntryInfoModel.ID> = []
+    @State private var selectDoc: DocumentDetailModel? = nil
     @State var order: [KeyPathComparator<EntryInfoModel>] = [.init(\.name, order: .forward)]
     
     @Binding var searchEntry: Int64?
@@ -51,11 +52,9 @@ struct GroupView: View{
                             ForEach(groupChileren, id: \.id) { child in
                                 TableRow(child)
                                     .contextMenu {
-                                        if let unwrappedID = selection.first {
-                                            if let doc = documentService.getDocument(entryId: unwrappedID) {
-                                                DocumentButtonView(doc: documentService.docDetail2Info(doc: doc)).id(doc.id)
-                                                Divider()
-                                            }
+                                        if let doc = selectDoc {
+                                            DocumentButtonView(doc: documentService.docDetail2Info(doc: doc)).id(doc.id)
+                                            Divider()
                                         }
                                         
                                         Button(action: {
@@ -89,6 +88,11 @@ struct GroupView: View{
                                 groupChileren.sort(using: order)
                             }
                         }
+                        .onChange(of: selection) {
+                            if let unwrappedID = selection.first {
+                                selectDoc = documentService.getDocument(entryId: unwrappedID)
+                            }
+                        }
                         .frame(minHeight: 200, maxHeight: .infinity)
                         .alert(isPresented: $showAlert) {
                             Alert(
@@ -104,16 +108,16 @@ struct GroupView: View{
                         }
                         
                         
-                        if selection.count == 1 {
-                            if let unwrappedID = selection.first {
-                                DocumentDetailView(entryId: unwrappedID)
-                                    .id("\(unwrappedID)/doc")
-                                    .frame(minHeight: 300, idealHeight: geometry.size.height/2)
-                                    .layoutPriority(1)
-                            }
+                        if let doc = selectDoc {
+                            DocumentDetailView(entryId: nil, doc: selectDoc)
+                                .id("\(doc.oid)/doc")
+                                .frame(minHeight: 300, idealHeight: geometry.size.height/2)
+                                .layoutPriority(1)
                         }
-                    } else {
-                        DocumentDetailView(entryId: searchEntry!)
+                    }
+                    
+                    if let searchEn = searchEntry {
+                        DocumentDetailView(entryId: searchEn, doc: nil)
                             .id("\(String(describing: searchEntry))/doc")
                     }
                 }

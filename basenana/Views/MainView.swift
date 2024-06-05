@@ -28,7 +28,7 @@ struct MainView: View{
                     .frame(minWidth: 180,idealWidth: 200)
             }detail: {
                 if searchEntry != nil{
-                    DocumentDetailView(entryId: searchEntry!)
+                    DocumentDetailView(entryId: searchEntry!, doc: nil)
                         .id("\(String(describing: searchEntry))/doc")
                 }
             }
