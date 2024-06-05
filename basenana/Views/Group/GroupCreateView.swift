@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GroupCreateView: View {
     @Binding var showCreateGroup: Bool
-    var parent: EntryDetailModel
+    var parent: EntryDetailModel?
 
     @State private var groupName: String = ""
     @State private var errorMsg: String = ""
@@ -18,7 +18,7 @@ struct GroupCreateView: View {
         Form{
             VStack {
                 VStack(alignment: .leading){
-                    TextField("Parent", text: .constant(parent.name))
+                    TextField("Parent", text: .constant(parent?.name ?? "root"))
                         .textFieldStyle(.squareBorder)
                         .disabled(true)
                         .padding(.vertical, 5)
@@ -36,7 +36,7 @@ struct GroupCreateView: View {
                     }
                     Button {
                         Task.detached {
-                            entryService.createGroup(groupName: groupName, parentId: parent.id)
+                            entryService.createGroup(groupName: groupName, parentId: parent?.id ?? GroupRoot.groupID)
                         }
                         showCreateGroup = false
                     } label: {

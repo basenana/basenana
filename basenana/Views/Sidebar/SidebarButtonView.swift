@@ -27,21 +27,14 @@ struct SidebarButtonView: View {
             }
             
             Button(action: {
-                if let unwrappedID = selection.first {
-                    showCreateGroup = true
-                }
+                showCreateGroup = true
             }, label: {
                 Image(systemName: "folder.badge.plus")
             })
             .buttonStyle(.accessoryBar)
             .sheet(isPresented: $showCreateGroup){
-                if let unwrappedID = selection.first {
-                    let entryId: Int64 = unwrappedID
-                    let parent = entryService.getEntry(entryID: entryId)
-                    if let p = parent {
-                        GroupCreateView(showCreateGroup: $showCreateGroup, parent: p)
-                    }
-                }
+                let p = entryService.getEntry(entryID: selection.first)
+                GroupCreateView(showCreateGroup: $showCreateGroup, parent: p)
             }
             
             Spacer()
