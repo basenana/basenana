@@ -69,10 +69,13 @@ class EntryService {
         }
     }
 
-    func getEntry(entryID: Int64) -> EntryDetailModel? {
+    func getEntry(entryID: Int64?) -> EntryDetailModel? {
+        if entryID == nil {
+            return nil
+        }
         do {
             var request = Api_V1_GetEntryDetailRequest()
-            request.entryID = entryID
+            request.entryID = entryID!
             let call = clientSet!.entries.getEntryDetail(request, callOptions: defaultCallOptions)
             let response = try call.response.wait()
             return entryDetail2Model(en: response.entry, properties: response.properties)
