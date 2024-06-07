@@ -10,15 +10,18 @@ import SwiftData
 
 struct GroupView: View{
     var groupID: Int64
+    @Binding var refreshToggle: Bool
+    @Binding var searchEntry: Int64?
+
     @State private var groupChileren: [EntryInfoModel] = []
     @State private var selection: Set<EntryInfoModel.ID> = []
     @State private var selectDoc: DocumentDetailModel? = nil
     @State var order: [KeyPathComparator<EntryInfoModel>] = [.init(\.name, order: .forward)]
     
-    @Binding var searchEntry: Int64?
-    
     @State private var showAlert = false
-    @State private var entryToDelete: EntryInfoModel? = nil
+    @State private var entriesToDelete: Set<EntryInfoModel.ID> = []
+    
+    @State var selectedMoved = false
     
     var body: some View {
         GeometryReader { geometry in
@@ -27,18 +30,10 @@ struct GroupView: View{
                     if searchEntry == nil {
                         Table(of: EntryInfoModel.self, selection: $selection, sortOrder: $order) {
                             TableColumn("Name", value: \.name) { entry in
-                                if entry.isGroup {
-                                    HStack {
-                                        Image(systemName: "folder")
-                                            .frame(width: 12, alignment: .center)
-                                        Text("\(entry.name)")
-                                    }
-                                } else {
-                                    HStack {
-                                        Image(systemName: "doc.text")
-                                            .frame(width: 12, alignment: .center)
-                                        Text("\(entry.name)")
-                                    }
+                                HStack {
+                                    Image(systemName: entry.isGroup ? "folder" : "doc.text")
+                                        .frame(width: 12, alignment: .center)
+                                    Text("\(entry.name)")
                                 }
                             }
                             TableColumn("Kind", value: \.kind)
@@ -52,14 +47,14 @@ struct GroupView: View{
                             ForEach(groupChileren, id: \.id) { child in
                                 TableRow(child)
                                     .contextMenu {
-                                        if let doc = selectDoc {
+                                        if let doc = selectDoc, selection.count == 1 {
                                             DocumentButtonView(doc: documentService.docDetail2Info(doc: doc)).id(doc.id)
                                             Divider()
                                         }
                                         
                                         Button(action: {
                                             showAlert = true
-                                            entryToDelete = child
+                                            entriesToDelete = selection
                                         }) {
                                             Text("Delete")
                                             Image(systemName: "trash")
@@ -71,11 +66,13 @@ struct GroupView: View{
                                             return
                                         }
                                         groupService.moveEntriesToGroup(entries: parseIDInfo(entryInfos: entryInfos), groupID: child.id)
+                                        refreshToggle.toggle()
                                     }
                             }
                         }
                         .dropDestination(for: String.self){ entryInfos, _ in
                             groupService.moveEntriesToGroup(entries: parseIDInfo(entryInfos: entryInfos), groupID: groupID)
+                            refreshToggle.toggle()
                             return false
                         }
                         .onAppear{
@@ -89,19 +86,22 @@ struct GroupView: View{
                             }
                         }
                         .onChange(of: selection) {
-                            if let unwrappedID = selection.first {
+                            if selection.count == 1, let unwrappedID = selection.first {
                                 selectDoc = documentService.getDocument(entryId: unwrappedID)
+                            }
+                        }
+                        .onChange(of: refreshToggle) {
+                            Task.detached{
+                                groupChileren = entryService.listChildren(parentEntryID: groupID, order: EntryOrder(order: EnOrder.modifiedAt, desc: true))
                             }
                         }
                         .frame(minHeight: 200, maxHeight: .infinity)
                         .alert(isPresented: $showAlert) {
                             Alert(
                                 title: Text("Confirm Delete"),
-                                message: Text("Are you sure delete \"\(entryToDelete?.name ?? "")\" ?"),
+                                message: Text("Are you sure delete these files or folders?"),
                                 primaryButton: .destructive(Text("Delete")) {
-                                    if let entryId = entryToDelete?.id {
-                                        Task.detached { entryService.deleteEntry(entryId: entryId) }
-                                    }
+                                    Task.detached { entryService.deleteEntries(entryIds: Array(entriesToDelete)) }
                                 },
                                 secondaryButton: .cancel()
                             )
@@ -126,4 +126,3 @@ struct GroupView: View{
         }
     }
 }
-

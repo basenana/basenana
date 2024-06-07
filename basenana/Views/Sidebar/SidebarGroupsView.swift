@@ -12,11 +12,12 @@ struct SidebarGroupsView: View {
     
     @State private var showAlert = false
     @State private var entryToDelete: GroupViewModel? = nil
+    @State private var refreshToggle = false
     
     var body: some View {
         OutlineGroup(GroupRoot.children ?? [], children: \.children){ child in
             NavigationLink {
-                GroupView(groupID: child.groupID, searchEntry: $searchEntry)
+                GroupView(groupID: child.groupID, refreshToggle: $refreshToggle, searchEntry: $searchEntry)
                     .id(child.groupID)
                     .navigationTitle(child.groupName)
             } label: {
@@ -30,6 +31,7 @@ struct SidebarGroupsView: View {
             .id(child.groupID)
             .dropDestination(for: String.self){ entryIDInfos, localtion in
                 groupService.moveEntriesToGroup(entries: parseIDInfo(entryInfos: entryIDInfos), groupID: child.groupID)
+                refreshToggle.toggle()
                 return false
             }
             .draggable(IDHelper(kind: "group", id: child.groupID).Encode())

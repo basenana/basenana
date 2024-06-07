@@ -13,7 +13,8 @@ struct SidebarButtonView: View {
     @State private var showQuickInbox = false
     @State private var showCreateGroup = false
     @Binding var selection: Set<GroupViewModel.ID>
-    
+    @Binding var refreshToggle: Bool
+
     var body: some View {
         HStack(content: {
             Button(action: {
@@ -23,7 +24,7 @@ struct SidebarButtonView: View {
             })
             .buttonStyle(.accessoryBar)
             .sheet(isPresented: $showQuickInbox) {
-                QuickInboxView(showQuickInbox: $showQuickInbox)
+                QuickInboxView(showQuickInbox: $showQuickInbox, refreshToggle: $refreshToggle)
             }
             
             Button(action: {

@@ -410,6 +410,11 @@ internal protocol Api_V1_EntriesClientProtocol: GRPCClient {
     callOptions: CallOptions?
   ) -> UnaryCall<Api_V1_DeleteEntryRequest, Api_V1_DeleteEntryResponse>
 
+  func deleteEntries(
+    _ request: Api_V1_DeleteEntriesRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Api_V1_DeleteEntriesRequest, Api_V1_DeleteEntriesResponse>
+
   func listGroupChildren(
     _ request: Api_V1_ListGroupChildrenRequest,
     callOptions: CallOptions?
@@ -541,6 +546,24 @@ extension Api_V1_EntriesClientProtocol {
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeDeleteEntryInterceptors() ?? []
+    )
+  }
+
+  /// Unary call to DeleteEntries
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to DeleteEntries.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  internal func deleteEntries(
+    _ request: Api_V1_DeleteEntriesRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Api_V1_DeleteEntriesRequest, Api_V1_DeleteEntriesResponse> {
+    return self.makeUnaryCall(
+      path: Api_V1_EntriesClientMetadata.Methods.deleteEntries.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeDeleteEntriesInterceptors() ?? []
     )
   }
 
@@ -712,6 +735,11 @@ internal protocol Api_V1_EntriesAsyncClientProtocol: GRPCClient {
     callOptions: CallOptions?
   ) -> GRPCAsyncUnaryCall<Api_V1_DeleteEntryRequest, Api_V1_DeleteEntryResponse>
 
+  func makeDeleteEntriesCall(
+    _ request: Api_V1_DeleteEntriesRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Api_V1_DeleteEntriesRequest, Api_V1_DeleteEntriesResponse>
+
   func makeListGroupChildrenCall(
     _ request: Api_V1_ListGroupChildrenRequest,
     callOptions: CallOptions?
@@ -811,6 +839,18 @@ extension Api_V1_EntriesAsyncClientProtocol {
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeDeleteEntryInterceptors() ?? []
+    )
+  }
+
+  internal func makeDeleteEntriesCall(
+    _ request: Api_V1_DeleteEntriesRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Api_V1_DeleteEntriesRequest, Api_V1_DeleteEntriesResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Api_V1_EntriesClientMetadata.Methods.deleteEntries.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeDeleteEntriesInterceptors() ?? []
     )
   }
 
@@ -935,6 +975,18 @@ extension Api_V1_EntriesAsyncClientProtocol {
     )
   }
 
+  internal func deleteEntries(
+    _ request: Api_V1_DeleteEntriesRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Api_V1_DeleteEntriesResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Api_V1_EntriesClientMetadata.Methods.deleteEntries.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeDeleteEntriesInterceptors() ?? []
+    )
+  }
+
   internal func listGroupChildren(
     _ request: Api_V1_ListGroupChildrenRequest,
     callOptions: CallOptions? = nil
@@ -1033,6 +1085,9 @@ internal protocol Api_V1_EntriesClientInterceptorFactoryProtocol: Sendable {
   /// - Returns: Interceptors to use when invoking 'deleteEntry'.
   func makeDeleteEntryInterceptors() -> [ClientInterceptor<Api_V1_DeleteEntryRequest, Api_V1_DeleteEntryResponse>]
 
+  /// - Returns: Interceptors to use when invoking 'deleteEntries'.
+  func makeDeleteEntriesInterceptors() -> [ClientInterceptor<Api_V1_DeleteEntriesRequest, Api_V1_DeleteEntriesResponse>]
+
   /// - Returns: Interceptors to use when invoking 'listGroupChildren'.
   func makeListGroupChildrenInterceptors() -> [ClientInterceptor<Api_V1_ListGroupChildrenRequest, Api_V1_ListGroupChildrenResponse>]
 
@@ -1057,6 +1112,7 @@ internal enum Api_V1_EntriesClientMetadata {
       Api_V1_EntriesClientMetadata.Methods.createEntry,
       Api_V1_EntriesClientMetadata.Methods.updateEntry,
       Api_V1_EntriesClientMetadata.Methods.deleteEntry,
+      Api_V1_EntriesClientMetadata.Methods.deleteEntries,
       Api_V1_EntriesClientMetadata.Methods.listGroupChildren,
       Api_V1_EntriesClientMetadata.Methods.changeParent,
       Api_V1_EntriesClientMetadata.Methods.writeFile,
@@ -1098,6 +1154,12 @@ internal enum Api_V1_EntriesClientMetadata {
     internal static let deleteEntry = GRPCMethodDescriptor(
       name: "DeleteEntry",
       path: "/api.v1.Entries/DeleteEntry",
+      type: GRPCCallType.unary
+    )
+
+    internal static let deleteEntries = GRPCMethodDescriptor(
+      name: "DeleteEntries",
+      path: "/api.v1.Entries/DeleteEntries",
       type: GRPCCallType.unary
     )
 
@@ -3071,6 +3133,8 @@ internal protocol Api_V1_EntriesProvider: CallHandlerProvider {
 
   func deleteEntry(request: Api_V1_DeleteEntryRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_DeleteEntryResponse>
 
+  func deleteEntries(request: Api_V1_DeleteEntriesRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_DeleteEntriesResponse>
+
   func listGroupChildren(request: Api_V1_ListGroupChildrenRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_ListGroupChildrenResponse>
 
   func changeParent(request: Api_V1_ChangeParentRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Api_V1_ChangeParentResponse>
@@ -3144,6 +3208,15 @@ extension Api_V1_EntriesProvider {
         responseSerializer: ProtobufSerializer<Api_V1_DeleteEntryResponse>(),
         interceptors: self.interceptors?.makeDeleteEntryInterceptors() ?? [],
         userFunction: self.deleteEntry(request:context:)
+      )
+
+    case "DeleteEntries":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_DeleteEntriesRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_DeleteEntriesResponse>(),
+        interceptors: self.interceptors?.makeDeleteEntriesInterceptors() ?? [],
+        userFunction: self.deleteEntries(request:context:)
       )
 
     case "ListGroupChildren":
@@ -3223,6 +3296,11 @@ internal protocol Api_V1_EntriesAsyncProvider: CallHandlerProvider, Sendable {
     request: Api_V1_DeleteEntryRequest,
     context: GRPCAsyncServerCallContext
   ) async throws -> Api_V1_DeleteEntryResponse
+
+  func deleteEntries(
+    request: Api_V1_DeleteEntriesRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Api_V1_DeleteEntriesResponse
 
   func listGroupChildren(
     request: Api_V1_ListGroupChildrenRequest,
@@ -3319,6 +3397,15 @@ extension Api_V1_EntriesAsyncProvider {
         wrapping: { try await self.deleteEntry(request: $0, context: $1) }
       )
 
+    case "DeleteEntries":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Api_V1_DeleteEntriesRequest>(),
+        responseSerializer: ProtobufSerializer<Api_V1_DeleteEntriesResponse>(),
+        interceptors: self.interceptors?.makeDeleteEntriesInterceptors() ?? [],
+        wrapping: { try await self.deleteEntries(request: $0, context: $1) }
+      )
+
     case "ListGroupChildren":
       return GRPCAsyncServerHandler(
         context: context,
@@ -3387,6 +3474,10 @@ internal protocol Api_V1_EntriesServerInterceptorFactoryProtocol: Sendable {
   ///   Defaults to calling `self.makeInterceptors()`.
   func makeDeleteEntryInterceptors() -> [ServerInterceptor<Api_V1_DeleteEntryRequest, Api_V1_DeleteEntryResponse>]
 
+  /// - Returns: Interceptors to use when handling 'deleteEntries'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeDeleteEntriesInterceptors() -> [ServerInterceptor<Api_V1_DeleteEntriesRequest, Api_V1_DeleteEntriesResponse>]
+
   /// - Returns: Interceptors to use when handling 'listGroupChildren'.
   ///   Defaults to calling `self.makeInterceptors()`.
   func makeListGroupChildrenInterceptors() -> [ServerInterceptor<Api_V1_ListGroupChildrenRequest, Api_V1_ListGroupChildrenResponse>]
@@ -3415,6 +3506,7 @@ internal enum Api_V1_EntriesServerMetadata {
       Api_V1_EntriesServerMetadata.Methods.createEntry,
       Api_V1_EntriesServerMetadata.Methods.updateEntry,
       Api_V1_EntriesServerMetadata.Methods.deleteEntry,
+      Api_V1_EntriesServerMetadata.Methods.deleteEntries,
       Api_V1_EntriesServerMetadata.Methods.listGroupChildren,
       Api_V1_EntriesServerMetadata.Methods.changeParent,
       Api_V1_EntriesServerMetadata.Methods.writeFile,
@@ -3456,6 +3548,12 @@ internal enum Api_V1_EntriesServerMetadata {
     internal static let deleteEntry = GRPCMethodDescriptor(
       name: "DeleteEntry",
       path: "/api.v1.Entries/DeleteEntry",
+      type: GRPCCallType.unary
+    )
+
+    internal static let deleteEntries = GRPCMethodDescriptor(
+      name: "DeleteEntries",
+      path: "/api.v1.Entries/DeleteEntries",
       type: GRPCCallType.unary
     )
 

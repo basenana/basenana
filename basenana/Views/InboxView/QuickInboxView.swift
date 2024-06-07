@@ -13,7 +13,8 @@ import SwiftData
 struct QuickInboxView: View{
     
     @Binding var showQuickInbox: Bool
-    
+    @Binding var refreshToggle: Bool
+
     @State private var urlInput: String = ""
     @State private var urlTitle: String = ""
     @State private var errorMsg: String = ""
@@ -66,6 +67,7 @@ struct QuickInboxView: View{
                         }
                         quickInbox(urlStr: urlInput, filename: urlTitle, fileType: fileTypeOption, isClusterFree: isClutterFree)
                         showQuickInbox = false
+                        refreshToggle.toggle()
                     } label: {
                         Text("Inbox")
                             .font(.body)
@@ -92,5 +94,5 @@ struct QuickInboxView: View{
 }
 
 #Preview {
-    return QuickInboxView(showQuickInbox: .constant(true))
+    return QuickInboxView(showQuickInbox: .constant(true), refreshToggle: .constant(false))
 }

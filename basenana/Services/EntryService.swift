@@ -68,6 +68,20 @@ class EntryService {
             log.error("[entryService] delete entry failed \(error)")
         }
     }
+    
+    func deleteEntries(entryIds: [Int64]) {
+        var request = Api_V1_DeleteEntriesRequest()
+        request.entryIds = entryIds
+        
+        let call = clientSet?.entries.deleteEntries(request, callOptions: defaultCallOptions)
+        
+        do {
+            let _ = try call?.response.wait()
+            GroupRoot.updateAt = Date()
+        } catch {
+            log.error("[entryService] delete entries failed \(error)")
+        }
+    }
 
     func getEntry(entryID: Int64?) -> EntryDetailModel? {
         if entryID == nil {

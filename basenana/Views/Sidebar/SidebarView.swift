@@ -13,11 +13,12 @@ struct SidebarView: View {
     @State var selection = Set<GroupViewModel.ID>()
     @State private var search: String = ""
     @Binding var searchEntry: Int64?
+    @State private var refreshToggle = false
 
     var body: some View {
         List(selection: $selection){
             NavigationLink {
-                GroupView(groupID: inboxEntryID, searchEntry: $searchEntry).id(inboxEntryID)
+                GroupView(groupID: inboxEntryID, refreshToggle: $refreshToggle, searchEntry: $searchEntry).id(inboxEntryID)
                     .navigationTitle("Inbox")
             } label: {
                 HStack{
@@ -58,9 +59,14 @@ struct SidebarView: View {
                     groupService.initGroupTree()
                 }
             }
+            .onChange(of: GroupRoot.updateAt) {
+                Task.detached{
+                    groupService.initGroupTree()
+                }
+            }
         }
         .listStyle(.sidebar)
-        .overlay(alignment: .bottom, content: {SidebarButtonView(selection: $selection)})
+        .overlay(alignment: .bottom, content: {SidebarButtonView(selection: $selection, refreshToggle: $refreshToggle)})
     }
 }
 
