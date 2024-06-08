@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftSoup
+import WebArchiver
 
 
 func parseURLTitle(urlStr: String) throws -> String {
@@ -31,6 +32,19 @@ func parseURLTitle(urlStr: String) throws -> String {
     
     let doc: Document = try! SwiftSoup.parse(htmlStr)
     let titleStr = try doc.title()
-
+    
     return titleStr
+}
+
+
+func webarchiveBaseMainResource(url: URL, mainResource: String) -> Data?{
+    var pData: Data?
+    let group = DispatchGroup()
+    group.enter()
+    WebArchiver.archiveWithMainResource(url: url, htmlContent: mainResource){ result in
+        pData = result.plistData
+        group.leave()
+    }
+    group.wait()
+    return pData
 }

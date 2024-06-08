@@ -7,20 +7,21 @@
 
 import Foundation
 import SwiftUI
-import SwiftData
+import Reeeed
 
 
 struct QuickInboxView: View{
     
     @Binding var showQuickInbox: Bool
     @Binding var refreshToggle: Bool
-
+    
     @State private var urlInput: String = ""
     @State private var urlTitle: String = ""
     @State private var errorMsg: String = ""
     @State private var fileTypeOption = "webarchive"
-    @State private var isClutterFree = true
     @State private var selectedURL: String? = nil
+    
+    @State private var htmlContent: String = ""
     
     var body: some View{
         Form{
@@ -28,10 +29,16 @@ struct QuickInboxView: View{
                 VStack(alignment: .leading){
                     TextField("URL", text: $urlInput, onCommit: {
                         if urlInput != ""{
-                            do {
-                                urlTitle = try parseURLTitle(urlStr: urlInput)
-                            }catch {
-                                errorMsg = "fetch web page failed \(error)"
+                            if let safeUrl = URL(string: urlInput){
+                                Task{
+                                    do {
+                                        let result = try await Reeeed.fetchAndExtractContent(fromURL: safeUrl)
+                                        urlTitle = result.title!
+                                        htmlContent = result.styledHTML
+                                    }catch {
+                                        errorMsg = "fetch web page failed \(error)"
+                                    }
+                                }
                             }
                         }
                     })
@@ -49,10 +56,6 @@ struct QuickInboxView: View{
                     }
                     .pickerStyle(.inline)
                     .padding(.vertical, 5)
-                    
-                    Toggle("Clutter-Free", isOn: $isClutterFree)
-                        .toggleStyle(.switch)
-                        .padding(.vertical, 5)
                 }
                 
                 HStack {
@@ -65,7 +68,7 @@ struct QuickInboxView: View{
                         if urlTitle == ""{
                             urlTitle = (try? parseURLTitle(urlStr: urlInput)) ?? "unknown"
                         }
-                        quickInbox(urlStr: urlInput, filename: urlTitle, fileType: fileTypeOption, isClusterFree: isClutterFree)
+                        quickInbox(urlStr: urlInput, filename: urlTitle, fileType: fileTypeOption)
                         showQuickInbox = false
                         refreshToggle.toggle()
                     } label: {
@@ -86,9 +89,21 @@ struct QuickInboxView: View{
         .formStyle(.grouped)
     }
     
-    func quickInbox(urlStr: String, filename: String, fileType: String, isClusterFree:Bool) {
+    func quickInbox(urlStr: String, filename: String, fileType: String) {
         Task.detached{
-            entryService.quickInbox(urlStr: urlStr, filename: filename, fileType: fileType, isClusterFree: isClusterFree)
+            var data: Data? = nil
+            if let url = URL(string: urlStr){
+                if htmlContent != ""{
+                    switch fileType {
+                    case "html":
+                        data = htmlContent.data(using: .utf8)
+                    case "webarchive":
+                        data = webarchiveBaseMainResource(url: url, mainResource: htmlContent)
+                    default: break
+                    }
+                }
+                entryService.quickInbox(urlStr: urlStr, filename: filename, fileType: fileType, data: data)
+            }
         }
     }
 }
