@@ -18,7 +18,7 @@ class EntryService {
     @AppStorage("org.basenana.nanafs.rootId", store: UserDefaults.standard)
     private var rootId: Int = 0
     
-    func quickInbox(urlStr: String, filename: String, fileType: String, isClusterFree:Bool) {
+    func quickInbox(urlStr: String, filename: String, fileType: String, data: Data?) {
         if clientSet == nil{
             log.error("[entryService] unauthenticated")
             return
@@ -27,8 +27,20 @@ class EntryService {
         var request = Api_V1_QuickInboxRequest()
         request.url = urlStr
         request.filename = filename
-        request.fileType = .webArchiveFile
-        request.clutterFree = isClusterFree
+        switch fileType {
+        case "webarchive":
+            request.fileType = .webArchiveFile
+        case "html":
+            request.fileType = .htmlFile
+        case "bookmark":
+            request.fileType = .bookmarkFile
+        default:
+            request.fileType = .webArchiveFile
+        }
+        request.clutterFree = true
+        if data != nil {
+            request.data = data!
+        }
         let call = clientSet!.inbox.quickInbox(request, callOptions: defaultCallOptions)
         
         do {

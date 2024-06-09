@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		3F0AEC762BA48EC7000DA928 /* GroupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEC752BA48EC7000DA928 /* GroupService.swift */; };
+		3F19E2092C14086700B84293 /* Reeeed in Frameworks */ = {isa = PBXBuildFile; productRef = 3F19E2082C14086700B84293 /* Reeeed */; };
+		3F19E20C2C140A6C00B84293 /* Reeeed in Frameworks */ = {isa = PBXBuildFile; productRef = 3F19E20B2C140A6C00B84293 /* Reeeed */; };
 		3F1BBE1D2B8E147F005D533F /* basenanaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE1C2B8E147F005D533F /* basenanaApp.swift */; };
 		3F1BBE232B8E1480005D533F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F1BBE222B8E1480005D533F /* Assets.xcassets */; };
 		3F1BBE272B8E1480005D533F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F1BBE262B8E1480005D533F /* Preview Assets.xcassets */; };
@@ -31,6 +33,7 @@
 		3F7444B92BE50DE900CC9C1E /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3F7444B82BE50DE900CC9C1E /* Info.plist */; };
 		3F81C9C52BAF1A6D00FEE130 /* GroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C42BAF1A6D00FEE130 /* GroupViewModel.swift */; };
 		3F81C9C72BAFCB8900FEE130 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C62BAFCB8900FEE130 /* MainView.swift */; };
+		3F84C8CB2C146E29003DC6DA /* WebArchiver in Frameworks */ = {isa = PBXBuildFile; productRef = 3F84C8CA2C146E29003DC6DA /* WebArchiver */; };
 		3FB782412BC1A82700327191 /* CGRPCZlib in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782402BC1A82700327191 /* CGRPCZlib */; };
 		3FB782432BC1A82700327191 /* GRPC in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782422BC1A82700327191 /* GRPC */; };
 		3FB782452BC1A82700327191 /* GRPCReflectionService in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782442BC1A82700327191 /* GRPCReflectionService */; };
@@ -187,6 +190,7 @@
 				3FB782492BC1A82700327191 /* protoc-gen-grpc-swift in Frameworks */,
 				3FB782452BC1A82700327191 /* GRPCReflectionService in Frameworks */,
 				3F4A78DB2BCF7FFB0035F90F /* SwiftyBeaver in Frameworks */,
+				3F19E20C2C140A6C00B84293 /* Reeeed in Frameworks */,
 				3FB782472BC1A82700327191 /* _GRPCCore in Frameworks */,
 				3F4A78D42BCD82290035F90F /* GRDB in Frameworks */,
 				3F7444B72BE3D1B000CC9C1E /* SwiftSoup in Frameworks */,
@@ -216,17 +220,26 @@
 				ED0CBB432BF656B90056E6AA /* protoc-gen-grpc-swift in Frameworks */,
 				ED0CBB442BF656B90056E6AA /* GRPCReflectionService in Frameworks */,
 				ED0CBB452BF656B90056E6AA /* SwiftyBeaver in Frameworks */,
+				3F19E2092C14086700B84293 /* Reeeed in Frameworks */,
 				ED0CBB462BF656B90056E6AA /* _GRPCCore in Frameworks */,
 				ED0CBB472BF656B90056E6AA /* GRDB in Frameworks */,
 				ED0CBB482BF656B90056E6AA /* SwiftSoup in Frameworks */,
 				ED0CBB492BF656B90056E6AA /* GRPC in Frameworks */,
 				ED0CBB4A2BF656B90056E6AA /* CGRPCZlib in Frameworks */,
+				3F84C8CB2C146E29003DC6DA /* WebArchiver in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3F19E20A2C140A6C00B84293 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		3F1BBE102B8E147F005D533F = {
 			isa = PBXGroup;
 			children = (
@@ -234,6 +247,7 @@
 				3F1BBE2F2B8E1480005D533F /* basenanaTests */,
 				3F1BBE392B8E1480005D533F /* basenanaUITests */,
 				3F1BBE1A2B8E147F005D533F /* Products */,
+				3F19E20A2C140A6C00B84293 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -452,6 +466,7 @@
 				3F4A78D32BCD82290035F90F /* GRDB */,
 				3F4A78DA2BCF7FFB0035F90F /* SwiftyBeaver */,
 				3F7444B62BE3D1B000CC9C1E /* SwiftSoup */,
+				3F19E20B2C140A6C00B84293 /* Reeeed */,
 			);
 			productName = basenana;
 			productReference = 3F1BBE192B8E147F005D533F /* Basenana.app */;
@@ -515,6 +530,8 @@
 				ED0CBB192BF656B90056E6AA /* GRDB */,
 				ED0CBB1B2BF656B90056E6AA /* SwiftyBeaver */,
 				ED0CBB1D2BF656B90056E6AA /* SwiftSoup */,
+				3F19E2082C14086700B84293 /* Reeeed */,
+				3F84C8CA2C146E29003DC6DA /* WebArchiver */,
 			);
 			productName = basenana;
 			productReference = ED0CBB522BF656B90056E6AA /* basenana dev.app */;
@@ -557,6 +574,8 @@
 				3F4A78D22BCD82290035F90F /* XCRemoteSwiftPackageReference "GRDB.swift" */,
 				3F4A78D92BCF7FFB0035F90F /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
 				3FDC2EA52BE3CC2C00344DF8 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
+				3F19E2072C14086700B84293 /* XCRemoteSwiftPackageReference "reeeed" */,
+				3F84C8C92C146E29003DC6DA /* XCRemoteSwiftPackageReference "WebArchiver" */,
 			);
 			productRefGroup = 3F1BBE1A2B8E147F005D533F /* Products */;
 			projectDirPath = "";
@@ -1147,6 +1166,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		3F19E2072C14086700B84293 /* XCRemoteSwiftPackageReference "reeeed" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nate-parrott/reeeed";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.1;
+			};
+		};
 		3F4A78D22BCD82290035F90F /* XCRemoteSwiftPackageReference "GRDB.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/groue/GRDB.swift.git";
@@ -1161,6 +1188,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.0.1;
+			};
+		};
+		3F84C8C92C146E29003DC6DA /* XCRemoteSwiftPackageReference "WebArchiver" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hyponet/WebArchiver.git";
+			requirement = {
+				branch = master;
+				kind = branch;
 			};
 		};
 		3FB7823F2BC1A82700327191 /* XCRemoteSwiftPackageReference "grpc-swift" */ = {
@@ -1214,6 +1249,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		3F19E2082C14086700B84293 /* Reeeed */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F19E2072C14086700B84293 /* XCRemoteSwiftPackageReference "reeeed" */;
+			productName = Reeeed;
+		};
+		3F19E20B2C140A6C00B84293 /* Reeeed */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F19E2072C14086700B84293 /* XCRemoteSwiftPackageReference "reeeed" */;
+			productName = Reeeed;
+		};
 		3F4A78D32BCD82290035F90F /* GRDB */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3F4A78D22BCD82290035F90F /* XCRemoteSwiftPackageReference "GRDB.swift" */;
@@ -1228,6 +1273,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3FDC2EA52BE3CC2C00344DF8 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
+		};
+		3F84C8CA2C146E29003DC6DA /* WebArchiver */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F84C8C92C146E29003DC6DA /* XCRemoteSwiftPackageReference "WebArchiver" */;
+			productName = WebArchiver;
 		};
 		3FB782402BC1A82700327191 /* CGRPCZlib */ = {
 			isa = XCSwiftPackageProductDependency;
