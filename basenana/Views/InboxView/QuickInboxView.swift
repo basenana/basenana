@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-import Reeeed
 
 
 struct QuickInboxView: View{
@@ -32,9 +31,10 @@ struct QuickInboxView: View{
                             if let safeUrl = URL(string: urlInput){
                                 Task{
                                     do {
-                                        let result = try await Reeeed.fetchAndExtractContent(fromURL: safeUrl)
-                                        urlTitle = result.title!
-                                        htmlContent = result.styledHTML
+                                        let rp = ReadablePage(url: safeUrl)
+                                        try await rp.parse()
+                                        urlTitle = rp.urlTitle
+                                        htmlContent = rp.htmlContent
                                     }catch {
                                         errorMsg = "fetch web page failed \(error)"
                                     }
