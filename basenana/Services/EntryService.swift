@@ -55,15 +55,13 @@ class EntryService {
         }
     }
     
-    func deleteEntry(entryId: Int64) {
+    func deleteEntry(entryId: Int64) async {
         var request = Api_V1_DeleteEntryRequest()
         request.entryID = entryId
         
-        let call = clientSet?.entries.deleteEntry(request, callOptions: defaultCallOptions)
-        
         do {
-            let _ = try call?.response.wait()
-            GroupRoot.updateAt = Date()
+            let call = clientSet?.entries.deleteEntry(request, callOptions: defaultCallOptions)
+            let _ = try await call?.response.get()
         } catch {
             log.error("[entryService] delete entry failed \(error)")
         }
@@ -82,7 +80,7 @@ class EntryService {
             log.error("[entryService] delete entries failed \(error)")
         }
     }
-
+    
     func getEntry(entryID: Int64?) -> EntryDetailModel? {
         if entryID == nil {
             return nil
@@ -111,7 +109,7 @@ class EntryService {
             return
         }
     }
-
+    
     func getRoot() -> EntryDetailModel? {
         var req = Api_V1_FindEntryDetailRequest()
         req.root = true
@@ -132,7 +130,7 @@ class EntryService {
         let rootEn = getRoot()
         return findChildren(parentID: rootEn!.id, chName: ".inbox")
     }
-
+    
     func findChildren(parentID: Int64, chName: String) -> EntryDetailModel? {
         var req = Api_V1_FindEntryDetailRequest()
         req.parentID = parentID
@@ -148,6 +146,23 @@ class EntryService {
         
         return nil
     }
+    
+    func listChildLeafs(parentID: Int64) -> [Int64] {
+        var leafs: [Int64] = []
+        
+        let children = listChildren(parentEntryID: parentID)
+        for child in children {
+            if child.isGroup {
+                leafs.append(contentsOf: listChildLeafs(parentID: child.id))
+            } else {
+                leafs.append(child.id)
+            }
+        }
+        leafs.append(parentID)
+        
+        return leafs
+    }
+    
     
     func listChildren(parentEntryID: Int64, filter: EntryFilter? = nil, order: EntryOrder? = nil, pages: Pagination? = nil) -> [EntryInfoModel]{
         var realParentID: Int64
@@ -194,7 +209,7 @@ class EntryService {
                 if o.desc == true {
                     req.orderDesc = true
                 }
-
+                
             }
             
             let call = clientSet!.entries.listGroupChildren(req, callOptions: defaultCallOptions)
@@ -232,7 +247,7 @@ class EntryService {
         entry.name = en.name != "" ? en.name : ""
         return entry
     }
-
+    
     func entryInfo2Model(en: Api_V1_EntryInfo) -> EntryInfoModel{
         return EntryInfoModel(
             id: en.id, name: en.name, kind: en.kind, isGroup: en.isGroup, size: en.size,

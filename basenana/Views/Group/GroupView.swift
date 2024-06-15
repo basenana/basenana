@@ -23,6 +23,9 @@ struct GroupView: View{
     
     @State var selectedMoved = false
     
+    @State private var deleteProgress = 0.0
+    @State private var showProgressSheet = false
+
     var body: some View {
         GeometryReader { geometry in
             VStack{
@@ -96,12 +99,37 @@ struct GroupView: View{
                             }
                         }
                         .frame(minHeight: 200, maxHeight: .infinity)
+                        .sheet(isPresented: $showProgressSheet) {
+                            VStack {
+                                Text("Deleting...")
+                                ProgressView(value: deleteProgress)
+                            }
+                            .padding()
+                        }
                         .alert(isPresented: $showAlert) {
                             Alert(
                                 title: Text("Confirm Delete"),
                                 message: Text("Are you sure delete these files or folders?"),
                                 primaryButton: .destructive(Text("Delete")) {
-                                    Task.detached { entryService.deleteEntries(entryIds: Array(entriesToDelete)) }
+                                    Task.detached {
+                                        Task {
+                                            var leafs: [Int64] = []
+                                            for en in entriesToDelete {
+                                                let children = entryService.listChildLeafs(parentID: en)
+                                                leafs += children
+                                            }
+
+                                            let all = leafs.count
+                                            showProgressSheet = true
+                                            for child in leafs {
+                                                await entryService.deleteEntry(entryId: child)
+                                                deleteProgress += 1.0/Double(all)
+                                            }
+                                            try await Task.sleep(nanoseconds: 500_000_000)
+                                            showProgressSheet = false
+                                            refreshToggle.toggle()
+                                        }
+                                    }
                                 },
                                 secondaryButton: .cancel()
                             )

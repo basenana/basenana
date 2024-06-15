@@ -13,6 +13,8 @@ struct SidebarGroupsView: View {
     @State private var showAlert = false
     @State private var entryToDelete: GroupViewModel? = nil
     @State private var refreshToggle = false
+    @State private var deleteProgress = 0.0
+    @State private var showProgressSheet = false
     
     var body: some View {
         OutlineGroup(GroupRoot.children ?? [], children: \.children){ child in
@@ -20,6 +22,38 @@ struct SidebarGroupsView: View {
                 GroupView(groupID: child.groupID, refreshToggle: $refreshToggle, searchEntry: $searchEntry)
                     .id(child.groupID)
                     .navigationTitle(child.groupName)
+                    .sheet(isPresented: $showProgressSheet) {
+                        VStack {
+                            Text("Deleting...")
+                            ProgressView(value: deleteProgress)
+                        }
+                        .padding()
+                    }            
+                    .alert(isPresented: $showAlert) {
+                        Alert(
+                            title: Text("Confirm Delete"),
+                            message: Text("Are you sure delete \"\(entryToDelete?.groupName ?? "")\" ?"),
+                            primaryButton: .destructive(Text("Delete")) {
+                                Task.detached {
+                                    if let entryId = entryToDelete?.groupID {
+                                        let children = entryService.listChildLeafs(parentID: entryId)
+                                        let all = children.count
+                                        showProgressSheet = true
+                                        Task {
+                                            defer { GroupRoot.updateAt = Date() }
+                                            for child in children {
+                                                await entryService.deleteEntry(entryId: child)
+                                                deleteProgress += 1.0/Double(all)
+                                            }
+                                            try await Task.sleep(nanoseconds: 500_000_000)
+                                            showProgressSheet = false
+                                        }
+                                    }
+                                }
+                            },
+                            secondaryButton: .cancel()
+                        )
+                    }
             } label: {
                 HStack{
                     Image(systemName: "folder")
@@ -44,18 +78,6 @@ struct SidebarGroupsView: View {
                     Image(systemName: "trash")
                 }
             }
-        }
-        .alert(isPresented: $showAlert) {
-            Alert(
-                title: Text("Confirm Delete"),
-                message: Text("Are you sure delete \"\(entryToDelete?.groupName ?? "")\" ?"),
-                primaryButton: .destructive(Text("Delete")) {
-                    if let entryId = entryToDelete?.groupID {
-                        Task.detached { entryService.deleteEntry(entryId: entryId) }
-                    }
-                },
-                secondaryButton: .cancel()
-            )
         }
     }
     
