@@ -12,17 +12,18 @@ let user = "User"
 let model = "Assistant"
 
 struct DialogueView: View {
-     @Binding var isDrawerOpen: Bool
      let docId: Int64
      let entryId: Int64
-     
+     @Binding var isDrawerOpen: Bool
+
      @State private var isCloseHovering = false
      @State private var isEraserHovering = false
      @State var newMessage = ""
      @State var waitingMessage = ""
-     @State private var room: RoomModel?
+     @State private var room: RoomModel? = nil
      @State var messages: [RoomMessageViewModel] = []
      @State private var ingestState = ""
+     @Environment(AlertStore.self) var alert
      
      var body: some View {
           VStack {
@@ -41,7 +42,7 @@ struct DialogueView: View {
                     }
                     
                     // button of eraser ..
-                    EraserButtonView(isEraserHovering: isEraserHovering, messages: $messages, roomId: room?.id ?? 0)
+                    EraserButtonView(roomId: room?.id ?? 0, isEraserHovering: isEraserHovering, messages: $messages)
                          .id("\(String(describing: room?.id))/eraserButton")
                     
                     // button of close ..
@@ -49,12 +50,15 @@ struct DialogueView: View {
                          .id("\(String(describing: room?.id))/closeButton")
                }
                .onAppear{
-                    if let entry = entryService.getEntry(entryID: entryId) {
+                    do {
+                         let entry = try service.getEntry(entryID: entryId)
                          for entryProperty in entry.properties {
                               if entryProperty.key == "org.basenana.friday/ingest" {
                                    ingestState = entryProperty.value
                               }
                          }
+                    } catch {
+                         alert.trigger(message: "\(error)")
                     }
                }
                .padding(10)
@@ -67,7 +71,11 @@ struct DialogueView: View {
                          }
                     }
                     .onAppear{
-                         room = dialogueService.openRoom(docId: docId, entryId: entryId)
+                         do {
+                              room = try service.openRoom(docId: docId, entryId: entryId)
+                         } catch {
+                              alert.trigger(message: "\(error)")
+                         }
                          let roomMessages = room?.messages ?? []
                          for msg in roomMessages {
                               messages.append(RoomMessageViewModel(id: msg.id!, sender: msg.sender, message: msg.message, sendAt: msg.sendAt))
@@ -104,7 +112,7 @@ struct DialogueView: View {
                          let messageNeedToSend = self.newMessage
                          var requestNeedToSave = true
                          var hasApply = false
-                         try dialogueService.chatInRoom(
+                         try service.chatInRoom(
                               roomId: room?.id ?? 0,
                               newRequest: messageNeedToSend,
                               callbackFn: {requestMsg,responseMsg in
@@ -132,6 +140,7 @@ struct DialogueView: View {
                               })
                     } catch {
                          log.error("chat in room failed \(error)")
+                         alert.trigger(message: "\(error)")
                     }
                     self.newMessage = ""
                }
@@ -140,5 +149,5 @@ struct DialogueView: View {
 }
 
 #Preview {
-     return DialogueView(isDrawerOpen: .constant(true), docId: 100, entryId: 100)
+     return DialogueView( docId: 100, entryId: 100, isDrawerOpen: .constant(true)).environment(AlertStore())
 }

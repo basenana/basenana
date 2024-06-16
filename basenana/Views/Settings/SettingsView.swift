@@ -27,6 +27,8 @@ struct SettingsView: View {
     @AppStorage("org.basenana.sync.sequence", store: UserDefaults.standard)
     private var syncedSeqNum: String = "0"
     
+    @State private var errorMessage = ""
+    
     var body: some View {
         Form {
             Section("Authentication") {
@@ -48,14 +50,22 @@ struct SettingsView: View {
             .frame(minWidth: 400, maxWidth: .infinity, minHeight: 20)
             
             HStack {
+                if errorMessage != ""{
+                    Text("\(errorMessage)")
+                        .foregroundStyle(.red)
+                        .padding(.vertical, 5)
+                }
                 Button {
                     syncedSeqNum = "0"
                 } label: {
                     Text("Reset")
                 }
                 Button {
-                    encodedClientCrt = ""
-                    AuthClient().reflushToken()
+                    do {
+                        let _ = try clientFactory.login()
+                    } catch {
+                        errorMessage = "\(error)"
+                    }
                 } label: {
                     Text("Submit")
                 }

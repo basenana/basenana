@@ -7,46 +7,36 @@
 
 import SwiftUI
 
-
 struct MainView: View{
-    
-    @State private var search: String = ""
-    @State private var searchEntry: Int64? = nil
-    
+    @State private var needLogin: Bool
+    @State private var alertState = AlertStore()
+
     init(){
         setupLogging()
-        AuthClient().reflushToken()
+        do {
+            let _ = try clientFactory.makeClient()
+            needLogin = false
+        } catch {
+            log.error("make client failed: \(error), need login")
+            needLogin = true
+        }
     }
     
     var body: some View {
-        // fixme
-        if !authStatus.hasAccessToken {
+        if needLogin {
             SettingsView()
         }else {
             NavigationSplitView {
-                SidebarView(searchEntry: $searchEntry)
+                SidebarView()
                     .frame(minWidth: 180,idealWidth: 200)
             }detail: {
-                if searchEntry != nil{
-                    DocumentDetailView(entryId: searchEntry!, doc: nil)
-                        .id("\(String(describing: searchEntry))/doc")
+            }
+            .alert(alertState.alertMessage, isPresented: $alertState.needAlert){
+                Button("OK", role: .cancel) {
+                    alertState.reset()
                 }
             }
-            .searchable(text: $search) {
-                let docs = documentService.searchDocument(search: search)
-                ForEach(docs, id: \.id) { doc in
-                    Button {
-                        searchEntry = doc.oid
-                    } label: {
-                        Label(doc.name, systemImage: "doc.text")
-                    }
-                }
-            }
-            .onChange(of: search) {
-                if search.isEmpty {
-                    searchEntry = nil
-                }
-            }
+            .environment(alertState)
         }
     }
 }

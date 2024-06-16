@@ -9,11 +9,16 @@ import SwiftUI
 
 struct DocumentButtonView: View {
     var doc: DocumentInfoModel
+    @Environment(AlertStore.self) var alert
     
     var body: some View {
         Button {
             withAnimation(.easeInOut) {
-                documentService.updateDocument(docUpdate: DocumentUpdate(docId: doc.id, unread: !doc.unread))
+                do {
+                    try service.updateDocument(docUpdate: DocumentUpdate(docId: doc.id, unread: !doc.unread))
+                } catch {
+                    alert.trigger(message: "\(error)")
+                }
             }
         } label: {
             if doc.unread {
@@ -26,7 +31,11 @@ struct DocumentButtonView: View {
         }
         Button {
             withAnimation(.easeInOut) {
-                documentService.updateDocument(docUpdate: DocumentUpdate(docId: doc.id, marked: !doc.marked))
+                do {
+                    try service.updateDocument(docUpdate: DocumentUpdate(docId: doc.id, marked: !doc.marked))
+                } catch {
+                    alert.trigger(message: "\(error)")
+                }
             }
         } label: {
             if doc.marked {

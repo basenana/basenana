@@ -10,45 +10,45 @@ import SwiftData
 import GRDB
 import SwiftProtobuf
 
-let dialogueService = DialogueService()
-
-class DialogueService: ObservableObject {
+extension Service{
     
-    func getRooms(docId: Int64, entryId: Int64) -> [RoomModel] {
+    func getRooms(docId: Int64, entryId: Int64) throws -> [RoomModel] {
+        let clientSet = try clientFactory.makeClient()
+        var request = Api_V1_ListRoomsRequest()
+        request.entryID = entryId
+        
+        let call = clientSet.dialogue.listRooms(request, callOptions: defaultCallOptions)
         do {
-            var request = Api_V1_ListRoomsRequest()
-            request.entryID = entryId
-            
-            let call = clientSet?.dialogue.listRooms(request, callOptions: defaultCallOptions)
-            let response = try call?.response.wait()
-            
+            let response = try call.response.wait()
             var rooms: [RoomModel] = []
-            for room in response!.rooms {
+            for room in response.rooms {
                 rooms.append(room2Model(room: room))
             }
             return rooms
         } catch {
             log.error("get rooms failed \(error)")
-            return []
+            throw error
         }
     }
     
-    func openRoom(docId: Int64, entryId: Int64) -> RoomModel? {
+    func openRoom(docId: Int64, entryId: Int64) throws -> RoomModel {
+        let clientSet = try clientFactory.makeClient()
+        var request = Api_V1_OpenRoomRequest()
+        request.entryID = entryId
+        let call = clientSet.dialogue.openRoom(request, callOptions: defaultCallOptions)
         do {
-            var request = Api_V1_OpenRoomRequest()
-            request.entryID = entryId
-            let call = clientSet!.dialogue.openRoom(request, callOptions: defaultCallOptions)
             let response = try call.response.wait()
             
             // todo: get message with pagination
             return room2Model(room: response.room)
         } catch {
             log.error("get rooms or messages failed \(error)")
-            return nil
+            throw error
         }
     }
     
     func chatInRoom(roomId: Int64, newRequest: String, callbackFn: @escaping (RoomMessageModel, RoomMessageModel) -> Void) throws {
+        let clientSet = try clientFactory.makeClient()
         var request = Api_V1_ChatRequest()
         let requestSendAt = Date()
         
@@ -73,7 +73,7 @@ class DialogueService: ObservableObject {
         request.sendAt = timestamp
         
         var waitingLLM = true
-        let _ = clientSet!.dialogue.chatInRoom(request, callOptions: nil) { response in
+        let _ = clientSet.dialogue.chatInRoom(request, callOptions: nil) { response in
             replyLine = response.responseMessage
             if response.sender != "" && response.sender != "thinking" && waitingLLM {
                 waitingLLM = false
@@ -84,14 +84,16 @@ class DialogueService: ObservableObject {
         }
     }
     
-    func clearMessage(roomId: Int64) {
+    func clearMessage(roomId: Int64) throws {
+        let clientSet = try clientFactory.makeClient()
+        var request = Api_V1_ClearRoomRequest()
+        request.roomID = roomId
+        let call = clientSet.dialogue.clearRoom(request, callOptions: defaultCallOptions)
         do {
-            var request = Api_V1_ClearRoomRequest()
-            request.roomID = roomId
-            let call = clientSet!.dialogue.clearRoom(request, callOptions: defaultCallOptions)
             let _ = try call.response.wait()
         }catch{
             log.error("clear room & message by roomId \(roomId) failed")
+            throw error
         }
     }
     

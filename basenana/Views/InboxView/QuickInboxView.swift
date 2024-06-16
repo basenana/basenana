@@ -19,8 +19,9 @@ struct QuickInboxView: View{
     @State private var errorMsg: String = ""
     @State private var fileTypeOption = "webarchive"
     @State private var selectedURL: String? = nil
-    
     @State private var htmlContent: String = ""
+    
+    @Environment(AlertStore.self) var alert
     
     var body: some View{
         Form{
@@ -90,7 +91,7 @@ struct QuickInboxView: View{
     }
     
     func quickInbox(urlStr: String, filename: String, fileType: String) {
-        Task.detached{
+        Task.detached {
             var data: Data? = nil
             if let url = URL(string: urlStr){
                 if htmlContent != ""{
@@ -102,7 +103,11 @@ struct QuickInboxView: View{
                     default: break
                     }
                 }
-                entryService.quickInbox(urlStr: urlStr, filename: filename, fileType: fileType, data: data)
+                do {
+                    try service.quickInbox(urlStr: urlStr, filename: filename, fileType: fileType, data: data)
+                } catch {
+                    alert.trigger(message: "\(error)")
+                }
             }
         }
     }
