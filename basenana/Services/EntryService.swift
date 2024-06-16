@@ -11,18 +11,10 @@ import SwiftUI
 import GRPC
 import GRDB
 
-let entryService = EntryService()
 
-class EntryService {
-    
-    @AppStorage("org.basenana.nanafs.rootId", store: UserDefaults.standard)
-    private var rootId: Int = 0
-    
-    func quickInbox(urlStr: String, filename: String, fileType: String, data: Data?) {
-        if clientSet == nil{
-            log.error("[entryService] unauthenticated")
-            return
-        }
+extension Service {
+    func quickInbox(urlStr: String, filename: String, fileType: String, data: Data?) throws {
+        let clientSet = try clientFactory.makeClient()
         
         var request = Api_V1_QuickInboxRequest()
         request.url = urlStr
@@ -40,132 +32,151 @@ class EntryService {
         request.clutterFree = true
         if data != nil {
             request.data = data!
+        }else {
+            log.warning("quick inbox without data content")
         }
-        let call = clientSet!.inbox.quickInbox(request, callOptions: defaultCallOptions)
-        
+        let call = clientSet.inbox.quickInbox(request, callOptions: defaultCallOptions)
         do {
             let response = try call.response.wait()
             log.debug("[entryService] new entey inboxed \(response.entryID)")
         } catch {
             log.error("[entryService] entey inbox failed \(error)")
+            throw error
         }
     }
     
-    func createGroup(groupName: String, parentId: Int64) {
+    func createGroup(groupName: String, parentId: Int64) throws{
+        let clientSet = try clientFactory.makeClient()
+        
         var request = Api_V1_CreateEntryRequest()
         request.kind = "group"
         request.name = groupName
         request.parentID = parentId
         
-        let call = clientSet?.entries.createEntry(request, callOptions: defaultCallOptions)
-        
+        let call = clientSet.entries.createEntry(request, callOptions: defaultCallOptions)
         do {
-            let _ = try call?.response.wait()
+            let _ = try call.response.wait()
             GroupRoot.updateAt = Date()
         } catch {
             log.error("[entryService] create group failed \(error)")
+            throw error
         }
     }
     
-    func deleteEntry(entryId: Int64) async {
+    func deleteEntry(entryId: Int64) async throws{
+        let clientSet = try clientFactory.makeClient()
+        
         var request = Api_V1_DeleteEntryRequest()
         request.entryID = entryId
         
+        let call = clientSet.entries.deleteEntry(request, callOptions: defaultCallOptions)
         do {
-            let call = clientSet?.entries.deleteEntry(request, callOptions: defaultCallOptions)
-            let _ = try await call?.response.get()
+            let _ = try await call.response.wait()
+            GroupRoot.updateAt = Date()
         } catch {
             log.error("[entryService] delete entry failed \(error)")
+            throw error
         }
     }
     
-    func deleteEntries(entryIds: [Int64]) {
+    func deleteEntries(entryIds: [Int64]) throws {
+        let clientSet = try clientFactory.makeClient()
+        
         var request = Api_V1_DeleteEntriesRequest()
         request.entryIds = entryIds
         
-        let call = clientSet?.entries.deleteEntries(request, callOptions: defaultCallOptions)
-        
+        let call = clientSet.entries.deleteEntries(request, callOptions: defaultCallOptions)
         do {
-            let _ = try call?.response.wait()
+            let _ = try call.response.wait()
             GroupRoot.updateAt = Date()
         } catch {
             log.error("[entryService] delete entries failed \(error)")
+            throw error
         }
     }
     
-    func getEntry(entryID: Int64?) -> EntryDetailModel? {
-        if entryID == nil {
-            return nil
-        }
+    func getEntry(entryID: Int64) throws -> EntryDetailModel {
+        let clientSet = try clientFactory.makeClient()
+        var request = Api_V1_GetEntryDetailRequest()
+        request.entryID = entryID
+        let call = clientSet.entries.getEntryDetail(request, callOptions: defaultCallOptions)
         do {
-            var request = Api_V1_GetEntryDetailRequest()
-            request.entryID = entryID!
-            let call = clientSet!.entries.getEntryDetail(request, callOptions: defaultCallOptions)
             let response = try call.response.wait()
             return entryDetail2Model(en: response.entry, properties: response.properties)
         } catch {
-            log.error("[EntryService] sync entris failed \(error)")
-            return nil
+            log.error("[EntryService] get entry \(entryID) failed \(error)")
+            throw error
         }
     }
     
-    func updateEntry(en: EntryDetailModel) {
+    func updateEntry(en: EntryDetailModel) throws {
+        let clientSet = try clientFactory.makeClient()
+        var request = Api_V1_UpdateEntryRequest()
+        request.entry = model2EntryDetail(en: en)
+
         do {
-            var request = Api_V1_UpdateEntryRequest()
-            request.entry = model2EntryDetail(en: en)
-            let call = clientSet!.entries.updateEntry(request, callOptions: defaultCallOptions)
+            let call = clientSet.entries.updateEntry(request, callOptions: defaultCallOptions)
             let _ = try call.response.wait()
-            return
         } catch {
             log.error("[EntryService] update entry \(en.id) failed \(error)")
-            return
+            throw error
         }
     }
     
-    func getRoot() -> EntryDetailModel? {
+    func getRoot() throws -> EntryDetailModel {
+        if self.rootID != 0 {
+            return try getEntry(entryID: self.rootID)
+        }
+        
+        let clientSet = try clientFactory.makeClient()
         var req = Api_V1_FindEntryDetailRequest()
         req.root = true
-        
-        let call = clientSet!.entries.findEntryDetail(req, callOptions: defaultCallOptions)
+        let call = clientSet.entries.findEntryDetail(req, callOptions: defaultCallOptions)
         
         do {
             let response = try call.response.wait()
+            self.rootID = response.entry.id
             return entryDetail2Model(en: response.entry, properties: response.properties)
         } catch {
             log.error("[entryService] get root entry failed \(error)")
+            throw error
         }
-        
-        return nil
     }
     
-    func getInbox() -> EntryDetailModel? {
-        let rootEn = getRoot()
-        return findChildren(parentID: rootEn!.id, chName: ".inbox")
+    func getInbox() throws -> EntryDetailModel {
+        let clientSet = try clientFactory.makeClient()
+        let rootEn = try getRoot()
+        return try findChildren(parentID: rootEn.id, chName: ".inbox")
     }
     
-    func findChildren(parentID: Int64, chName: String) -> EntryDetailModel? {
+    func findChildren(parentID: Int64, chName: String) throws -> EntryDetailModel {
+        let clientSet = try clientFactory.makeClient()
         var req = Api_V1_FindEntryDetailRequest()
         req.parentID = parentID
         req.name = chName
         
-        let call = clientSet!.entries.findEntryDetail(req, callOptions: defaultCallOptions)
+        let call = clientSet.entries.findEntryDetail(req, callOptions: defaultCallOptions)
         do {
             let response = try call.response.wait()
             return entryDetail2Model(en: response.entry, properties: response.properties)
         } catch {
             log.error("[entryService] find children \(chName) of \(parentID) failed \(error)")
+            throw error
         }
-        
-        return nil
     }
     
-    func listChildLeafs(parentID: Int64) -> [Int64] {
+    func listChildLeafs(parentID: Int64) throws -> [Int64] {
         var leafs: [Int64] = []
         
-        let children = listChildren(parentEntryID: parentID)
+        let children = try listChildren(parentEntryID: parentID)
         for child in children {
             if child.isGroup {
-                leafs.append(contentsOf: listChildLeafs(parentID: child.id))
+                do {
+                    leafs.append(contentsOf: try listChildLeafs(parentID: child.id))
+                } catch {
+                    log.error("list child leafs faile \(error)")
+                    throw error
+                }
             } else {
                 leafs.append(child.id)
             }
@@ -175,65 +186,63 @@ class EntryService {
         return leafs
     }
     
-    
-    func listChildren(parentEntryID: Int64, filter: EntryFilter? = nil, order: EntryOrder? = nil, pages: Pagination? = nil) -> [EntryInfoModel]{
+    func listChildren(parentEntryID: Int64, filter: EntryFilter? = nil, order: EntryOrder? = nil, pages: Pagination? = nil) throws -> [EntryInfoModel]{
+        let clientSet = try clientFactory.makeClient()
+        
         var realParentID: Int64
         switch parentEntryID {
+        case rootEntryID:
+            realParentID = try getRoot().id
         case inboxEntryID:
-            realParentID = (getInbox()?.id) ?? -1
+            realParentID = try getInbox().id
         default:
             realParentID = parentEntryID
         }
         
-        if realParentID == -1{
-            log.warning("no real parent entry \(parentEntryID) find")
+        var req = Api_V1_ListGroupChildrenRequest()
+        req.parentID = realParentID
+        if let ps = pages {
+            req.pagination = Api_V1_Pagination()
+            req.pagination.page = ps.page
+            req.pagination.pageSize = ps.pageSize
         }
         
+        if let f = filter {
+            req.filter = Api_V1_EntryFilter()
+            if f.isGroup == true {
+                req.filter.isGroup = Api_V1_EntryFilter.GroupFilter.group
+            }
+        }
+        
+        if let o = order {
+            switch o.order {
+            case EnOrder.createAt:
+                req.order = Api_V1_ListGroupChildrenRequest.EntryOrder.createdAt
+            case .modifiedAt:
+                req.order = Api_V1_ListGroupChildrenRequest.EntryOrder.modifiedAt
+            case .name:
+                req.order = Api_V1_ListGroupChildrenRequest.EntryOrder.name
+            case .kind:
+                req.order = Api_V1_ListGroupChildrenRequest.EntryOrder.kind
+            case .size:
+                req.order = Api_V1_ListGroupChildrenRequest.EntryOrder.size
+            }
+            if o.desc == true {
+                req.orderDesc = true
+            }
+        }
+
         do {
-            var req = Api_V1_ListGroupChildrenRequest()
-            req.parentID = realParentID
-            if let ps = pages {
-                req.pagination = Api_V1_Pagination()
-                req.pagination.page = ps.page
-                req.pagination.pageSize = ps.pageSize
-            }
-            
-            if let f = filter {
-                req.filter = Api_V1_EntryFilter()
-                if f.isGroup == true {
-                    req.filter.isGroup = Api_V1_EntryFilter.GroupFilter.group
-                }
-            }
-            
-            if let o = order {
-                switch o.order {
-                case EnOrder.createAt:
-                    req.order = Api_V1_ListGroupChildrenRequest.EntryOrder.createdAt
-                case .modifiedAt:
-                    req.order = Api_V1_ListGroupChildrenRequest.EntryOrder.modifiedAt
-                case .name:
-                    req.order = Api_V1_ListGroupChildrenRequest.EntryOrder.name
-                case .kind:
-                    req.order = Api_V1_ListGroupChildrenRequest.EntryOrder.kind
-                case .size:
-                    req.order = Api_V1_ListGroupChildrenRequest.EntryOrder.size
-                }
-                if o.desc == true {
-                    req.orderDesc = true
-                }
-                
-            }
-            
-            let call = clientSet!.entries.listGroupChildren(req, callOptions: defaultCallOptions)
+            let call = clientSet.entries.listGroupChildren(req, callOptions: defaultCallOptions)
             let response = try call.response.wait()
             var entries: [EntryInfoModel]=[]
             for entry in response.entries {
                 if !entry.name.hasPrefix(".") { entries.append(entryInfo2Model(en: entry)) }
             }
-            
             return entries
         } catch {
-            return []
+            log.error("[entryService] list children of \(realParentID) failed \(error)")
+            throw error
         }
     }
     

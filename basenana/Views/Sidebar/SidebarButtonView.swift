@@ -14,7 +14,7 @@ struct SidebarButtonView: View {
     @State private var showCreateGroup = false
     @Binding var selection: Set<GroupViewModel.ID>
     @Binding var refreshToggle: Bool
-
+    
     var body: some View {
         HStack(content: {
             Button(action: {
@@ -34,8 +34,7 @@ struct SidebarButtonView: View {
             })
             .buttonStyle(.accessoryBar)
             .sheet(isPresented: $showCreateGroup){
-                let p = entryService.getEntry(entryID: selection.first)
-                GroupCreateView(showCreateGroup: $showCreateGroup, parent: p)
+                GroupCreateView(parentID: selection.first, showCreateGroup: $showCreateGroup)
             }
             
             Spacer()

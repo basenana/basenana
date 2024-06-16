@@ -11,62 +11,61 @@ import SwiftUI
 import GRPC
 import GRDB
 
-let documentService = DocumentService()
-
-class DocumentService {
+extension Service {
     
-    func getDocument(entryId: Int64) -> DocumentDetailModel? {
+    func getDocument(entryId: Int64) throws -> DocumentDetailModel {
+        let clientSet = try clientFactory.makeClient()
         var request = Api_V1_GetDocumentDetailRequest()
         request.entryID = entryId
-        let call = clientSet!.document.getDocumentDetail(request, callOptions: defaultCallOptions)
+        let call = clientSet.document.getDocumentDetail(request, callOptions: defaultCallOptions)
         
         do {
             let response = try call.response.wait()
             return docDetail2Model(doc: response.document)
         } catch{
             log.error("[documentService] get document detail failed \(error)")
-            return nil
+            throw error
         }
     }
     
-    func listDocuments(filter: Docfilter? = nil, order: DocumentOrder? = nil, pages: Pagination? = nil) -> [DocumentInfoModel]{
+    func listDocuments(filter: Docfilter? = nil, order: DocumentOrder? = nil, pages: Pagination? = nil) throws -> [DocumentInfoModel]{
+        let clientSet = try clientFactory.makeClient()
+        var request = Api_V1_ListDocumentsRequest()
+        if let f = filter {
+            request.filter = Api_V1_DocumentFilter()
+            if let marked = f.marked {
+                request.filter.marked = marked
+            }
+            if let unread = f.unread {
+                request.filter.unread = unread
+            }
+            if let parentId = f.parentId {
+                request.parentID = parentId
+            }
+        }
+        
+        if let ps = pages {
+            request.pagination = Api_V1_Pagination()
+            request.pagination.page = ps.page
+            request.pagination.pageSize = ps.pageSize
+        }
+        
+        if let o = order {
+            switch o.order {
+            case DocOrder.createAt:
+                request.order = Api_V1_ListDocumentsRequest.DocumentOrder.createdAt
+            case .name:
+                request.order = Api_V1_ListDocumentsRequest.DocumentOrder.name
+            }
+            if o.desc == true {
+                request.orderDesc = true
+            }
+        }
+        
+        let call = clientSet.document.listDocuments(request, callOptions: defaultCallOptions)
         do {
-            var request = Api_V1_ListDocumentsRequest()
-            if let f = filter {
-                request.filter = Api_V1_DocumentFilter()
-                if let marked = f.marked {
-                    request.filter.marked = marked
-                }
-                if let unread = f.unread {
-                    request.filter.unread = unread
-                }
-                if let parentId = f.parentId {
-                    request.parentID = parentId
-                }
-            }
-            
-            if let ps = pages {
-                request.pagination = Api_V1_Pagination()
-                request.pagination.page = ps.page
-                request.pagination.pageSize = ps.pageSize
-            }
-            
-            if let o = order {
-                switch o.order {
-                case DocOrder.createAt:
-                    request.order = Api_V1_ListDocumentsRequest.DocumentOrder.createdAt
-                case .name:
-                    request.order = Api_V1_ListDocumentsRequest.DocumentOrder.name
-                }
-                if o.desc == true {
-                    request.orderDesc = true
-                }
-            }
-            
-            let call = clientSet?.document.listDocuments(request, callOptions: defaultCallOptions)
-            let response =  try call?.response.wait()
-            
-            let documents = response!.documents
+            let response = try call.response.wait()
+            let documents = response.documents
             var docs: [DocumentInfoModel] = []
             for doc in documents {
                 docs.append(docInfo2Model(doc: doc))
@@ -74,53 +73,52 @@ class DocumentService {
             return docs
         } catch {
             log.error("[documentService] list docuemnt failed \(error)")
-            return []
+            throw error
         }
     }
     
-    func updateDocument(docUpdate: DocumentUpdate) {
-        var doc: DocumentInfoModel?
+    func updateDocument(docUpdate: DocumentUpdate) throws {
+        let clientSet = try clientFactory.makeClient()
+        var request = Api_V1_UpdateDocumentRequest()
+        request.document.id = docUpdate.docId
+        if let unread = docUpdate.unread {
+            request.setMark = unread ? Api_V1_UpdateDocumentRequest.DocumentMark.unread:Api_V1_UpdateDocumentRequest.DocumentMark.read
+        }
+        if let mark = docUpdate.marked {
+            request.setMark = mark ? Api_V1_UpdateDocumentRequest.DocumentMark.marked:Api_V1_UpdateDocumentRequest.DocumentMark.unmarked
+        }
+        
         do {
-            var request = Api_V1_UpdateDocumentRequest()
-            request.document.id = docUpdate.docId
-            if let unread = docUpdate.unread {
-                request.setMark = unread ? Api_V1_UpdateDocumentRequest.DocumentMark.unread:Api_V1_UpdateDocumentRequest.DocumentMark.read
-                doc?.unread = unread
-            }
-            if let mark = docUpdate.marked {
-                request.setMark = mark ? Api_V1_UpdateDocumentRequest.DocumentMark.marked:Api_V1_UpdateDocumentRequest.DocumentMark.unmarked
-                doc?.marked = mark
-            }
-            
-            let call = clientSet?.document.updateDocument(request, callOptions: defaultCallOptions)
-            let _ = try call?.response.wait()
+            let call = clientSet.document.updateDocument(request, callOptions: defaultCallOptions)
+            let _ = try call.response.wait()
         } catch {
             log.error("[documentService] update docuemnt failed \(error)")
+            throw error
         }
-        return
     }
     
-    func ingestDocument(entryId: Int64){
+    func ingestDocument(entryId: Int64) throws {
+        let clientSet = try clientFactory.makeClient()
         var requset = Api_V1_TriggerWorkflowRequest()
         requset.workflowID = "buildin.ingest"
         requset.target.entryID = entryId
-        
+        let call = clientSet.workflow.triggerWorkflow(requset, callOptions: defaultCallOptions)
         do {
-            let call = clientSet!.workflow.triggerWorkflow(requset, callOptions: defaultCallOptions)
             let _ = try call.response.wait()
         } catch {
             log.error("trigger workflow failed \(error)")
-            return
+            throw error
         }
     }
     
-    func searchDocument(search: String) -> [DocumentInfoModel] {
-        
-        do {
-            var request = Api_V1_SearchDocumentsRequest()
-            request.query = search
+    func searchDocument(search: String) throws -> [DocumentInfoModel] {
+        let clientSet = try clientFactory.makeClient()
+        var request = Api_V1_SearchDocumentsRequest()
+        request.query = search
 
-            let call = clientSet!.document.searchDocuments(request, callOptions: defaultCallOptions)
+        let call = clientSet.document.searchDocuments(request, callOptions: defaultCallOptions)
+
+        do {
             let response = try call.response.wait()
             var docs: [DocumentInfoModel] = []
             
@@ -130,38 +128,37 @@ class DocumentService {
             return docs
         } catch {
             log.error("search document failed \(error)")
-            return []
+            throw error
         }
-        
     }
     
-    func listDocumentGroups(parentId: Int64?, filter: Docfilter?) -> [EntryInfoModel] {
-        do {
-            var request = Api_V1_GetDocumentParentsRequest()
-            if let f = filter {
-                request.filter = Api_V1_DocumentFilter()
-                if let marked = f.marked {
-                    request.filter.marked = marked
-                }
-                if let unread = f.unread {
-                    request.filter.unread = unread
-                }
+    func listDocumentGroups(parentId: Int64?, filter: Docfilter?) throws -> [EntryInfoModel] {
+        let clientSet = try clientFactory.makeClient()
+        var request = Api_V1_GetDocumentParentsRequest()
+        if let f = filter {
+            request.filter = Api_V1_DocumentFilter()
+            if let marked = f.marked {
+                request.filter.marked = marked
             }
-            if let pId = parentId {
-                request.parentID = pId
+            if let unread = f.unread {
+                request.filter.unread = unread
             }
+        }
+        if let pId = parentId {
+            request.parentID = pId
+        }
 
-            let call = clientSet?.document.getDocumentParents(request, callOptions: defaultCallOptions)
-            let response =  try call?.response.wait()
-            
+        do {
+            let call = clientSet.document.getDocumentParents(request, callOptions: defaultCallOptions)
+            let response =  try call.response.wait()
             var ens: [EntryInfoModel] = []
-            for en in response?.entries ?? [] {
-                ens.append(entryService.entryInfo2Model(en: en))
+            for en in response.entries {
+                ens.append(service.entryInfo2Model(en: en))
             }
             return ens
         } catch {
             log.error("[documentService] list docuemnt failed \(error)")
-            return []
+            throw error
         }
 
     }

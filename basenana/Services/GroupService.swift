@@ -10,20 +10,13 @@ import SwiftUI
 import GRPC
 import GRDB
 
-let groupService = GroupService()
-
-class GroupService {
-    @AppStorage("org.basenana.nanafs.namespace", store: UserDefaults.standard)
-    private var namespace: String = ""
-    
-    @AppStorage("org.basenana.nanafs.rootId", store: UserDefaults.standard)
-    private var rootId: Int = 0
-    
-    func initGroupTree() {
+extension Service {
+    func initGroupTree() throws {
+        let clientSet = try clientFactory.makeClient()
         log.debug("[groupService] start init group tree, id: \(GroupRoot.groupID), name: \(GroupRoot.groupName)")
         
         let req = Api_V1_GetGroupTreeRequest()
-        let call = clientSet!.entries.groupTree(req, callOptions: defaultCallOptions)
+        let call = clientSet.entries.groupTree(req, callOptions: defaultCallOptions)
         do {
             let response = try call.response.wait()
             GroupRoot.groupID = response.root.entry.id
@@ -34,39 +27,34 @@ class GroupService {
             }
         } catch {
             log.error("[groupService] find children failed \(error)")
-            return
+            throw error
         }
         
         log.debug("[groupService] init group tree finish, id: \(GroupRoot.groupID), name: \(GroupRoot.groupName)")
     }
     
-    func moveEntriesToGroup(entries: [Int64], groupID: Int64) {
+    func moveEntriesToGroup(entries: [Int64], groupID: Int64) throws {
         for entry in entries {
-            moveEntryToGroup(entryId: entry, groupID: groupID)
+            try moveEntryToGroup(entryId: entry, groupID: groupID)
         }
         GroupRoot.updateAt = Date()
     }
     
-    func moveEntryToGroup(entryId: Int64, groupID: Int64) {
-        if clientSet == nil {
-            log.error("move entry \(entryId) failed, client not init")
-            return
-        }
-        
-        log.info("move \(entryId) -> \(groupID)")
+    func moveEntryToGroup(entryId: Int64, groupID: Int64) throws {
+        let clientSet = try clientFactory.makeClient()
+        log.info("[groupService] move \(entryId) -> \(groupID)")
         var request = Api_V1_ChangeParentRequest()
         request.entryID = entryId
         request.newParentID = groupID
-        let call = clientSet!.entries.changeParent(request, callOptions: defaultCallOptions)
+        let call = clientSet.entries.changeParent(request, callOptions: defaultCallOptions)
         
         do {
             let _ = try call.response.wait()
         } catch {
             log.error("move entry \(entryId) failed \(error)")
-            return
+            throw error
         }
     }
-    
 }
 
 func buildGroupEntry(group: Api_V1_GetGroupTreeResponse.GroupEntry) -> GroupViewModel{

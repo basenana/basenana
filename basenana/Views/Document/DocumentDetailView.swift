@@ -10,14 +10,15 @@ import SwiftUI
 
 struct DocumentDetailView: View {
     @State var isDrawerOpen: Bool = false
-    var doc: DocumentDetailModel?
+    var entryId: Int64
     
-    init(entryId: Int64?, doc: DocumentDetailModel?){
-        if doc != nil {
-            self.doc = doc
-        }
-        if let eId = entryId {
-            self.doc = documentService.getDocument(entryId: eId)
+    var doc: DocumentDetailModel? {
+        get {
+            do {
+                return try service.getDocument(entryId: entryId)
+            } catch {
+                return nil
+            }
         }
     }
     
@@ -41,7 +42,7 @@ struct DocumentDetailView: View {
                             
                             if isDrawerOpen{
                                 // dialogue body
-                                DialogueView(isDrawerOpen: $isDrawerOpen, docId: document.id, entryId: document.oid)
+                                DialogueView(docId: document.id, entryId: document.oid, isDrawerOpen: $isDrawerOpen)
                                     .id("\(document.oid)/room")
                                     .frame(minWidth:200, idealWidth: 200, maxWidth: .infinity)
                             }

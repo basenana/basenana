@@ -34,6 +34,11 @@
 		3F81C9C52BAF1A6D00FEE130 /* GroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C42BAF1A6D00FEE130 /* GroupViewModel.swift */; };
 		3F81C9C72BAFCB8900FEE130 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C62BAFCB8900FEE130 /* MainView.swift */; };
 		3F84C8CB2C146E29003DC6DA /* WebArchiver in Frameworks */ = {isa = PBXBuildFile; productRef = 3F84C8CA2C146E29003DC6DA /* WebArchiver */; };
+		3FA180142C157A8A004176EA /* WebArchiver in Frameworks */ = {isa = PBXBuildFile; productRef = 3FA180132C157A8A004176EA /* WebArchiver */; };
+		3FA180162C1DBFA1004176EA /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA180152C1DBFA1004176EA /* Service.swift */; };
+		3FA180172C1DBFA1004176EA /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA180152C1DBFA1004176EA /* Service.swift */; };
+		3FA1801F2C1E977B004176EA /* AlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA1801E2C1E977B004176EA /* AlertViewModel.swift */; };
+		3FA180202C1E977B004176EA /* AlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA1801E2C1E977B004176EA /* AlertViewModel.swift */; };
 		3FB782412BC1A82700327191 /* CGRPCZlib in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782402BC1A82700327191 /* CGRPCZlib */; };
 		3FB782432BC1A82700327191 /* GRPC in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782422BC1A82700327191 /* GRPC */; };
 		3FB782452BC1A82700327191 /* GRPCReflectionService in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782442BC1A82700327191 /* GRPCReflectionService */; };
@@ -155,6 +160,8 @@
 		3F7444B82BE50DE900CC9C1E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = basenana/Info.plist; sourceTree = SOURCE_ROOT; };
 		3F81C9C42BAF1A6D00FEE130 /* GroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewModel.swift; sourceTree = "<group>"; };
 		3F81C9C62BAFCB8900FEE130 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		3FA180152C1DBFA1004176EA /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		3FA1801E2C1E977B004176EA /* AlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewModel.swift; sourceTree = "<group>"; };
 		3FB782502BC2D0F600327191 /* fsapi-v1.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "fsapi-v1.grpc.swift"; sourceTree = "<group>"; };
 		3FB782512BC2D0F600327191 /* fsapi-v1.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "fsapi-v1.pb.swift"; sourceTree = "<group>"; };
 		3FDC2EA02BDCEBC500344DF8 /* EntryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryViewModel.swift; sourceTree = "<group>"; };
@@ -196,6 +203,7 @@
 				3F7444B72BE3D1B000CC9C1E /* SwiftSoup in Frameworks */,
 				3FB782432BC1A82700327191 /* GRPC in Frameworks */,
 				3FB782412BC1A82700327191 /* CGRPCZlib in Frameworks */,
+				3FA180142C157A8A004176EA /* WebArchiver in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,6 +348,7 @@
 				3F0AEC752BA48EC7000DA928 /* GroupService.swift */,
 				ED47907A2BB129FF00FEA8D4 /* DocumentService.swift */,
 				ED72603F2BC2E34A005F1166 /* DialogueService.swift */,
+				3FA180152C1DBFA1004176EA /* Service.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -371,6 +380,7 @@
 				3F81C9C42BAF1A6D00FEE130 /* GroupViewModel.swift */,
 				ED1D72CD2BD2BDAD006CF95F /* DialogueViewModel.swift */,
 				3FDC2EA02BDCEBC500344DF8 /* EntryViewModel.swift */,
+				3FA1801E2C1E977B004176EA /* AlertViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -467,6 +477,7 @@
 				3F4A78DA2BCF7FFB0035F90F /* SwiftyBeaver */,
 				3F7444B62BE3D1B000CC9C1E /* SwiftSoup */,
 				3F19E20B2C140A6C00B84293 /* Reeeed */,
+				3FA180132C157A8A004176EA /* WebArchiver */,
 			);
 			productName = basenana;
 			productReference = 3F1BBE192B8E147F005D533F /* Basenana.app */;
@@ -644,6 +655,7 @@
 				ED54F0542C0D808700EE2C2E /* DocumentView.swift in Sources */,
 				3F1BBE5E2B93664E005D533F /* HTMLStringView.swift in Sources */,
 				3FB782552BC2D0F600327191 /* fsapi-v1.pb.swift in Sources */,
+				3FA180162C1DBFA1004176EA /* Service.swift in Sources */,
 				ED2A0B432BFF1A2200CFF463 /* PageModel.swift in Sources */,
 				3F1BBE592B932251005D533F /* GroupView.swift in Sources */,
 				ED917E782B9607BE004FCB9A /* DocumentModel.swift in Sources */,
@@ -662,6 +674,7 @@
 				ED6B17162C0ED30F00FEABE6 /* GroupCreateView.swift in Sources */,
 				3FB782542BC2D0F600327191 /* fsapi-v1.grpc.swift in Sources */,
 				EDF504772BEB295700CB4B1C /* DocumentDetailView.swift in Sources */,
+				3FA1801F2C1E977B004176EA /* AlertViewModel.swift in Sources */,
 				3F4A78E12BD299110035F90F /* SettingsView.swift in Sources */,
 				3F1BBE1D2B8E147F005D533F /* basenanaApp.swift in Sources */,
 				EDC5AA802C06F8FC003B78AD /* IngestButtonView.swift in Sources */,
@@ -706,6 +719,7 @@
 				ED54F0552C0D81C600EE2C2E /* DocumentView.swift in Sources */,
 				ED0CBB2C2BF656B90056E6AA /* HTMLStringView.swift in Sources */,
 				ED0CBB2D2BF656B90056E6AA /* fsapi-v1.pb.swift in Sources */,
+				3FA180172C1DBFA1004176EA /* Service.swift in Sources */,
 				ED2A0B442BFF1A5100CFF463 /* PageModel.swift in Sources */,
 				ED0CBB2E2BF656B90056E6AA /* GroupView.swift in Sources */,
 				ED0CBB2F2BF656B90056E6AA /* DocumentModel.swift in Sources */,
@@ -724,6 +738,7 @@
 				ED6B17172C0ED50800FEABE6 /* GroupCreateView.swift in Sources */,
 				ED0CBB3B2BF656B90056E6AA /* DocumentDetailView.swift in Sources */,
 				ED0CBB3C2BF656B90056E6AA /* SettingsView.swift in Sources */,
+				3FA180202C1E977B004176EA /* AlertViewModel.swift in Sources */,
 				EDC5AA832C06F933003B78AD /* IngestButtonView.swift in Sources */,
 				ED0CBB3D2BF656B90056E6AA /* basenanaApp.swift in Sources */,
 				ED0CBB3E2BF656B90056E6AA /* DocumentItemView.swift in Sources */,
@@ -1275,6 +1290,11 @@
 			productName = SwiftSoup;
 		};
 		3F84C8CA2C146E29003DC6DA /* WebArchiver */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F84C8C92C146E29003DC6DA /* XCRemoteSwiftPackageReference "WebArchiver" */;
+			productName = WebArchiver;
+		};
+		3FA180132C157A8A004176EA /* WebArchiver */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3F84C8C92C146E29003DC6DA /* XCRemoteSwiftPackageReference "WebArchiver" */;
 			productName = WebArchiver;

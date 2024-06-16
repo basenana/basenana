@@ -11,6 +11,7 @@ struct DocumentItemView: View {
     var doc: DocumentInfoModel
     var unreadPage: Bool
     @State var parent: EntryDetailModel?
+    @Environment(AlertStore.self) var alert
     
     init(doc: DocumentInfoModel, unreadPage: Bool) {
         self.doc = doc
@@ -51,9 +52,10 @@ struct DocumentItemView: View {
                 .frame(minHeight: 0, idealHeight: 50, alignment: .leading)
         }
         .onAppear{
-            Task.detached{
-                let parentId = doc.parentId
-                self.parent = entryService.getEntry(entryID: parentId)
+            do {
+                self.parent = try service.getEntry(entryID: doc.parentId)
+            } catch {
+                alert.trigger(message: "\(error)")
             }
         }
     }

@@ -20,6 +20,54 @@ fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAP
   typealias Version = _2
 }
 
+enum Api_V1_WebFileType: SwiftProtobuf.Enum {
+  typealias RawValue = Int
+  case bookmarkFile // = 0
+  case htmlFile // = 1
+  case rawHtmlFile // = 2
+  case webArchiveFile // = 3
+  case UNRECOGNIZED(Int)
+
+  init() {
+    self = .bookmarkFile
+  }
+
+  init?(rawValue: Int) {
+    switch rawValue {
+    case 0: self = .bookmarkFile
+    case 1: self = .htmlFile
+    case 2: self = .rawHtmlFile
+    case 3: self = .webArchiveFile
+    default: self = .UNRECOGNIZED(rawValue)
+    }
+  }
+
+  var rawValue: Int {
+    switch self {
+    case .bookmarkFile: return 0
+    case .htmlFile: return 1
+    case .rawHtmlFile: return 2
+    case .webArchiveFile: return 3
+    case .UNRECOGNIZED(let i): return i
+    }
+  }
+
+}
+
+#if swift(>=4.2)
+
+extension Api_V1_WebFileType: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  static let allCases: [Api_V1_WebFileType] = [
+    .bookmarkFile,
+    .htmlFile,
+    .rawHtmlFile,
+    .webArchiveFile,
+  ]
+}
+
+#endif  // swift(>=4.2)
+
 struct Api_V1_AccessTokenRequest {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -72,7 +120,7 @@ struct Api_V1_QuickInboxRequest {
 
   var sourceType: Api_V1_QuickInboxRequest.SourceType = .urlSource
 
-  var fileType: Api_V1_QuickInboxRequest.FileType = .bookmarkFile
+  var fileType: Api_V1_WebFileType = .bookmarkFile
 
   var filename: String = String()
 
@@ -110,37 +158,6 @@ struct Api_V1_QuickInboxRequest {
 
   }
 
-  enum FileType: SwiftProtobuf.Enum {
-    typealias RawValue = Int
-    case bookmarkFile // = 0
-    case htmlFile // = 1
-    case webArchiveFile // = 2
-    case UNRECOGNIZED(Int)
-
-    init() {
-      self = .bookmarkFile
-    }
-
-    init?(rawValue: Int) {
-      switch rawValue {
-      case 0: self = .bookmarkFile
-      case 1: self = .htmlFile
-      case 2: self = .webArchiveFile
-      default: self = .UNRECOGNIZED(rawValue)
-      }
-    }
-
-    var rawValue: Int {
-      switch self {
-      case .bookmarkFile: return 0
-      case .htmlFile: return 1
-      case .webArchiveFile: return 2
-      case .UNRECOGNIZED(let i): return i
-      }
-    }
-
-  }
-
   init() {}
 }
 
@@ -150,15 +167,6 @@ extension Api_V1_QuickInboxRequest.SourceType: CaseIterable {
   // The compiler won't synthesize support with the UNRECOGNIZED case.
   static let allCases: [Api_V1_QuickInboxRequest.SourceType] = [
     .urlSource,
-  ]
-}
-
-extension Api_V1_QuickInboxRequest.FileType: CaseIterable {
-  // The compiler won't synthesize support with the UNRECOGNIZED case.
-  static let allCases: [Api_V1_QuickInboxRequest.FileType] = [
-    .bookmarkFile,
-    .htmlFile,
-    .webArchiveFile,
   ]
 }
 
@@ -308,9 +316,38 @@ struct Api_V1_CreateEntryRequest {
 
   var kind: String = String()
 
+  var rss: Api_V1_CreateEntryRequest.RssConfig {
+    get {return _rss ?? Api_V1_CreateEntryRequest.RssConfig()}
+    set {_rss = newValue}
+  }
+  /// Returns true if `rss` has been explicitly set.
+  var hasRss: Bool {return self._rss != nil}
+  /// Clears the value of `rss`. Subsequent reads from it will return its default value.
+  mutating func clearRss() {self._rss = nil}
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
+  struct RssConfig {
+    // SwiftProtobuf.Message conformance is added in an extension below. See the
+    // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+    // methods supported on all messages.
+
+    var feed: String = String()
+
+    var siteName: String = String()
+
+    var siteURL: String = String()
+
+    var fileType: Api_V1_WebFileType = .bookmarkFile
+
+    var unknownFields = SwiftProtobuf.UnknownStorage()
+
+    init() {}
+  }
+
   init() {}
+
+  fileprivate var _rss: Api_V1_CreateEntryRequest.RssConfig? = nil
 }
 
 struct Api_V1_CreateEntryResponse {
@@ -2099,11 +2136,11 @@ struct Api_V1_Event {
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
+extension Api_V1_WebFileType: @unchecked Sendable {}
 extension Api_V1_AccessTokenRequest: @unchecked Sendable {}
 extension Api_V1_AccessTokenResponse: @unchecked Sendable {}
 extension Api_V1_QuickInboxRequest: @unchecked Sendable {}
 extension Api_V1_QuickInboxRequest.SourceType: @unchecked Sendable {}
-extension Api_V1_QuickInboxRequest.FileType: @unchecked Sendable {}
 extension Api_V1_QuickInboxResponse: @unchecked Sendable {}
 extension Api_V1_Pagination: @unchecked Sendable {}
 extension Api_V1_GetGroupTreeRequest: @unchecked Sendable {}
@@ -2113,6 +2150,7 @@ extension Api_V1_FindEntryDetailRequest: @unchecked Sendable {}
 extension Api_V1_GetEntryDetailRequest: @unchecked Sendable {}
 extension Api_V1_GetEntryDetailResponse: @unchecked Sendable {}
 extension Api_V1_CreateEntryRequest: @unchecked Sendable {}
+extension Api_V1_CreateEntryRequest.RssConfig: @unchecked Sendable {}
 extension Api_V1_CreateEntryResponse: @unchecked Sendable {}
 extension Api_V1_UpdateEntryRequest: @unchecked Sendable {}
 extension Api_V1_UpdateEntryResponse: @unchecked Sendable {}
@@ -2189,6 +2227,15 @@ extension Api_V1_Event.EventData: @unchecked Sendable {}
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "api.v1"
+
+extension Api_V1_WebFileType: SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "BookmarkFile"),
+    1: .same(proto: "HtmlFile"),
+    2: .same(proto: "RawHtmlFile"),
+    3: .same(proto: "WebArchiveFile"),
+  ]
+}
 
 extension Api_V1_AccessTokenRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = _protobuf_package + ".AccessTokenRequest"
@@ -2359,14 +2406,6 @@ extension Api_V1_QuickInboxRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
 extension Api_V1_QuickInboxRequest.SourceType: SwiftProtobuf._ProtoNameProviding {
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     0: .same(proto: "UrlSource"),
-  ]
-}
-
-extension Api_V1_QuickInboxRequest.FileType: SwiftProtobuf._ProtoNameProviding {
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "BookmarkFile"),
-    1: .same(proto: "HtmlFile"),
-    2: .same(proto: "WebArchiveFile"),
   ]
 }
 
@@ -2667,6 +2706,7 @@ extension Api_V1_CreateEntryRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
     1: .same(proto: "parentID"),
     2: .same(proto: "name"),
     3: .same(proto: "kind"),
+    4: .same(proto: "rss"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -2678,12 +2718,17 @@ extension Api_V1_CreateEntryRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
       case 1: try { try decoder.decodeSingularInt64Field(value: &self.parentID) }()
       case 2: try { try decoder.decodeSingularStringField(value: &self.name) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.kind) }()
+      case 4: try { try decoder.decodeSingularMessageField(value: &self._rss) }()
       default: break
       }
     }
   }
 
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if self.parentID != 0 {
       try visitor.visitSingularInt64Field(value: self.parentID, fieldNumber: 1)
     }
@@ -2693,6 +2738,9 @@ extension Api_V1_CreateEntryRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
     if !self.kind.isEmpty {
       try visitor.visitSingularStringField(value: self.kind, fieldNumber: 3)
     }
+    try { if let v = self._rss {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -2700,6 +2748,57 @@ extension Api_V1_CreateEntryRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
     if lhs.parentID != rhs.parentID {return false}
     if lhs.name != rhs.name {return false}
     if lhs.kind != rhs.kind {return false}
+    if lhs._rss != rhs._rss {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Api_V1_CreateEntryRequest.RssConfig: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = Api_V1_CreateEntryRequest.protoMessageName + ".RssConfig"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "feed"),
+    2: .same(proto: "siteName"),
+    3: .same(proto: "siteURL"),
+    4: .same(proto: "fileType"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.feed) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.siteName) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.siteURL) }()
+      case 4: try { try decoder.decodeSingularEnumField(value: &self.fileType) }()
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.feed.isEmpty {
+      try visitor.visitSingularStringField(value: self.feed, fieldNumber: 1)
+    }
+    if !self.siteName.isEmpty {
+      try visitor.visitSingularStringField(value: self.siteName, fieldNumber: 2)
+    }
+    if !self.siteURL.isEmpty {
+      try visitor.visitSingularStringField(value: self.siteURL, fieldNumber: 3)
+    }
+    if self.fileType != .bookmarkFile {
+      try visitor.visitSingularEnumField(value: self.fileType, fieldNumber: 4)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: Api_V1_CreateEntryRequest.RssConfig, rhs: Api_V1_CreateEntryRequest.RssConfig) -> Bool {
+    if lhs.feed != rhs.feed {return false}
+    if lhs.siteName != rhs.siteName {return false}
+    if lhs.siteURL != rhs.siteURL {return false}
+    if lhs.fileType != rhs.fileType {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

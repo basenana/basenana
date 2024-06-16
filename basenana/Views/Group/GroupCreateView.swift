@@ -8,11 +8,22 @@
 import SwiftUI
 
 struct GroupCreateView: View {
+    var parentID: Int64?
     @Binding var showCreateGroup: Bool
-    var parent: EntryDetailModel?
-
+    
     @State private var groupName: String = ""
     @State private var errorMsg: String = ""
+    
+    var parent: EntryDetailModel? {
+        get {
+            do {
+                return try service.getEntry(entryID: self.parentID ?? rootEntryID)
+            } catch {
+                self.errorMsg = "\(error)"
+            }
+            return nil
+        }
+    }
     
     var body: some View{
         Form{
@@ -35,10 +46,12 @@ struct GroupCreateView: View {
                             .padding(.vertical, 5)
                     }
                     Button {
-                        Task.detached {
-                            entryService.createGroup(groupName: groupName, parentId: parent?.id ?? GroupRoot.groupID)
+                        do {
+                            try service.createGroup(groupName: groupName, parentId: parent?.id ?? GroupRoot.groupID)
+                            showCreateGroup = false
+                        } catch {
+                            errorMsg = "\(error)"
                         }
-                        showCreateGroup = false
                     } label: {
                         Text("Create")
                             .font(.body)
