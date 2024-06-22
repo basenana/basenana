@@ -16,7 +16,7 @@ enum AppAction {
 
     case initGroupTree(root: RootGroupModel)
 
-    case quickInbox(urlStr: String, filename: String, fileType: String)
+    case quickInbox(urlStr: String, filename: String, fileType: String, data: Data?)
     
     case updateInbox(enties: [EntryInfoModel])
     

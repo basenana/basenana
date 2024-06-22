@@ -12,16 +12,19 @@ import Foundation
 final class AppConfiguration: ObservableObject {
     
     @AppStorage("org.basenana.nanafs.host", store: UserDefaults.standard)
-    private var host: String = ""
+    var host: String = ""
     
     @AppStorage("org.basenana.nanafs.port", store: UserDefaults.standard)
-    private var port: Int = 0
+    var port: Int = 0
     
     @AppStorage("org.basenana.nanafs.auth.accessToken", store: UserDefaults.standard)
-    private var accessTokenKey: String = ""
+    var accessTokenKey: String = ""
     
     @AppStorage("org.basenana.nanafs.auth.secretToken", store: UserDefaults.standard)
-    private var secretToken: String = ""
+    var secretToken: String = ""
     
+    @AppStorage("org.basenana.nanafs.document.autoRead", store: UserDefaults.standard)
+    var autoRead: Bool = false
+
     static let share = AppConfiguration()
 }

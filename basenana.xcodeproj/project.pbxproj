@@ -68,10 +68,20 @@
 		3FA180142C157A8A004176EA /* WebArchiver in Frameworks */ = {isa = PBXBuildFile; productRef = 3FA180132C157A8A004176EA /* WebArchiver */; };
 		3FA180162C1DBFA1004176EA /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA180152C1DBFA1004176EA /* Service.swift */; };
 		3FA180172C1DBFA1004176EA /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA180152C1DBFA1004176EA /* Service.swift */; };
+		3FA594552C26C14300E303CE /* PropertyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA594542C26C14300E303CE /* PropertyViewModel.swift */; };
+		3FA594562C26C14300E303CE /* PropertyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA594542C26C14300E303CE /* PropertyViewModel.swift */; };
+		3FA594582C26CD9800E303CE /* Consistents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA594572C26CD9800E303CE /* Consistents.swift */; };
+		3FA594592C26CD9800E303CE /* Consistents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA594572C26CD9800E303CE /* Consistents.swift */; };
 		3FAC06BC2C25BEC40067E7A5 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06BB2C25BEC40067E7A5 /* LoginView.swift */; };
 		3FAC06BD2C25BEC40067E7A5 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06BB2C25BEC40067E7A5 /* LoginView.swift */; };
 		3FAC06C22C25DE050067E7A5 /* GroupTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06C12C25DE050067E7A5 /* GroupTableView.swift */; };
 		3FAC06C32C25DE050067E7A5 /* GroupTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06C12C25DE050067E7A5 /* GroupTableView.swift */; };
+		3FAC06C52C26727E0067E7A5 /* DocumentReaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06C42C26727E0067E7A5 /* DocumentReaderViewModel.swift */; };
+		3FAC06C62C26727E0067E7A5 /* DocumentReaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06C42C26727E0067E7A5 /* DocumentReaderViewModel.swift */; };
+		3FAC06C82C2675410067E7A5 /* DocumentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06C72C2675410067E7A5 /* DocumentListView.swift */; };
+		3FAC06C92C2675410067E7A5 /* DocumentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06C72C2675410067E7A5 /* DocumentListView.swift */; };
+		3FAC06CB2C268CF40067E7A5 /* DocumentMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06CA2C268CF40067E7A5 /* DocumentMenuView.swift */; };
+		3FAC06CC2C268CF40067E7A5 /* DocumentMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06CA2C268CF40067E7A5 /* DocumentMenuView.swift */; };
 		3FB782412BC1A82700327191 /* CGRPCZlib in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782402BC1A82700327191 /* CGRPCZlib */; };
 		3FB782432BC1A82700327191 /* GRPC in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782422BC1A82700327191 /* GRPC */; };
 		3FB782452BC1A82700327191 /* GRPCReflectionService in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782442BC1A82700327191 /* GRPCReflectionService */; };
@@ -129,8 +139,6 @@
 		ED62B1752BE7D82A001AC523 /* EntryPropertyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED62B1742BE7D82A001AC523 /* EntryPropertyModel.swift */; };
 		ED6B17162C0ED30F00FEABE6 /* GroupCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6B17152C0ED30F00FEABE6 /* GroupCreateView.swift */; };
 		ED6B17172C0ED50800FEABE6 /* GroupCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6B17152C0ED30F00FEABE6 /* GroupCreateView.swift */; };
-		ED6B17192C0EE76900FEABE6 /* DocumentButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6B17182C0EE76900FEABE6 /* DocumentButtonView.swift */; };
-		ED6B171A2C0EE80D00FEABE6 /* DocumentButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6B17182C0EE76900FEABE6 /* DocumentButtonView.swift */; };
 		ED72603E2BC2E25D005F1166 /* DialogueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED72603D2BC2E25D005F1166 /* DialogueModel.swift */; };
 		ED7260402BC2E34A005F1166 /* DialogueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED72603F2BC2E34A005F1166 /* DialogueService.swift */; };
 		ED85A3BE2BBAB21A0040598E /* DialogueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED85A3BD2BBAB21A0040598E /* DialogueView.swift */; };
@@ -208,8 +216,13 @@
 		3F81C9C42BAF1A6D00FEE130 /* GroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewModel.swift; sourceTree = "<group>"; };
 		3F81C9C62BAFCB8900FEE130 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		3FA180152C1DBFA1004176EA /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		3FA594542C26C14300E303CE /* PropertyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyViewModel.swift; sourceTree = "<group>"; };
+		3FA594572C26CD9800E303CE /* Consistents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Consistents.swift; sourceTree = "<group>"; };
 		3FAC06BB2C25BEC40067E7A5 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		3FAC06C12C25DE050067E7A5 /* GroupTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupTableView.swift; sourceTree = "<group>"; };
+		3FAC06C42C26727E0067E7A5 /* DocumentReaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentReaderViewModel.swift; sourceTree = "<group>"; };
+		3FAC06C72C2675410067E7A5 /* DocumentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentListView.swift; sourceTree = "<group>"; };
+		3FAC06CA2C268CF40067E7A5 /* DocumentMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentMenuView.swift; sourceTree = "<group>"; };
 		3FB782502BC2D0F600327191 /* fsapi-v1.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "fsapi-v1.grpc.swift"; sourceTree = "<group>"; };
 		3FB782512BC2D0F600327191 /* fsapi-v1.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "fsapi-v1.pb.swift"; sourceTree = "<group>"; };
 		3FDC2EA22BDCEEB200344DF8 /* IDHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDHelper.swift; sourceTree = "<group>"; };
@@ -222,7 +235,6 @@
 		ED54F0532C0D808700EE2C2E /* DocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentView.swift; sourceTree = "<group>"; };
 		ED62B1742BE7D82A001AC523 /* EntryPropertyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryPropertyModel.swift; sourceTree = "<group>"; };
 		ED6B17152C0ED30F00FEABE6 /* GroupCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCreateView.swift; sourceTree = "<group>"; };
-		ED6B17182C0EE76900FEABE6 /* DocumentButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentButtonView.swift; sourceTree = "<group>"; };
 		ED72603D2BC2E25D005F1166 /* DialogueModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueModel.swift; sourceTree = "<group>"; };
 		ED72603F2BC2E34A005F1166 /* DialogueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueService.swift; sourceTree = "<group>"; };
 		ED85A3BD2BBAB21A0040598E /* DialogueView.swift */ = {isa = PBXFileReference; indentWidth = 5; lastKnownFileType = sourcecode.swift; path = DialogueView.swift; sourceTree = "<group>"; };
@@ -481,6 +493,8 @@
 			children = (
 				3F81C9C42BAF1A6D00FEE130 /* GroupViewModel.swift */,
 				ED1D72CD2BD2BDAD006CF95F /* DialogueViewModel.swift */,
+				3FAC06C42C26727E0067E7A5 /* DocumentReaderViewModel.swift */,
+				3FA594542C26C14300E303CE /* PropertyViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -509,6 +523,7 @@
 				3F4A78CE2BCC2A660035F90F /* FsClientSet.swift */,
 				3F317C442C24574B00F42D37 /* Mapping.swift */,
 				3F317C472C2459BA00F42D37 /* Helper.swift */,
+				3FA594572C26CD9800E303CE /* Consistents.swift */,
 			);
 			path = FsAPI;
 			sourceTree = "<group>";
@@ -529,7 +544,8 @@
 				ED85A3C22BBAB3BD0040598E /* DocumentItemView.swift */,
 				EDF504762BEB295700CB4B1C /* DocumentDetailView.swift */,
 				ED54F0532C0D808700EE2C2E /* DocumentView.swift */,
-				ED6B17182C0EE76900FEABE6 /* DocumentButtonView.swift */,
+				3FAC06C72C2675410067E7A5 /* DocumentListView.swift */,
+				3FAC06CA2C268CF40067E7A5 /* DocumentMenuView.swift */,
 			);
 			path = Document;
 			sourceTree = "<group>";
@@ -738,6 +754,7 @@
 			files = (
 				ED47907B2BB129FF00FEA8D4 /* DocumentService.swift in Sources */,
 				3F317C3C2C232B4700F42D37 /* GroupModel.swift in Sources */,
+				3FAC06CB2C268CF40067E7A5 /* DocumentMenuView.swift in Sources */,
 				3FDC2EA32BDCEEB200344DF8 /* IDHelper.swift in Sources */,
 				ED85A3BE2BBAB21A0040598E /* DialogueView.swift in Sources */,
 				ED7260402BC2E34A005F1166 /* DialogueService.swift in Sources */,
@@ -747,13 +764,16 @@
 				3F317C322C231D3400F42D37 /* AppEnvironment.swift in Sources */,
 				3F317C352C231E8C00F42D37 /* Destination.swift in Sources */,
 				3F1BBE572B90CD59005D533F /* EntryModel.swift in Sources */,
+				3FAC06C82C2675410067E7A5 /* DocumentListView.swift in Sources */,
 				3F4A78C82BC99D160035F90F /* SidebarGroupsView.swift in Sources */,
 				3F1BBE602B94BAF9005D533F /* QuickInboxView.swift in Sources */,
 				3F4A78DD2BCF80080035F90F /* Logging.swift in Sources */,
 				ED1D72CE2BD2BDAD006CF95F /* DialogueViewModel.swift in Sources */,
 				ED62B1752BE7D82A001AC523 /* EntryPropertyModel.swift in Sources */,
 				3F317C4B2C24701000F42D37 /* Extension.swift in Sources */,
+				3FA594552C26C14300E303CE /* PropertyViewModel.swift in Sources */,
 				ED54F0542C0D808700EE2C2E /* DocumentView.swift in Sources */,
+				3FA594582C26CD9800E303CE /* Consistents.swift in Sources */,
 				3F1BBE5E2B93664E005D533F /* HTMLStringView.swift in Sources */,
 				3FB782552BC2D0F600327191 /* fsapi-v1.pb.swift in Sources */,
 				3FA180162C1DBFA1004176EA /* Service.swift in Sources */,
@@ -767,6 +787,7 @@
 				3F1BBE4F2B90C4D5005D533F /* SidebarView.swift in Sources */,
 				3FDC2EA72BE3CC8C00344DF8 /* HTMLParser.swift in Sources */,
 				3F317C452C24574B00F42D37 /* Mapping.swift in Sources */,
+				3FAC06C52C26727E0067E7A5 /* DocumentReaderViewModel.swift in Sources */,
 				3F4A78CF2BCC2A660035F90F /* FsClientSet.swift in Sources */,
 				EDC5AA7A2C06F738003B78AD /* MessageView.swift in Sources */,
 				3F81C9C52BAF1A6D00FEE130 /* GroupViewModel.swift in Sources */,
@@ -786,7 +807,6 @@
 				3F1BBE1D2B8E147F005D533F /* basenanaApp.swift in Sources */,
 				3F317C262C231CF200F42D37 /* AppState.swift in Sources */,
 				EDC5AA802C06F8FC003B78AD /* IngestButtonView.swift in Sources */,
-				ED6B17192C0EE76900FEABE6 /* DocumentButtonView.swift in Sources */,
 				3F317C392C23253900F42D37 /* Reducer.swift in Sources */,
 				ED85A3C32BBAB3BD0040598E /* DocumentItemView.swift in Sources */,
 				3F81C9C72BAFCB8900FEE130 /* ContentView.swift in Sources */,
@@ -822,6 +842,7 @@
 				ED0CBB222BF656B90056E6AA /* DialogueView.swift in Sources */,
 				ED0CBB232BF656B90056E6AA /* DialogueService.swift in Sources */,
 				ED0CBB242BF656B90056E6AA /* SidebarButtonView.swift in Sources */,
+				3FAC06C92C2675410067E7A5 /* DocumentListView.swift in Sources */,
 				ED0CBB252BF656B90056E6AA /* EntryModel.swift in Sources */,
 				ED0CBB262BF656B90056E6AA /* SidebarGroupsView.swift in Sources */,
 				3FAC06BD2C25BEC40067E7A5 /* LoginView.swift in Sources */,
@@ -829,7 +850,10 @@
 				3F317C202C231AD500F42D37 /* Debug.swift in Sources */,
 				ED0CBB272BF656B90056E6AA /* QuickInboxView.swift in Sources */,
 				ED0CBB282BF656B90056E6AA /* Logging.swift in Sources */,
+				3FA594592C26CD9800E303CE /* Consistents.swift in Sources */,
 				ED0CBB2A2BF656B90056E6AA /* DialogueViewModel.swift in Sources */,
+				3FAC06CC2C268CF40067E7A5 /* DocumentMenuView.swift in Sources */,
+				3FAC06C62C26727E0067E7A5 /* DocumentReaderViewModel.swift in Sources */,
 				ED0CBB2B2BF656B90056E6AA /* EntryPropertyModel.swift in Sources */,
 				ED54F0552C0D81C600EE2C2E /* DocumentView.swift in Sources */,
 				ED0CBB2C2BF656B90056E6AA /* HTMLStringView.swift in Sources */,
@@ -861,13 +885,13 @@
 				3F317C272C231CF200F42D37 /* AppState.swift in Sources */,
 				3F317C302C231D2800F42D37 /* AppConfiguration.swift in Sources */,
 				EDC5AA832C06F933003B78AD /* IngestButtonView.swift in Sources */,
+				3FA594562C26C14300E303CE /* PropertyViewModel.swift in Sources */,
 				3F317C4C2C24701000F42D37 /* Extension.swift in Sources */,
 				3F317C4F2C2476C300F42D37 /* StackContentView.swift in Sources */,
 				ED0CBB3D2BF656B90056E6AA /* basenanaApp.swift in Sources */,
 				3F317C2A2C231CFC00F42D37 /* Store.swift in Sources */,
 				3F317C432C244D7F00F42D37 /* AlertModel.swift in Sources */,
 				ED0CBB3E2BF656B90056E6AA /* DocumentItemView.swift in Sources */,
-				ED6B171A2C0EE80D00FEABE6 /* DocumentButtonView.swift in Sources */,
 				EDC5AA812C06F925003B78AD /* CloseButtonView.swift in Sources */,
 				3F317C462C24574B00F42D37 /* Mapping.swift in Sources */,
 				ED0CBB3F2BF656B90056E6AA /* ContentView.swift in Sources */,

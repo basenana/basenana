@@ -41,13 +41,12 @@ struct DocumentDetailModel: Codable, Identifiable, Hashable{
     
     var createdAt: Date
     var changedAt: Date
+    
+    func toInfo() -> DocumentInfoModel{
+        return DocumentInfoModel(id: id, oid: oid, parentId: parentId, name: name, namespace: namespace, marked: marked, unread: unread, subContent: content, createdAt: createdAt, changedAt: changedAt)
+    }
 }
 
-struct Docfilter {
-    var unread: Bool?
-    var marked: Bool?
-    var parentId: Int64?
-}
 
 struct DocumentOrder {
     var order: DocOrder

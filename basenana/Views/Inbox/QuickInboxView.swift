@@ -20,6 +20,8 @@ struct QuickInboxView: View{
     @State private var selectedURL: String? = nil
     @State private var htmlContent: String = ""
     
+    @Environment(Store.self) private var store: Store
+    
     var body: some View{
         Form{
             VStack {
@@ -63,11 +65,25 @@ struct QuickInboxView: View{
                             .padding(.vertical, 5)
                     }
                     Button {
-                        if urlTitle == ""{
-                            urlTitle = (try? parseURLTitle(urlStr: urlInput)) ?? "unknown"
+                        Task {
+                            if urlTitle == "" {
+                                urlTitle = (try? parseURLTitle(urlStr: urlInput)) ?? "unknown"
+                            }
+                            var data: Data? = nil
+                            if let url = URL(string: urlInput){
+                                if htmlContent != ""{
+                                    switch fileTypeOption {
+                                    case "html":
+                                        data = htmlContent.data(using: .utf8)
+                                    case "webarchive":
+                                        data = webarchiveBaseMainResource(url: url, mainResource: htmlContent)
+                                    default: break
+                                    }
+                                }
+                            }
+                            store.dispatch(.quickInbox(urlStr: urlInput, filename: urlTitle, fileType: fileTypeOption, data: data ))
                         }
-                        quickInbox(urlStr: urlInput, filename: urlTitle, fileType: fileTypeOption)
-                        showQuickInbox = false
+                        
                     } label: {
                         Text("Inbox")
                             .font(.body)
@@ -84,27 +100,6 @@ struct QuickInboxView: View{
             .padding(20)
         }
         .formStyle(.grouped)
-    }
-    
-    func quickInbox(urlStr: String, filename: String, fileType: String) {
-        Task.detached {
-            var data: Data? = nil
-            if let url = URL(string: urlStr){
-                if htmlContent != ""{
-                    switch fileType {
-                    case "html":
-                        data = htmlContent.data(using: .utf8)
-                    case "webarchive":
-                        data = webarchiveBaseMainResource(url: url, mainResource: htmlContent)
-                    default: break
-                    }
-                }
-                do {
-                    try service.quickInbox(urlStr: urlStr, filename: filename, fileType: fileType, data: data)
-                } catch {
-                }
-            }
-        }
     }
 }
 

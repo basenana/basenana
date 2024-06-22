@@ -47,7 +47,7 @@ struct StackLandingView: View {
     var body: some View {
         switch landing {
         case .readDocuments(prespective: let prespective):
-            DocumentView(filter: prespective == DocumentPrespective.unread ? Docfilter(unread: true) : Docfilter(marked: true)).id(prespective)
+            DocumentView(prespective: prespective).id(prespective)
         case .groupList(group: let group):
             GroupView(group: group).id(group)
         default:

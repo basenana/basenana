@@ -11,7 +11,7 @@ import Foundation
 extension Api_V1_EntryInfo {
     func toEntry() -> EntryInfoModel {
         return EntryInfoModel(
-            id: self.id, name: self.name, kind: self.kind, isGroup: self.isGroup, size: self.size,
+            id: self.id, name: self.name, kind: self.kind, isGroup: self.isGroup, size: self.size, parentID: self.parentID,
             createdAt: self.changedAt.date, changedAt: self.changedAt.date, modifiedAt: self.modifiedAt.date, accessAt: self.accessAt.date
         )
     }
@@ -47,6 +47,12 @@ extension Api_V1_EntryDetail {
         // update name only
         entry.name = en.name != "" ? en.name : ""
         return entry
+    }
+}
+
+extension Api_V1_Property {
+    func toEntryProperty() -> EntryPropertyModel {
+        return EntryPropertyModel(key: self.key, value: self.value, encoded: self.encoded)
     }
 }
 

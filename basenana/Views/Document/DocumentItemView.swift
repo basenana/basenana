@@ -9,12 +9,19 @@ import SwiftUI
 
 struct DocumentItemView: View {
     var doc: DocumentInfoModel
-    var unreadPage: Bool
-    @State var parent: EntryDetailModel?
+    var markReaded: Bool
     
-    init(doc: DocumentInfoModel, unreadPage: Bool) {
+    @State var property = PropertyViewModel()
+    @Environment(\.sendAlert) var sendAlert
+    
+    init(doc: DocumentInfoModel) {
         self.doc = doc
-        self.unreadPage = unreadPage
+        self.markReaded = false
+    }
+    
+    init(doc: DocumentInfoModel, markReaded: Bool ){
+        self.doc = doc
+        self.markReaded = markReaded
     }
     
     var body: some View {
@@ -29,19 +36,19 @@ struct DocumentItemView: View {
             VStack(alignment: .leading){
                 
                 HStack(alignment: .top) {
-                    Text((parent?.name ?? "").hasPrefix(".") ? String((parent?.name ?? "").dropFirst(1)) : (parent?.name ?? ""))
+                    Text(self.groupName())
                         .foregroundColor(Color.gray)
                     
                     Spacer()
                     
                     Text(dateFormatter.string(from: doc.createdAt))
                         .font(.caption)
-                        .foregroundColor(doc.unread || !unreadPage ? Color.primary : Color.gray)
+                        .foregroundColor(markReaded ? Color.gray : Color.primary  )
                 }
                 
-                Text(doc.name)
+                Text(self.docTitle())
                     .font(.headline)
-                    .foregroundColor(doc.unread || !unreadPage ? Color.primary : Color.gray)
+                    .foregroundColor(markReaded ? Color.gray : Color.primary  )
                 
             }
             Text(doc.subContent)
@@ -50,12 +57,33 @@ struct DocumentItemView: View {
                 .frame(minWidth: 0, idealWidth: 200, maxWidth: .infinity, alignment: .leading)
                 .frame(minHeight: 0, idealHeight: 50, alignment: .leading)
         }
-        .onAppear{
+        .task{
             do {
-                self.parent = try service.getEntry(entryID: doc.parentId)
+                try await property.initEntry(entryID: doc.oid)
             } catch {
+                sendAlert("fetch entry property failed \(error)")
             }
         }
+    }
+    
+    func docTitle() -> String {
+        if let p = property.getProperty(k: PropertyWebPageTitle){
+            return p.value
+        }
+        
+        return doc.name
+    }
+
+    func groupName() -> String {
+        if let p = property.getProperty(k: PropertyWebSiteName){
+            return p.value
+        }
+        
+        if !property.parentName.isEmpty && !property.parentName.hasPrefix("."){
+            return property.parentName
+        }
+        
+        return property.entryAliases
     }
 }
 

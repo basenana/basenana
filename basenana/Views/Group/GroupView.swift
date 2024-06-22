@@ -31,8 +31,8 @@ struct GroupView: View{
                         }
 
                     if let doc = groupViewModel.document {
-                        DocumentDetailView(entryId: doc.oid)
-                            .id("\(doc.oid)/doc")
+                        DocumentDetailView(document: doc.toInfo())
+                            .id(doc)
                             .frame(minHeight: 300, idealHeight: geometry.size.height/2)
                             .layoutPriority(1)
                     }
@@ -43,8 +43,7 @@ struct GroupView: View{
                             try await groupViewModel.fetchSelectedDocument()
                         } catch {
                             let msg = "fetch document error: \(error)"
-                            log.error(msg)
-                            sendAlert(msg)
+                            log.warning(msg)
                         }
                     }
                 }

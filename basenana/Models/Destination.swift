@@ -8,6 +8,7 @@
 import Foundation
 
 enum DocumentPrespective {
+    case none
     case unread
     case marked
 }

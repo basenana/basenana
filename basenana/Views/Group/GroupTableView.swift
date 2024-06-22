@@ -12,6 +12,7 @@ import Foundation
 struct GroupTableView: View {
     @Binding var group: GroupViewModel
     @State var order: [KeyPathComparator<EntryInfoModel>] = [.init(\.name, order: .forward)]
+    @Environment(\.goGroupListView) var goGroupListView
     
     var body: some View {
         Table(of: EntryInfoModel.self, selection: $group.selection, sortOrder: $order) {

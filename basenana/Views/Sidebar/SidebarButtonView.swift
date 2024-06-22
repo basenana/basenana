@@ -27,15 +27,18 @@ struct SidebarButtonView: View {
                 QuickInboxView(showQuickInbox: $showQuickInbox)
             }
             
-            if case .groupList(group: let group) = store.state.sidebarSelection {
-                Button(action: {
-                    showCreateGroup = true
-                }, label: {
-                    Image(systemName: "folder.badge.plus")
-                })
-                .buttonStyle(.accessoryBar)
-                .sheet(isPresented: $showCreateGroup){
-                    GroupCreateView(parentID: group.groupID, showCreateGroup: $showCreateGroup)
+            Button(action: {
+                showCreateGroup = true
+            }, label: {
+                Image(systemName: "folder.badge.plus")
+            })
+            .buttonStyle(.accessoryBar)
+            .sheet(isPresented: $showCreateGroup){
+                if case .groupList(group: let group) = store.state.sidebarSelection {
+                    GroupCreateView(parent: group, showCreateGroup: $showCreateGroup)
+                }else{
+                    // mkdir in root
+                    GroupCreateView(parent: nil, showCreateGroup: $showCreateGroup)
                 }
             }
             

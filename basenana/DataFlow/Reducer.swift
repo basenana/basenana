@@ -49,7 +49,7 @@ extension Store {
             state.groupTree = root
             return nil
             
-        case .quickInbox(urlStr: let urlStr, filename: let filename, fileType: let fileType):
+        case .quickInbox(urlStr: let urlStr, filename: let filename, fileType: let fileType, data: let data):
             let inboxID = state.fsInfo.inboxID
             return Task {
                 let clientSet = try clientFactory.makeClient()
@@ -70,7 +70,11 @@ extension Store {
                 }
                 request.clutterFree = true
                 
-                log.warning("quick inbox without data content")
+                if data != nil {
+                    request.data = data!
+                }else {
+                    log.warning("quick inbox without data content")
+                }
                 let call = clientSet.inbox.quickInbox(request, callOptions: defaultCallOptions)
                 do {
                     let response = try await call.response.get()
@@ -272,7 +276,7 @@ extension Store {
             
         case .updateSidebarSelection(select: let select):
             if let nextSelect = select {
-                state.sidebarSelection = select
+                state.sidebarSelection = nextSelect
             }
             return nil
             
