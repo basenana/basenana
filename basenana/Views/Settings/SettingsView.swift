@@ -56,15 +56,11 @@ struct SettingsView: View {
                         .padding(.vertical, 5)
                 }
                 Button {
-                    syncedSeqNum = "0"
-                } label: {
-                    Text("Reset")
-                }
-                Button {
                     do {
                         let _ = try clientFactory.login()
                     } catch {
                         errorMessage = "\(error)"
+                        return
                     }
                 } label: {
                     Text("Submit")

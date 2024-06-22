@@ -8,6 +8,13 @@
 import Foundation
 
 @Observable
+class DialogueViewModel {
+    var messageToSend: String = ""
+    var newReply: String = ""
+    var messages: [RoomMessageModel] = []
+}
+
+@Observable
 class RoomMessageViewModel: Identifiable {
     var id: Int64
     var sender: String

@@ -12,8 +12,8 @@ struct SidebarButtonView: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var showQuickInbox = false
     @State private var showCreateGroup = false
-    @Binding var selection: Set<GroupViewModel.ID>
-    @Binding var refreshToggle: Bool
+    
+    @Environment(Store.self) private var store: Store
     
     var body: some View {
         HStack(content: {
@@ -24,7 +24,7 @@ struct SidebarButtonView: View {
             })
             .buttonStyle(.accessoryBar)
             .sheet(isPresented: $showQuickInbox) {
-                QuickInboxView(showQuickInbox: $showQuickInbox, refreshToggle: $refreshToggle)
+                QuickInboxView(showQuickInbox: $showQuickInbox)
             }
             
             Button(action: {
@@ -34,8 +34,14 @@ struct SidebarButtonView: View {
             })
             .buttonStyle(.accessoryBar)
             .sheet(isPresented: $showCreateGroup){
-                GroupCreateView(parentID: selection.first, showCreateGroup: $showCreateGroup)
+                if case .groupList(group: let group) = store.state.sidebarSelection {
+                    GroupCreateView(parent: group, showCreateGroup: $showCreateGroup)
+                }else{
+                    // mkdir in root
+                    GroupCreateView(parent: nil, showCreateGroup: $showCreateGroup)
+                }
             }
+            
             
             Spacer()
         })

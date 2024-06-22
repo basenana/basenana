@@ -15,6 +15,9 @@ let clientFactory = ClientFactory()
 let clientEventLoopGroup = PlatformSupport.makeEventLoopGroup(loopCount: System.coreCount/2+1)
 
 class ClientFactory {
+    
+    static let share = ClientFactory()
+    
     @AppStorage("org.basenana.nanafs.host", store: UserDefaults.standard)
     private var host: String = ""
     
@@ -75,7 +78,7 @@ class ClientFactory {
             let encodedClientCrt = try response.clientCrt.base64Decoded()
             let encodedClientKey = try response.clientKey.base64Decoded()
             self.namespace = response.namespace
-            self.client = try ClientSet(host: self.host, port: self.port, clientCrt: encodedClientCrt, clientKey: encodedClientKey)
+            self.client = try ClientSet(host: self.host, port: self.port, clientCrt: encodedClientCrt, clientKey: encodedClientKey, namespace: response.namespace)
         } catch {
             log.error("[authClient] access token with ak \(self.accessTokenKey) failed: \(error)")
             throw ClientError.invalidAccessKey
@@ -93,7 +96,9 @@ class ClientSet {
     var workflow: Api_V1_WorkflowClientProtocol
     var notify: Api_V1_NotifyClientProtocol
     
-    init(host: String, port: Int, clientCrt: [UInt8], clientKey: [UInt8]) throws {
+    private var namespace: String
+    
+    init(host: String, port: Int, clientCrt: [UInt8], clientKey: [UInt8], namespace: String) throws {
         let tlsChannel = ClientConnection
             .usingTLSBackedByNIOSSL(on: clientEventLoopGroup)
             .withTLS(certificateChain: [try .init(bytes: clientCrt, format: .pem)])
@@ -108,6 +113,37 @@ class ClientSet {
         self.dialogue = Api_V1_RoomNIOClient(channel: tlsChannel)
         self.workflow = Api_V1_WorkflowNIOClient(channel: tlsChannel)
         self.notify = Api_V1_NotifyNIOClient(channel: tlsChannel)
+        
+        self.namespace = namespace
+    }
+    
+    func fsInfo() throws -> FsInfoModel {
+        let result = FsInfoModel()
+        result.namespace = namespace
+        
+        do {
+            var req = Api_V1_FindEntryDetailRequest()
+            req.root = true
+            let resp = try entries.findEntryDetail(req, callOptions: defaultCallOptions).response.wait()
+            result.rootID = resp.entry.id
+        } catch {
+            log.error("refush fs info error, get root entry failed \(error)")
+            throw error
+        }
+        
+        do {
+            var req = Api_V1_FindEntryDetailRequest()
+            req.parentID = result.rootID
+            req.name = ".inbox"
+            let resp = try entries.findEntryDetail(req, callOptions: defaultCallOptions).response.wait()
+            result.inboxID = resp.entry.id
+        } catch {
+            log.error("refush fs info error, get inbox entry failed \(error)")
+            throw error
+        }
+        
+        result.fsApiReady = true
+        return result
     }
 }
 

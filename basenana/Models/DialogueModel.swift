@@ -19,6 +19,8 @@ struct RoomModel {
     var createdAt: Date
     
     var messages: [RoomMessageModel]
+    
+    static var empty = RoomModel(oid: 0, createdAt: Date(), messages: [])
 }
 
 struct RoomMessageModel: Codable, Identifiable {

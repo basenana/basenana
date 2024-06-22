@@ -12,12 +12,13 @@ import GRDB
 let rootEntryID: Int64 = 1
 let inboxEntryID: Int64 = 2
 
-struct EntryInfoModel: Codable, Identifiable {
+struct EntryInfoModel: Codable, Identifiable, Hashable {
     var id: Int64
     var name: String
     var kind: String
     var isGroup: Bool
     var size: Int64
+    var parentID: Int64
 
     var createdAt: Date
     var changedAt: Date
@@ -26,6 +27,13 @@ struct EntryInfoModel: Codable, Identifiable {
     
     func isVisitable() -> Bool{
         return !name.starts(with: ".")
+    }
+    
+    func toGroup() -> GroupModel? {
+        guard isGroup else {
+            return nil
+        }
+        return GroupModel(parentID: parentID, groupID: id, groupName: name)
     }
 }
 struct EntryDetailModel: Codable, Identifiable {

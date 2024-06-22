@@ -13,7 +13,6 @@ struct EraserButtonView: View {
     
     @State var isEraserHovering = false
     @Binding var messages : [RoomMessageViewModel]
-    @Environment(AlertStore.self) var alert
     
     var body: some View {
         Button {
@@ -21,7 +20,6 @@ struct EraserButtonView: View {
                 do{
                     try service.clearMessage(roomId: roomId)
                 } catch {
-                    alert.trigger(message: "\(error)")
                 }
                 messages = []
             }

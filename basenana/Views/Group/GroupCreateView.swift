@@ -8,28 +8,20 @@
 import SwiftUI
 
 struct GroupCreateView: View {
-    var parentID: Int64?
+    var parent: GroupModel?
     @Binding var showCreateGroup: Bool
+    @Environment(Store.self) private var store: Store
     
+    @State private var parentID: Int64 = 0
+    @State private var parentName: String = ""
     @State private var groupName: String = ""
     @State private var errorMsg: String = ""
-    
-    var parent: EntryDetailModel? {
-        get {
-            do {
-                return try service.getEntry(entryID: self.parentID ?? rootEntryID)
-            } catch {
-                self.errorMsg = "\(error)"
-            }
-            return nil
-        }
-    }
     
     var body: some View{
         Form{
             VStack {
                 VStack(alignment: .leading){
-                    TextField("Parent", text: .constant(parent?.name ?? "root"))
+                    TextField("Parent", text: $parentName)
                         .textFieldStyle(.squareBorder)
                         .disabled(true)
                         .padding(.vertical, 5)
@@ -46,12 +38,7 @@ struct GroupCreateView: View {
                             .padding(.vertical, 5)
                     }
                     Button {
-                        do {
-                            try service.createGroup(groupName: groupName, parentId: parent?.id ?? GroupRoot.groupID)
-                            showCreateGroup = false
-                        } catch {
-                            errorMsg = "\(error)"
-                        }
+                        store.dispatch(.createGroup(groupName: groupName, parentId: parentID))
                     } label: {
                         Text("Create")
                             .font(.body)
@@ -68,5 +55,14 @@ struct GroupCreateView: View {
             .padding(20)
         }
         .formStyle(.grouped)
+        .onAppear{
+            if parent != nil{
+                parentID = parent!.groupID
+                parentName = parent!.groupName
+            }else{
+                parentID = store.state.fsInfo.rootID
+                parentName = "root"
+            }
+        }
     }
 }

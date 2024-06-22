@@ -24,20 +24,6 @@ struct DocumentInfoModel: Codable, Identifiable, Hashable{
     var changedAt: Date
 }
 
-extension RandomAccessCollection where Self.Element: Identifiable {
-    func isLastItem<Item: Identifiable>(_ item: Item) -> Bool {
-        guard !isEmpty else {
-            return false
-        }
-        
-        guard let itemIndex = firstIndex(where: { $0.id.hashValue == item.id.hashValue }) else {
-            return false
-        }
-        
-        let distance = self.distance(from: itemIndex, to: endIndex)
-        return distance == 1
-    }
-}
 
 struct DocumentDetailModel: Codable, Identifiable, Hashable{
     var id: Int64
@@ -55,13 +41,12 @@ struct DocumentDetailModel: Codable, Identifiable, Hashable{
     
     var createdAt: Date
     var changedAt: Date
+    
+    func toInfo() -> DocumentInfoModel{
+        return DocumentInfoModel(id: id, oid: oid, parentId: parentId, name: name, namespace: namespace, marked: marked, unread: unread, subContent: content, createdAt: createdAt, changedAt: changedAt)
+    }
 }
 
-struct Docfilter {
-    var unread: Bool?
-    var marked: Bool?
-    var parentId: Int64?
-}
 
 struct DocumentOrder {
     var order: DocOrder
@@ -77,4 +62,14 @@ struct DocumentUpdate {
     var docId: Int64
     var unread: Bool?
     var marked: Bool?
+}
+
+
+extension DocumentDetailModel {
+    func Info() -> DocumentInfoModel {
+        return DocumentInfoModel(
+            id: self.id, oid: self.oid, parentId: self.parentId, name: self.name, namespace: self.namespace, source: self.source,
+            marked: self.marked, unread: self.unread, subContent: self.content,
+            createdAt: self.createdAt, changedAt: self.changedAt)
+    }
 }
