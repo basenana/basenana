@@ -12,8 +12,6 @@ struct IngestButtonView: View {
     @State var isIngestHovering = false
     @Binding var ingestState: String
     
-    @Environment(AlertStore.self) var alert
-    
     let entryId: Int64
     
     var body: some View {
@@ -41,7 +39,6 @@ struct IngestButtonView: View {
                         }
                     }
                 } catch {
-                    alert.trigger(message: "\(error)")
                 }
             }
         } label: {

@@ -9,9 +9,9 @@ import Foundation
 
 struct AppState {
     var destinations = [Destination]()
+    var sidebarSelection: Destination? = nil
     var alert = AlertModel()
     var fsInfo = FsInfoModel()
     var groupTree = RootGroupModel()
     var inbox = [EntryInfoModel]()
-    var sidebarSelection: Int64 = 0
 }

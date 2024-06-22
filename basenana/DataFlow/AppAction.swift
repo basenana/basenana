@@ -39,4 +39,12 @@ enum AppAction {
     case alert(msg: String)
     
     case offAlert
+    
+    case setDestination(to: [Destination])
+
+    case updateDestination(to: [Destination])
+
+    case gotoDestination(Destination)
+    
+    case updateSidebarSelection(select: Destination?)
 }

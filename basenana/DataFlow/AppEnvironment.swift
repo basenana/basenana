@@ -9,5 +9,5 @@ import Foundation
 
 
 struct AppEnvironment {
-    let clientFactory = ClientFactory.shared
+    let clientFactory = ClientFactory.share
 }

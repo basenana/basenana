@@ -47,7 +47,7 @@ struct GroupCreateView: View {
                     }
                     Button {
                         do {
-                            try service.createGroup(groupName: groupName, parentId: parent?.id ?? GroupRoot.groupID)
+                            try service.createGroup(groupName: groupName, parentId: parent!.id)
                             showCreateGroup = false
                         } catch {
                             errorMsg = "\(error)"

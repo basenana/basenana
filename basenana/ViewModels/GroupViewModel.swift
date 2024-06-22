@@ -7,29 +7,68 @@
 
 import Foundation
 
-var GroupRoot: GroupViewModel = GroupViewModel(groupID: rootEntryID, groupName: "root")
 
 @Observable
-class GroupViewModel: Identifiable, Hashable {
-    var id: Int64
-    var groupID: Int64
-    var groupName: String
-    var children: [GroupViewModel]? = nil
-    var updateAt: Date? = nil
+class GroupViewModel {
+    var id: Int64 = 0
+    var children: [EntryInfoModel] = []
     
-    init(groupID: Int64, groupName: String) {
+    var selection: Set<EntryInfoModel.ID> = []
+    var document: DocumentDetailModel? = nil
+    
+    
+    func fetchChildren(groupID: Int64) async throws  {
         self.id = groupID
-        self.groupID = groupID
-        self.groupName = groupName
+        let clientSet = try ClientFactory.share.makeClient()
+        
+        var req = Api_V1_ListGroupChildrenRequest()
+        req.parentID = groupID
+        req.order = Api_V1_ListGroupChildrenRequest.EntryOrder.modifiedAt
+        
+        do {
+            let call = clientSet.entries.listGroupChildren(req, callOptions: defaultCallOptions)
+            let response = try await call.response.get()
+            self.children = response.entries.filter({ !$0.name.hasPrefix(".") }).map({$0.toEntry()})
+        } catch {
+            log.error("list children of \(groupID) failed \(error)")
+            throw error
+        }
     }
     
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(groupID)
-        hasher.combine(groupName)
-    }
-    
-    static func == (lhs: GroupViewModel, rhs: GroupViewModel) -> Bool {
-        return lhs.groupID == rhs.groupID
+    func fetchSelectedDocument() async throws  {
+        if selection.isEmpty || selection.count > 1 {
+            return
+        }
+        
+        let enID = selection.first!
+        var en: EntryInfoModel?
+        for oneEn in self.children {
+            if oneEn.id == enID {
+                en = oneEn
+            }
+        }
+        if en == nil {
+            return
+        }
+        
+        if en!.isGroup {
+            return
+        }
+        
+        let clientSet = try ClientFactory.share.makeClient()
+        var req = Api_V1_GetDocumentDetailRequest()
+        req.entryID = en!.id
+        
+        do {
+            let call = clientSet.document.getDocumentDetail(req, callOptions: defaultCallOptions)
+            let response = try await call.response.get()
+            self.document = response.document.toDocuement()
+        } catch {
+            log.error("get docuemnt with entry id \(en!.id) failed \(error)")
+            throw error
+        }
+        
+        return
     }
 }
 

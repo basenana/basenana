@@ -30,3 +30,16 @@ enum Destination: Identifiable, Hashable, Equatable {
         }
     }
 }
+
+
+extension DocumentPrespective {
+    var destination: Destination {
+        return .readDocuments(prespective: self)
+    }
+}
+
+extension GroupModel {
+    var destination: Destination {
+        return .groupList(group: self)
+    }
+}

@@ -23,7 +23,6 @@ struct DialogueView: View {
      @State private var room: RoomModel? = nil
      @State var messages: [RoomMessageViewModel] = []
      @State private var ingestState = ""
-     @Environment(AlertStore.self) var alert
      
      var body: some View {
           VStack {
@@ -58,7 +57,6 @@ struct DialogueView: View {
                               }
                          }
                     } catch {
-                         alert.trigger(message: "\(error)")
                     }
                }
                .padding(10)
@@ -74,7 +72,6 @@ struct DialogueView: View {
                          do {
                               room = try service.openRoom(docId: docId, entryId: entryId)
                          } catch {
-                              alert.trigger(message: "\(error)")
                          }
                          let roomMessages = room?.messages ?? []
                          for msg in roomMessages {
@@ -140,7 +137,6 @@ struct DialogueView: View {
                               })
                     } catch {
                          log.error("chat in room failed \(error)")
-                         alert.trigger(message: "\(error)")
                     }
                     self.newMessage = ""
                }
@@ -149,5 +145,5 @@ struct DialogueView: View {
 }
 
 #Preview {
-     return DialogueView( docId: 100, entryId: 100, isDrawerOpen: .constant(true)).environment(AlertStore())
+     return DialogueView( docId: 100, entryId: 100, isDrawerOpen: .constant(true))
 }

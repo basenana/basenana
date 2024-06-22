@@ -20,7 +20,6 @@ struct DocumentView: View {
     @State private var isLoading: Bool = false
     @State private var page: Int = 1
     
-    @Environment(AlertStore.self) var alert
     
     private let pageSize: Int = 20
     
@@ -77,7 +76,6 @@ struct DocumentView: View {
                         parentMaps[group.name] = group
                     }
                 } catch {
-                    alert.trigger(message: "\(error)")
                 }
             }
             .onChange(of: selectedId) { newSelectedId in
@@ -88,7 +86,6 @@ struct DocumentView: View {
                             self.docs[index].unread = false
                         }
                     } catch {
-                        alert.trigger(message: "\(error)")
                     }
                 }
             }
@@ -133,7 +130,6 @@ struct DocumentView: View {
             self.docs.append(contentsOf: moreDocs)
             self.page += 1
         } catch {
-            alert.trigger(message: "\(error)")
         }
     }
 }

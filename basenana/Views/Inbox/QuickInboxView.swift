@@ -12,7 +12,6 @@ import SwiftUI
 struct QuickInboxView: View{
     
     @Binding var showQuickInbox: Bool
-    @Binding var refreshToggle: Bool
     
     @State private var urlInput: String = ""
     @State private var urlTitle: String = ""
@@ -20,8 +19,6 @@ struct QuickInboxView: View{
     @State private var fileTypeOption = "webarchive"
     @State private var selectedURL: String? = nil
     @State private var htmlContent: String = ""
-    
-    @Environment(AlertStore.self) var alert
     
     var body: some View{
         Form{
@@ -71,7 +68,6 @@ struct QuickInboxView: View{
                         }
                         quickInbox(urlStr: urlInput, filename: urlTitle, fileType: fileTypeOption)
                         showQuickInbox = false
-                        refreshToggle.toggle()
                     } label: {
                         Text("Inbox")
                             .font(.body)
@@ -106,7 +102,6 @@ struct QuickInboxView: View{
                 do {
                     try service.quickInbox(urlStr: urlStr, filename: filename, fileType: fileType, data: data)
                 } catch {
-                    alert.trigger(message: "\(error)")
                 }
             }
         }
@@ -114,5 +109,5 @@ struct QuickInboxView: View{
 }
 
 #Preview {
-    return QuickInboxView(showQuickInbox: .constant(true), refreshToggle: .constant(false))
+    return QuickInboxView(showQuickInbox: .constant(true))
 }

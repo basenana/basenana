@@ -9,7 +9,6 @@ import SwiftUI
 
 struct DocumentButtonView: View {
     var doc: DocumentInfoModel
-    @Environment(AlertStore.self) var alert
     
     var body: some View {
         Button {
@@ -17,7 +16,6 @@ struct DocumentButtonView: View {
                 do {
                     try service.updateDocument(docUpdate: DocumentUpdate(docId: doc.id, unread: !doc.unread))
                 } catch {
-                    alert.trigger(message: "\(error)")
                 }
             }
         } label: {
@@ -34,7 +32,6 @@ struct DocumentButtonView: View {
                 do {
                     try service.updateDocument(docUpdate: DocumentUpdate(docId: doc.id, marked: !doc.marked))
                 } catch {
-                    alert.trigger(message: "\(error)")
                 }
             }
         } label: {

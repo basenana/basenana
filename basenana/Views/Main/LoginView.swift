@@ -1,13 +1,15 @@
 //
-//  SettingsView.swift
+//  LoginView.swift
 //  basenana
 //
-//  Created by Hypo on 2024/4/19.
+//  Created by Hypo on 2024/6/21.
 //
 
 import SwiftUI
+import Foundation
 
-struct SettingsView: View {
+
+struct LoginView: View {
     @AppStorage("org.basenana.nanafs.host", store: UserDefaults.standard)
     private var serverHost:String = ""
     
@@ -28,6 +30,8 @@ struct SettingsView: View {
     private var syncedSeqNum: String = "0"
     
     @State private var errorMessage = ""
+    
+    @Environment(Store.self) private var store: Store
     
     var body: some View {
         Form {
@@ -62,6 +66,8 @@ struct SettingsView: View {
                         errorMessage = "\(error)"
                         return
                     }
+                    
+                    store.dispatch(.login)
                 } label: {
                     Text("Submit")
                 }
@@ -71,12 +77,8 @@ struct SettingsView: View {
         .formStyle(.grouped)
         .padding(20)
         .frame(maxHeight: .infinity)
+        .task {
+            store.dispatch(.login)
+        }
     }
 }
-
-public extension UserDefaults {
-    #if DEVELOPMENT
-    static let standard = UserDefaults(suiteName: "org.basenana-dev")!
-    #endif
-}
-

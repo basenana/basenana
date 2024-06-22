@@ -56,7 +56,6 @@ extension Service {
         let call = clientSet.entries.createEntry(request, callOptions: defaultCallOptions)
         do {
             let _ = try call.response.wait()
-            GroupRoot.updateAt = Date()
         } catch {
             log.error("[entryService] create group failed \(error)")
             throw error
@@ -71,8 +70,7 @@ extension Service {
         
         let call = clientSet.entries.deleteEntry(request, callOptions: defaultCallOptions)
         do {
-            let _ = try await call.response.wait()
-            GroupRoot.updateAt = Date()
+            let _ = try await call.response.get()
         } catch {
             log.error("[entryService] delete entry failed \(error)")
             throw error
@@ -88,7 +86,6 @@ extension Service {
         let call = clientSet.entries.deleteEntries(request, callOptions: defaultCallOptions)
         do {
             let _ = try call.response.wait()
-            GroupRoot.updateAt = Date()
         } catch {
             log.error("[entryService] delete entries failed \(error)")
             throw error

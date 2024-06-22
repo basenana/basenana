@@ -118,7 +118,7 @@ class ClientSet {
     }
     
     func fsInfo() throws -> FsInfoModel {
-        var result = FsInfoModel()
+        let result = FsInfoModel()
         result.namespace = namespace
         
         do {

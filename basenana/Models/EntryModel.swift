@@ -12,7 +12,7 @@ import GRDB
 let rootEntryID: Int64 = 1
 let inboxEntryID: Int64 = 2
 
-struct EntryInfoModel: Codable, Identifiable {
+struct EntryInfoModel: Codable, Identifiable, Hashable {
     var id: Int64
     var name: String
     var kind: String

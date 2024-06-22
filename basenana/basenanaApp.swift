@@ -13,8 +13,7 @@ struct basenanaApp: App {
     
     var body: some Scene {
         WindowGroup {
-            MainView()
-                .frame(minWidth: 1200, minHeight: 800)
+            ContentView()
         }
         
         Settings {

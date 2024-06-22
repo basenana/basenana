@@ -10,71 +10,47 @@ import SwiftUI
 import SwiftData
 
 struct SidebarView: View {
-    @State var selection = Set<GroupViewModel.ID>()
-    @State private var refreshToggle = false
-    @Environment(AlertStore.self) var alert
+    @Environment(Store.self) private var store: Store
 
     var body: some View {
-        List(selection: $selection){
-            NavigationLink {
-                GroupView(groupID: inboxEntryID, refreshToggle: $refreshToggle).id(inboxEntryID)
-                    .navigationTitle("Inbox")
-            } label: {
-                HStack{
-                    Image(systemName: "tray.full.fill").foregroundColor(.blue)
-                    Text("Inbox")
-                }.frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.vertical, 5)
+        List(selection: store.binding(for: \.sidebarSelection, toAction: {
+            .updateSidebarSelection(select: $0)
+        })){
+            NavigationLink(value: Destination.groupList(group: store.state.fsInfo.inboxGroupModel())){
+                SidebarIconView(imageName: "tray.full.fill", title: "Inbox", color: .blue)
             }
             
-            NavigationLink {
-                DocumentView(filter: Docfilter(unread: true)).id("unread")
-                    .toolbar(removing: .sidebarToggle)
-                    .navigationTitle("Unread")
-            } label: {
-                HStack{
-                    Image(systemName: "circle.fill").foregroundColor(.brown)
-                    Text("Unread")
-                }.frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.vertical, 5)
+            NavigationLink(value: Destination.readDocuments(prespective: .unread)){
+                SidebarIconView(imageName: "circle.fill", title: "Unread", color: .brown)
             }
             
-            NavigationLink {
-                DocumentView(filter: Docfilter(marked: true)).id("marked")
-                    .toolbar(removing: .sidebarToggle)
-                    .navigationTitle("Marked")
-            } label: {
-                HStack{
-                    Image(systemName: "bookmark.fill").foregroundColor(.yellow)
-                    Text("Marked")
-                }.frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.vertical, 5)
+            NavigationLink(value: Destination.readDocuments(prespective: .marked)){
+                SidebarIconView(imageName: "bookmark.fill", title: "Marked", color: .yellow)
             }
+
             Section("GROUPS"){
                 SidebarGroupsView()
             }
-            .onAppear{
-                initGroupTree()
-            }
-            .onChange(of: GroupRoot.updateAt) {
-                initGroupTree()
-            }
         }
         .listStyle(.sidebar)
-        .overlay(alignment: .bottom, content: {SidebarButtonView(selection: $selection, refreshToggle: $refreshToggle)})
+        .overlay(alignment: .bottom, content: {SidebarButtonView()})
     }
+}
+
+struct SidebarIconView: View {
+    var imageName: String
+    var title: String
+    var color: Color?
     
-    func initGroupTree(){
-        Task.detached{
-            do {
-                try service.initGroupTree()
-            } catch {
-                await alert.trigger(message: "\(error)")
-            }
-        }
+    var body: some View {
+        HStack{
+            Image(systemName: imageName).foregroundColor(color)
+            Text(title)
+        }.frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.vertical, 5)
     }
 }
 
 #Preview {
-    return SidebarView()
+    return SidebarView().environment(Store())
 }

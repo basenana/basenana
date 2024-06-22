@@ -24,7 +24,7 @@ extension Store {
             
             return Task {
                 let rootID = fsInfo.rootID
-                var root = RootGroupModel()
+                let root = RootGroupModel()
                 let clientSet = try clientFactory.makeClient()
                 log.debug("start init group tree, id: \(rootID)")
                 
@@ -153,7 +153,7 @@ extension Store {
                     do {
                         let resp = try await call.response.get()
                         if resp.entry.isGroup{
-                            var grp = GroupModel(parentID: resp.entry.parent.id, groupID: resp.entry.id, groupName: resp.entry.name)
+                            let grp = GroupModel(parentID: resp.entry.parent.id, groupID: resp.entry.id, groupName: resp.entry.name)
                             grp.parentID = resp.entry.parent.id
                             needUpdateGroup.append(grp)
                         }
@@ -247,6 +247,33 @@ extension Store {
         case .offAlert:
             state.alert.alertMessage = ""
             state.alert.needAlert = false
+            return nil
+            
+        case .gotoDestination(to: let to):
+            state.destinations.append(to)
+            return nil
+
+        case .setDestination(to: let to):
+            if state.destinations == to {
+                return nil
+            }
+            if state.destinations.isEmpty {
+                state.destinations = to
+                return nil
+            }
+            state.destinations.removeAll()
+            return Task {
+                try await Task.sleep(nanoseconds: 1000)
+                return .updateDestination(to: to)
+            }
+        case .updateDestination(to: let to):
+            state.destinations = to
+            return nil
+            
+        case .updateSidebarSelection(select: let select):
+            if let nextSelect = select {
+                state.sidebarSelection = select
+            }
             return nil
             
         }
