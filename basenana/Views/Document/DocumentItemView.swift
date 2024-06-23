@@ -73,11 +73,18 @@ struct DocumentItemView: View {
     }
     
     func docTime() -> String {
+        var datetime = doc.createdAt
+        
         if let p = property.getProperty(k: PropertyWebPageUpdateAt){
-            return p.value
+            // parse datetime from RFC3339
+            if let paresedDate = rfc3339Formatter.date(from: p.value) {
+                datetime = paresedDate
+            }else {
+                log.warning("parse web page update at failed, got \(p.value)")
+            }
         }
         
-        return dateFormatter.string(from: doc.createdAt)
+        return dateFormatter.string(from: datetime)
     }
 
     func docURL() -> String {
@@ -109,10 +116,13 @@ struct DocumentItemView: View {
         return property.entryAliases
     }
     
+    let rfc3339Formatter = RFC3339Formatter()
+    
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
+        formatter.timeZone = .current
         return formatter
     }()
 }
