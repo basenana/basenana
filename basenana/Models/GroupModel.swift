@@ -12,17 +12,37 @@ class RootGroupModel {
     var children: [GroupModel]? = nil
     var allGroups: [Int64: GroupModel] = [:]
     
-    func changeParent(groupID: Int64, newParentID: Int64){
+    func changeParent(groupID: Int64, newParentID: Int64) {
         if let group = self.allGroups[groupID] {
+            if group.parentID == newParentID {
+                return
+            }
+            if let newParent = self.allGroups[newParentID]{
+                for exist in newParent.children ?? [] {
+                    if exist.groupName == group.groupName {
+                        return
+                    }
+                }
+            }
+            if isInLoop(groupID: groupID, newParentID: newParentID) {
+                return
+            }
             self.removeChildGroup(parentID: group.parentID, childID: group.groupID)
-            self.addChildGroup(parentID: newParentID, childID: group.groupID, childName: group.groupName)
+            self.addChildGroup(parentID: newParentID, childID: group.groupID, childName: group.groupName, grandChildren: group.children)
+            return
         }
+        return
     }
     
-    func addChildGroup(parentID: Int64, childID: Int64, childName: String){
+    func addChildGroup(parentID: Int64, childID: Int64, childName: String, grandChildren: [GroupModel]?){
+        let newGroup = GroupModel(parentID: parentID, groupID: childID, groupName: childName)
+        if grandChildren != nil{
+            newGroup.children = grandChildren
+        }
+        
         if let parent = self.allGroups[parentID]{
             if parent.children == nil{
-                parent.children = [GroupModel(parentID: parentID, groupID: childID, groupName: childName)]
+                parent.children = [newGroup]
                 return
             }
             
@@ -33,19 +53,27 @@ class RootGroupModel {
                 }
             }
             
-            let grp = GroupModel(parentID: parentID, groupID: childID, groupName: childName)
-            parent.children!.append(grp)
-            self.allGroups[childID] = grp
+            parent.children!.append(newGroup)
+            self.allGroups[childID] = newGroup
+        }else {
+            if children == nil {
+                children = []
+            }
+            allGroups[newGroup.groupID] = newGroup
+            children?.append(newGroup)
         }
+        
     }
     
     func removeChildGroup(parentID: Int64, childID: Int64){
         guard let _ = self.allGroups[childID] else {
+            log.info("delete \(parentID)/\(childID) but child not found")
             return
         }
         
         if let parent = self.allGroups[parentID]{
             if parent.children == nil{
+                log.info("delete \(parentID)/\(childID) parent has not child")
                 return
             }
             
@@ -56,6 +84,18 @@ class RootGroupModel {
             self.allGroups[childID] = nil
         }
     }
+    
+    func isInLoop(groupID: Int64, newParentID: Int64) -> Bool {
+        var nextParentID: Int64 = newParentID
+        while let parent = allGroups[nextParentID] {
+            if parent.id == groupID {
+                return true
+            }
+            nextParentID = parent.parentID
+        }
+        return false
+    }
+        
 }
 
 

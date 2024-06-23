@@ -25,12 +25,9 @@ struct SidebarGroupsView: View {
                 }
                 .padding(.vertical, 4)
             })
+            .id(child)
             .dropDestination(for: String.self){ entryIDInfos, localtion in
-                do {
-                    try service.moveEntriesToGroup(entries: parseIDInfo(entryInfos: entryIDInfos), groupID: child.groupID)
-                    refreshToggle.toggle()
-                } catch {
-                }
+                store.dispatch(.moveEntriesToGroup(entries: parseIDInfo(entryInfos: entryIDInfos), groupID: child.groupID))
                 return false
             }
             .draggable(IDHelper(kind: "group", id: child.groupID).Encode())

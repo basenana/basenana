@@ -11,6 +11,17 @@ enum DocumentPrespective {
     case none
     case unread
     case marked
+    
+    var Title: String {
+        switch self {
+        case .none:
+            return "Basenana"
+        case .unread:
+            return "Unread"
+        case .marked:
+            return "Marked"
+        }
+    }
 }
 
 

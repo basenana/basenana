@@ -14,4 +14,7 @@ struct AppState {
     var fsInfo = FsInfoModel()
     var groupTree = RootGroupModel()
     var inbox = [EntryInfoModel]()
+    
+    var documentReader = DocumentReaderViewModel()
+    var currentGroup = GroupViewModel()
 }

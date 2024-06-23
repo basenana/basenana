@@ -16,7 +16,12 @@ class GroupViewModel {
     var selection: Set<EntryInfoModel.ID> = []
     var document: DocumentDetailModel? = nil
     
-    
+    static func load(groupID: Int64) async throws -> GroupViewModel {
+        let vm = GroupViewModel()
+        try await vm.fetchChildren(groupID: groupID)
+        return vm
+    }
+
     func fetchChildren(groupID: Int64) async throws  {
         self.id = groupID
         let clientSet = try ClientFactory.share.makeClient()

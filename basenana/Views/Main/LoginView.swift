@@ -23,62 +23,82 @@ struct LoginView: View {
     @AppStorage("org.basenana.nanafs.auth.secretToken", store: UserDefaults.standard)
     private var secretToken:String = ""
     
-    @AppStorage("org.basenana.nanafs.clientCrt", store: UserDefaults.standard)
-    private var encodedClientCrt: String = ""
-    
-    @AppStorage("org.basenana.sync.sequence", store: UserDefaults.standard)
-    private var syncedSeqNum: String = "0"
-    
     @State private var errorMessage = ""
-    
+    @State private var isLogining = false
+
     @Environment(Store.self) private var store: Store
     
     var body: some View {
-        Form {
-            Section("Authentication") {
-                TextField("Host", text: $serverHost)
-                TextField("Port", text: $serverPortStr, onCommit: {
-                    log.debug("parse port \(serverPortStr)")
-                    if let validNumber = Int(serverPortStr) {
-                        self.serverPort = validNumber
-                    }
-                }).onAppear{
-                    serverPortStr = "\(self.serverPort)"
+        VStack {
+            Text("🍌Login")
+                .font(.largeTitle)
+                .padding(.bottom, 20)
+                .padding(.top, 30)
+
+            TextField("NanaFS Server", text: $serverHost)
+                .padding()
+                .cornerRadius(5.0)
+                .padding(.bottom, 10)
+
+            TextField("NanaFS Port", text: $serverPortStr, onCommit: {
+                log.debug("parse port \(serverPortStr)")
+                if let validNumber = Int(serverPortStr) {
+                    self.serverPort = validNumber
                 }
-                TextField("AccessTokenKey", text: $accessTokenKey)
-                TextField("SecretToken", text: $secretToken)
+            }).onAppear{
+                serverPortStr = "\(self.serverPort)"
             }
-            .padding(.horizontal, 50.0)
-            .padding(10)
-            .textFieldStyle(RoundedBorderTextFieldStyle())
-            .frame(minWidth: 400, maxWidth: .infinity, minHeight: 20)
+            .padding()
+            .cornerRadius(5.0)
+            .padding(.bottom, 10)
+
+            TextField("AccessTokenKey", text: $accessTokenKey)
+                .padding()
+                .cornerRadius(5.0)
+                .padding(.bottom, 10)
+            SecureField("SecretToken", text: $secretToken)
+                .padding()
+                .cornerRadius(5.0)
+                .padding(.bottom, 10)
             
-            HStack {
-                if errorMessage != ""{
-                    Text("\(errorMessage)")
-                        .foregroundStyle(.red)
-                        .padding(.vertical, 5)
+            Text("\(errorMessage)")
+                .foregroundStyle(.red)
+                .padding(.bottom, 10)
+            
+            Button(action: {
+                Task {
+                    await doLogin()
                 }
-                Button {
-                    do {
-                        let _ = try clientFactory.login()
-                    } catch {
-                        errorMessage = "\(error)"
-                        return
-                    }
-                    
-                    store.dispatch(.login)
-                } label: {
-                    Text("Submit")
-                }
+            }) {
+                Text(isLogining ? "Logining" : "Login" )
+                    .foregroundColor(.white)
+                    .frame(width: 220, height: 40)
+                    .background(Color.blue)
             }
-            .frame(maxWidth: .infinity, alignment: .trailing)
+            .cornerRadius(10.0)
+            .padding(.bottom, 30)
         }
-        .formStyle(.grouped)
-        .padding(20)
-        .frame(maxHeight: .infinity)
+        .padding()
         .task {
-            store.dispatch(.login)
+            if serverHost != "" && accessTokenKey != "" {
+                await doLogin()
+            }
         }
     }
+    
+    func doLogin() async {
+        isLogining = true
+        do {
+            let _ = try clientFactory.login()
+        } catch {
+            errorMessage = "\(error)"
+            isLogining = false
+            return
+        }
+        await store.dispatch(.login)
+    }
+}
+
+#Preview {
+    LoginView().environment(Store())
 }

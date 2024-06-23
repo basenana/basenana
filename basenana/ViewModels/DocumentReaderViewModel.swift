@@ -28,10 +28,53 @@ class DocumentReaderViewModel {
     
     var needAutoReadDocument: Set<DocumentInfoModel.ID> = []
     
+    static func load(prespective : DocumentPrespective) async throws -> DocumentReaderViewModel {
+        let vm = DocumentReaderViewModel()
+        vm.prespective = prespective
+        try await vm.loadNextPageDocuments()
+
+        let clientSet = try clientFactory.makeClient()
+        var request = Api_V1_GetDocumentParentsRequest()
+        
+        switch prespective {
+        case .none:
+            return vm
+        case .unread:
+            request.filter = Api_V1_DocumentFilter()
+            request.filter.unread = true
+        case .marked:
+            request.filter = Api_V1_DocumentFilter()
+            request.filter.marked = true
+        }
+        
+        do {
+            let call = clientSet.document.getDocumentParents(request, callOptions: defaultCallOptions)
+            let response = try await call.response.get()
+            for grp in response.entries.map({ $0.toEntry() }){
+                vm.documentGroups.append(grp)
+            }
+        } catch {
+            log.error("list docuemnt parent failed \(error)")
+            throw error
+        }
+        return vm
+    }
+
     func initFirstPageDocuments(prespective : DocumentPrespective) async throws {
+        try await waitingForLoading()
+        self.isLoading = true
+        log.info("start init first page")
+        defer {
+            self.isLoading = false
+            log.info("finish init first page")
+        }
+        if self.prespective != .none {
+            return
+        }
+
         self.prespective = prespective
         try await loadNextPageDocuments()
-        
+
         let clientSet = try clientFactory.makeClient()
         var request = Api_V1_GetDocumentParentsRequest()
         
@@ -49,7 +92,9 @@ class DocumentReaderViewModel {
         do {
             let call = clientSet.document.getDocumentParents(request, callOptions: defaultCallOptions)
             let response = try await call.response.get()
-            documentGroups = response.entries.map({ $0.toEntry() })
+            for grp in response.entries.map({ $0.toEntry() }){
+                documentGroups.append(grp)
+            }
         } catch {
             log.error("list docuemnt parent failed \(error)")
             throw error
@@ -57,6 +102,14 @@ class DocumentReaderViewModel {
     }
     
     func reloadNextPageDocuments() async throws {
+        try await waitingForLoading()
+        self.isLoading = true
+        log.info("start reload next page")
+        defer {
+            self.isLoading = false
+            log.info("finish reload next page")
+        }
+        
         self.page = 1
         self.documents = []
         try await loadNextPageDocuments()
@@ -121,9 +174,28 @@ class DocumentReaderViewModel {
     
     func checkAndLoadNextPage<Item: Identifiable>(_ item: Item) async throws {
         if hasMore && documents.isLastItem(item) {
-            isLoading = true
+            try await waitingForLoading()
+            self.isLoading = true
+            log.info("start load next page")
+            defer {
+                self.isLoading = false
+                log.info("finish load next page")
+            }
             try await loadNextPageDocuments()
-            self.isLoading = false
+        }
+    }
+    
+    func waitingForLoading() async throws {
+        var waitTime = 0
+        try await Task.sleep(for: .microseconds(arc4random() % 10))
+        
+        while self.isLoading {
+            try await Task.sleep(for: .microseconds(arc4random() % 100 + 10))
+            waitTime += 1
+            if waitTime % 10 == 0 {
+                log.warning("wating for loading too long")
+            }
         }
     }
 }
+

@@ -18,15 +18,15 @@ struct SidebarView: View {
         })){
             NavigationLink(value: Destination.groupList(group: store.state.fsInfo.inboxGroupModel())){
                 SidebarIconView(imageName: "tray.full.fill", title: "Inbox", color: .blue)
-            }
+            }.id("nav_inbox")
             
             NavigationLink(value: Destination.readDocuments(prespective: .unread)){
                 SidebarIconView(imageName: "circle.fill", title: "Unread", color: .brown)
-            }
+            }.id("nav_unread")
             
             NavigationLink(value: Destination.readDocuments(prespective: .marked)){
                 SidebarIconView(imageName: "bookmark.fill", title: "Marked", color: .yellow)
-            }
+            }.id("nav_marked")
 
             Section("GROUPS"){
                 SidebarGroupsView()

@@ -89,6 +89,7 @@
 		3FB782492BC1A82700327191 /* protoc-gen-grpc-swift in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782482BC1A82700327191 /* protoc-gen-grpc-swift */; };
 		3FB782542BC2D0F600327191 /* fsapi-v1.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB782502BC2D0F600327191 /* fsapi-v1.grpc.swift */; };
 		3FB782552BC2D0F600327191 /* fsapi-v1.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB782512BC2D0F600327191 /* fsapi-v1.pb.swift */; };
+		3FCE74B32C27D6C300C4E783 /* EnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F317C1C2C231ABB00F42D37 /* EnvironmentKey.swift */; };
 		3FDC2EA32BDCEEB200344DF8 /* IDHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA22BDCEEB200344DF8 /* IDHelper.swift */; };
 		3FDC2EA72BE3CC8C00344DF8 /* HTMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA62BE3CC8C00344DF8 /* HTMLParser.swift */; };
 		ED079DC32C2705B4004F416B /* DialogueTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED079DC22C2705B4004F416B /* DialogueTitleView.swift */; };
@@ -826,6 +827,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3FCE74B32C27D6C300C4E783 /* EnvironmentKey.swift in Sources */,
+				ED0CBB202BF656B90056E6AA /* DocumentService.swift in Sources */,
 				ED0CBB212BF656B90056E6AA /* IDHelper.swift in Sources */,
 				3F317C3A2C23253900F42D37 /* Reducer.swift in Sources */,
 				ED0CBB222BF656B90056E6AA /* DialogueView.swift in Sources */,

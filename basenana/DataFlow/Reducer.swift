@@ -34,7 +34,7 @@ extension Store {
                     let response = try await call.response.get()
                     root.children = []
                     for grp in response.root.children {
-                        root.children?.append(paresGroupTreeChild(group: grp))
+                        root.children?.append(paresGroupTreeChild(root: root, group: grp))
                     }
                 } catch {
                     log.error("[groupService] find children failed \(error)")
@@ -94,6 +94,9 @@ extension Store {
                     for en in listResp.entries{
                         newInboxEntries.append(en.toEntry())
                     }
+                } catch {
+                    log.error("inbox failed \(error)")
+                    throw error
                 }
                 
                 return .updateInbox(enties: newInboxEntries)
@@ -170,12 +173,10 @@ extension Store {
             }
             
         case .moveEntriesToGroup(entries: let entries, groupID: let groupID):
-            for entryId in entries {
-                state.groupTree.changeParent(groupID: entryId, newParentID: groupID)
-            }
             
             return Task {
                 let clientSet = try clientFactory.makeClient()
+                var moveSucceed: [Int64] = []
                 for entryId in entries {
                     log.info("move \(entryId) -> \(groupID)")
                     var request = Api_V1_ChangeParentRequest()
@@ -189,13 +190,20 @@ extension Store {
                         log.error("move entry \(entryId) failed \(error)")
                         throw error
                     }
+                    moveSucceed.append(entryId)
                 }
-                return nil
+                return .changeGroupTree(entries: moveSucceed, groupID: groupID)
             }
             
+        case .changeGroupTree(entries: let entries, groupID: let groupID):
+            for entryId in entries {
+                state.groupTree.changeParent(groupID: entryId, newParentID: groupID)
+            }
+            return nil
+
         case .addGroupToGroupTree(children: let children):
             for child in children {
-                state.groupTree.addChildGroup(parentID: child.parentID, childID: child.groupID, childName: child.groupName)
+                state.groupTree.addChildGroup(parentID: child.parentID, childID: child.groupID, childName: child.groupName, grandChildren: nil)
             }
             return nil
 
@@ -278,6 +286,7 @@ extension Store {
             if let nextSelect = select {
                 state.sidebarSelection = nextSelect
             }
+            state.sidebarSelection = select
             return nil
             
         }
