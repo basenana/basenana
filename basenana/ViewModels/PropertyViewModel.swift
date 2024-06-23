@@ -43,6 +43,16 @@ class PropertyViewModel {
         self.properties = response.properties.filter({ !$0.encoded }).map({ $0.toEntryProperty() })
     }
     
+    func fetchProperty() async throws {
+        let clientSet = try clientFactory.makeClient()
+        var request = Api_V1_GetEntryDetailRequest()
+        request.entryID = entryID
+        let call = clientSet.entries.getEntryDetail(request, callOptions: defaultCallOptions)
+        let response = try await call.response.get()
+        
+        self.properties = response.properties.filter({ !$0.encoded }).map({ $0.toEntryProperty() })
+    }
+    
     func getProperty(k: String) -> EntryPropertyModel?{
         for property in properties {
             if property.key == k{
@@ -51,4 +61,5 @@ class PropertyViewModel {
         }
         return nil
     }
+    
 }

@@ -35,6 +35,21 @@ struct GroupTableView: View {
                 TableRow(child)
             }
         }
+        .contextMenu{
+            Button("goto", action: {
+                if let selected = group.selection.first {
+                    for en in group.children {
+                        if en.id != selected {
+                            continue
+                        }
+                        if en.isGroup {
+                            goGroupListView(en.toGroup()!)
+                        }
+                    }
+                }
+                log.info("\(group.selection)")
+            })
+        }
         .onChange(of: order){
             withAnimation {
                 group.children.sort(using: order)

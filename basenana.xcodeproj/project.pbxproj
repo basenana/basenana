@@ -91,10 +91,14 @@
 		3FB782552BC2D0F600327191 /* fsapi-v1.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB782512BC2D0F600327191 /* fsapi-v1.pb.swift */; };
 		3FDC2EA32BDCEEB200344DF8 /* IDHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA22BDCEEB200344DF8 /* IDHelper.swift */; };
 		3FDC2EA72BE3CC8C00344DF8 /* HTMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA62BE3CC8C00344DF8 /* HTMLParser.swift */; };
-		ED0CBB202BF656B90056E6AA /* DocumentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED47907A2BB129FF00FEA8D4 /* DocumentService.swift */; };
+		ED079DC32C2705B4004F416B /* DialogueTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED079DC22C2705B4004F416B /* DialogueTitleView.swift */; };
+		ED079DC72C27FD43004F416B /* MessageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED079DC62C27FD43004F416B /* MessageListView.swift */; };
+		ED079DC82C2800C7004F416B /* DialogueTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED079DC22C2705B4004F416B /* DialogueTitleView.swift */; };
+		ED079DC92C2800CA004F416B /* MessageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED079DC62C27FD43004F416B /* MessageListView.swift */; };
+		ED079DCB2C28116F004F416B /* DialogueButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED079DCA2C28116F004F416B /* DialogueButtonView.swift */; };
+		ED079DCC2C281276004F416B /* DialogueButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED079DCA2C28116F004F416B /* DialogueButtonView.swift */; };
 		ED0CBB212BF656B90056E6AA /* IDHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA22BDCEEB200344DF8 /* IDHelper.swift */; };
 		ED0CBB222BF656B90056E6AA /* DialogueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED85A3BD2BBAB21A0040598E /* DialogueView.swift */; };
-		ED0CBB232BF656B90056E6AA /* DialogueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED72603F2BC2E34A005F1166 /* DialogueService.swift */; };
 		ED0CBB242BF656B90056E6AA /* SidebarButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78C92BC99D600035F90F /* SidebarButtonView.swift */; };
 		ED0CBB252BF656B90056E6AA /* EntryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE562B90CD59005D533F /* EntryModel.swift */; };
 		ED0CBB262BF656B90056E6AA /* SidebarGroupsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78C72BC99D160035F90F /* SidebarGroupsView.swift */; };
@@ -133,25 +137,17 @@
 		ED1D72CE2BD2BDAD006CF95F /* DialogueViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1D72CD2BD2BDAD006CF95F /* DialogueViewModel.swift */; };
 		ED2A0B432BFF1A2200CFF463 /* PageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2A0B422BFF1A2200CFF463 /* PageModel.swift */; };
 		ED2A0B442BFF1A5100CFF463 /* PageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2A0B422BFF1A2200CFF463 /* PageModel.swift */; };
-		ED47907B2BB129FF00FEA8D4 /* DocumentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED47907A2BB129FF00FEA8D4 /* DocumentService.swift */; };
 		ED54F0542C0D808700EE2C2E /* DocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED54F0532C0D808700EE2C2E /* DocumentView.swift */; };
 		ED54F0552C0D81C600EE2C2E /* DocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED54F0532C0D808700EE2C2E /* DocumentView.swift */; };
 		ED62B1752BE7D82A001AC523 /* EntryPropertyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED62B1742BE7D82A001AC523 /* EntryPropertyModel.swift */; };
 		ED6B17162C0ED30F00FEABE6 /* GroupCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6B17152C0ED30F00FEABE6 /* GroupCreateView.swift */; };
 		ED6B17172C0ED50800FEABE6 /* GroupCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6B17152C0ED30F00FEABE6 /* GroupCreateView.swift */; };
 		ED72603E2BC2E25D005F1166 /* DialogueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED72603D2BC2E25D005F1166 /* DialogueModel.swift */; };
-		ED7260402BC2E34A005F1166 /* DialogueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED72603F2BC2E34A005F1166 /* DialogueService.swift */; };
 		ED85A3BE2BBAB21A0040598E /* DialogueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED85A3BD2BBAB21A0040598E /* DialogueView.swift */; };
 		ED85A3C32BBAB3BD0040598E /* DocumentItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED85A3C22BBAB3BD0040598E /* DocumentItemView.swift */; };
 		ED917E782B9607BE004FCB9A /* DocumentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED917E772B9607BE004FCB9A /* DocumentModel.swift */; };
 		EDC5AA7A2C06F738003B78AD /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC5AA792C06F738003B78AD /* MessageView.swift */; };
-		EDC5AA7C2C06F77C003B78AD /* CloseButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC5AA7B2C06F77C003B78AD /* CloseButtonView.swift */; };
-		EDC5AA7E2C06F7CF003B78AD /* EraserButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC5AA7D2C06F7CF003B78AD /* EraserButtonView.swift */; };
-		EDC5AA802C06F8FC003B78AD /* IngestButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC5AA7F2C06F8FC003B78AD /* IngestButtonView.swift */; };
-		EDC5AA812C06F925003B78AD /* CloseButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC5AA7B2C06F77C003B78AD /* CloseButtonView.swift */; };
 		EDC5AA822C06F92A003B78AD /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC5AA792C06F738003B78AD /* MessageView.swift */; };
-		EDC5AA832C06F933003B78AD /* IngestButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC5AA7F2C06F8FC003B78AD /* IngestButtonView.swift */; };
-		EDC5AA842C06F93A003B78AD /* EraserButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDC5AA7D2C06F7CF003B78AD /* EraserButtonView.swift */; };
 		EDEF16382BC8DD93000BC25C /* Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDEF16372BC8DD93000BC25C /* Assets.swift */; };
 		EDF504772BEB295700CB4B1C /* DocumentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF504762BEB295700CB4B1C /* DocumentDetailView.swift */; };
 /* End PBXBuildFile section */
@@ -227,23 +223,21 @@
 		3FB782512BC2D0F600327191 /* fsapi-v1.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "fsapi-v1.pb.swift"; sourceTree = "<group>"; };
 		3FDC2EA22BDCEEB200344DF8 /* IDHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDHelper.swift; sourceTree = "<group>"; };
 		3FDC2EA62BE3CC8C00344DF8 /* HTMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLParser.swift; sourceTree = "<group>"; };
+		ED079DC22C2705B4004F416B /* DialogueTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueTitleView.swift; sourceTree = "<group>"; };
+		ED079DC62C27FD43004F416B /* MessageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListView.swift; sourceTree = "<group>"; };
+		ED079DCA2C28116F004F416B /* DialogueButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueButtonView.swift; sourceTree = "<group>"; };
 		ED0CBB522BF656B90056E6AA /* basenana dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "basenana dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED0CBB532BF656BA0056E6AA /* Info-dev.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-dev.plist"; sourceTree = SOURCE_ROOT; };
 		ED1D72CD2BD2BDAD006CF95F /* DialogueViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueViewModel.swift; sourceTree = "<group>"; };
 		ED2A0B422BFF1A2200CFF463 /* PageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageModel.swift; sourceTree = "<group>"; };
-		ED47907A2BB129FF00FEA8D4 /* DocumentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentService.swift; sourceTree = "<group>"; };
 		ED54F0532C0D808700EE2C2E /* DocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentView.swift; sourceTree = "<group>"; };
 		ED62B1742BE7D82A001AC523 /* EntryPropertyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryPropertyModel.swift; sourceTree = "<group>"; };
 		ED6B17152C0ED30F00FEABE6 /* GroupCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCreateView.swift; sourceTree = "<group>"; };
 		ED72603D2BC2E25D005F1166 /* DialogueModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueModel.swift; sourceTree = "<group>"; };
-		ED72603F2BC2E34A005F1166 /* DialogueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueService.swift; sourceTree = "<group>"; };
 		ED85A3BD2BBAB21A0040598E /* DialogueView.swift */ = {isa = PBXFileReference; indentWidth = 5; lastKnownFileType = sourcecode.swift; path = DialogueView.swift; sourceTree = "<group>"; };
 		ED85A3C22BBAB3BD0040598E /* DocumentItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentItemView.swift; sourceTree = "<group>"; };
 		ED917E772B9607BE004FCB9A /* DocumentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentModel.swift; sourceTree = "<group>"; };
 		EDC5AA792C06F738003B78AD /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
-		EDC5AA7B2C06F77C003B78AD /* CloseButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseButtonView.swift; sourceTree = "<group>"; };
-		EDC5AA7D2C06F7CF003B78AD /* EraserButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EraserButtonView.swift; sourceTree = "<group>"; };
-		EDC5AA7F2C06F8FC003B78AD /* IngestButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngestButtonView.swift; sourceTree = "<group>"; };
 		EDEF16372BC8DD93000BC25C /* Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assets.swift; sourceTree = "<group>"; };
 		EDF504762BEB295700CB4B1C /* DocumentDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -408,8 +402,6 @@
 			children = (
 				3F2CB97C2B9A02B600ADDDED /* EntryService.swift */,
 				3F0AEC752BA48EC7000DA928 /* GroupService.swift */,
-				ED47907A2BB129FF00FEA8D4 /* DocumentService.swift */,
-				ED72603F2BC2E34A005F1166 /* DialogueService.swift */,
 				3FA180152C1DBFA1004176EA /* Service.swift */,
 			);
 			path = Services;
@@ -555,9 +547,9 @@
 			children = (
 				ED85A3BD2BBAB21A0040598E /* DialogueView.swift */,
 				EDC5AA792C06F738003B78AD /* MessageView.swift */,
-				EDC5AA7B2C06F77C003B78AD /* CloseButtonView.swift */,
-				EDC5AA7D2C06F7CF003B78AD /* EraserButtonView.swift */,
-				EDC5AA7F2C06F8FC003B78AD /* IngestButtonView.swift */,
+				ED079DC22C2705B4004F416B /* DialogueTitleView.swift */,
+				ED079DC62C27FD43004F416B /* MessageListView.swift */,
+				ED079DCA2C28116F004F416B /* DialogueButtonView.swift */,
 			);
 			path = Dialogue;
 			sourceTree = "<group>";
@@ -752,12 +744,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED47907B2BB129FF00FEA8D4 /* DocumentService.swift in Sources */,
 				3F317C3C2C232B4700F42D37 /* GroupModel.swift in Sources */,
 				3FAC06CB2C268CF40067E7A5 /* DocumentMenuView.swift in Sources */,
 				3FDC2EA32BDCEEB200344DF8 /* IDHelper.swift in Sources */,
 				ED85A3BE2BBAB21A0040598E /* DialogueView.swift in Sources */,
-				ED7260402BC2E34A005F1166 /* DialogueService.swift in Sources */,
 				3F317C482C2459BA00F42D37 /* Helper.swift in Sources */,
 				3F317C4E2C2476C300F42D37 /* StackContentView.swift in Sources */,
 				3F4A78CA2BC99D600035F90F /* SidebarButtonView.swift in Sources */,
@@ -770,7 +760,9 @@
 				3F4A78DD2BCF80080035F90F /* Logging.swift in Sources */,
 				ED1D72CE2BD2BDAD006CF95F /* DialogueViewModel.swift in Sources */,
 				ED62B1752BE7D82A001AC523 /* EntryPropertyModel.swift in Sources */,
+				ED079DC72C27FD43004F416B /* MessageListView.swift in Sources */,
 				3F317C4B2C24701000F42D37 /* Extension.swift in Sources */,
+				ED079DC32C2705B4004F416B /* DialogueTitleView.swift in Sources */,
 				3FA594552C26C14300E303CE /* PropertyViewModel.swift in Sources */,
 				ED54F0542C0D808700EE2C2E /* DocumentView.swift in Sources */,
 				3FA594582C26CD9800E303CE /* Consistents.swift in Sources */,
@@ -780,6 +772,7 @@
 				3FAC06BC2C25BEC40067E7A5 /* LoginView.swift in Sources */,
 				ED2A0B432BFF1A2200CFF463 /* PageModel.swift in Sources */,
 				3F1BBE592B932251005D533F /* GroupView.swift in Sources */,
+				ED079DCB2C28116F004F416B /* DialogueButtonView.swift in Sources */,
 				ED917E782B9607BE004FCB9A /* DocumentModel.swift in Sources */,
 				ED72603E2BC2E25D005F1166 /* DialogueModel.swift in Sources */,
 				3F317C1F2C231AD500F42D37 /* Debug.swift in Sources */,
@@ -793,9 +786,7 @@
 				3F81C9C52BAF1A6D00FEE130 /* GroupViewModel.swift in Sources */,
 				3F2CB97D2B9A02B600ADDDED /* EntryService.swift in Sources */,
 				3F317C2C2C231D1A00F42D37 /* AppAction.swift in Sources */,
-				EDC5AA7E2C06F7CF003B78AD /* EraserButtonView.swift in Sources */,
 				3F317C292C231CFC00F42D37 /* Store.swift in Sources */,
-				EDC5AA7C2C06F77C003B78AD /* CloseButtonView.swift in Sources */,
 				3F0AEC762BA48EC7000DA928 /* GroupService.swift in Sources */,
 				3F317C1D2C231ABB00F42D37 /* EnvironmentKey.swift in Sources */,
 				ED6B17162C0ED30F00FEABE6 /* GroupCreateView.swift in Sources */,
@@ -806,7 +797,6 @@
 				3F4A78E12BD299110035F90F /* SettingsView.swift in Sources */,
 				3F1BBE1D2B8E147F005D533F /* basenanaApp.swift in Sources */,
 				3F317C262C231CF200F42D37 /* AppState.swift in Sources */,
-				EDC5AA802C06F8FC003B78AD /* IngestButtonView.swift in Sources */,
 				3F317C392C23253900F42D37 /* Reducer.swift in Sources */,
 				ED85A3C32BBAB3BD0040598E /* DocumentItemView.swift in Sources */,
 				3F81C9C72BAFCB8900FEE130 /* ContentView.swift in Sources */,
@@ -836,11 +826,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED0CBB202BF656B90056E6AA /* DocumentService.swift in Sources */,
 				ED0CBB212BF656B90056E6AA /* IDHelper.swift in Sources */,
 				3F317C3A2C23253900F42D37 /* Reducer.swift in Sources */,
 				ED0CBB222BF656B90056E6AA /* DialogueView.swift in Sources */,
-				ED0CBB232BF656B90056E6AA /* DialogueService.swift in Sources */,
 				ED0CBB242BF656B90056E6AA /* SidebarButtonView.swift in Sources */,
 				3FAC06C92C2675410067E7A5 /* DocumentListView.swift in Sources */,
 				ED0CBB252BF656B90056E6AA /* EntryModel.swift in Sources */,
@@ -863,8 +851,11 @@
 				ED2A0B442BFF1A5100CFF463 /* PageModel.swift in Sources */,
 				ED0CBB2E2BF656B90056E6AA /* GroupView.swift in Sources */,
 				ED0CBB2F2BF656B90056E6AA /* DocumentModel.swift in Sources */,
+				ED079DCC2C281276004F416B /* DialogueButtonView.swift in Sources */,
 				ED0CBB302BF656B90056E6AA /* DialogueModel.swift in Sources */,
 				ED0CBB322BF656B90056E6AA /* Assets.swift in Sources */,
+				ED079DC92C2800CA004F416B /* MessageListView.swift in Sources */,
+				ED079DC82C2800C7004F416B /* DialogueTitleView.swift in Sources */,
 				3FAC06C32C25DE050067E7A5 /* GroupTableView.swift in Sources */,
 				EDC5AA822C06F92A003B78AD /* MessageView.swift in Sources */,
 				3F317C2D2C231D1A00F42D37 /* AppAction.swift in Sources */,
@@ -876,7 +867,6 @@
 				ED0CBB382BF656B90056E6AA /* EntryService.swift in Sources */,
 				3F317C492C2459BA00F42D37 /* Helper.swift in Sources */,
 				ED0CBB392BF656B90056E6AA /* GroupService.swift in Sources */,
-				EDC5AA842C06F93A003B78AD /* EraserButtonView.swift in Sources */,
 				ED0CBB3A2BF656B90056E6AA /* fsapi-v1.grpc.swift in Sources */,
 				ED6B17172C0ED50800FEABE6 /* GroupCreateView.swift in Sources */,
 				ED0CBB3B2BF656B90056E6AA /* DocumentDetailView.swift in Sources */,
@@ -884,7 +874,6 @@
 				ED0CBB3C2BF656B90056E6AA /* SettingsView.swift in Sources */,
 				3F317C272C231CF200F42D37 /* AppState.swift in Sources */,
 				3F317C302C231D2800F42D37 /* AppConfiguration.swift in Sources */,
-				EDC5AA832C06F933003B78AD /* IngestButtonView.swift in Sources */,
 				3FA594562C26C14300E303CE /* PropertyViewModel.swift in Sources */,
 				3F317C4C2C24701000F42D37 /* Extension.swift in Sources */,
 				3F317C4F2C2476C300F42D37 /* StackContentView.swift in Sources */,
@@ -892,7 +881,6 @@
 				3F317C2A2C231CFC00F42D37 /* Store.swift in Sources */,
 				3F317C432C244D7F00F42D37 /* AlertModel.swift in Sources */,
 				ED0CBB3E2BF656B90056E6AA /* DocumentItemView.swift in Sources */,
-				EDC5AA812C06F925003B78AD /* CloseButtonView.swift in Sources */,
 				3F317C462C24574B00F42D37 /* Mapping.swift in Sources */,
 				ED0CBB3F2BF656B90056E6AA /* ContentView.swift in Sources */,
 			);
