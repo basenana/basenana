@@ -24,7 +24,7 @@ struct RoomModel {
 }
 
 struct RoomMessageModel: Codable, Identifiable {
-    var id: Int64?
+    var id: Int64
     var namespace: String?
     var roomid: Int64
     var sender: String

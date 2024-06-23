@@ -9,8 +9,12 @@ import Foundation
 import SwiftUI
 
 struct MessageView: View {
-     @Binding var message: RoomMessageViewModel
+     var message: RoomMessageModel
      
+    init(message: RoomMessageModel) {
+        self.message = message
+    }
+    
      var body: some View {
           let dateFormatter: DateFormatter = {
                let formatter = DateFormatter()

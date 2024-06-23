@@ -68,7 +68,7 @@ struct DocumentFridayView: View {
                 
                 if openFriday{
                     // dialogue body
-                    DialogueView(docId: document.id, entryId: document.oid, isDrawerOpen: $openFriday)
+                    DialogueView(openFriday: $openFriday, entryId: document.oid)
                         .id("\(document.oid)/room")
                         .frame(minWidth:200, idealWidth: 200, maxWidth: .infinity)
                 }
