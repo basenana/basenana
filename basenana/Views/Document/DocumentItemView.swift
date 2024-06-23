@@ -23,14 +23,8 @@ struct DocumentItemView: View {
         self.doc = doc
         self.markReaded = markReaded
     }
-    
+
     var body: some View {
-        let dateFormatter: DateFormatter = {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .medium
-            formatter.timeStyle = .short
-            return formatter
-        }()
         
         VStack(alignment: .leading) {
             VStack(alignment: .leading){
@@ -41,7 +35,7 @@ struct DocumentItemView: View {
                     
                     Spacer()
                     
-                    Text(dateFormatter.string(from: doc.createdAt))
+                    Text(self.docTime())
                         .font(.caption)
                         .foregroundColor(markReaded ? Color.gray : Color.primary  )
                 }
@@ -51,13 +45,17 @@ struct DocumentItemView: View {
                     .foregroundColor(markReaded ? Color.gray : Color.primary  )
                 
             }
-            Text(doc.subContent)
+            
+            Text("\(doc.subContent.prefix(100))")
                 .font(.body)
                 .foregroundColor(Color.gray)
-                .frame(minWidth: 0, idealWidth: 200, maxWidth: .infinity, alignment: .leading)
-                .frame(minHeight: 0, idealHeight: 50, alignment: .leading)
+                .frame(minWidth: 0, idealWidth: 200,  maxWidth: .infinity, minHeight: 0, idealHeight: 40, maxHeight: 50, alignment: .leading)
+            
+            Text(self.docURL())
+                .foregroundColor(Color.gray)
         }
-        .task{
+        .padding(.vertical, 3)
+        .task {
             do {
                 try await property.initEntry(entryID: doc.oid)
             } catch {
@@ -73,6 +71,31 @@ struct DocumentItemView: View {
         
         return doc.name
     }
+    
+    func docTime() -> String {
+        if let p = property.getProperty(k: PropertyWebPageUpdateAt){
+            return p.value
+        }
+        
+        return dateFormatter.string(from: doc.createdAt)
+    }
+
+    func docURL() -> String {
+        var urlStr: String = ""
+        for keyStr in [PropertyWebPageURL, PropertyWebSiteURL]{
+            if let p = property.getProperty(k: keyStr){
+                urlStr =  p.value
+                break
+            }
+        }
+        
+        guard !urlStr.isEmpty else {
+            return ""
+        }
+        
+        let url = URL(string: urlStr)
+        return url?.host() ?? ""
+    }
 
     func groupName() -> String {
         if let p = property.getProperty(k: PropertyWebSiteName){
@@ -85,5 +108,12 @@ struct DocumentItemView: View {
         
         return property.entryAliases
     }
+    
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter
+    }()
 }
 

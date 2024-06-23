@@ -12,20 +12,23 @@ import Foundation
 struct DocumentListView: View {
     @Binding var readerViewModel: DocumentReaderViewModel
     @State private var appConfig = AppConfiguration.share
-    
     @Environment(Store.self) private var store: Store
     @Environment(\.sendAlert) var sendAlert
     
-    
+    @State var section = DocumentListSection()
+
     var body: some View {
-        NavigationSplitView() {
+        NavigationView() {
             VStack {
                 List(readerViewModel.documents, id:\.self, selection: $readerViewModel.selection) { document in
+                    DocumentListSectionView(sectionName: section.sectionNames[document.id])
                     NavigationLink(value: document) {
                         DocumentItemView(doc: document, markReaded: readerViewModel.isMarkDocumentsReaded(doc: document)).id(document).tag(document as DocumentInfoModel?)
                             .onAppear { handleDocuementOnAppear(doc: document) }
                             .onDisappear { handleDocuementOnDisappear(doc: document) }
-                    }.task{
+                    }
+                    .task {
+                        section.updateSection(next: document)
                         do {
                             try await readerViewModel.checkAndLoadNextPage(document)
                         } catch {
@@ -34,11 +37,11 @@ struct DocumentListView: View {
                     }
                 }
                 if readerViewModel.isLoading {
-                    Divider()
-                    Text("Loading ...").padding(.vertical)
+                    Text("☁️Loading ...").padding(.vertical)
                 }
-            }.toolbar(removing: .sidebarToggle)
-        } detail: {
+            }
+            .toolbar(removing: .sidebarToggle)
+            .frame(minWidth: 300, idealWidth: 300)
             if let selected = readerViewModel.selection {
                 DocumentDetailView(document: selected).id(selected)
             }
@@ -72,5 +75,52 @@ struct DocumentListView: View {
             }
         }
     }
+    
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        formatter.dateFormat = "yyyy/MM/dd"
+        return formatter
+    }()
 }
 
+struct DocumentListSectionView: View {
+    var sectionName: String?
+    
+    var body: some View {
+        if sectionName == nil || sectionName!.isEmpty {
+            EmptyView()
+        } else {
+            Section(sectionName!){}
+        }
+    }
+}
+
+
+@Observable
+class DocumentListSection {
+    var sectionNames: [Int64: String] = [:]
+    @ObservationIgnored private var lastSectionName: String = ""
+
+    func updateSection(next: DocumentInfoModel) {
+        if let _ = sectionNames[next.id]{
+            return
+        }
+        let sk = dateFormatter.string(from: next.createdAt)
+        if sk == lastSectionName {
+            sectionNames[next.id] = ""
+            return
+        }
+        lastSectionName = sk
+        sectionNames[next.id] = sk
+    }
+    
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        formatter.dateFormat = "yyyy/MM/dd"
+        return formatter
+    }()
+}

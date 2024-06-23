@@ -24,7 +24,7 @@ struct StackContentView: View {
                     .navigationDestination(for: Destination.self) { destination in
                         switch destination {
                         case .groupList(group: let group):
-                            GroupView(group: group).id(group)
+                            GroupView(group: group).id(group).navigationTitle(group.groupName)
                         default:
                             Text("unknown destination")
                         }
@@ -47,9 +47,9 @@ struct StackLandingView: View {
     var body: some View {
         switch landing {
         case .readDocuments(prespective: let prespective):
-            DocumentView(prespective: prespective).id(prespective)
+            DocumentView(prespective: prespective).id(prespective).navigationTitle(prespective.Title)
         case .groupList(group: let group):
-            GroupView(group: group).id(group)
+            GroupView(group: group).id(group).navigationTitle(group.groupName)
         default:
             Text("unknown")
         }
@@ -74,6 +74,6 @@ struct StackBannerView: View {
             Text("             `-.__  `----\"\"\"    __.-'")
             Text("                  `--..____..--'")
         }
-        .font(.system(size: 18, weight: .thin, design: .monospaced)).foregroundColor(.gray)
+        .font(.system(size: 14, weight: .thin, design: .monospaced)).foregroundColor(.gray)
     }
 }

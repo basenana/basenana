@@ -39,6 +39,7 @@ struct GroupCreateView: View {
                     }
                     Button {
                         store.dispatch(.createGroup(groupName: groupName, parentId: parentID))
+                        showCreateGroup.toggle()
                     } label: {
                         Text("Create")
                             .font(.body)

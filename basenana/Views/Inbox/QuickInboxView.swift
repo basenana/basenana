@@ -65,24 +65,25 @@ struct QuickInboxView: View{
                             .padding(.vertical, 5)
                     }
                     Button {
-                        Task {
-                            if urlTitle == "" {
-                                urlTitle = (try? parseURLTitle(urlStr: urlInput)) ?? "unknown"
-                            }
-                            var data: Data? = nil
-                            if let url = URL(string: urlInput){
-                                if htmlContent != ""{
-                                    switch fileTypeOption {
-                                    case "html":
-                                        data = htmlContent.data(using: .utf8)
-                                    case "webarchive":
-                                        data = webarchiveBaseMainResource(url: url, mainResource: htmlContent)
-                                    default: break
-                                    }
-                                }
-                            }
-                            store.dispatch(.quickInbox(urlStr: urlInput, filename: urlTitle, fileType: fileTypeOption, data: data ))
-                        }
+//                        Task.detached {
+//                            if urlTitle == "" {
+//                                urlTitle = (try? parseURLTitle(urlStr: urlInput)) ?? "unknown"
+//                            }
+//                            var data: Data? = nil
+//                            if let url = URL(string: urlInput){
+//                                if htmlContent != ""{
+//                                    switch fileTypeOption {
+//                                    case "html":
+//                                        data = htmlContent.data(using: .utf8)
+//                                    case "webarchive":
+//                                        data = webarchiveBaseMainResource(url: url, mainResource: htmlContent)
+//                                    default: break
+//                                    }
+//                                }
+//                            }
+//                        }
+                        store.dispatch(.quickInbox(urlStr: urlInput, filename: urlTitle, fileType: fileTypeOption, data: nil ))
+                        showQuickInbox.toggle()
                         
                     } label: {
                         Text("Inbox")

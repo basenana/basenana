@@ -13,6 +13,7 @@ struct GroupTableView: View {
     @Binding var group: GroupViewModel
     @State var order: [KeyPathComparator<EntryInfoModel>] = [.init(\.name, order: .forward)]
     @Environment(\.goGroupListView) var goGroupListView
+    @Environment(Store.self) private var store: Store
     
     var body: some View {
         Table(of: EntryInfoModel.self, selection: $group.selection, sortOrder: $order) {
@@ -33,6 +34,7 @@ struct GroupTableView: View {
         } rows: {
             ForEach(group.children, id: \.id) { child in
                 TableRow(child)
+                    .draggable(IDHelper(kind: "entry", id: child.id).Encode())
             }
         }
         .contextMenu{

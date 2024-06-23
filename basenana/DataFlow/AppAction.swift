@@ -28,6 +28,8 @@ enum AppAction {
     
     case moveEntriesToGroup(entries: [Int64], groupID: Int64)
     
+    case changeGroupTree(entries: [Int64], groupID: Int64)
+
     case addGroupToGroupTree(children: [GroupModel])
     
     case removeGroupFromGroupTree(children: [GroupModel])

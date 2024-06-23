@@ -15,7 +15,6 @@ struct DocumentView: View {
     
     var body: some View {
         DocumentListView(readerViewModel: $readerViewModel)
-            .frame(minWidth: 300, idealWidth: 300)
             .listStyle(.inset)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
@@ -28,21 +27,24 @@ struct DocumentView: View {
                     .pickerStyle(.menu)
                 }
             }
-            .onChange(of: readerViewModel.groupFilter ) { _, _ in
-                log.info("reload next page \(readerViewModel.groupFilter)")
-                Task { @MainActor in
-                    do {
-                        try await readerViewModel.reloadNextPageDocuments()
-                    } catch {
-                        sendAlert("\(error)")
+            .onChange(of: readerViewModel.groupFilter ) { old, new in
+                if old != new {
+                    Task {
+                        do {
+                            try await readerViewModel.reloadNextPageDocuments()
+                        } catch {
+                            sendAlert("filter docuemnt failed \(error)")
+                        }
                     }
                 }
             }
             .task {
                 do {
-                    try await readerViewModel.initFirstPageDocuments(prespective: prespective)
+                    readerViewModel = try await DocumentReaderViewModel.load(prespective: prespective)
+                }catch (let cancellationError as CancellationError){
+                    log.warning("load document first page failed \(cancellationError)")
                 } catch {
-                    sendAlert("\(error)")
+                    sendAlert("load document first page failed \(error)")
                 }
             }
     }

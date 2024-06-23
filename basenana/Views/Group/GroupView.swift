@@ -20,21 +20,21 @@ struct GroupView: View{
                 VSplitView(){
                     GroupTableView(group: $groupViewModel)
                         .frame(minHeight: 200, maxHeight: .infinity)
-                        .task {
-                            do {
-                                try await groupViewModel.fetchChildren(groupID: group.groupID)
-                            } catch {
-                                let msg = "fetch group \(group.groupID) error: \(error)"
-                                log.error(msg)
-                                sendAlert(msg)
-                            }
-                        }
 
                     if let doc = groupViewModel.document {
                         DocumentDetailView(document: doc.toInfo())
                             .id(doc)
                             .frame(minHeight: 300, idealHeight: geometry.size.height/2)
                             .layoutPriority(1)
+                    }
+                }
+                .task {
+                    do {
+                        groupViewModel = try await GroupViewModel.load(groupID: group.groupID)
+                    } catch {
+                        let msg = "fetch group \(group.groupID) error: \(error)"
+                        log.error(msg)
+                        sendAlert(msg)
                     }
                 }
                 .onChange(of: groupViewModel.selection) {
