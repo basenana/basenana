@@ -185,12 +185,14 @@ extension Store {
                     let call = clientSet.entries.changeParent(request, callOptions: defaultCallOptions)
                     
                     do {
-                        let _ = try await call.response.get()
+                        let resp = try await call.response.get()
+                        if resp.entry.isGroup {
+                            moveSucceed.append(entryId)
+                        }
                     } catch {
                         log.error("move entry \(entryId) failed \(error)")
                         throw error
                     }
-                    moveSucceed.append(entryId)
                 }
                 return .changeGroupTree(entries: moveSucceed, groupID: groupID)
             }

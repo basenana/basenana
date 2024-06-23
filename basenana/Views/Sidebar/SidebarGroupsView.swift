@@ -32,6 +32,18 @@ struct SidebarGroupsView: View {
             }
             .draggable(IDHelper(kind: "group", id: child.groupID).Encode())
         }
+        .contextMenu{
+            GroupMenuView(entry: nil, group: selectedGroup())
+        }
+    }
+    
+    @MainActor func selectedGroup() -> GroupModel? {
+        if store.state.sidebarSelection != nil{
+            if case Destination.groupList(group: let group) = store.state.sidebarSelection! {
+                return group
+            }
+        }
+        return nil
     }
 }
 

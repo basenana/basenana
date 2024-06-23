@@ -21,7 +21,11 @@ struct DocumentListView: View {
         NavigationView() {
             VStack {
                 List(readerViewModel.documents, id:\.self, selection: $readerViewModel.selection) { document in
-                    DocumentListSectionView(sectionName: section.sectionNames[document.id])
+                    if readerViewModel.prespective == .unread {
+                        // group by document time
+                        DocumentListSectionView(sectionName: section.sectionNames[document.id])
+                    }
+                    
                     NavigationLink(value: document) {
                         DocumentItemView(doc: document, markReaded: readerViewModel.isMarkDocumentsReaded(doc: document)).id(document).tag(document as DocumentInfoModel?)
                             .onAppear { handleDocuementOnAppear(doc: document) }
@@ -107,7 +111,7 @@ class DocumentListSection {
         if let _ = sectionNames[next.id]{
             return
         }
-        let sk = dateFormatter.string(from: next.createdAt)
+        let sk = buildSection(next: next)
         if sk == lastSectionName {
             sectionNames[next.id] = ""
             return
@@ -116,6 +120,17 @@ class DocumentListSection {
         sectionNames[next.id] = sk
     }
     
+    func buildSection(next: DocumentInfoModel) -> String {
+        if Calendar.current.isDateInToday(next.createdAt){
+            return "TODAY"
+        }
+        if Calendar.current.isDateInYesterday(next.createdAt){
+            return "YESTERDAY"
+        }
+
+        return dateFormatter.string(from: next.createdAt)
+    }
+
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
