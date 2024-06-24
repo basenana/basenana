@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3F071B972C299AC100F19C63 /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F071B962C299AC100F19C63 /* SearchModel.swift */; };
+		3F071B9A2C29A20900F19C63 /* NotificationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F071B992C29A20900F19C63 /* NotificationModel.swift */; };
+		3F071B9B2C29A20900F19C63 /* NotificationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F071B992C29A20900F19C63 /* NotificationModel.swift */; };
+		3F071B9D2C29A22300F19C63 /* JobModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F071B9C2C29A22300F19C63 /* JobModel.swift */; };
+		3F071B9E2C29A22300F19C63 /* JobModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F071B9C2C29A22300F19C63 /* JobModel.swift */; };
+		3F071BA12C29A27F00F19C63 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F071BA02C29A27F00F19C63 /* NotificationView.swift */; };
+		3F071BA22C29A27F00F19C63 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F071BA02C29A27F00F19C63 /* NotificationView.swift */; };
+		3F071BA42C29A2CC00F19C63 /* BackgroundJobView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F071BA32C29A2CC00F19C63 /* BackgroundJobView.swift */; };
+		3F071BA52C29A2CC00F19C63 /* BackgroundJobView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F071BA32C29A2CC00F19C63 /* BackgroundJobView.swift */; };
+		3F071BA72C29B3CE00F19C63 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F071BA62C29B3CE00F19C63 /* Style.swift */; };
+		3F071BA82C29B3CE00F19C63 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F071BA62C29B3CE00F19C63 /* Style.swift */; };
 		3F0AEC762BA48EC7000DA928 /* GroupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEC752BA48EC7000DA928 /* GroupService.swift */; };
 		3F19E2092C14086700B84293 /* Reeeed in Frameworks */ = {isa = PBXBuildFile; productRef = 3F19E2082C14086700B84293 /* Reeeed */; };
 		3F19E20C2C140A6C00B84293 /* Reeeed in Frameworks */ = {isa = PBXBuildFile; productRef = 3F19E20B2C140A6C00B84293 /* Reeeed */; };
@@ -175,6 +186,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3F071B962C299AC100F19C63 /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
+		3F071B992C29A20900F19C63 /* NotificationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationModel.swift; sourceTree = "<group>"; };
+		3F071B9C2C29A22300F19C63 /* JobModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobModel.swift; sourceTree = "<group>"; };
+		3F071BA02C29A27F00F19C63 /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
+		3F071BA32C29A2CC00F19C63 /* BackgroundJobView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundJobView.swift; sourceTree = "<group>"; };
+		3F071BA62C29B3CE00F19C63 /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
 		3F0AEC752BA48EC7000DA928 /* GroupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupService.swift; sourceTree = "<group>"; };
 		3F1BBE192B8E147F005D533F /* Basenana.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Basenana.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F1BBE1C2B8E147F005D533F /* basenanaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = basenanaApp.swift; sourceTree = "<group>"; };
@@ -301,6 +318,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3F071B9F2C29A26600F19C63 /* Toolbar */ = {
+			isa = PBXGroup;
+			children = (
+				3F071BA02C29A27F00F19C63 /* NotificationView.swift */,
+				3F071BA32C29A2CC00F19C63 /* BackgroundJobView.swift */,
+			);
+			path = Toolbar;
+			sourceTree = "<group>";
+		};
 		3F19E20A2C140A6C00B84293 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -377,6 +403,7 @@
 		3F1BBE492B90C393005D533F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				3F071B9F2C29A26600F19C63 /* Toolbar */,
 				3F317C372C2322B300F42D37 /* Main */,
 				3F7444BA2BE7153400CC9C1E /* Inbox */,
 				3FDC2E9B2BDC030800344DF8 /* Group */,
@@ -400,6 +427,9 @@
 				3F317C3B2C232B4700F42D37 /* GroupModel.swift */,
 				3F317C3E2C2336E200F42D37 /* FsInfoModel.swift */,
 				3F317C412C244D7F00F42D37 /* AlertModel.swift */,
+				3F071B962C299AC100F19C63 /* SearchModel.swift */,
+				3F071B992C29A20900F19C63 /* NotificationModel.swift */,
+				3F071B9C2C29A22300F19C63 /* JobModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -433,6 +463,7 @@
 				3F317C1C2C231ABB00F42D37 /* EnvironmentKey.swift */,
 				3F317C4A2C24701000F42D37 /* Extension.swift */,
 				3F9FF9982C2829B900C9BBA4 /* Datetime.swift */,
+				3F071BA62C29B3CE00F19C63 /* Style.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -765,6 +796,7 @@
 				3F317C352C231E8C00F42D37 /* Destination.swift in Sources */,
 				3F1BBE572B90CD59005D533F /* EntryModel.swift in Sources */,
 				3FAC06C82C2675410067E7A5 /* DocumentListView.swift in Sources */,
+				3F071B972C299AC100F19C63 /* SearchModel.swift in Sources */,
 				3F4A78C82BC99D160035F90F /* SidebarGroupsView.swift in Sources */,
 				3F1BBE602B94BAF9005D533F /* QuickInboxView.swift in Sources */,
 				3F4A78DD2BCF80080035F90F /* Logging.swift in Sources */,
@@ -772,8 +804,10 @@
 				ED62B1752BE7D82A001AC523 /* EntryPropertyModel.swift in Sources */,
 				ED079DC72C27FD43004F416B /* MessageListView.swift in Sources */,
 				3F317C4B2C24701000F42D37 /* Extension.swift in Sources */,
+				3F071B9D2C29A22300F19C63 /* JobModel.swift in Sources */,
 				ED079DC32C2705B4004F416B /* DialogueTitleView.swift in Sources */,
 				3FA594552C26C14300E303CE /* PropertyViewModel.swift in Sources */,
+				3F071BA42C29A2CC00F19C63 /* BackgroundJobView.swift in Sources */,
 				ED54F0542C0D808700EE2C2E /* DocumentView.swift in Sources */,
 				3FA594582C26CD9800E303CE /* Consistents.swift in Sources */,
 				3F9FF99C2C28546D00C9BBA4 /* GroupMenuView.swift in Sources */,
@@ -782,6 +816,7 @@
 				3FA180162C1DBFA1004176EA /* Service.swift in Sources */,
 				3FAC06BC2C25BEC40067E7A5 /* LoginView.swift in Sources */,
 				ED2A0B432BFF1A2200CFF463 /* PageModel.swift in Sources */,
+				3F071B9A2C29A20900F19C63 /* NotificationModel.swift in Sources */,
 				3F1BBE592B932251005D533F /* GroupView.swift in Sources */,
 				ED079DCB2C28116F004F416B /* DialogueButtonView.swift in Sources */,
 				ED917E782B9607BE004FCB9A /* DocumentModel.swift in Sources */,
@@ -792,6 +827,7 @@
 				3FDC2EA72BE3CC8C00344DF8 /* HTMLParser.swift in Sources */,
 				3F317C452C24574B00F42D37 /* Mapping.swift in Sources */,
 				3FAC06C52C26727E0067E7A5 /* DocumentReaderViewModel.swift in Sources */,
+				3F071BA72C29B3CE00F19C63 /* Style.swift in Sources */,
 				3F4A78CF2BCC2A660035F90F /* FsClientSet.swift in Sources */,
 				EDC5AA7A2C06F738003B78AD /* MessageView.swift in Sources */,
 				3F81C9C52BAF1A6D00FEE130 /* GroupViewModel.swift in Sources */,
@@ -801,6 +837,7 @@
 				3F0AEC762BA48EC7000DA928 /* GroupService.swift in Sources */,
 				3F317C1D2C231ABB00F42D37 /* EnvironmentKey.swift in Sources */,
 				ED6B17162C0ED30F00FEABE6 /* GroupCreateView.swift in Sources */,
+				3F071BA12C29A27F00F19C63 /* NotificationView.swift in Sources */,
 				3FB782542BC2D0F600327191 /* fsapi-v1.grpc.swift in Sources */,
 				3F317C2F2C231D2800F42D37 /* AppConfiguration.swift in Sources */,
 				3F317C422C244D7F00F42D37 /* AlertModel.swift in Sources */,
@@ -877,10 +914,13 @@
 				ED0CBB342BF656B90056E6AA /* HTMLParser.swift in Sources */,
 				ED0CBB352BF656B90056E6AA /* FsClientSet.swift in Sources */,
 				3F317C3D2C232B4700F42D37 /* GroupModel.swift in Sources */,
+				3F071BA52C29A2CC00F19C63 /* BackgroundJobView.swift in Sources */,
 				ED0CBB372BF656B90056E6AA /* GroupViewModel.swift in Sources */,
 				ED0CBB382BF656B90056E6AA /* EntryService.swift in Sources */,
 				3F317C492C2459BA00F42D37 /* Helper.swift in Sources */,
+				3F071BA82C29B3CE00F19C63 /* Style.swift in Sources */,
 				ED0CBB392BF656B90056E6AA /* GroupService.swift in Sources */,
+				3F071BA22C29A27F00F19C63 /* NotificationView.swift in Sources */,
 				ED0CBB3A2BF656B90056E6AA /* fsapi-v1.grpc.swift in Sources */,
 				ED6B17172C0ED50800FEABE6 /* GroupCreateView.swift in Sources */,
 				ED0CBB3B2BF656B90056E6AA /* DocumentDetailView.swift in Sources */,
@@ -890,9 +930,11 @@
 				3F317C302C231D2800F42D37 /* AppConfiguration.swift in Sources */,
 				3FA594562C26C14300E303CE /* PropertyViewModel.swift in Sources */,
 				3F317C4C2C24701000F42D37 /* Extension.swift in Sources */,
+				3F071B9E2C29A22300F19C63 /* JobModel.swift in Sources */,
 				3F317C4F2C2476C300F42D37 /* StackContentView.swift in Sources */,
 				ED0CBB3D2BF656B90056E6AA /* basenanaApp.swift in Sources */,
 				3F317C2A2C231CFC00F42D37 /* Store.swift in Sources */,
+				3F071B9B2C29A20900F19C63 /* NotificationModel.swift in Sources */,
 				3F317C432C244D7F00F42D37 /* AlertModel.swift in Sources */,
 				ED0CBB3E2BF656B90056E6AA /* DocumentItemView.swift in Sources */,
 				3F317C462C24574B00F42D37 /* Mapping.swift in Sources */,

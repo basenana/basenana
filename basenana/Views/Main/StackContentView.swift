@@ -34,6 +34,14 @@ struct StackContentView: View {
                 }
             }
         }
+        .toolbar{
+            ToolbarItemGroup(placement: .primaryAction){
+                Spacer()
+                BackgroundJobView()
+                NotificationView()
+            }
+        }
+        .searchable(text: store.binding(for: \.search.query, toAction: { _ in .alert(msg: "not support") } ))
         .alert(store.state.alert.alertMessage, isPresented: store.binding(for: \.alert.needAlert, toAction: { _ in .offAlert })){
             Button("OK", role: .cancel) {}
         }

@@ -42,8 +42,13 @@ struct SidebarButtonView: View {
                 }
             }
             
-            
             Spacer()
+            
+            Button(action: {
+            }, label: {
+                Image(systemName: "ellipsis.curlybraces")
+            })
+            .buttonStyle(.accessoryBar)
         })
         .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/,alignment: .leading)
         .padding(5)

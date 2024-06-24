@@ -285,12 +285,9 @@ extension Store {
             return nil
             
         case .updateSidebarSelection(select: let select):
-            if let nextSelect = select {
-                state.sidebarSelection = nextSelect
-            }
             state.sidebarSelection = select
             return nil
-            
+
         }
     }
 }

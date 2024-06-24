@@ -12,14 +12,28 @@ import Foundation
 struct GroupMenuView: View {
     var entry: EntryInfoModel?
     var group: GroupModel?
-
+    
+    @Environment(Store.self) private var store: Store
+    
     var body: some View {
-        Section{
-            Button("New Group", action: {})
+        if entry != nil {
+            Section{
+                Button("Open", action: {
+                    if entry!.isGroup {
+                        store.dispatch(.gotoDestination(.groupList(group: GroupModel(parentID: entry!.parentID, groupID: entry!.id, groupName: entry!.name))))
+                    }else {
+                        store.dispatch(.alert(msg: "not support open \(entry!.kind) file"))
+                    }
+                })
+            }
         }
         
         Section{
-            Button("Open", action: {})
+            Menu("New") {
+                Button("Group", action: {})
+                Button("RSS Feed", action: {})
+                Button("Dynamic Group", action: {})
+            }
         }
         
         // web page
@@ -35,12 +49,22 @@ struct GroupMenuView: View {
         
         Section{
             Menu("Move To") {
-                Button("Group 1", action: { print("Option 1 selected") })
-                Button("Group 2", action: { print("Option 2 selected") })
+                ForEach(store.state.groupTree.children ?? []){ childGroup in
+                    GroupDestinationView(
+                        group: childGroup,
+                        childKeyPath: \.children,
+                        action: { store.dispatch(.alert(msg: "test move to \($0.groupName) ")) }
+                    )
+                }
             }
             Menu("Replicate To") {
-                Button("Group 1", action: { print("Option 1 selected") })
-                Button("Group 2", action: { print("Option 2 selected") })
+                ForEach(store.state.groupTree.children ?? []){ childGroup in
+                    GroupDestinationView(
+                        group: childGroup,
+                        childKeyPath: \.children,
+                        action: { store.dispatch(.alert(msg: "test dup to \($0.groupName) ")) }
+                    )
+                }
             }
         }
         
@@ -49,6 +73,35 @@ struct GroupMenuView: View {
                 Button("As Marked", action: { print("Option 1 selected") })
                 Button("As Unread", action: { print("Option 2 selected") })
             }
+        }
+    }
+}
+
+
+struct GroupDestinationView: View {
+    let group: GroupModel
+    let childKeyPath: KeyPath<GroupModel, [GroupModel]?>
+    let action: (_: GroupModel) ->Void
+    
+    @Environment(Store.self) private var store: Store
+    
+    var body: some View {
+        if group[keyPath: childKeyPath] != nil {
+            DisclosureGroup(
+                isExpanded: /*@START_MENU_TOKEN@*/.constant(true)/*@END_MENU_TOKEN@*/,
+                content: {
+                    Menu(group.groupName) {
+                        Button(group.groupName, action: { action(group) })
+                        Divider()
+                        ForEach(group[keyPath: childKeyPath] ?? []) { childGroup in
+                            GroupDestinationView(group: childGroup, childKeyPath: childKeyPath, action: action)
+                        }
+                    }
+                },
+                label: {}
+            ).disclosureGroupStyle(GroupDestDisclosureStyle())
+        } else {
+            Button(group.groupName, action: { action(group) })
         }
     }
 }

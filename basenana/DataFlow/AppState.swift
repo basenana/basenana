@@ -15,6 +15,10 @@ struct AppState {
     var groupTree = RootGroupModel()
     var inbox = [EntryInfoModel]()
     
-    var documentReader = DocumentReaderViewModel()
+    var search = SearchModel()
     var currentGroup = GroupViewModel()
+    
+    var notifications = [NotificationModel]()
+    var backgroundJob = [JobModel]()
+
 }

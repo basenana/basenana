@@ -17,7 +17,7 @@ struct DocumentView: View {
         DocumentListView(readerViewModel: $readerViewModel)
             .listStyle(.inset)
             .toolbar {
-                ToolbarItem(placement: .primaryAction) {
+                ToolbarItem(placement: .principal) {
                     Picker("In Group", selection: $readerViewModel.groupFilter) {
                         Text("Select").tag(Int64(0))
                         ForEach(readerViewModel.documentGroups, id: \.self) { group in

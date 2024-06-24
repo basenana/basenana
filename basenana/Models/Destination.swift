@@ -28,6 +28,7 @@ enum DocumentPrespective {
 enum Destination: Identifiable, Hashable, Equatable {
     
     case mainContent
+    case fridayChat
     case readDocuments(prespective: DocumentPrespective)
     case groupList(group: GroupModel)
 
@@ -35,6 +36,8 @@ enum Destination: Identifiable, Hashable, Equatable {
         switch self {
         case .mainContent:
             return "mainContent"
+        case .fridayChat:
+            return "fridayChat"
         case .readDocuments(prespective: let prespective):
             return "readDocument_\(prespective)"
         case .groupList(group: let group):
