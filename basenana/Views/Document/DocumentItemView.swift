@@ -30,7 +30,7 @@ struct DocumentItemView: View {
             VStack(alignment: .leading){
                 
                 HStack(alignment: .top) {
-                    Text(self.groupName())
+                    Text("\(self.groupName().prefix(25))")
                         .foregroundColor(Color.gray)
                     
                     Spacer()
@@ -106,6 +106,9 @@ struct DocumentItemView: View {
 
     func groupName() -> String {
         if let p = property.getProperty(k: PropertyWebSiteName){
+            if p.value.count > 20 {
+                return "\(p.value.prefix(20))..."
+            }
             return p.value
         }
         

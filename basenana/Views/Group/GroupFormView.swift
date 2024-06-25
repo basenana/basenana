@@ -6,15 +6,37 @@
 //
 
 import SwiftUI
+import FeedKit
+
+enum GroupType: Identifiable {
+    case standard
+    case feed
+    case dynamic
+    
+    var id: String {
+        get {
+            switch self {
+            case .standard:
+                return "group_standard"
+            case .feed:
+                return "group_feed"
+            case .dynamic:
+                return "group_dynamic"
+            }
+        }
+    }
+}
 
 struct GroupCreateView: View {
     var parent: GroupModel?
-    @Binding var showCreateGroup: Bool
+    var groupType: GroupType = GroupType.standard
+    
     @Environment(Store.self) private var store: Store
     
     @State private var parentID: Int64 = 0
     @State private var parentName: String = ""
     @State private var groupName: String = ""
+    @State private var rssFeed: String = ""
     @State private var errorMsg: String = ""
     
     var body: some View{
@@ -26,9 +48,16 @@ struct GroupCreateView: View {
                         .disabled(true)
                         .padding(.vertical, 5)
                     
+                    if groupType == GroupType.feed {
+                        TextField("Feed", text: $rssFeed, onCommit: parseRssTitle )
+                            .textFieldStyle(.squareBorder)
+                            .padding(.vertical, 5)
+                    }
+                    
                     TextField("GroupName", text: $groupName)
                         .textFieldStyle(.squareBorder)
                         .padding(.vertical, 5)
+                    
                 }
                 
                 HStack {
@@ -39,7 +68,6 @@ struct GroupCreateView: View {
                     }
                     Button {
                         store.dispatch(.createGroup(groupName: groupName, parentId: parentID))
-                        showCreateGroup.toggle()
                     } label: {
                         Text("Create")
                             .font(.body)
@@ -64,6 +92,20 @@ struct GroupCreateView: View {
                 parentID = store.state.fsInfo.rootID
                 parentName = "root"
             }
+        }
+    }
+    
+    func parseRssTitle() {
+        if let validUrl = URL(string: rssFeed){
+            let parser = FeedParser(URL: validUrl)
+            parser.parseAsync(result: { result in
+                switch result {
+                case .success(let feed):
+                    groupName = sanitizeFileName(feed.rssFeed?.title ?? feed.atomFeed?.title ?? feed.jsonFeed?.title ?? "")
+                case .failure(let err):
+                    errorMsg = "Not a valid feed URL \(err.errorDescription ?? "")"
+                }
+            })
         }
     }
 }

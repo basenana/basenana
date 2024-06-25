@@ -21,4 +21,16 @@ struct AppState {
     var notifications = [NotificationModel]()
     var backgroundJob = [JobModel]()
 
+    var showSheet: SheetKind? = nil
+}
+
+
+extension Store {
+    func getSelectedGroup() -> GroupModel? {
+        if case .groupList(group: let group) = state.sidebarSelection {
+            return group
+        }else{
+            return nil
+        }
+    }
 }

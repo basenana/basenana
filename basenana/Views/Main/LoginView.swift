@@ -73,7 +73,6 @@ struct LoginView: View {
                 Text(isLogining ? "Logining" : "Login" )
                     .foregroundColor(.white)
                     .frame(width: 220, height: 40)
-                    .background(Color.blue)
             }
             .cornerRadius(10.0)
             .padding(.bottom, 30)

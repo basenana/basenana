@@ -43,3 +43,18 @@ func parseIDInfo(entryInfos: [String]) -> [Int64] {
     return entryIDList
 }
 
+
+func sanitizeFileName(_ fileName: String) -> String {
+    let illegalFileNameCharacters = CharacterSet(charactersIn: "/\\?%*|\"<>")
+    
+    var sanitizedFileName = fileName.components(separatedBy: illegalFileNameCharacters).joined(separator: "_")
+    
+    sanitizedFileName = sanitizedFileName.trimmingCharacters(in: .whitespacesAndNewlines)
+    
+    // 确保文件名不与系统保留名称冲突（如 "." 和 ".."）
+    if sanitizedFileName == "." || sanitizedFileName == ".." {
+        return ""
+    }
+    
+    return sanitizedFileName
+}

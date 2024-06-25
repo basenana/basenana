@@ -13,10 +13,12 @@ struct NotificationView: View {
     @Environment(Store.self) private var store: Store
     
     var body: some View {
-        Button(action: {
-            store.dispatch(.alert(msg: "not support"))
-        }, label: {
-            Image(systemName: "bell")
-        })
+        if !store.state.notifications.isEmpty {
+            Button(action: {
+                store.dispatch(.alert(msg: "not support"))
+            }, label: {
+                Image(systemName: "bell")
+            })
+        }
     }
 }

@@ -11,8 +11,6 @@ import SwiftUI
 
 struct QuickInboxView: View{
     
-    @Binding var showQuickInbox: Bool
-    
     @State private var urlInput: String = ""
     @State private var urlTitle: String = ""
     @State private var errorMsg: String = ""
@@ -83,7 +81,6 @@ struct QuickInboxView: View{
 //                            }
 //                        }
                         store.dispatch(.quickInbox(urlStr: urlInput, filename: urlTitle, fileType: fileTypeOption, data: nil ))
-                        showQuickInbox.toggle()
                         
                     } label: {
                         Text("Inbox")
@@ -105,5 +102,5 @@ struct QuickInboxView: View{
 }
 
 #Preview {
-    return QuickInboxView(showQuickInbox: .constant(true))
+    return QuickInboxView()
 }

@@ -42,6 +42,14 @@ struct StackContentView: View {
             }
         }
         .searchable(text: store.binding(for: \.search.query, toAction: { _ in .alert(msg: "not support") } ))
+        .sheet(item: store.binding(for: \.showSheet, toAction: { .showSheet(sheetKind: $0) })){ item in
+            switch item{
+            case .quickInbox:
+                QuickInboxView()
+            case .createGroup(parent: let parent, grpType: let grpType):
+                GroupCreateView(parent: parent, groupType: grpType)
+            }
+        }
         .alert(store.state.alert.alertMessage, isPresented: store.binding(for: \.alert.needAlert, toAction: { _ in .offAlert })){
             Button("OK", role: .cancel) {}
         }
@@ -60,6 +68,22 @@ struct StackLandingView: View {
             GroupView(group: group).id(group).navigationTitle(group.groupName)
         default:
             Text("unknown")
+        }
+    }
+}
+
+enum SheetKind: Identifiable{
+    case quickInbox
+    case createGroup(parent: GroupModel?, grpType: GroupType)
+    
+    var id: String {
+        get {
+            switch self {
+            case .quickInbox:
+                return "kind_quick_inbox"
+                case .createGroup(parent: let parent, grpType: let grpType):
+                return "kind_\(parent?.groupID ?? 0)_\(grpType.id)"
+            }
         }
     }
 }

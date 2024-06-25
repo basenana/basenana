@@ -50,6 +50,7 @@ extension Store {
             return nil
             
         case .quickInbox(urlStr: let urlStr, filename: let filename, fileType: let fileType, data: let data):
+            state.showSheet = nil
             let inboxID = state.fsInfo.inboxID
             return Task {
                 let clientSet = try clientFactory.makeClient()
@@ -107,6 +108,8 @@ extension Store {
             return nil
             
         case .createGroup(groupName: let groupName, parentId: let parentId):
+            state.showSheet = nil
+            
             return Task {
                 let clientSet = try clientFactory.makeClient()
                 
@@ -261,6 +264,10 @@ extension Store {
         case .offAlert:
             state.alert.alertMessage = ""
             state.alert.needAlert = false
+            return nil
+        
+        case .showSheet(sheetKind: let sheetKind):
+            state.showSheet = sheetKind
             return nil
             
         case .gotoDestination(to: let to):

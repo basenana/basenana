@@ -13,10 +13,12 @@ struct BackgroundJobView: View {
     @Environment(Store.self) private var store: Store
     
     var body: some View {
-        Button(action: {
-            store.dispatch(.alert(msg: "not support"))
-        }, label: {
-            Image(systemName: "hourglass")
-        })
+        if !store.state.backgroundJob.isEmpty {
+            Button(action: {
+                store.dispatch(.alert(msg: "not support"))
+            }, label: {
+                Image(systemName: "hourglass")
+            })
+        }
     }
 }

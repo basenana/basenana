@@ -11,6 +11,7 @@ import Foundation
 
 struct GroupTableView: View {
     @Binding var group: GroupViewModel
+    
     @State var order: [KeyPathComparator<EntryInfoModel>] = [.init(\.name, order: .forward)]
     @Environment(\.goGroupListView) var goGroupListView
     @Environment(Store.self) private var store: Store

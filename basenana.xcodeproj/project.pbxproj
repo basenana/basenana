@@ -97,6 +97,7 @@
 		3FAC06C92C2675410067E7A5 /* DocumentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06C72C2675410067E7A5 /* DocumentListView.swift */; };
 		3FAC06CB2C268CF40067E7A5 /* DocumentMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06CA2C268CF40067E7A5 /* DocumentMenuView.swift */; };
 		3FAC06CC2C268CF40067E7A5 /* DocumentMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06CA2C268CF40067E7A5 /* DocumentMenuView.swift */; };
+		3FB2AC762C2AFD80007E755B /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB2AC752C2AFD80007E755B /* FeedKit */; };
 		3FB782412BC1A82700327191 /* CGRPCZlib in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782402BC1A82700327191 /* CGRPCZlib */; };
 		3FB782432BC1A82700327191 /* GRPC in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782422BC1A82700327191 /* GRPC */; };
 		3FB782452BC1A82700327191 /* GRPCReflectionService in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782442BC1A82700327191 /* GRPCReflectionService */; };
@@ -156,8 +157,8 @@
 		ED54F0542C0D808700EE2C2E /* DocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED54F0532C0D808700EE2C2E /* DocumentView.swift */; };
 		ED54F0552C0D81C600EE2C2E /* DocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED54F0532C0D808700EE2C2E /* DocumentView.swift */; };
 		ED62B1752BE7D82A001AC523 /* EntryPropertyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED62B1742BE7D82A001AC523 /* EntryPropertyModel.swift */; };
-		ED6B17162C0ED30F00FEABE6 /* GroupCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6B17152C0ED30F00FEABE6 /* GroupCreateView.swift */; };
-		ED6B17172C0ED50800FEABE6 /* GroupCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6B17152C0ED30F00FEABE6 /* GroupCreateView.swift */; };
+		ED6B17162C0ED30F00FEABE6 /* GroupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6B17152C0ED30F00FEABE6 /* GroupFormView.swift */; };
+		ED6B17172C0ED50800FEABE6 /* GroupFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6B17152C0ED30F00FEABE6 /* GroupFormView.swift */; };
 		ED72603E2BC2E25D005F1166 /* DialogueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED72603D2BC2E25D005F1166 /* DialogueModel.swift */; };
 		ED85A3BE2BBAB21A0040598E /* DialogueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED85A3BD2BBAB21A0040598E /* DialogueView.swift */; };
 		ED85A3C32BBAB3BD0040598E /* DocumentItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED85A3C22BBAB3BD0040598E /* DocumentItemView.swift */; };
@@ -256,7 +257,7 @@
 		ED2A0B422BFF1A2200CFF463 /* PageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageModel.swift; sourceTree = "<group>"; };
 		ED54F0532C0D808700EE2C2E /* DocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentView.swift; sourceTree = "<group>"; };
 		ED62B1742BE7D82A001AC523 /* EntryPropertyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryPropertyModel.swift; sourceTree = "<group>"; };
-		ED6B17152C0ED30F00FEABE6 /* GroupCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCreateView.swift; sourceTree = "<group>"; };
+		ED6B17152C0ED30F00FEABE6 /* GroupFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupFormView.swift; sourceTree = "<group>"; };
 		ED72603D2BC2E25D005F1166 /* DialogueModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueModel.swift; sourceTree = "<group>"; };
 		ED85A3BD2BBAB21A0040598E /* DialogueView.swift */ = {isa = PBXFileReference; indentWidth = 5; lastKnownFileType = sourcecode.swift; path = DialogueView.swift; sourceTree = "<group>"; };
 		ED85A3C22BBAB3BD0040598E /* DocumentItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentItemView.swift; sourceTree = "<group>"; };
@@ -279,6 +280,7 @@
 				3F4A78D42BCD82290035F90F /* GRDB in Frameworks */,
 				3F7444B72BE3D1B000CC9C1E /* SwiftSoup in Frameworks */,
 				3FB782432BC1A82700327191 /* GRPC in Frameworks */,
+				3FB2AC762C2AFD80007E755B /* FeedKit in Frameworks */,
 				3FB782412BC1A82700327191 /* CGRPCZlib in Frameworks */,
 				3FA180142C157A8A004176EA /* WebArchiver in Frameworks */,
 			);
@@ -403,11 +405,11 @@
 		3F1BBE492B90C393005D533F /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				3F071B9F2C29A26600F19C63 /* Toolbar */,
 				3F317C372C2322B300F42D37 /* Main */,
 				3F7444BA2BE7153400CC9C1E /* Inbox */,
 				3FDC2E9B2BDC030800344DF8 /* Group */,
 				3F4A78DF2BD299040035F90F /* Settings */,
+				3F071B9F2C29A26600F19C63 /* Toolbar */,
 				3F4A78C62BC99CE90035F90F /* Sidebar */,
 				ED85A3BF2BBAB2520040598E /* Document */,
 				EDC5AA782C06F71D003B78AD /* Dialogue */,
@@ -563,7 +565,7 @@
 			isa = PBXGroup;
 			children = (
 				3F1BBE582B932251005D533F /* GroupView.swift */,
-				ED6B17152C0ED30F00FEABE6 /* GroupCreateView.swift */,
+				ED6B17152C0ED30F00FEABE6 /* GroupFormView.swift */,
 				3FAC06C12C25DE050067E7A5 /* GroupTableView.swift */,
 				3F9FF99B2C28546D00C9BBA4 /* GroupMenuView.swift */,
 			);
@@ -621,6 +623,7 @@
 				3F7444B62BE3D1B000CC9C1E /* SwiftSoup */,
 				3F19E20B2C140A6C00B84293 /* Reeeed */,
 				3FA180132C157A8A004176EA /* WebArchiver */,
+				3FB2AC752C2AFD80007E755B /* FeedKit */,
 			);
 			productName = basenana;
 			productReference = 3F1BBE192B8E147F005D533F /* Basenana.app */;
@@ -730,6 +733,7 @@
 				3FDC2EA52BE3CC2C00344DF8 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 				3F19E2072C14086700B84293 /* XCRemoteSwiftPackageReference "reeeed" */,
 				3F84C8C92C146E29003DC6DA /* XCRemoteSwiftPackageReference "WebArchiver" */,
+				3FB2AC742C2AFD80007E755B /* XCRemoteSwiftPackageReference "FeedKit" */,
 			);
 			productRefGroup = 3F1BBE1A2B8E147F005D533F /* Products */;
 			projectDirPath = "";
@@ -836,7 +840,7 @@
 				3F317C292C231CFC00F42D37 /* Store.swift in Sources */,
 				3F0AEC762BA48EC7000DA928 /* GroupService.swift in Sources */,
 				3F317C1D2C231ABB00F42D37 /* EnvironmentKey.swift in Sources */,
-				ED6B17162C0ED30F00FEABE6 /* GroupCreateView.swift in Sources */,
+				ED6B17162C0ED30F00FEABE6 /* GroupFormView.swift in Sources */,
 				3F071BA12C29A27F00F19C63 /* NotificationView.swift in Sources */,
 				3FB782542BC2D0F600327191 /* fsapi-v1.grpc.swift in Sources */,
 				3F317C2F2C231D2800F42D37 /* AppConfiguration.swift in Sources */,
@@ -922,7 +926,7 @@
 				ED0CBB392BF656B90056E6AA /* GroupService.swift in Sources */,
 				3F071BA22C29A27F00F19C63 /* NotificationView.swift in Sources */,
 				ED0CBB3A2BF656B90056E6AA /* fsapi-v1.grpc.swift in Sources */,
-				ED6B17172C0ED50800FEABE6 /* GroupCreateView.swift in Sources */,
+				ED6B17172C0ED50800FEABE6 /* GroupFormView.swift in Sources */,
 				ED0CBB3B2BF656B90056E6AA /* DocumentDetailView.swift in Sources */,
 				3F317C332C231D3400F42D37 /* AppEnvironment.swift in Sources */,
 				ED0CBB3C2BF656B90056E6AA /* SettingsView.swift in Sources */,
@@ -1407,6 +1411,14 @@
 				kind = branch;
 			};
 		};
+		3FB2AC742C2AFD80007E755B /* XCRemoteSwiftPackageReference "FeedKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nmdias/FeedKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.1.2;
+			};
+		};
 		3FB7823F2BC1A82700327191 /* XCRemoteSwiftPackageReference "grpc-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/grpc/grpc-swift";
@@ -1492,6 +1504,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3F84C8C92C146E29003DC6DA /* XCRemoteSwiftPackageReference "WebArchiver" */;
 			productName = WebArchiver;
+		};
+		3FB2AC752C2AFD80007E755B /* FeedKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3FB2AC742C2AFD80007E755B /* XCRemoteSwiftPackageReference "FeedKit" */;
+			productName = FeedKit;
 		};
 		3FB782402BC1A82700327191 /* CGRPCZlib */ = {
 			isa = XCSwiftPackageProductDependency;

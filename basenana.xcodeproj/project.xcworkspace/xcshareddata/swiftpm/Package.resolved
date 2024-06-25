@@ -1,6 +1,15 @@
 {
-  "originHash" : "a7d07e3b03f3b63d57ed521956424dfa0902f2584dfec7a66f5dff7921e74a50",
+  "originHash" : "401800c2993438888fce1dc0b943d40925071284b0e971cde42df843e099fb47",
   "pins" : [
+    {
+      "identity" : "feedkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nmdias/FeedKit.git",
+      "state" : {
+        "revision" : "68493a33d862c33c9a9f67ec729b3b7df1b20ade",
+        "version" : "9.1.2"
+      }
+    },
     {
       "identity" : "fuzi",
       "kind" : "remoteSourceControl",

@@ -42,6 +42,8 @@ enum AppAction {
     
     case offAlert
     
+    case showSheet(sheetKind: SheetKind?)
+
     case setDestination(to: [Destination])
 
     case updateDestination(to: [Destination])

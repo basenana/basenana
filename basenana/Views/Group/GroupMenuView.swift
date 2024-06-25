@@ -30,8 +30,12 @@ struct GroupMenuView: View {
         
         Section{
             Menu("New") {
-                Button("Group", action: {})
-                Button("RSS Feed", action: {})
+                Button("Group", action: {
+                    store.dispatch(.showSheet(sheetKind: .createGroup(parent: store.getSelectedGroup(), grpType: .standard)))
+                })
+                Button("RSS Feed", action: {
+                    store.dispatch(.showSheet(sheetKind: .createGroup(parent: store.getSelectedGroup(), grpType: .feed)))
+                })
                 Button("Dynamic Group", action: {})
             }
         }
