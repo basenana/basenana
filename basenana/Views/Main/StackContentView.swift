@@ -21,27 +21,29 @@ struct StackContentView: View {
             NavigationStack(path: store.binding(for: \.destinations, toAction: { .setDestination(to: $0)})) {
                 if let selection = store.state.sidebarSelection {
                     StackLandingView(landing: selection)
-                    .navigationDestination(for: Destination.self) { destination in
-                        switch destination {
-                        case .groupList(group: let group):
-                            GroupView(group: group).id(group).navigationTitle(group.groupName)
-                        default:
-                            Text("unknown destination")
+                        .navigationDestination(for: Destination.self) { destination in
+                            switch destination {
+                            case .groupList(group: let group):
+                                GroupView(group: group).id(group).navigationTitle(group.groupName)
+                            case .workflowDashboard:
+                                WorkflowDashboardView()
+                            default:
+                                Text("unknown destination")
+                            }
                         }
-                    }
                 } else {
                     StackBannerView()
                 }
             }
         }
         .toolbar{
-            ToolbarItemGroup(placement: .primaryAction){
-                Spacer()
+            ToolbarItemGroup(placement: .principal){
                 BackgroundJobView()
                 NotificationView()
+                Spacer()
             }
         }
-        .searchable(text: store.binding(for: \.search.query, toAction: { _ in .alert(msg: "not support") } ))
+        .searchable(text: store.binding(for: \.search.query, toAction: { .search(query: $0) } ))
         .sheet(item: store.binding(for: \.showSheet, toAction: { .showSheet(sheetKind: $0) })){ item in
             switch item{
             case .quickInbox:
@@ -50,7 +52,7 @@ struct StackContentView: View {
                 GroupCreateView(parent: parent, groupType: grpType)
             }
         }
-        .alert(store.state.alert.alertMessage, isPresented: store.binding(for: \.alert.needAlert, toAction: { _ in .offAlert })){
+        .alert(store.state.alert.alertMessage, isPresented: store.binding(for: \.alert.needAlert, toAction: { _ in .alert(msg: nil) })){
             Button("OK", role: .cancel) {}
         }
     }
@@ -62,6 +64,8 @@ struct StackLandingView: View {
     
     var body: some View {
         switch landing {
+        case .mainContent:
+            StackBannerView()
         case .readDocuments(prespective: let prespective):
             DocumentView(prespective: prespective).id(prespective).navigationTitle(prespective.Title)
         case .groupList(group: let group):
@@ -81,7 +85,7 @@ enum SheetKind: Identifiable{
             switch self {
             case .quickInbox:
                 return "kind_quick_inbox"
-                case .createGroup(parent: let parent, grpType: let grpType):
+            case .createGroup(parent: let parent, grpType: let grpType):
                 return "kind_\(parent?.groupID ?? 0)_\(grpType.id)"
             }
         }

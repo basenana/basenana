@@ -72,7 +72,6 @@
 		3F4A78DD2BCF80080035F90F /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78DC2BCF80080035F90F /* Logging.swift */; };
 		3F4A78E12BD299110035F90F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78E02BD299110035F90F /* SettingsView.swift */; };
 		3F7444B72BE3D1B000CC9C1E /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 3F7444B62BE3D1B000CC9C1E /* SwiftSoup */; };
-		3F7444B92BE50DE900CC9C1E /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3F7444B82BE50DE900CC9C1E /* Info.plist */; };
 		3F81C9C52BAF1A6D00FEE130 /* GroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C42BAF1A6D00FEE130 /* GroupViewModel.swift */; };
 		3F81C9C72BAFCB8900FEE130 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C62BAFCB8900FEE130 /* ContentView.swift */; };
 		3F84C8CB2C146E29003DC6DA /* WebArchiver in Frameworks */ = {isa = PBXBuildFile; productRef = 3F84C8CA2C146E29003DC6DA /* WebArchiver */; };
@@ -105,8 +104,10 @@
 		3FB782492BC1A82700327191 /* protoc-gen-grpc-swift in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782482BC1A82700327191 /* protoc-gen-grpc-swift */; };
 		3FB782542BC2D0F600327191 /* fsapi-v1.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB782502BC2D0F600327191 /* fsapi-v1.grpc.swift */; };
 		3FB782552BC2D0F600327191 /* fsapi-v1.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB782512BC2D0F600327191 /* fsapi-v1.pb.swift */; };
+		3FC3CDA82C2DA52500FAC58F /* WorkflowDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC3CDA72C2DA52500FAC58F /* WorkflowDashboardView.swift */; };
+		3FC3CDA92C2DA52500FAC58F /* WorkflowDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC3CDA72C2DA52500FAC58F /* WorkflowDashboardView.swift */; };
 		3FCE74B32C27D6C300C4E783 /* EnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F317C1C2C231ABB00F42D37 /* EnvironmentKey.swift */; };
-		3FDC2EA32BDCEEB200344DF8 /* IDHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA22BDCEEB200344DF8 /* IDHelper.swift */; };
+		3FDC2EA32BDCEEB200344DF8 /* SomeHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA22BDCEEB200344DF8 /* SomeHelpers.swift */; };
 		3FDC2EA72BE3CC8C00344DF8 /* HTMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA62BE3CC8C00344DF8 /* HTMLParser.swift */; };
 		ED079DC32C2705B4004F416B /* DialogueTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED079DC22C2705B4004F416B /* DialogueTitleView.swift */; };
 		ED079DC72C27FD43004F416B /* MessageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED079DC62C27FD43004F416B /* MessageListView.swift */; };
@@ -114,7 +115,7 @@
 		ED079DC92C2800CA004F416B /* MessageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED079DC62C27FD43004F416B /* MessageListView.swift */; };
 		ED079DCB2C28116F004F416B /* DialogueButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED079DCA2C28116F004F416B /* DialogueButtonView.swift */; };
 		ED079DCC2C281276004F416B /* DialogueButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED079DCA2C28116F004F416B /* DialogueButtonView.swift */; };
-		ED0CBB212BF656B90056E6AA /* IDHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA22BDCEEB200344DF8 /* IDHelper.swift */; };
+		ED0CBB212BF656B90056E6AA /* SomeHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA22BDCEEB200344DF8 /* SomeHelpers.swift */; };
 		ED0CBB222BF656B90056E6AA /* DialogueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED85A3BD2BBAB21A0040598E /* DialogueView.swift */; };
 		ED0CBB242BF656B90056E6AA /* SidebarButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78C92BC99D600035F90F /* SidebarButtonView.swift */; };
 		ED0CBB252BF656B90056E6AA /* EntryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE562B90CD59005D533F /* EntryModel.swift */; };
@@ -246,7 +247,8 @@
 		3FAC06CA2C268CF40067E7A5 /* DocumentMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentMenuView.swift; sourceTree = "<group>"; };
 		3FB782502BC2D0F600327191 /* fsapi-v1.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "fsapi-v1.grpc.swift"; sourceTree = "<group>"; };
 		3FB782512BC2D0F600327191 /* fsapi-v1.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "fsapi-v1.pb.swift"; sourceTree = "<group>"; };
-		3FDC2EA22BDCEEB200344DF8 /* IDHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDHelper.swift; sourceTree = "<group>"; };
+		3FC3CDA72C2DA52500FAC58F /* WorkflowDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowDashboardView.swift; sourceTree = "<group>"; };
+		3FDC2EA22BDCEEB200344DF8 /* SomeHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SomeHelpers.swift; sourceTree = "<group>"; };
 		3FDC2EA62BE3CC8C00344DF8 /* HTMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLParser.swift; sourceTree = "<group>"; };
 		ED079DC22C2705B4004F416B /* DialogueTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueTitleView.swift; sourceTree = "<group>"; };
 		ED079DC62C27FD43004F416B /* MessageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListView.swift; sourceTree = "<group>"; };
@@ -411,6 +413,7 @@
 				3F4A78DF2BD299040035F90F /* Settings */,
 				3F071B9F2C29A26600F19C63 /* Toolbar */,
 				3F4A78C62BC99CE90035F90F /* Sidebar */,
+				3FC3CDA62C2DA4F900FAC58F /* Workflow */,
 				ED85A3BF2BBAB2520040598E /* Document */,
 				EDC5AA782C06F71D003B78AD /* Dialogue */,
 			);
@@ -453,7 +456,7 @@
 				3F317C1B2C231A9300F42D37 /* Configuration */,
 				3F317C1A2C231A4B00F42D37 /* WebHelper */,
 				3F317C192C231A1E00F42D37 /* SwiftUI */,
-				3FDC2EA22BDCEEB200344DF8 /* IDHelper.swift */,
+				3FDC2EA22BDCEEB200344DF8 /* SomeHelpers.swift */,
 				3F4A78DC2BCF80080035F90F /* Logging.swift */,
 			);
 			path = Share;
@@ -559,6 +562,14 @@
 				3FA594572C26CD9800E303CE /* Consistents.swift */,
 			);
 			path = FsAPI;
+			sourceTree = "<group>";
+		};
+		3FC3CDA62C2DA4F900FAC58F /* Workflow */ = {
+			isa = PBXGroup;
+			children = (
+				3FC3CDA72C2DA52500FAC58F /* WorkflowDashboardView.swift */,
+			);
+			path = Workflow;
 			sourceTree = "<group>";
 		};
 		3FDC2E9B2BDC030800344DF8 /* Group */ = {
@@ -754,7 +765,6 @@
 			files = (
 				3F1BBE272B8E1480005D533F /* Preview Assets.xcassets in Resources */,
 				3F1BBE232B8E1480005D533F /* Assets.xcassets in Resources */,
-				3F7444B92BE50DE900CC9C1E /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -791,7 +801,7 @@
 				3F317C3C2C232B4700F42D37 /* GroupModel.swift in Sources */,
 				3F9FF9992C2829B900C9BBA4 /* Datetime.swift in Sources */,
 				3FAC06CB2C268CF40067E7A5 /* DocumentMenuView.swift in Sources */,
-				3FDC2EA32BDCEEB200344DF8 /* IDHelper.swift in Sources */,
+				3FDC2EA32BDCEEB200344DF8 /* SomeHelpers.swift in Sources */,
 				ED85A3BE2BBAB21A0040598E /* DialogueView.swift in Sources */,
 				3F317C482C2459BA00F42D37 /* Helper.swift in Sources */,
 				3F317C4E2C2476C300F42D37 /* StackContentView.swift in Sources */,
@@ -812,6 +822,7 @@
 				ED079DC32C2705B4004F416B /* DialogueTitleView.swift in Sources */,
 				3FA594552C26C14300E303CE /* PropertyViewModel.swift in Sources */,
 				3F071BA42C29A2CC00F19C63 /* BackgroundJobView.swift in Sources */,
+				3FC3CDA82C2DA52500FAC58F /* WorkflowDashboardView.swift in Sources */,
 				ED54F0542C0D808700EE2C2E /* DocumentView.swift in Sources */,
 				3FA594582C26CD9800E303CE /* Consistents.swift in Sources */,
 				3F9FF99C2C28546D00C9BBA4 /* GroupMenuView.swift in Sources */,
@@ -880,7 +891,7 @@
 			files = (
 				3FCE74B32C27D6C300C4E783 /* EnvironmentKey.swift in Sources */,
 				3F9FF99A2C2829B900C9BBA4 /* Datetime.swift in Sources */,
-				ED0CBB212BF656B90056E6AA /* IDHelper.swift in Sources */,
+				ED0CBB212BF656B90056E6AA /* SomeHelpers.swift in Sources */,
 				3F317C3A2C23253900F42D37 /* Reducer.swift in Sources */,
 				ED0CBB222BF656B90056E6AA /* DialogueView.swift in Sources */,
 				ED0CBB242BF656B90056E6AA /* SidebarButtonView.swift in Sources */,
@@ -896,6 +907,7 @@
 				ED0CBB2A2BF656B90056E6AA /* DialogueViewModel.swift in Sources */,
 				3FAC06CC2C268CF40067E7A5 /* DocumentMenuView.swift in Sources */,
 				3FAC06C62C26727E0067E7A5 /* DocumentReaderViewModel.swift in Sources */,
+				3FC3CDA92C2DA52500FAC58F /* WorkflowDashboardView.swift in Sources */,
 				ED0CBB2B2BF656B90056E6AA /* EntryPropertyModel.swift in Sources */,
 				ED54F0552C0D81C600EE2C2E /* DocumentView.swift in Sources */,
 				ED0CBB2C2BF656B90056E6AA /* HTMLStringView.swift in Sources */,

@@ -31,7 +31,7 @@ struct QuickInboxView: View{
                                     do {
                                         let rp = ReadablePage(url: safeUrl)
                                         try await rp.parse()
-                                        urlTitle = rp.urlTitle
+                                        urlTitle = sanitizeFileName(rp.urlTitle)
                                         htmlContent = rp.htmlContent
                                     }catch {
                                         errorMsg = "fetch web page failed \(error)"

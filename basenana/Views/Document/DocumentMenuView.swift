@@ -8,9 +8,61 @@
 import SwiftUI
 import Foundation
 
-
 struct DocumentMenuView: View {
     @State var doc: DocumentInfoModel
+    @State var property = PropertyViewModel()
+    
+    @Binding var readerViewModel: DocumentReaderViewModel
+    @Environment(Store.self) private var store: Store
+    @Environment(\.sendAlert) var sendAlert
+    @Environment(\.openURL) var openURL
+    
+    var body: some View {
+        VStack {
+            Section{
+                Button("Go To Group", action: {
+                    store.dispatch(.gotoDestination(.groupListByID(groupID: doc.parentId)))
+                })
+            }
+            
+            Section{
+                Button("Launch URL", action: {
+                    if let pro = property.getProperty(k: PropertyWebPageURL){
+                        if let pageUrl = URL(string: pro.value){
+                            openURL.callAsFunction(pageUrl){ result in
+                                log.info("open docuemnt url \(pro.value), resule: \(result)")
+                            }
+                        }
+                    }else {
+                        log.warning("can not get document \(doc.id) url")
+                    }
+                })
+                Button("Copy URL", action: {
+                    if let pro = property.getProperty(k: PropertyWebPageURL){
+                        copyToClipBoard(textToCopy: pro.value)
+                    }
+                })
+            }
+            
+            Section{
+                Menu("Mark"){
+                    DocumentMarkMenuView(doc: $doc, readerViewModel: $readerViewModel)
+                }
+            }
+        }
+        .task {
+            do {
+                try await property.initEntry(entryID: doc.oid)
+            } catch {
+                log.warning("fetch entry property failed \(error)")
+            }
+        }
+    }
+}
+    
+
+struct DocumentMarkMenuView: View {
+    @Binding var doc: DocumentInfoModel
     @Binding var readerViewModel: DocumentReaderViewModel
     @Environment(Store.self) private var store: Store
     
@@ -27,12 +79,9 @@ struct DocumentMenuView: View {
                 }
             }
         } label: {
-            if readerViewModel.readed.contains(doc.id) {
-                Image(systemName: "circle.fill").resizable().frame(width: 1, height: 1)
-                Text("Unread")
-            }else{
-                Image(systemName: "circle").resizable().frame(width: 1, height: 1)
-                Text("Read")
+            Text("Unread")
+            if !readerViewModel.readed.contains(doc.id) {
+                Image(systemName: "checkmark")
             }
         }
         Button {
@@ -47,12 +96,9 @@ struct DocumentMenuView: View {
                 }
             }
         } label: {
+            Text("Mark")
             if readerViewModel.marked.contains(doc.id) {
-                Image(systemName: "star").resizable().frame(width: 1, height: 1)
-                Text("Unmark")
-            }else{
-                Image(systemName: "star.fill").resizable().frame(width: 1, height: 1)
-                Text("Mark")
+                Image(systemName: "checkmark")
             }
         }
     }

@@ -31,9 +31,8 @@ struct HTMLStringView: NSViewRepresentable {
         self.htmlContent = """
 <head>
 <meta charset='UTF-8' />
-<meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=yes'>
+<meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=yes'>
 <style type='text/css'>body, table { width: 95%; margin: 0 auto; background-color: #FFF; color:#333; font-family: arial, sans-serif; font-weight: 100; font-size: 12pt; margin:2em 2em 2em 2em; }
-body { padding-right: 20px; }
 p, li { line-height: 150%; }
 a { color: #3366cc; border-bottom: 1px dotted #3366cc; text-decoration: none; }
 a:hover { color: #2647a3; border-bottom-color: color: #66ccff; }
@@ -103,3 +102,12 @@ iframe { height: auto; width: auto; max-width: 95%; max-height: 100%; }
     }
 }
 #endif
+
+
+func openURLInBrowser(urlStr: String) {
+    // UIApplication for iOS
+    if let url = URL(string: urlStr){
+        NSWorkspace.shared.open(url)
+    }
+    log.error("url \(urlStr) can not open")
+}

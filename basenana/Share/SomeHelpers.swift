@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AppKit
 
 struct IDHelper {
     var kind: String
@@ -57,4 +58,11 @@ func sanitizeFileName(_ fileName: String) -> String {
     }
     
     return sanitizedFileName
+}
+
+
+func copyToClipBoard(textToCopy: String) {
+    let pasteBoard = NSPasteboard.general
+    pasteBoard.clearContents()
+    pasteBoard.setString(textToCopy, forType: .string)
 }

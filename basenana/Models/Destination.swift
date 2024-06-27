@@ -30,7 +30,9 @@ enum Destination: Identifiable, Hashable, Equatable {
     case mainContent
     case fridayChat
     case readDocuments(prespective: DocumentPrespective)
+    case groupListByID(groupID: Int64)
     case groupList(group: GroupModel)
+    case workflowDashboard
 
     var id: String {
         switch self {
@@ -40,8 +42,12 @@ enum Destination: Identifiable, Hashable, Equatable {
             return "fridayChat"
         case .readDocuments(prespective: let prespective):
             return "readDocument_\(prespective)"
+        case .groupListByID(groupID: let group):
+            return "groupListByID_\(group)"
         case .groupList(group: let group):
             return "groupList_\(group.groupID)"
+        case .workflowDashboard:
+            return "workflowDashboard"
         }
     }
 }

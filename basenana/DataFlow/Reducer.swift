@@ -106,8 +106,16 @@ extension Store {
         case .updateInbox(enties: let entries):
             state.inbox = entries
             return nil
+        
+        case .search(query: let query):
+            state.search.query = query
+            return nil
             
-        case .createGroup(groupName: let groupName, parentId: let parentId):
+        case .setOpenedGroupViewModel(group: let group):
+            state.currentGroup = group
+            return nil
+
+        case .createGroup(groupName: let groupName, parentId: let parentId, opt: let opt):
             state.showSheet = nil
             
             return Task {
@@ -117,6 +125,17 @@ extension Store {
                 request.kind = "group"
                 request.name = groupName
                 request.parentID = parentId
+                
+                if opt.groupType == .feed {
+                    if opt.feed == "" || opt.siteName == "" || opt.siteURL == "" {
+                        return .alert(msg: "create feed group failed, invalid args: feed=\(opt.feed) site=\(opt.siteName) url=\(opt.siteURL)")
+                    }
+                    var rssConfig = Api_V1_CreateEntryRequest.RssConfig()
+                    rssConfig.feed = opt.feed
+                    rssConfig.siteURL = opt.siteURL
+                    rssConfig.siteName = opt.siteName
+                    rssConfig.fileType = .webArchiveFile // TODO: need configable
+                }
                 
                 var grp: GroupModel?
                 let call = clientSet.entries.createEntry(request, callOptions: defaultCallOptions)
@@ -257,13 +276,13 @@ extension Store {
             }
             
         case .alert(msg: let msg):
-            state.alert.alertMessage = msg
-            state.alert.needAlert = true
-            return nil
-            
-        case .offAlert:
-            state.alert.alertMessage = ""
-            state.alert.needAlert = false
+            if let hasMsg = msg {
+                state.alert.alertMessage = hasMsg
+                state.alert.needAlert = true
+            } else {
+                state.alert.alertMessage = ""
+                state.alert.needAlert = false
+            }
             return nil
         
         case .showSheet(sheetKind: let sheetKind):
@@ -271,12 +290,30 @@ extension Store {
             return nil
             
         case .gotoDestination(to: let to):
-            state.destinations.append(to)
+            switch to {
+            case .groupListByID(groupID: let groupID):
+                if let grp = state.groupTree.allGroups[groupID]{
+                    state.destinations.append(Destination.groupList(group: grp))
+                }else {
+                    if groupID == state.fsInfo.inboxID {
+                        state.destinations.append(Destination.groupList(group: GroupModel(parentID: state.fsInfo.rootID, groupID: groupID, groupName: "Inbox")))
+                        return nil
+                    }
+                    return Task {
+                        .alert(msg: "group not found")
+                    }
+                }
+            default:
+                state.destinations.append(to)
+            }
             return nil
 
         case .setDestination(to: let to):
             if state.destinations == to {
                 return nil
+            }
+            if !to.isEmpty && state.sidebarSelection == nil {
+                state.sidebarSelection = .mainContent
             }
             if state.destinations.isEmpty {
                 state.destinations = to

@@ -39,7 +39,7 @@ struct GroupTableView: View {
                 Text("\($0.modifiedAt, format: Date.FormatStyle(date: .numeric, time: .standard))")
             }
         } rows: {
-            ForEach(group.children, id: \.id) { child in
+            ForEach(group.children.filter({ store.state.search.filterEntryName($0) }), id: \.id) { child in
                 TableRow(child)
                     .draggable(IDHelper(kind: "entry", id: child.id).Encode())
             }

@@ -36,6 +36,8 @@ struct GroupCreateView: View {
     @State private var parentID: Int64 = 0
     @State private var parentName: String = ""
     @State private var groupName: String = ""
+    @State private var siteName: String = ""
+    @State private var siteURL: String = ""
     @State private var rssFeed: String = ""
     @State private var errorMsg: String = ""
     
@@ -67,7 +69,7 @@ struct GroupCreateView: View {
                             .padding(.vertical, 5)
                     }
                     Button {
-                        store.dispatch(.createGroup(groupName: groupName, parentId: parentID))
+                        store.dispatch(.createGroup(groupName: groupName, parentId: parentID, opt: buildOption()))
                     } label: {
                         Text("Create")
                             .font(.body)
@@ -95,13 +97,23 @@ struct GroupCreateView: View {
         }
     }
     
+    func buildOption() -> GroupCreateOptionModel {
+        var opt = GroupCreateOptionModel()
+        opt.feed = rssFeed
+        opt.siteName = siteName
+        opt.siteURL = siteURL
+        return opt
+    }
+
     func parseRssTitle() {
         if let validUrl = URL(string: rssFeed){
             let parser = FeedParser(URL: validUrl)
             parser.parseAsync(result: { result in
                 switch result {
                 case .success(let feed):
-                    groupName = sanitizeFileName(feed.rssFeed?.title ?? feed.atomFeed?.title ?? feed.jsonFeed?.title ?? "")
+                    siteName = feed.rssFeed?.title ?? feed.atomFeed?.title ?? feed.jsonFeed?.title ?? ""
+                    siteURL = feed.rssFeed?.link ?? feed.atomFeed?.links?.first?.attributes?.href ?? feed.jsonFeed?.homePageURL ?? ""
+                    groupName = sanitizeFileName(siteName)
                 case .failure(let err):
                     errorMsg = "Not a valid feed URL \(err.errorDescription ?? "")"
                 }

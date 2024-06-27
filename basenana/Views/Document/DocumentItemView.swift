@@ -59,7 +59,7 @@ struct DocumentItemView: View {
             do {
                 try await property.initEntry(entryID: doc.oid)
             } catch {
-                sendAlert("fetch entry property failed \(error)")
+                log.warning("fetch entry property failed \(error)")
             }
         }
     }

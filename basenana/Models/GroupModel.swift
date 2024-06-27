@@ -95,7 +95,7 @@ class RootGroupModel {
         }
         return false
     }
-        
+    
 }
 
 
@@ -126,3 +126,11 @@ class GroupModel: Identifiable, Hashable {
     }
 }
 
+
+struct GroupCreateOptionModel {
+    var groupType: GroupType = .standard
+    var feed: String = ""
+    var siteName: String = ""
+    var siteURL: String = ""
+    var feedFileType: String = "webarchive"
+}

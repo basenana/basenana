@@ -30,6 +30,7 @@ struct SidebarButtonView: View {
             Spacer()
             
             Button(action: {
+                store.dispatch(.setDestination(to: [.workflowDashboard]))
             }, label: {
                 Image(systemName: "ellipsis.curlybraces")
             })

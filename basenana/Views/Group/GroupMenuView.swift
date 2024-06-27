@@ -13,69 +13,103 @@ struct GroupMenuView: View {
     var entry: EntryInfoModel?
     var group: GroupModel?
     
+    @State var property = PropertyViewModel()
     @Environment(Store.self) private var store: Store
+    @Environment(\.sendAlert) var sendAlert
+    @Environment(\.openURL) var openURL
     
     var body: some View {
-        if entry != nil {
+        VStack {
+            if entry != nil {
+                Section{
+                    Button("Open", action: {
+                        if entry!.isGroup {
+                            store.dispatch(.gotoDestination(.groupList(group: GroupModel(parentID: entry!.parentID, groupID: entry!.id, groupName: entry!.name))))
+                        }else {
+                            store.dispatch(.alert(msg: "not support open \(entry!.kind) file"))
+                        }
+                    })
+                }
+            }
+            
             Section{
-                Button("Open", action: {
-                    if entry!.isGroup {
-                        store.dispatch(.gotoDestination(.groupList(group: GroupModel(parentID: entry!.parentID, groupID: entry!.id, groupName: entry!.name))))
-                    }else {
-                        store.dispatch(.alert(msg: "not support open \(entry!.kind) file"))
+                Menu("New") {
+                    Button("Group", action: {
+                        store.dispatch(.showSheet(sheetKind: .createGroup(parent: store.getSelectedGroup(), grpType: .standard)))
+                    })
+                    Button("RSS Feed", action: {
+                        store.dispatch(.showSheet(sheetKind: .createGroup(parent: store.getSelectedGroup(), grpType: .feed)))
+                    })
+                    Button("Dynamic Group", action: {})
+                }
+            }
+            
+            // web page
+            Section{
+                Button("Launch URL", action: {
+                    for pk in [PropertyWebPageURL, PropertyWebSiteURL]{
+                        if let pro = property.getProperty(k: pk){
+                            if let pageUrl = URL(string: pro.value){
+                                openURL.callAsFunction(pageUrl){ result in
+                                    log.info("open docuemnt url \(pro.value), resule: \(result)")
+                                }
+                                break
+                            }
+                        }
+                    }
+                })
+                Button("Copy URL", action: {
+                    for pk in [PropertyWebPageURL, PropertyWebSiteURL]{
+                        if let pro = property.getProperty(k: pk){
+                            copyToClipBoard(textToCopy: pro.value)
+                            break
+                        }
                     }
                 })
             }
-        }
-        
-        Section{
-            Menu("New") {
-                Button("Group", action: {
-                    store.dispatch(.showSheet(sheetKind: .createGroup(parent: store.getSelectedGroup(), grpType: .standard)))
-                })
-                Button("RSS Feed", action: {
-                    store.dispatch(.showSheet(sheetKind: .createGroup(parent: store.getSelectedGroup(), grpType: .feed)))
-                })
-                Button("Dynamic Group", action: {})
+            
+            Section{
+                Button("Rename", action: {})
+                Button("Delete", action: {})
             }
-        }
-        
-        // web page
-        Section{
-            Button("Launch URL", action: {})
-            Button("Copy URL", action: {})
-        }
-        
-        Section{
-            Button("Rename", action: {})
-            Button("Delete", action: {})
-        }
-        
-        Section{
-            Menu("Move To") {
-                ForEach(store.state.groupTree.children ?? []){ childGroup in
-                    GroupDestinationView(
-                        group: childGroup,
-                        childKeyPath: \.children,
-                        action: { store.dispatch(.alert(msg: "test move to \($0.groupName) ")) }
-                    )
+            
+            Section{
+                Menu("Move To") {
+                    ForEach(store.state.groupTree.children ?? []){ childGroup in
+                        GroupDestinationView(
+                            group: childGroup,
+                            childKeyPath: \.children,
+                            action: { store.dispatch(.alert(msg: "test move to \($0.groupName) ")) }
+                        )
+                    }
+                }
+                Menu("Replicate To") {
+                    ForEach(store.state.groupTree.children ?? []){ childGroup in
+                        GroupDestinationView(
+                            group: childGroup,
+                            childKeyPath: \.children,
+                            action: { store.dispatch(.alert(msg: "test dup to \($0.groupName) ")) }
+                        )
+                    }
                 }
             }
-            Menu("Replicate To") {
-                ForEach(store.state.groupTree.children ?? []){ childGroup in
-                    GroupDestinationView(
-                        group: childGroup,
-                        childKeyPath: \.children,
-                        action: { store.dispatch(.alert(msg: "test dup to \($0.groupName) ")) }
-                    )
+            
+            if entry != nil {
+                Section{
+                    Menu("Mark") {
+                        Button("As Marked", action: { print("Option 1 selected") })
+                        Button("As Unread", action: { print("Option 2 selected") })
+                    }
                 }
             }
         }
-        
-        Section{
-            Menu("Mark") {
-                Button("As Marked", action: { print("Option 1 selected") })
-                Button("As Unread", action: { print("Option 2 selected") })
+        .task {
+            if entry != nil || group != nil {
+                do {
+                    try await property.initEntry(entryID: entry?.id ?? group?.groupID ?? -1)
+                } catch {
+                    log.warning("fetch entry property failed \(error)")
+                }
             }
         }
     }

@@ -20,7 +20,11 @@ enum AppAction {
     
     case updateInbox(enties: [EntryInfoModel])
     
-    case createGroup(groupName: String, parentId: Int64)
+    case search(query: String)
+
+    case setOpenedGroupViewModel(group: GroupViewModel)
+
+    case createGroup(groupName: String, parentId: Int64, opt: GroupCreateOptionModel)
     
     case updateEntry(en: EntryDetailModel)
 
@@ -38,9 +42,7 @@ enum AppAction {
     
     case ingestDocument(entryId: Int64)
     
-    case alert(msg: String)
-    
-    case offAlert
+    case alert(msg: String?)
     
     case showSheet(sheetKind: SheetKind?)
 
