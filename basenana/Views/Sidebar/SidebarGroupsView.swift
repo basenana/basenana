@@ -8,11 +8,6 @@
 import SwiftUI
 
 struct SidebarGroupsView: View {
-    @State private var showAlert = false
-    @State private var refreshToggle = false
-    @State private var deleteProgress = 0.0
-    @State private var showProgressSheet = false
-    
     @Environment(Store.self) private var store: Store
     
     var body: some View {

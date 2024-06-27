@@ -25,6 +25,9 @@ final class AppConfiguration: ObservableObject {
     
     @AppStorage("org.basenana.nanafs.document.autoRead", store: UserDefaults.standard)
     var autoRead: Bool = false
+    
+    @AppStorage("org.basenana.nanafs.friday.globalChart", store: UserDefaults.standard)
+    var enableGlobalChart: Bool = false
 
     static let share = AppConfiguration()
 }

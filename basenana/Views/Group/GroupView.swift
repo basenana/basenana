@@ -12,6 +12,7 @@ struct GroupView: View{
     var group: GroupModel
     
     @State private var groupViewModel = GroupViewModel()
+    @Environment(Store.self) private var store: Store
     @Environment(\.sendAlert) var sendAlert
 
     var body: some View {
@@ -31,6 +32,7 @@ struct GroupView: View{
                 .task {
                     do {
                         groupViewModel = try await GroupViewModel.load(groupID: group.groupID)
+                        store.dispatch(.setOpenedGroupViewModel(group: groupViewModel))
                     } catch {
                         let msg = "fetch group \(group.groupID) error: \(error)"
                         log.error(msg)

@@ -11,6 +11,7 @@ import SwiftData
 
 struct SidebarView: View {
     @Environment(Store.self) private var store: Store
+    @State private var appConfiguration = AppConfiguration.share
 
     var body: some View {
         List(selection: store.binding(for: \.sidebarSelection, toAction: {
@@ -27,12 +28,19 @@ struct SidebarView: View {
             NavigationLink(value: Destination.readDocuments(prespective: .marked)){
                 SidebarIconView(imageName: "bookmark.fill", title: "Marked", color: .yellow)
             }.id("nav_marked")
+            
+            if appConfiguration.enableGlobalChart {
+                NavigationLink(value: Destination.fridayChat){
+                    SidebarIconView(imageName: "ellipsis.message.fill", title: "Hello Friday", color: .green)
+                }.id("nav_hello_friday")
+            }
 
             Section("GROUPS"){
                 SidebarGroupsView()
             }
         }
         .listStyle(.sidebar)
+        .padding(.bottom, 20)
         .overlay(alignment: .bottom, content: {SidebarButtonView()})
     }
 }
