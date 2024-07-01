@@ -104,9 +104,13 @@
 		3FB782492BC1A82700327191 /* protoc-gen-grpc-swift in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782482BC1A82700327191 /* protoc-gen-grpc-swift */; };
 		3FB782542BC2D0F600327191 /* fsapi-v1.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB782502BC2D0F600327191 /* fsapi-v1.grpc.swift */; };
 		3FB782552BC2D0F600327191 /* fsapi-v1.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB782512BC2D0F600327191 /* fsapi-v1.pb.swift */; };
-		3FC3CDA82C2DA52500FAC58F /* WorkflowDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC3CDA72C2DA52500FAC58F /* WorkflowDashboardView.swift */; };
-		3FC3CDA92C2DA52500FAC58F /* WorkflowDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC3CDA72C2DA52500FAC58F /* WorkflowDashboardView.swift */; };
+		3FC3CDA82C2DA52500FAC58F /* WorkflowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC3CDA72C2DA52500FAC58F /* WorkflowView.swift */; };
+		3FC3CDA92C2DA52500FAC58F /* WorkflowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC3CDA72C2DA52500FAC58F /* WorkflowView.swift */; };
 		3FCE74B32C27D6C300C4E783 /* EnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F317C1C2C231ABB00F42D37 /* EnvironmentKey.swift */; };
+		3FCEC3CC2C314D0B002D8662 /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F071B962C299AC100F19C63 /* SearchModel.swift */; };
+		3FCEC3CE2C314D41002D8662 /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3FCEC3CD2C314D41002D8662 /* FeedKit */; };
+		3FCEC3D02C319142002D8662 /* WorkflowJobView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FCEC3CF2C319142002D8662 /* WorkflowJobView.swift */; };
+		3FCEC3D12C319142002D8662 /* WorkflowJobView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FCEC3CF2C319142002D8662 /* WorkflowJobView.swift */; };
 		3FDC2EA32BDCEEB200344DF8 /* SomeHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA22BDCEEB200344DF8 /* SomeHelpers.swift */; };
 		3FDC2EA72BE3CC8C00344DF8 /* HTMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDC2EA62BE3CC8C00344DF8 /* HTMLParser.swift */; };
 		ED079DC32C2705B4004F416B /* DialogueTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED079DC22C2705B4004F416B /* DialogueTitleView.swift */; };
@@ -247,7 +251,8 @@
 		3FAC06CA2C268CF40067E7A5 /* DocumentMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentMenuView.swift; sourceTree = "<group>"; };
 		3FB782502BC2D0F600327191 /* fsapi-v1.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "fsapi-v1.grpc.swift"; sourceTree = "<group>"; };
 		3FB782512BC2D0F600327191 /* fsapi-v1.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "fsapi-v1.pb.swift"; sourceTree = "<group>"; };
-		3FC3CDA72C2DA52500FAC58F /* WorkflowDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowDashboardView.swift; sourceTree = "<group>"; };
+		3FC3CDA72C2DA52500FAC58F /* WorkflowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowView.swift; sourceTree = "<group>"; };
+		3FCEC3CF2C319142002D8662 /* WorkflowJobView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowJobView.swift; sourceTree = "<group>"; };
 		3FDC2EA22BDCEEB200344DF8 /* SomeHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SomeHelpers.swift; sourceTree = "<group>"; };
 		3FDC2EA62BE3CC8C00344DF8 /* HTMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLParser.swift; sourceTree = "<group>"; };
 		ED079DC22C2705B4004F416B /* DialogueTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueTitleView.swift; sourceTree = "<group>"; };
@@ -314,6 +319,7 @@
 				ED0CBB472BF656B90056E6AA /* GRDB in Frameworks */,
 				ED0CBB482BF656B90056E6AA /* SwiftSoup in Frameworks */,
 				ED0CBB492BF656B90056E6AA /* GRPC in Frameworks */,
+				3FCEC3CE2C314D41002D8662 /* FeedKit in Frameworks */,
 				ED0CBB4A2BF656B90056E6AA /* CGRPCZlib in Frameworks */,
 				3F84C8CB2C146E29003DC6DA /* WebArchiver in Frameworks */,
 			);
@@ -567,7 +573,8 @@
 		3FC3CDA62C2DA4F900FAC58F /* Workflow */ = {
 			isa = PBXGroup;
 			children = (
-				3FC3CDA72C2DA52500FAC58F /* WorkflowDashboardView.swift */,
+				3FC3CDA72C2DA52500FAC58F /* WorkflowView.swift */,
+				3FCEC3CF2C319142002D8662 /* WorkflowJobView.swift */,
 			);
 			path = Workflow;
 			sourceTree = "<group>";
@@ -700,6 +707,7 @@
 				ED0CBB1D2BF656B90056E6AA /* SwiftSoup */,
 				3F19E2082C14086700B84293 /* Reeeed */,
 				3F84C8CA2C146E29003DC6DA /* WebArchiver */,
+				3FCEC3CD2C314D41002D8662 /* FeedKit */,
 			);
 			productName = basenana;
 			productReference = ED0CBB522BF656B90056E6AA /* basenana dev.app */;
@@ -822,7 +830,7 @@
 				ED079DC32C2705B4004F416B /* DialogueTitleView.swift in Sources */,
 				3FA594552C26C14300E303CE /* PropertyViewModel.swift in Sources */,
 				3F071BA42C29A2CC00F19C63 /* BackgroundJobView.swift in Sources */,
-				3FC3CDA82C2DA52500FAC58F /* WorkflowDashboardView.swift in Sources */,
+				3FC3CDA82C2DA52500FAC58F /* WorkflowView.swift in Sources */,
 				ED54F0542C0D808700EE2C2E /* DocumentView.swift in Sources */,
 				3FA594582C26CD9800E303CE /* Consistents.swift in Sources */,
 				3F9FF99C2C28546D00C9BBA4 /* GroupMenuView.swift in Sources */,
@@ -863,6 +871,7 @@
 				3F317C392C23253900F42D37 /* Reducer.swift in Sources */,
 				ED85A3C32BBAB3BD0040598E /* DocumentItemView.swift in Sources */,
 				3F81C9C72BAFCB8900FEE130 /* ContentView.swift in Sources */,
+				3FCEC3D02C319142002D8662 /* WorkflowJobView.swift in Sources */,
 				3F317C3F2C2336E200F42D37 /* FsInfoModel.swift in Sources */,
 				3FAC06C22C25DE050067E7A5 /* GroupTableView.swift in Sources */,
 			);
@@ -889,6 +898,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3FCEC3CC2C314D0B002D8662 /* SearchModel.swift in Sources */,
 				3FCE74B32C27D6C300C4E783 /* EnvironmentKey.swift in Sources */,
 				3F9FF99A2C2829B900C9BBA4 /* Datetime.swift in Sources */,
 				ED0CBB212BF656B90056E6AA /* SomeHelpers.swift in Sources */,
@@ -907,7 +917,7 @@
 				ED0CBB2A2BF656B90056E6AA /* DialogueViewModel.swift in Sources */,
 				3FAC06CC2C268CF40067E7A5 /* DocumentMenuView.swift in Sources */,
 				3FAC06C62C26727E0067E7A5 /* DocumentReaderViewModel.swift in Sources */,
-				3FC3CDA92C2DA52500FAC58F /* WorkflowDashboardView.swift in Sources */,
+				3FC3CDA92C2DA52500FAC58F /* WorkflowView.swift in Sources */,
 				ED0CBB2B2BF656B90056E6AA /* EntryPropertyModel.swift in Sources */,
 				ED54F0552C0D81C600EE2C2E /* DocumentView.swift in Sources */,
 				ED0CBB2C2BF656B90056E6AA /* HTMLStringView.swift in Sources */,
@@ -953,6 +963,7 @@
 				3F071B9B2C29A20900F19C63 /* NotificationModel.swift in Sources */,
 				3F317C432C244D7F00F42D37 /* AlertModel.swift in Sources */,
 				ED0CBB3E2BF656B90056E6AA /* DocumentItemView.swift in Sources */,
+				3FCEC3D12C319142002D8662 /* WorkflowJobView.swift in Sources */,
 				3F317C462C24574B00F42D37 /* Mapping.swift in Sources */,
 				ED0CBB3F2BF656B90056E6AA /* ContentView.swift in Sources */,
 			);
@@ -1546,6 +1557,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3FB7823F2BC1A82700327191 /* XCRemoteSwiftPackageReference "grpc-swift" */;
 			productName = "protoc-gen-grpc-swift";
+		};
+		3FCEC3CD2C314D41002D8662 /* FeedKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3FB2AC742C2AFD80007E755B /* XCRemoteSwiftPackageReference "FeedKit" */;
+			productName = FeedKit;
 		};
 		ED0CBB132BF656B90056E6AA /* CGRPCZlib */ = {
 			isa = XCSwiftPackageProductDependency;

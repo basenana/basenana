@@ -25,59 +25,56 @@ struct LoginView: View {
     
     @State private var errorMessage = ""
     @State private var isLogining = false
-
+    
     @Environment(Store.self) private var store: Store
     
     var body: some View {
         VStack {
-            Text("🍌Login")
+            Text("Connect to NanaFS🍌")
                 .font(.largeTitle)
-                .padding(.bottom, 20)
-                .padding(.top, 30)
-
-            TextField("NanaFS Server", text: $serverHost)
-                .padding()
-                .cornerRadius(5.0)
-                .padding(.bottom, 10)
-
-            TextField("NanaFS Port", text: $serverPortStr, onCommit: {
-                log.debug("parse port \(serverPortStr)")
-                if let validNumber = Int(serverPortStr) {
-                    self.serverPort = validNumber
+                .padding(30)
+            Form {
+                
+                TextField("Server", text: $serverHost)
+                    .textFieldStyle(.roundedBorder)
+                    .padding()
+                
+                TextField("Port", text: $serverPortStr, onCommit: {
+                    if let validNumber = Int(serverPortStr) {
+                        self.serverPort = validNumber
+                    }
+                }).onAppear{
+                    serverPortStr = "\(self.serverPort)"
                 }
-            }).onAppear{
-                serverPortStr = "\(self.serverPort)"
+                .padding()
+                .textFieldStyle(.roundedBorder)
+                
+                TextField("AccessToken", text: $accessTokenKey)
+                    .padding()
+                    .textFieldStyle(.roundedBorder)
+                SecureField("SecretToken", text: $secretToken)
+                    .padding()
+                    .textFieldStyle(.roundedBorder)
             }
-            .padding()
-            .cornerRadius(5.0)
-            .padding(.bottom, 10)
-
-            TextField("AccessTokenKey", text: $accessTokenKey)
-                .padding()
-                .cornerRadius(5.0)
-                .padding(.bottom, 10)
-            SecureField("SecretToken", text: $secretToken)
-                .padding()
-                .cornerRadius(5.0)
-                .padding(.bottom, 10)
             
             Text("\(errorMessage)")
                 .foregroundStyle(.red)
-                .padding(.bottom, 10)
             
             Button(action: {
                 Task {
                     await doLogin()
                 }
             }) {
-                Text(isLogining ? "Logining" : "Login" )
+                Text(isLogining ? "Connecting" : "Connect" )
+                    .font(.body)
+                    .padding(10)
                     .foregroundColor(.white)
                     .frame(width: 220, height: 40)
             }
-            .cornerRadius(10.0)
-            .padding(.bottom, 30)
+            .padding(.vertical, 30)
         }
-        .padding()
+        .padding(50)
+        .frame(minWidth: 700, minHeight: 500)
         .task {
             if serverHost != "" && accessTokenKey != "" {
                 await doLogin()

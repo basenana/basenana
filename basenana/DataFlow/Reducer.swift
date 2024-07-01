@@ -135,6 +135,7 @@ extension Store {
                     rssConfig.siteURL = opt.siteURL
                     rssConfig.siteName = opt.siteName
                     rssConfig.fileType = .webArchiveFile // TODO: need configable
+                    request.rss = rssConfig
                 }
                 
                 var grp: GroupModel?
@@ -311,9 +312,6 @@ extension Store {
         case .setDestination(to: let to):
             if state.destinations == to {
                 return nil
-            }
-            if !to.isEmpty && state.sidebarSelection == nil {
-                state.sidebarSelection = .mainContent
             }
             if state.destinations.isEmpty {
                 state.destinations = to

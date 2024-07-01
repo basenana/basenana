@@ -33,10 +33,8 @@ struct SidebarGroupsView: View {
     }
     
     @MainActor func selectedGroup() -> GroupModel? {
-        if store.state.sidebarSelection != nil{
-            if case Destination.groupList(group: let group) = store.state.sidebarSelection! {
-                return group
-            }
+        if case Destination.groupList(group: let group) = store.state.sidebarSelection {
+            return group
         }
         return nil
     }

@@ -43,49 +43,46 @@ struct GroupCreateView: View {
     
     var body: some View{
         Form{
-            VStack {
-                VStack(alignment: .leading){
-                    TextField("Parent", text: $parentName)
-                        .textFieldStyle(.squareBorder)
-                        .disabled(true)
-                        .padding(.vertical, 5)
-                    
-                    if groupType == GroupType.feed {
-                        TextField("Feed", text: $rssFeed, onCommit: parseRssTitle )
-                            .textFieldStyle(.squareBorder)
-                            .padding(.vertical, 5)
-                    }
-                    
-                    TextField("GroupName", text: $groupName)
-                        .textFieldStyle(.squareBorder)
-                        .padding(.vertical, 5)
-                    
-                }
-                
-                HStack {
-                    if errorMsg != ""{
-                        Text("\(errorMsg)")
-                            .foregroundStyle(.red)
-                            .padding(.vertical, 5)
-                    }
-                    Button {
-                        store.dispatch(.createGroup(groupName: groupName, parentId: parentID, opt: buildOption()))
-                    } label: {
-                        Text("Create")
-                            .font(.body)
-                            .padding(6)
-                            .foregroundColor(.white)
-                            .background(Color.blue)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                }
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                .padding(.vertical, 10)
+            TextField("Parent", text: $parentName)
+                .textFieldStyle(.roundedBorder)
+                .disabled(true)
+                .padding(.vertical, 5)
+            
+            if groupType == GroupType.feed {
+                TextField("Feed", text: $rssFeed, onCommit: parseRssTitle )
+                    .textFieldStyle(.roundedBorder)
+                    .padding(.vertical, 5)
             }
-            .padding(20)
+            
+            TextField("GroupName", text: $groupName)
+                .textFieldStyle(.roundedBorder)
+                .padding(.vertical, 5)
+            
+            
+            HStack {
+                if errorMsg != ""{
+                    Text("\(errorMsg)")
+                        .foregroundStyle(.red)
+                        .padding(.vertical, 5)
+                        .padding(.trailing, 20)
+                }
+                Button {
+                    store.dispatch(.createGroup(groupName: groupName, parentId: parentID, opt: buildOption()))
+                } label: {
+                    Text("Create")
+                        .font(.body)
+                        .padding(6)
+                        .foregroundColor(.white)
+                        .background(Color.blue)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                }
+                .buttonStyle(PlainButtonStyle())
+            }
+            .frame(maxWidth: .infinity, alignment: .trailing)
+            .padding(.top, 10)
         }
-        .formStyle(.grouped)
+        .padding(50)
+        .frame(minWidth: 500)
         .onAppear{
             if parent != nil{
                 parentID = parent!.groupID
@@ -99,12 +96,13 @@ struct GroupCreateView: View {
     
     func buildOption() -> GroupCreateOptionModel {
         var opt = GroupCreateOptionModel()
+        opt.groupType = groupType
         opt.feed = rssFeed
         opt.siteName = siteName
         opt.siteURL = siteURL
         return opt
     }
-
+    
     func parseRssTitle() {
         if let validUrl = URL(string: rssFeed){
             let parser = FeedParser(URL: validUrl)
@@ -120,4 +118,8 @@ struct GroupCreateView: View {
             })
         }
     }
+}
+
+#Preview {
+    GroupCreateView(parent: nil, groupType: .feed).environment(Store())
 }

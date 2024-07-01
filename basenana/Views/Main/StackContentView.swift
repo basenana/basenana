@@ -19,21 +19,17 @@ struct StackContentView: View {
                 .frame(minWidth: 180,idealWidth: 200)
         }detail: {
             NavigationStack(path: store.binding(for: \.destinations, toAction: { .setDestination(to: $0)})) {
-                if let selection = store.state.sidebarSelection {
-                    StackLandingView(landing: selection)
-                        .navigationDestination(for: Destination.self) { destination in
-                            switch destination {
-                            case .groupList(group: let group):
-                                GroupView(group: group).id(group).navigationTitle(group.groupName)
-                            case .workflowDashboard:
-                                WorkflowDashboardView()
-                            default:
-                                Text("unknown destination")
-                            }
+                StackLandingView(landing: store.state.sidebarSelection)
+                    .navigationDestination(for: Destination.self) { destination in
+                        switch destination {
+                        case .groupList(group: let group):
+                            GroupView(group: group).id(group).navigationTitle(group.groupName)
+                        case .workflowDashboard:
+                            WorkflowView()
+                        default:
+                            Text("unknown destination")
                         }
-                } else {
-                    StackBannerView()
-                }
+                    }
             }
         }
         .toolbar{

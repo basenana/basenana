@@ -9,7 +9,7 @@ import Foundation
 
 struct AppState {
     var destinations = [Destination]()
-    var sidebarSelection: Destination? = .mainContent
+    var sidebarSelection: Destination = .mainContent
     var alert = AlertModel()
     var fsInfo = FsInfoModel()
     var groupTree = RootGroupModel()

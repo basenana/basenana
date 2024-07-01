@@ -52,5 +52,5 @@ enum AppAction {
 
     case gotoDestination(Destination)
     
-    case updateSidebarSelection(select: Destination?)
+    case updateSidebarSelection(select: Destination)
 }
