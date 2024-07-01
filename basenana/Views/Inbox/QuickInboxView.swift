@@ -21,86 +21,84 @@ struct QuickInboxView: View{
     @Environment(Store.self) private var store: Store
     
     var body: some View{
-        Form{
-            VStack {
-                VStack(alignment: .leading){
-                    TextField("URL", text: $urlInput, onCommit: {
-                        if urlInput != ""{
-                            if let safeUrl = URL(string: urlInput){
-                                Task{
-                                    do {
-                                        let rp = ReadablePage(url: safeUrl)
-                                        try await rp.parse()
-                                        urlTitle = sanitizeFileName(rp.urlTitle)
-                                        htmlContent = rp.htmlContent
-                                    }catch {
-                                        errorMsg = "fetch web page failed \(error)"
-                                    }
+        VStack {
+            Form{
+                TextField("URL", text: $urlInput, onCommit: {
+                    if urlInput != ""{
+                        if let safeUrl = URL(string: urlInput){
+                            Task{
+                                do {
+                                    let rp = ReadablePage(url: safeUrl)
+                                    try await rp.parse()
+                                    urlTitle = sanitizeFileName(rp.urlTitle)
+                                    htmlContent = rp.htmlContent
+                                }catch {
+                                    errorMsg = "fetch web page failed \(error)"
                                 }
                             }
                         }
-                    })
+                    }
+                })
+                .textFieldStyle(.squareBorder)
+                .padding(.vertical, 5)
+                
+                TextField("Title", text: $urlTitle)
                     .textFieldStyle(.squareBorder)
                     .padding(.vertical, 5)
-                    
-                    TextField("Title", text: $urlTitle)
-                        .textFieldStyle(.squareBorder)
-                        .padding(.vertical, 5)
-                    
-                    Picker("Flile Type", selection: $fileTypeOption) {
-                        Text("Webarchive").tag("webarchive")
-                        Text("Html").tag("html")
-                        Text("Bookmark").tag("bookmark")
-                    }
-                    .pickerStyle(.inline)
-                    .padding(.vertical, 5)
-                }
                 
-                HStack {
-                    if errorMsg != ""{
-                        Text("\(errorMsg)")
-                            .foregroundStyle(.red)
-                            .padding(.vertical, 5)
-                    }
-                    Button {
-//                        Task.detached {
-//                            if urlTitle == "" {
-//                                urlTitle = (try? parseURLTitle(urlStr: urlInput)) ?? "unknown"
-//                            }
-//                            var data: Data? = nil
-//                            if let url = URL(string: urlInput){
-//                                if htmlContent != ""{
-//                                    switch fileTypeOption {
-//                                    case "html":
-//                                        data = htmlContent.data(using: .utf8)
-//                                    case "webarchive":
-//                                        data = webarchiveBaseMainResource(url: url, mainResource: htmlContent)
-//                                    default: break
-//                                    }
-//                                }
-//                            }
-//                        }
-                        store.dispatch(.quickInbox(urlStr: urlInput, filename: urlTitle, fileType: fileTypeOption, data: nil ))
-                        
-                    } label: {
-                        Text("Inbox")
-                            .font(.body)
-                            .padding(6)
-                            .foregroundColor(.white)
-                            .background(Color.blue)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                    }
-                    .buttonStyle(PlainButtonStyle())
+                Picker("Flile Type", selection: $fileTypeOption) {
+                    Text("Webarchive").tag("webarchive")
+                    Text("Html").tag("html")
+                    Text("Bookmark").tag("bookmark")
                 }
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                .padding(.vertical, 10)
+                .pickerStyle(.inline)
+                .padding(.vertical, 5)
             }
-            .padding(20)
+            HStack {
+                if errorMsg != ""{
+                    Text("\(errorMsg)")
+                        .foregroundStyle(.red)
+                        .padding(.vertical, 5)
+                }
+                Button {
+                    //                        Task.detached {
+                    //                            if urlTitle == "" {
+                    //                                urlTitle = (try? parseURLTitle(urlStr: urlInput)) ?? "unknown"
+                    //                            }
+                    //                            var data: Data? = nil
+                    //                            if let url = URL(string: urlInput){
+                    //                                if htmlContent != ""{
+                    //                                    switch fileTypeOption {
+                    //                                    case "html":
+                    //                                        data = htmlContent.data(using: .utf8)
+                    //                                    case "webarchive":
+                    //                                        data = webarchiveBaseMainResource(url: url, mainResource: htmlContent)
+                    //                                    default: break
+                    //                                    }
+                    //                                }
+                    //                            }
+                    //                        }
+                    store.dispatch(.quickInbox(urlStr: urlInput, filename: urlTitle, fileType: fileTypeOption, data: nil ))
+                    
+                } label: {
+                    Text("Inbox")
+                        .font(.body)
+                        .padding(6)
+                        .foregroundColor(.white)
+                        .background(Color.blue)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                }
+                .buttonStyle(PlainButtonStyle())
+            }
+            .frame(maxWidth: .infinity, alignment: .trailing)
+            .padding(.vertical, 10)
         }
-        .formStyle(.grouped)
+        .padding(50)
+        .frame(minWidth: 600, minHeight: 150)
     }
 }
 
+
 #Preview {
-    return QuickInboxView()
+    return QuickInboxView().environment(Store())
 }
