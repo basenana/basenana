@@ -22,7 +22,7 @@ struct SidebarView: View {
             }.id("nav_inbox")
             
             NavigationLink(value: Destination.readDocuments(prespective: .unread)){
-                SidebarIconView(imageName: "circle.fill", title: "Unread", color: .brown)
+                SidebarIconView(imageName: "circle.inset.filled", title: "Unread", color: .brown)
             }.id("nav_unread")
             
             NavigationLink(value: Destination.readDocuments(prespective: .marked)){

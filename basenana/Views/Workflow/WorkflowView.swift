@@ -11,11 +11,7 @@ import Foundation
 struct WorkflowView: View {
     
     let columns = [
-        GridItem(.fixed(200)),
-        GridItem(.fixed(200)),
-        GridItem(.fixed(200)),
-        GridItem(.fixed(200)),
-        GridItem(.fixed(200)),
+        GridItem(.adaptive(minimum: 180)),
     ]
     
     
@@ -38,7 +34,7 @@ struct WorkflowItemView: View {
     var workflowName: String = "workflow.name"
     var body: some View {
         VStack(alignment: .leading) {
-            Text(randomWeatherEmoji()).font(.system(size: 30))
+            Text(randomWeatherEmoji()).font(.system(size: 20))
             Spacer(minLength: 30)
             HStack {
                 Text(workflowName)
@@ -63,8 +59,10 @@ struct WorkflowItemView: View {
                 }, label: {
                     Image(systemName: "ellipsis.circle.fill")
                         .resizable()
-                        .frame(width: 20, height: 20)
-                }).buttonStyle(PlainButtonStyle())
+                        .frame(width: 15, height: 15)
+                })
+                .padding(.trailing, 5)
+                .buttonStyle(PlainButtonStyle())
                 
             }
         }

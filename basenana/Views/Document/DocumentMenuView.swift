@@ -45,7 +45,7 @@ struct DocumentMenuView: View {
             }
             
             Section{
-                Menu("Mark"){
+                Menu("Mark To"){
                     DocumentMarkMenuView(doc: $doc, readerViewModel: $readerViewModel)
                 }
             }
@@ -79,10 +79,10 @@ struct DocumentMarkMenuView: View {
                 }
             }
         } label: {
-            Text("Unread")
-            if !readerViewModel.readed.contains(doc.id) {
-                Image(systemName: "checkmark")
-            }
+            Image(systemName: readerViewModel.readed.contains(doc.id) ? "circle.slash" : "circle.fill")
+                .resizable()
+                .frame(width: 5, height: 5)
+            Text(readerViewModel.readed.contains(doc.id) ? "Unread" : "Read")
         }
         Button {
             withAnimation(.easeInOut) {
@@ -96,10 +96,10 @@ struct DocumentMarkMenuView: View {
                 }
             }
         } label: {
-            Text("Mark")
-            if readerViewModel.marked.contains(doc.id) {
-                Image(systemName: "checkmark")
-            }
+            Image(systemName: readerViewModel.marked.contains(doc.id) ? "bookmark.slash": "bookmark.fill")
+                .resizable()
+                .frame(width: 5, height: 5)
+            Text(readerViewModel.marked.contains(doc.id) ? "Unmark": "Mark")
         }
     }
 }
