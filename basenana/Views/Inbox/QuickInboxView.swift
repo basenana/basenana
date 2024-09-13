@@ -17,7 +17,9 @@ struct QuickInboxView: View{
     @State private var fileTypeOption = "webarchive"
     @State private var selectedURL: String? = nil
     @State private var htmlContent: String = ""
-    
+    @State private var page: WebPage? = nil
+    @State private var showPreview: Bool = false
+
     @Environment(Store.self) private var store: Store
     
     var body: some View{
@@ -25,13 +27,12 @@ struct QuickInboxView: View{
             Form{
                 TextField("URL", text: $urlInput, onCommit: {
                     if urlInput != ""{
-                        if let safeUrl = URL(string: urlInput){
+                        if let _ = URL(string: urlInput){
                             Task{
                                 do {
-                                    let rp = ReadablePage(url: safeUrl)
-                                    try await rp.parse()
-                                    urlTitle = sanitizeFileName(rp.urlTitle)
-                                    htmlContent = rp.htmlContent
+                                    let loadedPage = try fetchWebPage(url: urlInput)
+                                    self.page = loadedPage
+                                    self.urlTitle = loadedPage.title
                                 }catch {
                                     errorMsg = "fetch web page failed \(error)"
                                 }
@@ -49,7 +50,6 @@ struct QuickInboxView: View{
                 Picker("Flile Type", selection: $fileTypeOption) {
                     Text("Webarchive").tag("webarchive")
                     Text("Html").tag("html")
-                    Text("Bookmark").tag("bookmark")
                 }
                 .pickerStyle(.inline)
                 .padding(.vertical, 5)
@@ -60,26 +60,27 @@ struct QuickInboxView: View{
                         .foregroundStyle(.red)
                         .padding(.vertical, 5)
                 }
+                if let safePage = self.page {
+                    Button(action: {
+                        self.showPreview = true
+                    }) {
+                        Text("Preview")
+                            .font(.body)
+                            .padding(6)
+                            .foregroundColor(.white)
+                            .background(Color.blue)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                    }
+                    .popover(isPresented: $showPreview) {
+                        VStack {
+                            ReadabilityView(page: safePage)
+                        }
+                        .frame(width: 500, height: 600)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
                 Button {
-                    //                        Task.detached {
-                    //                            if urlTitle == "" {
-                    //                                urlTitle = (try? parseURLTitle(urlStr: urlInput)) ?? "unknown"
-                    //                            }
-                    //                            var data: Data? = nil
-                    //                            if let url = URL(string: urlInput){
-                    //                                if htmlContent != ""{
-                    //                                    switch fileTypeOption {
-                    //                                    case "html":
-                    //                                        data = htmlContent.data(using: .utf8)
-                    //                                    case "webarchive":
-                    //                                        data = webarchiveBaseMainResource(url: url, mainResource: htmlContent)
-                    //                                    default: break
-                    //                                    }
-                    //                                }
-                    //                            }
-                    //                        }
                     store.dispatch(.quickInbox(urlStr: urlInput, filename: urlTitle, fileType: fileTypeOption, data: nil ))
-                    
                 } label: {
                     Text("Inbox")
                         .font(.body)

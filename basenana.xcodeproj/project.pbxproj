@@ -24,9 +24,6 @@
 		3F1BBE1D2B8E147F005D533F /* basenanaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE1C2B8E147F005D533F /* basenanaApp.swift */; };
 		3F1BBE232B8E1480005D533F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F1BBE222B8E1480005D533F /* Assets.xcassets */; };
 		3F1BBE272B8E1480005D533F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F1BBE262B8E1480005D533F /* Preview Assets.xcassets */; };
-		3F1BBE312B8E1480005D533F /* basenanaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE302B8E1480005D533F /* basenanaTests.swift */; };
-		3F1BBE3B2B8E1480005D533F /* basenanaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE3A2B8E1480005D533F /* basenanaUITests.swift */; };
-		3F1BBE3D2B8E1480005D533F /* basenanaUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE3C2B8E1480005D533F /* basenanaUITestsLaunchTests.swift */; };
 		3F1BBE4F2B90C4D5005D533F /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE4E2B90C4D5005D533F /* SidebarView.swift */; };
 		3F1BBE572B90CD59005D533F /* EntryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE562B90CD59005D533F /* EntryModel.swift */; };
 		3F1BBE592B932251005D533F /* GroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE582B932251005D533F /* GroupView.swift */; };
@@ -106,6 +103,19 @@
 		3FB782552BC2D0F600327191 /* fsapi-v1.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB782512BC2D0F600327191 /* fsapi-v1.pb.swift */; };
 		3FC3CDA82C2DA52500FAC58F /* WorkflowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC3CDA72C2DA52500FAC58F /* WorkflowView.swift */; };
 		3FC3CDA92C2DA52500FAC58F /* WorkflowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC3CDA72C2DA52500FAC58F /* WorkflowView.swift */; };
+		3FC54EDA2C80B8C200803A1D /* Packer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC54ED92C80B8C200803A1D /* Packer.swift */; };
+		3FC54EDF2C84613B00803A1D /* ReadabilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC54EDE2C84613B00803A1D /* ReadabilityView.swift */; };
+		3FC54EE02C84613B00803A1D /* ReadabilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC54EDE2C84613B00803A1D /* ReadabilityView.swift */; };
+		3FC54EE42C84A22E00803A1D /* readability_initialization.js in Resources */ = {isa = PBXBuildFile; fileRef = 3FC54EE12C84A22E00803A1D /* readability_initialization.js */; };
+		3FC54EE52C84A22E00803A1D /* readability_initialization.js in Resources */ = {isa = PBXBuildFile; fileRef = 3FC54EE12C84A22E00803A1D /* readability_initialization.js */; };
+		3FC54EE62C84A22E00803A1D /* Readability.js in Resources */ = {isa = PBXBuildFile; fileRef = 3FC54EE22C84A22E00803A1D /* Readability.js */; };
+		3FC54EE72C84A22E00803A1D /* Readability.js in Resources */ = {isa = PBXBuildFile; fileRef = 3FC54EE22C84A22E00803A1D /* Readability.js */; };
+		3FC54EE82C84A22E00803A1D /* readability_images.js in Resources */ = {isa = PBXBuildFile; fileRef = 3FC54EE32C84A22E00803A1D /* readability_images.js */; };
+		3FC54EE92C84A22E00803A1D /* readability_images.js in Resources */ = {isa = PBXBuildFile; fileRef = 3FC54EE32C84A22E00803A1D /* readability_images.js */; };
+		3FC54F042C948E4C00803A1D /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 3FC54F032C948E4C00803A1D /* Data */; };
+		3FC54F052C948E4C00803A1D /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 3FC54F032C948E4C00803A1D /* Data */; };
+		3FC54F0B2C94902100803A1D /* Job in Resources */ = {isa = PBXBuildFile; fileRef = 3FC54F0A2C94902100803A1D /* Job */; };
+		3FC54F0C2C94902100803A1D /* Job in Resources */ = {isa = PBXBuildFile; fileRef = 3FC54F0A2C94902100803A1D /* Job */; };
 		3FCE74B32C27D6C300C4E783 /* EnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F317C1C2C231ABB00F42D37 /* EnvironmentKey.swift */; };
 		3FCEC3CC2C314D0B002D8662 /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F071B962C299AC100F19C63 /* SearchModel.swift */; };
 		3FCEC3CE2C314D41002D8662 /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3FCEC3CD2C314D41002D8662 /* FeedKit */; };
@@ -205,10 +215,7 @@
 		3F1BBE242B8E1480005D533F /* basenana.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = basenana.entitlements; sourceTree = "<group>"; };
 		3F1BBE262B8E1480005D533F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		3F1BBE2C2B8E1480005D533F /* basenanaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = basenanaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3F1BBE302B8E1480005D533F /* basenanaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = basenanaTests.swift; sourceTree = "<group>"; };
 		3F1BBE362B8E1480005D533F /* basenanaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = basenanaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3F1BBE3A2B8E1480005D533F /* basenanaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = basenanaUITests.swift; sourceTree = "<group>"; };
-		3F1BBE3C2B8E1480005D533F /* basenanaUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = basenanaUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		3F1BBE4E2B90C4D5005D533F /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		3F1BBE562B90CD59005D533F /* EntryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryModel.swift; sourceTree = "<group>"; };
 		3F1BBE582B932251005D533F /* GroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupView.swift; sourceTree = "<group>"; };
@@ -252,6 +259,25 @@
 		3FB782502BC2D0F600327191 /* fsapi-v1.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "fsapi-v1.grpc.swift"; sourceTree = "<group>"; };
 		3FB782512BC2D0F600327191 /* fsapi-v1.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "fsapi-v1.pb.swift"; sourceTree = "<group>"; };
 		3FC3CDA72C2DA52500FAC58F /* WorkflowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowView.swift; sourceTree = "<group>"; };
+		3FC54ED92C80B8C200803A1D /* Packer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Packer.swift; sourceTree = "<group>"; };
+		3FC54EDE2C84613B00803A1D /* ReadabilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadabilityView.swift; sourceTree = "<group>"; };
+		3FC54EE12C84A22E00803A1D /* readability_initialization.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = readability_initialization.js; sourceTree = "<group>"; };
+		3FC54EE22C84A22E00803A1D /* Readability.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = Readability.js; sourceTree = "<group>"; };
+		3FC54EE32C84A22E00803A1D /* readability_images.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = readability_images.js; sourceTree = "<group>"; };
+		3FC54EEB2C94863F00803A1D /* AppState */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = AppState; sourceTree = "<group>"; };
+		3FC54EF22C94870C00803A1D /* Styleguide */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Styleguide; sourceTree = "<group>"; };
+		3FC54EF32C94874400803A1D /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
+		3FC54EFE2C948C6300803A1D /* Tree */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Tree; sourceTree = "<group>"; };
+		3FC54EFF2C948C8100803A1D /* Inbox */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Inbox; sourceTree = "<group>"; };
+		3FC54F002C948C9200803A1D /* Workflow */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Workflow; sourceTree = "<group>"; };
+		3FC54F012C948CB100803A1D /* Dialogue */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Dialogue; sourceTree = "<group>"; };
+		3FC54F022C948CF500803A1D /* Document */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Document; sourceTree = "<group>"; };
+		3FC54F032C948E4C00803A1D /* Data */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Data; sourceTree = "<group>"; };
+		3FC54F062C948FB900803A1D /* Entry */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Entry; sourceTree = "<group>"; };
+		3FC54F072C948FDB00803A1D /* Search */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Search; sourceTree = "<group>"; };
+		3FC54F082C948FF000803A1D /* Notify */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Notify; sourceTree = "<group>"; };
+		3FC54F0A2C94902100803A1D /* Job */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Job; sourceTree = "<group>"; };
+		3FC54F0D2C94904600803A1D /* Packer */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Packer; sourceTree = "<group>"; };
 		3FCEC3CF2C319142002D8662 /* WorkflowJobView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowJobView.swift; sourceTree = "<group>"; };
 		3FDC2EA22BDCEEB200344DF8 /* SomeHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SomeHelpers.swift; sourceTree = "<group>"; };
 		3FDC2EA62BE3CC8C00344DF8 /* HTMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLParser.swift; sourceTree = "<group>"; };
@@ -337,21 +363,25 @@
 			path = Toolbar;
 			sourceTree = "<group>";
 		};
-		3F19E20A2C140A6C00B84293 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		3F1BBE102B8E147F005D533F = {
 			isa = PBXGroup;
 			children = (
+				3FC54EEB2C94863F00803A1D /* AppState */,
+				3FC54F062C948FB900803A1D /* Entry */,
+				3FC54F022C948CF500803A1D /* Document */,
+				3FC54F072C948FDB00803A1D /* Search */,
+				3FC54F012C948CB100803A1D /* Dialogue */,
+				3FC54F002C948C9200803A1D /* Workflow */,
+				3FC54EFF2C948C8100803A1D /* Inbox */,
+				3FC54EFE2C948C6300803A1D /* Tree */,
+				3FC54F0A2C94902100803A1D /* Job */,
+				3FC54F0D2C94904600803A1D /* Packer */,
+				3FC54F082C948FF000803A1D /* Notify */,
+				3FC54EF32C94874400803A1D /* Domain */,
+				3FC54F032C948E4C00803A1D /* Data */,
+				3FC54EF22C94870C00803A1D /* Styleguide */,
 				3F1BBE1B2B8E147F005D533F /* basenana */,
-				3F1BBE2F2B8E1480005D533F /* basenanaTests */,
-				3F1BBE392B8E1480005D533F /* basenanaUITests */,
 				3F1BBE1A2B8E147F005D533F /* Products */,
-				3F19E20A2C140A6C00B84293 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -391,23 +421,6 @@
 				3F1BBE262B8E1480005D533F /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		3F1BBE2F2B8E1480005D533F /* basenanaTests */ = {
-			isa = PBXGroup;
-			children = (
-				3F1BBE302B8E1480005D533F /* basenanaTests.swift */,
-			);
-			path = basenanaTests;
-			sourceTree = "<group>";
-		};
-		3F1BBE392B8E1480005D533F /* basenanaUITests */ = {
-			isa = PBXGroup;
-			children = (
-				3F1BBE3A2B8E1480005D533F /* basenanaUITests.swift */,
-				3F1BBE3C2B8E1480005D533F /* basenanaUITestsLaunchTests.swift */,
-			);
-			path = basenanaUITests;
 			sourceTree = "<group>";
 		};
 		3F1BBE492B90C393005D533F /* Views */ = {
@@ -458,6 +471,7 @@
 		3F1BBE4D2B90C3EA005D533F /* Share */ = {
 			isa = PBXGroup;
 			children = (
+				3FC54ED82C80B84A00803A1D /* Packer */,
 				3FB782532BC2D0F600327191 /* FsAPI */,
 				3F317C1B2C231A9300F42D37 /* Configuration */,
 				3F317C1A2C231A4B00F42D37 /* WebHelper */,
@@ -482,8 +496,12 @@
 		3F317C1A2C231A4B00F42D37 /* WebHelper */ = {
 			isa = PBXGroup;
 			children = (
+				3FC54EE32C84A22E00803A1D /* readability_images.js */,
+				3FC54EE12C84A22E00803A1D /* readability_initialization.js */,
+				3FC54EE22C84A22E00803A1D /* Readability.js */,
 				3F1BBE5D2B93664E005D533F /* HTMLStringView.swift */,
 				3FDC2EA62BE3CC8C00344DF8 /* HTMLParser.swift */,
+				3FC54EDE2C84613B00803A1D /* ReadabilityView.swift */,
 			);
 			path = WebHelper;
 			sourceTree = "<group>";
@@ -577,6 +595,14 @@
 				3FCEC3CF2C319142002D8662 /* WorkflowJobView.swift */,
 			);
 			path = Workflow;
+			sourceTree = "<group>";
+		};
+		3FC54ED82C80B84A00803A1D /* Packer */ = {
+			isa = PBXGroup;
+			children = (
+				3FC54ED92C80B8C200803A1D /* Packer.swift */,
+			);
+			path = Packer;
 			sourceTree = "<group>";
 		};
 		3FDC2E9B2BDC030800344DF8 /* Group */ = {
@@ -771,8 +797,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3FC54EE82C84A22E00803A1D /* readability_images.js in Resources */,
 				3F1BBE272B8E1480005D533F /* Preview Assets.xcassets in Resources */,
+				3FC54F0B2C94902100803A1D /* Job in Resources */,
+				3FC54F042C948E4C00803A1D /* Data in Resources */,
+				3FC54EE42C84A22E00803A1D /* readability_initialization.js in Resources */,
 				3F1BBE232B8E1480005D533F /* Assets.xcassets in Resources */,
+				3FC54EE62C84A22E00803A1D /* Readability.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -794,8 +825,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3FC54EE92C84A22E00803A1D /* readability_images.js in Resources */,
 				ED0CBB4C2BF656B90056E6AA /* Preview Assets.xcassets in Resources */,
+				3FC54F0C2C94902100803A1D /* Job in Resources */,
+				3FC54F052C948E4C00803A1D /* Data in Resources */,
+				3FC54EE52C84A22E00803A1D /* readability_initialization.js in Resources */,
 				ED0CBB4D2BF656B90056E6AA /* Assets.xcassets in Resources */,
+				3FC54EE72C84A22E00803A1D /* Readability.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -845,6 +881,7 @@
 				ED917E782B9607BE004FCB9A /* DocumentModel.swift in Sources */,
 				ED72603E2BC2E25D005F1166 /* DialogueModel.swift in Sources */,
 				3F317C1F2C231AD500F42D37 /* Debug.swift in Sources */,
+				3FC54EDF2C84613B00803A1D /* ReadabilityView.swift in Sources */,
 				EDEF16382BC8DD93000BC25C /* Assets.swift in Sources */,
 				3F1BBE4F2B90C4D5005D533F /* SidebarView.swift in Sources */,
 				3FDC2EA72BE3CC8C00344DF8 /* HTMLParser.swift in Sources */,
@@ -863,6 +900,7 @@
 				3F071BA12C29A27F00F19C63 /* NotificationView.swift in Sources */,
 				3FB782542BC2D0F600327191 /* fsapi-v1.grpc.swift in Sources */,
 				3F317C2F2C231D2800F42D37 /* AppConfiguration.swift in Sources */,
+				3FC54EDA2C80B8C200803A1D /* Packer.swift in Sources */,
 				3F317C422C244D7F00F42D37 /* AlertModel.swift in Sources */,
 				EDF504772BEB295700CB4B1C /* DocumentDetailView.swift in Sources */,
 				3F4A78E12BD299110035F90F /* SettingsView.swift in Sources */,
@@ -881,7 +919,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3F1BBE312B8E1480005D533F /* basenanaTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -889,8 +926,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3F1BBE3D2B8E1480005D533F /* basenanaUITestsLaunchTests.swift in Sources */,
-				3F1BBE3B2B8E1480005D533F /* basenanaUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -921,6 +956,7 @@
 				ED0CBB2B2BF656B90056E6AA /* EntryPropertyModel.swift in Sources */,
 				ED54F0552C0D81C600EE2C2E /* DocumentView.swift in Sources */,
 				ED0CBB2C2BF656B90056E6AA /* HTMLStringView.swift in Sources */,
+				3FC54EE02C84613B00803A1D /* ReadabilityView.swift in Sources */,
 				3F317C362C231E8C00F42D37 /* Destination.swift in Sources */,
 				ED0CBB2D2BF656B90056E6AA /* fsapi-v1.pb.swift in Sources */,
 				3F9FF99D2C28546D00C9BBA4 /* GroupMenuView.swift in Sources */,
