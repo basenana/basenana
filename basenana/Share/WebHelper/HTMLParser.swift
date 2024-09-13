@@ -10,10 +10,20 @@ import SwiftSoup
 import WebArchiver
 import Reeeed
 
+enum WebError: Error {
+    case InvalidUrl(String)
+    case BodyIsEmpty
+    case InvalidPath
+    case Unknown
+}
+
 
 func parseURLTitle(urlStr: String) throws -> String {
+    guard let url = URL(string: urlStr) else {
+        throw WebError.InvalidUrl(urlStr)
+    }
+    
     var htmlStr: String = ""
-    let url = URL(string: urlStr)!
     let group = DispatchGroup()
     group.enter()
     let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
@@ -36,6 +46,42 @@ func parseURLTitle(urlStr: String) throws -> String {
     
     return titleStr
 }
+
+struct WebPage {
+    var url: URL
+    var title: String = ""
+    var htmlContent: String = ""
+}
+
+func fetchWebPage(url urlString: String) throws -> WebPage {
+    guard let url = URL(string: urlString) else {
+        throw WebError.InvalidUrl(urlString)
+    }
+    
+    var wp = WebPage(url: url)
+    let group = DispatchGroup()
+    group.enter()
+    let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+        if let error = error {
+            log.error("fetch url \(urlString) error: \(error)")
+        } else if let data = data {
+            wp.htmlContent = String(data: data, encoding: .utf8) ?? ""
+        }
+        group.leave()
+    }
+    task.resume()
+    group.wait()
+
+    if wp.htmlContent == "" {
+        throw WebError.BodyIsEmpty
+    }
+    
+    let doc: Document = try! SwiftSoup.parse(wp.htmlContent)
+    wp.title = try doc.title()
+
+    return wp
+}
+
 
 
 func webarchiveBaseMainResource(url: URL, mainResource: String) -> Data?{

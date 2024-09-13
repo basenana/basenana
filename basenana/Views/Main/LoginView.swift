@@ -68,7 +68,6 @@ struct LoginView: View {
                 Text(isLogining ? "Connecting" : "Connect" )
                     .font(.body)
                     .padding(10)
-                    .foregroundColor(.white)
                     .frame(width: 220, height: 40)
             }
             .padding(.vertical, 30)
