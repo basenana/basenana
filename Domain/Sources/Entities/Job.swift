@@ -6,3 +6,16 @@
 //
 
 import Foundation
+
+
+protocol Workflow {
+    
+}
+
+protocol WorkflowJob {
+    
+}
+
+protocol Job {
+    
+}

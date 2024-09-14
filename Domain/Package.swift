@@ -8,16 +8,46 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "Domain",
-            targets: ["Domain"]),
+            name: "Entities",
+            targets: ["Entities"]),
+        .library(
+            name: "FsProtocol",
+            targets: ["FsProtocol"]),
+        .library(
+            name: "UseCaseProtocol",
+            targets: ["UseCaseProtocol"]),
+        .library(
+            name: "UseCase",
+            targets: ["UseCase"]),
+        .library(
+            name: "DomainTestHelpers",
+            targets: ["DomainTestHelpers"]),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "Domain"),
+            name: "Entities",
+            dependencies: []
+        ),
+        .target(
+            name: "FsProtocol",
+            dependencies: ["Entities"]
+        ),
+        .target(
+            name: "UseCaseProtocol",
+            dependencies: ["Entities"]
+        ),
+        .target(
+            name: "UseCase",
+            dependencies: ["FsProtocol", "UseCaseProtocol"]
+        ),
+        .target(
+            name: "DomainTestHelpers",
+            dependencies: ["Entities", "FsProtocol", "UseCaseProtocol"]
+        ),
         .testTarget(
             name: "DomainTests",
-            dependencies: ["Domain"]),
+            dependencies: ["Entities", "FsProtocol", "UseCase"]),
     ]
 )

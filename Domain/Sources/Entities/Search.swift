@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+
+protocol Search {
+    var query: String { get set }
+}
