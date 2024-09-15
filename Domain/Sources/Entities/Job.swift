@@ -8,14 +8,18 @@
 import Foundation
 
 
-protocol Workflow {
+public protocol Workflow {
     
 }
 
-protocol WorkflowJob {
+public protocol WorkflowJob {
     
 }
 
-protocol Job {
+public protocol Job {
+    
+}
+
+public struct WorkflowJobOption {
     
 }

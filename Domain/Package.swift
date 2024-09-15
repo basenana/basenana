@@ -11,8 +11,8 @@ let package = Package(
             name: "Entities",
             targets: ["Entities"]),
         .library(
-            name: "FsProtocol",
-            targets: ["FsProtocol"]),
+            name: "RepositoryProtocol",
+            targets: ["RepositoryProtocol"]),
         .library(
             name: "UseCaseProtocol",
             targets: ["UseCaseProtocol"]),
@@ -31,7 +31,7 @@ let package = Package(
             dependencies: []
         ),
         .target(
-            name: "FsProtocol",
+            name: "RepositoryProtocol",
             dependencies: ["Entities"]
         ),
         .target(
@@ -40,14 +40,14 @@ let package = Package(
         ),
         .target(
             name: "UseCase",
-            dependencies: ["FsProtocol", "UseCaseProtocol"]
+            dependencies: ["RepositoryProtocol", "UseCaseProtocol"]
         ),
         .target(
             name: "DomainTestHelpers",
-            dependencies: ["Entities", "FsProtocol", "UseCaseProtocol"]
+            dependencies: ["Entities", "RepositoryProtocol", "UseCaseProtocol"]
         ),
         .testTarget(
             name: "DomainTests",
-            dependencies: ["Entities", "FsProtocol", "UseCase"]),
+            dependencies: ["Entities", "RepositoryProtocol", "UseCase"]),
     ]
 )

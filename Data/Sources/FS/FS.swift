@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import FsProtocol
+import RepositoryProtocol
 
 
-class FS: FsProtocol {
+class FS: FSRepositoryProtocol {
 }

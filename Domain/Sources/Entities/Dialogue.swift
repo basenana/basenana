@@ -8,7 +8,7 @@
 import Foundation
 
 
-protocol Room {
+public protocol Room {
     var id: Int64 { get }
     var namespace: String { get }
     var oid: Int64 { get }
@@ -20,7 +20,7 @@ protocol Room {
     var messages: [RoomMessage] { get }
 }
 
-protocol RoomMessage {
+public protocol RoomMessage {
     var id: Int64 { get }
     var namespace: String { get }
     var roomid: Int64 { get }
@@ -29,4 +29,8 @@ protocol RoomMessage {
     
     var sendAt: Date { get }
     var createdAt: Date { get }
+}
+
+public struct RoomOption {
+    var prompt: String
 }

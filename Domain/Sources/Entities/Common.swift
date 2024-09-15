@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct Pagination {
+public struct Pagination {
     var page: Int64
     var pageSize: Int64
 }

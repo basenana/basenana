@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol EntryInfo {
+public protocol EntryInfo {
     var id: Int64 { get }
     var name: String { get }
     var kind: String { get }
@@ -24,7 +24,7 @@ protocol EntryInfo {
     func toGroup() -> Group?
 }
 
-protocol EntryDetail {
+public protocol EntryDetail {
     var id: Int64 { get }
     var name: String { get }
     var aliases: String { get }
@@ -49,17 +49,26 @@ protocol EntryDetail {
 }
 
 
-func isVisitable(en: EntryInfo) -> Bool{
+public func isVisitable(en: EntryInfo) -> Bool{
     return !en.name.starts(with: ".")
 }
 
-func isVisitable(en: EntryDetail) -> Bool{
+public func isVisitable(en: EntryDetail) -> Bool{
     return !en.name.starts(with: ".")
 }
 
 
-protocol EntryProperty {
+public protocol EntryProperty {
     var key: String { get }
     var value : String { get }
     var encoded: Bool { get }
+}
+
+
+public struct EntryCreate {
+    
+}
+
+public struct EntryUpdate {
+    
 }

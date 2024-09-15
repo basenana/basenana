@@ -8,7 +8,7 @@
 import Foundation
 
 
-protocol Group {
+public protocol Group {
     var id: Int64 { get }
     var groupName: String { get }
     var parentID: Int64 { get }
@@ -16,7 +16,7 @@ protocol Group {
 }
 
 
-struct GroupCreate {
+public struct GroupCreate {
     var groupType: GroupType = .standard
     var feed: String = ""
     var siteName: String = ""
@@ -26,12 +26,12 @@ struct GroupCreate {
 
 
 
-enum GroupType: Identifiable {
+public enum GroupType: Identifiable {
     case standard
     case feed
     case dynamic
     
-    var id: String {
+    public var id: String {
         get {
             switch self {
             case .standard:

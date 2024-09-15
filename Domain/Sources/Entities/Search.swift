@@ -8,6 +8,6 @@
 import Foundation
 
 
-protocol Search {
+public protocol Search {
     var query: String { get set }
 }

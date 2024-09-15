@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol DocumentInfo {
+public protocol DocumentInfo {
     var id: Int64 { get }
     var oid: Int64 { get }
     var parentId: Int64 { get }
@@ -23,7 +23,7 @@ protocol DocumentInfo {
 }
 
 
-protocol DocumentDetail {
+public protocol DocumentDetail {
     var id: Int64 { get }
     var oid: Int64 { get }
     var parentId: Int64 { get }
@@ -42,8 +42,32 @@ protocol DocumentDetail {
 }
 
 
-struct DocumentUpdate {
+public struct DocumentUpdate {
     var docId: Int64
-    var unread: Bool?
-    var marked: Bool?
+    var unread: Bool? = nil
+    var marked: Bool? = nil
+}
+
+public struct DocumentFilter {
+    var all: Bool? = nil
+    var parent: Int64? = nil
+    var source: String? = nil
+    var marked: Bool? = nil
+    var unread: Bool? = nil
+    var page: Pagination? = nil
+    var order: DocumentOrder? = nil
+    var orderDesc: Bool? = nil
+}
+
+public struct DocumentID {
+    var documentID: Int64
+    var entryID: Int64
+}
+
+public enum DocumentOrder {
+    case name
+    case source
+    case marked
+    case unread
+    case createdAt
 }

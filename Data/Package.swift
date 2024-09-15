@@ -19,7 +19,7 @@ let package = Package(
             name: "Data",
             dependencies: [
                 .product(name: "Entities", package: "Domain"),
-                .product(name: "FsProtocol", package: "Domain"),
+                .product(name: "RepositoryProtocol", package: "Domain"),
             ]
         ),
         .testTarget(
