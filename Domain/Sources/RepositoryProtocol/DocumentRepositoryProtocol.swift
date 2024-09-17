@@ -9,7 +9,7 @@ import Foundation
 import Entities
 
 
-protocol DocumentRepositoryProtocol {
+public protocol DocumentRepositoryProtocol {
     func ListDocuments(filter: DocumentFilter) throws -> [DocumentInfo]
     func GetDocumentDetail(id: DocumentID) throws -> DocumentDetail
     func UpdateDocument(doc: DocumentUpdate) throws

@@ -43,25 +43,25 @@ public protocol DocumentDetail {
 
 
 public struct DocumentUpdate {
-    var docId: Int64
-    var unread: Bool? = nil
-    var marked: Bool? = nil
+    public var docId: Int64
+    public var unread: Bool? = nil
+    public var marked: Bool? = nil
 }
 
 public struct DocumentFilter {
-    var all: Bool? = nil
-    var parent: Int64? = nil
-    var source: String? = nil
-    var marked: Bool? = nil
-    var unread: Bool? = nil
-    var page: Pagination? = nil
-    var order: DocumentOrder? = nil
-    var orderDesc: Bool? = nil
+    public var all: Bool? = nil
+    public var parent: Int64? = nil
+    public var source: String? = nil
+    public var marked: Bool? = nil
+    public var unread: Bool? = nil
+    public var page: Pagination? = nil
+    public var order: DocumentOrder? = nil
+    public var orderDesc: Bool? = nil
 }
 
 public struct DocumentID {
-    var documentID: Int64
-    var entryID: Int64
+    public var documentID: Int64
+    public var entryID: Int64
 }
 
 public enum DocumentOrder {

@@ -9,6 +9,6 @@ import Foundation
 
 
 public struct Pagination {
-    var page: Int64
-    var pageSize: Int64
+    public var page: Int64
+    public var pageSize: Int64
 }

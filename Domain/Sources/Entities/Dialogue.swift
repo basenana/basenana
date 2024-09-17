@@ -32,5 +32,5 @@ public protocol RoomMessage {
 }
 
 public struct RoomOption {
-    var prompt: String
+    public var prompt: String
 }

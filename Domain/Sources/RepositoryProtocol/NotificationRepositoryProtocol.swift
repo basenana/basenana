@@ -9,7 +9,7 @@ import Foundation
 import Entities
 
 
-protocol NotificationRepositoryProtocol {
+public protocol NotificationRepositoryProtocol {
     func ListMessage(all: Bool) throws -> [NotificationMessage]
     func ReadMeesage(id: String) throws
 }

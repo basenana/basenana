@@ -9,13 +9,13 @@ import Foundation
 import Entities
 
 
-protocol DialogueRepositoryProtocol {
+public protocol DialogueRepositoryProtocol {
     func ListRoomes(entry: Int64) throws -> [Room]
-    func OpenRoome(entry: Int64, room: Int64, option: RoomOption) throws -> Room
-    func UpdateRoome(room: Int64, option: RoomOption) throws
-    func DeleteRoome(room: Int64) throws
-    func ClearRoome(room: Int64) throws
-    func ChatInRoome(room: Int64, message: String) throws -> RoomMessage
+    func OpenRoom(entry: Int64, room: Int64, option: RoomOption) throws -> Room
+    func UpdateRoom(room: Int64, option: RoomOption) throws
+    func DeleteRoom(room: Int64) throws
+    func ClearRoom(room: Int64) throws
+    func ChatInRoom(room: Int64, message: String, , handler: @escaping (RoomMessage, Bool) -> Void) throws
 }
 
 

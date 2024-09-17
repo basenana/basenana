@@ -9,18 +9,18 @@ import Foundation
 
 
 public struct QuickInbox {
-    var sourceType: SourceType
-    var fileType: FileType
-    var filename: String
+    public var sourceType: SourceType
+    public var fileType: FileType
+    public var filename: String
     
     // source is url
-    var url: String
+    public var url: String
     
     // source is raw
-    var data: Data
+    public var data: Data
 }
 
-enum FileType {
+public enum FileType {
     case Bookmark
     case Html
     case Webarchive

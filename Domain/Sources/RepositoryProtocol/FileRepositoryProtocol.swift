@@ -9,7 +9,7 @@ import Foundation
 import Entities
 
 
-protocol FileRepositoryProtocol {
+public protocol FileRepositoryProtocol {
     func WriteFile(entry: Int64, off: Int64, len: Int64, input: Stream) throws
     func ReadFile(entry: Int64, off: Int64, len: Int64) throws -> Stream
 }

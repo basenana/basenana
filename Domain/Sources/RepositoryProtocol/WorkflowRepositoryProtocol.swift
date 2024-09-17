@@ -9,7 +9,7 @@ import Foundation
 import Entities
 
 
-protocol WorkflowRepositoryProtocol {
+public protocol WorkflowRepositoryProtocol {
     func ListWorkflows() throws -> [Workflow]
     func ListWorkflowJobs(workflow: String) throws -> [WorkflowJob]
     func TriggerWorkflow(workflow: String, option: WorkflowJobOption) throws -> WorkflowJob

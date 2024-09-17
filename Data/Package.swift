@@ -7,23 +7,45 @@ let package = Package(
     name: "Data",
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library( name: "Data", targets: ["Data"]),
+        .library( name: "Repositories", targets: ["Repositories"]),
+        .library( name: "NetworkCore", targets: ["NetworkCore"]),
+        .library( name: "NetworkExtension", targets: ["NetworkExtension"]),
     ],
     dependencies: [
         .package(name: "Domain", path: "../Domain"),
+        .package(url: "https://github.com/grpc/grpc-swift", from: "1.23.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "Data",
+            name: "Repositories",
             dependencies: [
+                "NetworkCore",
+                "NetworkExtension",
                 .product(name: "Entities", package: "Domain"),
                 .product(name: "RepositoryProtocol", package: "Domain"),
             ]
         ),
+        .target(
+            name: "NetworkCore",
+            dependencies: [
+                .product(name: "GRPC", package: "grpc-swift"),
+//                .product(name: "SwiftProtobuf", package: "grpc-swift"),
+//                .product(name: "NIO", package: "grpc-swift"),
+//                .product(name: "NIOSSL", package: "grpc-swift"),
+//                .product(name: "NIOConcurrencyHelpers", package: "grpc-swift"),
+            ]
+        ),
+        .target(
+            name: "NetworkExtension",
+            dependencies: [
+                "NetworkCore",
+                .product(name: "Entities", package: "Domain"),
+            ]
+        ),
         .testTarget(
             name: "DataTests",
-            dependencies: ["Data"]),
+            dependencies: ["Repositories", "NetworkCore", "NetworkExtension"]),
     ]
 )

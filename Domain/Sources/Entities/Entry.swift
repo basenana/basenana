@@ -72,3 +72,7 @@ public struct EntryCreate {
 public struct EntryUpdate {
     
 }
+
+public struct ChangeParentOption{
+    
+}

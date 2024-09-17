@@ -9,7 +9,7 @@ import Foundation
 import Entities
 
 
-protocol EntryRepositoryProtocol {
+public protocol EntryRepositoryProtocol {
     // entries
     func GroupTree() throws -> Group
     func RootEntry() throws -> EntryDetail
@@ -19,7 +19,7 @@ protocol EntryRepositoryProtocol {
     func UpdateEntry(entry: EntryUpdate) throws -> EntryDetail
     func DeleteEntries(entrys: [Int64]) throws
     func ListGroupChildren(parent: Int64) throws -> [EntryInfo]
-    func ChangeParent() throws
+    func ChangeParent(entry: Int64, newParent: Int64, option: ChangeParentOption) throws
     
     // entry properties
     func AddProperty(entry: Int64, key: String, val: String) throws
