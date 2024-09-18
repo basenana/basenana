@@ -6,3 +6,9 @@
 //
 
 import Foundation
+import Entities
+
+
+public protocol DocumentUseCaseProtocol {
+    
+}

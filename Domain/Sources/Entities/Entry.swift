@@ -66,13 +66,45 @@ public protocol EntryProperty {
 
 
 public struct EntryCreate {
+    public var parent: Int64
+    public var name: String
+    public var kind: String
     
+    public var RSS: RSSConfig?
+
+}
+
+public struct RSSConfig {
+    public var feed: String
+    public var siteName: String
+    public var siteURL: String
+    public var fileType: FileType
 }
 
 public struct EntryUpdate {
-    
+    public var id: Int64
+    public var name: String?
 }
 
 public struct ChangeParentOption{
     
+}
+
+public struct EntryFilter {
+    public var parent: Int64
+    public var kind: String? = nil
+    public var groupOnly: Bool? = nil
+    public var fileOnly: Bool? = nil
+    public var page: Pagination? = nil
+    public var order: EntryOrder? = nil
+    public var orderDesc: Bool? = nil
+}
+
+public enum EntryOrder {
+    case name
+    case kind
+    case isGroup
+    case size
+    case createdAt
+    case modifiedAt
 }

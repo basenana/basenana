@@ -18,7 +18,7 @@ public protocol EntriesClientProtocol {
     func CreateEntry(entry: EntryCreate) throws -> APIEntryInfo
     func UpdateEntry(entry: EntryUpdate) throws -> APIEntryDetail
     func DeleteEntries(entrys: [Int64]) throws
-    func ListGroupChildren(parent: Int64) throws -> [APIEntryInfo]
+    func ListGroupChildren(filter: EntryFilter) throws -> [APIEntryInfo]
     func ChangeParent(entry: Int64, newParent: Int64, option: ChangeParentOption) throws
     
     // entry properties

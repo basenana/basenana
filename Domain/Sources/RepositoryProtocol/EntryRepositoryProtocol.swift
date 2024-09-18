@@ -18,7 +18,7 @@ public protocol EntryRepositoryProtocol {
     func CreateEntry(entry: EntryCreate) throws -> EntryInfo
     func UpdateEntry(entry: EntryUpdate) throws -> EntryDetail
     func DeleteEntries(entrys: [Int64]) throws
-    func ListGroupChildren(parent: Int64) throws -> [EntryInfo]
+    func ListGroupChildren(filter: EntryFilter) throws -> [EntryInfo]
     func ChangeParent(entry: Int64, newParent: Int64, option: ChangeParentOption) throws
     
     // entry properties

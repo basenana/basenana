@@ -1,5 +1,5 @@
 //
-//  DialogueUseCaseProtocol.swift
+//  EntryTreeUseCaseProtocol.swift
 //
 //
 //  Created by Hypo on 2024/9/13.
@@ -9,6 +9,6 @@ import Foundation
 import Entities
 
 
-public protocol DialogueUseCaseProtocol {
+public protocol EntryTreeUseCaseProtocol {
     
 }

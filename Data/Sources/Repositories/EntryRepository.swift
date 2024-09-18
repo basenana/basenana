@@ -47,8 +47,8 @@ public class EntryRepository: EntryRepositoryProtocol {
         return try core.DeleteEntries(entrys: entrys)
     }
     
-    public func ListGroupChildren(parent: Int64) throws -> [any Entities.EntryInfo] {
-        return try core.ListGroupChildren(parent: parent)
+    public func ListGroupChildren(filter: EntryFilter) throws -> [any Entities.EntryInfo] {
+        return try core.ListGroupChildren(filter: filter)
     }
     
     public func ChangeParent(entry: Int64, newParent: Int64, option: ChangeParentOption) throws {
