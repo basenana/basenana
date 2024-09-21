@@ -64,7 +64,6 @@
 		3F4A78C82BC99D160035F90F /* SidebarGroupsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78C72BC99D160035F90F /* SidebarGroupsView.swift */; };
 		3F4A78CA2BC99D600035F90F /* SidebarButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78C92BC99D600035F90F /* SidebarButtonView.swift */; };
 		3F4A78CF2BCC2A660035F90F /* FsClientSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78CE2BCC2A660035F90F /* FsClientSet.swift */; };
-		3F4A78D42BCD82290035F90F /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4A78D32BCD82290035F90F /* GRDB */; };
 		3F4A78DB2BCF7FFB0035F90F /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4A78DA2BCF7FFB0035F90F /* SwiftyBeaver */; };
 		3F4A78DD2BCF80080035F90F /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78DC2BCF80080035F90F /* Logging.swift */; };
 		3F4A78E12BD299110035F90F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78E02BD299110035F90F /* SettingsView.swift */; };
@@ -160,7 +159,6 @@
 		ED0CBB442BF656B90056E6AA /* GRPCReflectionService in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB162BF656B90056E6AA /* GRPCReflectionService */; };
 		ED0CBB452BF656B90056E6AA /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB1B2BF656B90056E6AA /* SwiftyBeaver */; };
 		ED0CBB462BF656B90056E6AA /* _GRPCCore in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB172BF656B90056E6AA /* _GRPCCore */; };
-		ED0CBB472BF656B90056E6AA /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB192BF656B90056E6AA /* GRDB */; };
 		ED0CBB482BF656B90056E6AA /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB1D2BF656B90056E6AA /* SwiftSoup */; };
 		ED0CBB492BF656B90056E6AA /* GRPC in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB152BF656B90056E6AA /* GRPC */; };
 		ED0CBB4A2BF656B90056E6AA /* CGRPCZlib in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB132BF656B90056E6AA /* CGRPCZlib */; };
@@ -310,7 +308,6 @@
 				3F4A78DB2BCF7FFB0035F90F /* SwiftyBeaver in Frameworks */,
 				3F19E20C2C140A6C00B84293 /* Reeeed in Frameworks */,
 				3FB782472BC1A82700327191 /* _GRPCCore in Frameworks */,
-				3F4A78D42BCD82290035F90F /* GRDB in Frameworks */,
 				3F7444B72BE3D1B000CC9C1E /* SwiftSoup in Frameworks */,
 				3FB782432BC1A82700327191 /* GRPC in Frameworks */,
 				3FB2AC762C2AFD80007E755B /* FeedKit in Frameworks */,
@@ -342,7 +339,6 @@
 				ED0CBB452BF656B90056E6AA /* SwiftyBeaver in Frameworks */,
 				3F19E2092C14086700B84293 /* Reeeed in Frameworks */,
 				ED0CBB462BF656B90056E6AA /* _GRPCCore in Frameworks */,
-				ED0CBB472BF656B90056E6AA /* GRDB in Frameworks */,
 				ED0CBB482BF656B90056E6AA /* SwiftSoup in Frameworks */,
 				ED0CBB492BF656B90056E6AA /* GRPC in Frameworks */,
 				3FCEC3CE2C314D41002D8662 /* FeedKit in Frameworks */,
@@ -662,7 +658,6 @@
 				3FB782442BC1A82700327191 /* GRPCReflectionService */,
 				3FB782462BC1A82700327191 /* _GRPCCore */,
 				3FB782482BC1A82700327191 /* protoc-gen-grpc-swift */,
-				3F4A78D32BCD82290035F90F /* GRDB */,
 				3F4A78DA2BCF7FFB0035F90F /* SwiftyBeaver */,
 				3F7444B62BE3D1B000CC9C1E /* SwiftSoup */,
 				3F19E20B2C140A6C00B84293 /* Reeeed */,
@@ -773,7 +768,6 @@
 			mainGroup = 3F1BBE102B8E147F005D533F;
 			packageReferences = (
 				3FB7823F2BC1A82700327191 /* XCRemoteSwiftPackageReference "grpc-swift" */,
-				3F4A78D22BCD82290035F90F /* XCRemoteSwiftPackageReference "GRDB.swift" */,
 				3F4A78D92BCF7FFB0035F90F /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
 				3FDC2EA52BE3CC2C00344DF8 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 				3F19E2072C14086700B84293 /* XCRemoteSwiftPackageReference "reeeed" */,
@@ -1446,14 +1440,6 @@
 				minimumVersion = 1.0.1;
 			};
 		};
-		3F4A78D22BCD82290035F90F /* XCRemoteSwiftPackageReference "GRDB.swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/groue/GRDB.swift.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.0.0;
-			};
-		};
 		3F4A78D92BCF7FFB0035F90F /* XCRemoteSwiftPackageReference "SwiftyBeaver" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SwiftyBeaver/SwiftyBeaver.git";
@@ -1538,11 +1524,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3F19E2072C14086700B84293 /* XCRemoteSwiftPackageReference "reeeed" */;
 			productName = Reeeed;
-		};
-		3F4A78D32BCD82290035F90F /* GRDB */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3F4A78D22BCD82290035F90F /* XCRemoteSwiftPackageReference "GRDB.swift" */;
-			productName = GRDB;
 		};
 		3F4A78DA2BCF7FFB0035F90F /* SwiftyBeaver */ = {
 			isa = XCSwiftPackageProductDependency;

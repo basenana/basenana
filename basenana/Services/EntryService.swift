@@ -9,7 +9,6 @@ import Foundation
 import SwiftData
 import SwiftUI
 import GRPC
-import GRDB
 
 
 extension Service {

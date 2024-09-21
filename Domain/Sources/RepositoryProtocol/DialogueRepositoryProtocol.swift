@@ -15,7 +15,7 @@ public protocol DialogueRepositoryProtocol {
     func UpdateRoom(room: Int64, option: RoomOption) throws
     func DeleteRoom(room: Int64) throws
     func ClearRoom(room: Int64) throws
-    func ChatInRoom(room: Int64, message: String, , handler: @escaping (RoomMessage, Bool) -> Void) throws
+    func ChatInRoom(room: Int64, message: String, handler: @escaping (RoomMessage, Bool) -> Void) throws
 }
 
 

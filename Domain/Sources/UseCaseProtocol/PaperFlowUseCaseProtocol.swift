@@ -10,5 +10,6 @@ import Entities
 
 
 public protocol PaperFlowUseCaseProtocol {
-    
+    func listUnreadDocuments(page: Pagination) throws -> [DocumentInfo]
+    func listMarkedDocuments(page: Pagination) throws -> [DocumentInfo]
 }

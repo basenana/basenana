@@ -7,7 +7,6 @@
 
 import SwiftData
 import Foundation
-import GRDB
 
 struct DocumentInfoModel: Codable, Identifiable, Hashable{
     var id: Int64

@@ -7,7 +7,6 @@
 
 import SwiftData
 import Foundation
-import GRDB
 
 let rootEntryID: Int64 = 1
 let inboxEntryID: Int64 = 2

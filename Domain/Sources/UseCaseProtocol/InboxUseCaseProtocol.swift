@@ -10,5 +10,5 @@ import Entities
 
 
 public protocol InboxUseCaseProtocol {
-    
+    func quickInbox(url: String, fileName: String, fileType: FileType) throws
 }

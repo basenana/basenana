@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftData
-import GRDB
 
 struct RoomModel {
     var id: Int64?

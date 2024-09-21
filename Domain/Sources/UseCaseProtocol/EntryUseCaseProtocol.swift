@@ -10,5 +10,7 @@ import Entities
 
 
 public protocol EntryUseCaseProtocol {
-    
+    func getEntryDetails(entry: Int64) throws -> EntryDetail
+    func renameEntry(entry: Int64, newName: String) throws
+    func deleteEntry(entry: Int64) throws
 }

@@ -7,7 +7,6 @@
 
 import SwiftData
 import Foundation
-import GRDB
 
 struct EntryPropertyModel: Codable {
     var key: String

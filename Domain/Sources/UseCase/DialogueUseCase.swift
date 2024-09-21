@@ -5,3 +5,7 @@
 //  Created by Hypo on 2024/9/18.
 //
 
+
+public class DialogueUseCase {
+    
+}
