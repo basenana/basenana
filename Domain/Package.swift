@@ -11,6 +11,9 @@ let package = Package(
             name: "Entities",
             targets: ["Entities"]),
         .library(
+            name: "AppState",
+            targets: ["AppState"]),
+        .library(
             name: "RepositoryProtocol",
             targets: ["RepositoryProtocol"]),
         .library(
@@ -31,6 +34,10 @@ let package = Package(
             dependencies: []
         ),
         .target(
+            name: "AppState",
+            dependencies: ["Entities"]
+        ),
+        .target(
             name: "RepositoryProtocol",
             dependencies: ["Entities"]
         ),
@@ -44,7 +51,7 @@ let package = Package(
         ),
         .target(
             name: "DomainTestHelpers",
-            dependencies: ["Entities", "RepositoryProtocol", "UseCaseProtocol"]
+            dependencies: ["Entities", "RepositoryProtocol", "UseCase"]
         ),
         .testTarget(
             name: "DomainTests",

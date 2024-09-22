@@ -6,6 +6,9 @@
 //
 
 
-public class DialogueUseCase {
+import Entities
+import UseCaseProtocol
+
+public class DialogueUseCase: DialogueUseCaseProtocol {
     
 }

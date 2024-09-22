@@ -61,6 +61,8 @@
 		3F317C4C2C24701000F42D37 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F317C4A2C24701000F42D37 /* Extension.swift */; };
 		3F317C4E2C2476C300F42D37 /* StackContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F317C4D2C2476C300F42D37 /* StackContentView.swift */; };
 		3F317C4F2C2476C300F42D37 /* StackContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F317C4D2C2476C300F42D37 /* StackContentView.swift */; };
+		3F3711DF2CA01BFA00098460 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB192BF656B90056E6AA /* GRDB */; };
+		3F3711E22CA022D100098460 /* TreeListView in Frameworks */ = {isa = PBXBuildFile; productRef = 3F3711E12CA022D100098460 /* TreeListView */; };
 		3F4A78C82BC99D160035F90F /* SidebarGroupsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78C72BC99D160035F90F /* SidebarGroupsView.swift */; };
 		3F4A78CA2BC99D600035F90F /* SidebarButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78C92BC99D600035F90F /* SidebarButtonView.swift */; };
 		3F4A78CF2BCC2A660035F90F /* FsClientSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78CE2BCC2A660035F90F /* FsClientSet.swift */; };
@@ -262,10 +264,8 @@
 		3FC54EE12C84A22E00803A1D /* readability_initialization.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = readability_initialization.js; sourceTree = "<group>"; };
 		3FC54EE22C84A22E00803A1D /* Readability.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = Readability.js; sourceTree = "<group>"; };
 		3FC54EE32C84A22E00803A1D /* readability_images.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = readability_images.js; sourceTree = "<group>"; };
-		3FC54EEB2C94863F00803A1D /* AppState */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = AppState; sourceTree = "<group>"; };
 		3FC54EF22C94870C00803A1D /* Styleguide */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Styleguide; sourceTree = "<group>"; };
 		3FC54EF32C94874400803A1D /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
-		3FC54EFE2C948C6300803A1D /* Tree */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Tree; sourceTree = "<group>"; };
 		3FC54EFF2C948C8100803A1D /* Inbox */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Inbox; sourceTree = "<group>"; };
 		3FC54F002C948C9200803A1D /* Workflow */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Workflow; sourceTree = "<group>"; };
 		3FC54F012C948CB100803A1D /* Dialogue */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Dialogue; sourceTree = "<group>"; };
@@ -308,6 +308,7 @@
 				3F4A78DB2BCF7FFB0035F90F /* SwiftyBeaver in Frameworks */,
 				3F19E20C2C140A6C00B84293 /* Reeeed in Frameworks */,
 				3FB782472BC1A82700327191 /* _GRPCCore in Frameworks */,
+				3F3711E22CA022D100098460 /* TreeListView in Frameworks */,
 				3F7444B72BE3D1B000CC9C1E /* SwiftSoup in Frameworks */,
 				3FB782432BC1A82700327191 /* GRPC in Frameworks */,
 				3FB2AC762C2AFD80007E755B /* FeedKit in Frameworks */,
@@ -334,6 +335,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F3711DF2CA01BFA00098460 /* GRDB in Frameworks */,
 				ED0CBB432BF656B90056E6AA /* protoc-gen-grpc-swift in Frameworks */,
 				ED0CBB442BF656B90056E6AA /* GRPCReflectionService in Frameworks */,
 				ED0CBB452BF656B90056E6AA /* SwiftyBeaver in Frameworks */,
@@ -362,14 +364,12 @@
 		3F1BBE102B8E147F005D533F = {
 			isa = PBXGroup;
 			children = (
-				3FC54EEB2C94863F00803A1D /* AppState */,
 				3FC54F062C948FB900803A1D /* Entry */,
 				3FC54F022C948CF500803A1D /* Document */,
 				3FC54F072C948FDB00803A1D /* Search */,
 				3FC54F012C948CB100803A1D /* Dialogue */,
 				3FC54F002C948C9200803A1D /* Workflow */,
 				3FC54EFF2C948C8100803A1D /* Inbox */,
-				3FC54EFE2C948C6300803A1D /* Tree */,
 				3FC54F0A2C94902100803A1D /* Job */,
 				3FC54F0D2C94904600803A1D /* Packer */,
 				3FC54F082C948FF000803A1D /* Notify */,
@@ -377,6 +377,7 @@
 				3FC54F032C948E4C00803A1D /* Data */,
 				3FC54EF22C94870C00803A1D /* Styleguide */,
 				3F1BBE1B2B8E147F005D533F /* basenana */,
+				3F3711E02CA022D100098460 /* Frameworks */,
 				3F1BBE1A2B8E147F005D533F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -534,6 +535,13 @@
 			path = Main;
 			sourceTree = "<group>";
 		};
+		3F3711E02CA022D100098460 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		3F4A78C62BC99CE90035F90F /* Sidebar */ = {
 			isa = PBXGroup;
 			children = (
@@ -663,6 +671,7 @@
 				3F19E20B2C140A6C00B84293 /* Reeeed */,
 				3FA180132C157A8A004176EA /* WebArchiver */,
 				3FB2AC752C2AFD80007E755B /* FeedKit */,
+				3F3711E12CA022D100098460 /* TreeListView */,
 			);
 			productName = basenana;
 			productReference = 3F1BBE192B8E147F005D533F /* Basenana.app */;
@@ -1524,6 +1533,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3F19E2072C14086700B84293 /* XCRemoteSwiftPackageReference "reeeed" */;
 			productName = Reeeed;
+		};
+		3F3711E12CA022D100098460 /* TreeListView */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TreeListView;
 		};
 		3F4A78DA2BCF7FFB0035F90F /* SwiftyBeaver */ = {
 			isa = XCSwiftPackageProductDependency;

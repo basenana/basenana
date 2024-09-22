@@ -17,3 +17,8 @@ public enum RepositoryError: Error {
     case streamBroken
     case loginFailed(Error)
 }
+
+
+public enum UseCaseError: Error {
+    case unimplement
+}
