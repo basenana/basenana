@@ -1,21 +1,21 @@
 //
-//  Helper.swift
-//  Entry
+//  IDHelper.swift
+//  Domain
 //
 //  Created by Hypo on 2024/9/22.
 //
 
 
-struct IDHelper {
+public struct IDHelper {
     var kind: String
     var id: Int64
     
-    init(kind: String, id: Int64) {
+    public init(kind: String, id: Int64) {
         self.kind = kind
         self.id = id
     }
     
-    init(encodedStr: String){
+    public init(encodedStr: String){
         let parts = encodedStr.components(separatedBy: ".")
         self.kind = parts[0]
         self.id = 0
@@ -24,12 +24,12 @@ struct IDHelper {
         }
     }
     
-    func Encode() -> String {
+    public func Encode() -> String {
         return "\(kind).\(id)"
     }
 }
 
-func parseIDInfo(entryInfos: [String]) -> [Int64] {
+public func parseIDInfo(entryInfos: [String]) -> [Int64] {
     var entryIDList: [Int64] = []
     for entryInfo in entryInfos {
         let idInfo = IDHelper(encodedStr: entryInfo)

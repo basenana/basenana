@@ -18,15 +18,18 @@ public class EntryUseCase: EntryUseCaseProtocol {
     }
     
     public func getEntryDetails(entry: Int64) throws -> any Entities.EntryDetail {
-        throw UseCaseError.unimplement
+        return try entryRepo.GetEntryDetail(entry: entry)
     }
     
     public func renameEntry(entry: Int64, newName: String) throws {
-        throw UseCaseError.unimplement
+        let en = try getEntryDetails(entry: entry)
+        var opt = ChangeParentOption()
+        opt.newName = newName
+        return try entryRepo.ChangeParent(entry: en.id, newParent: en.parent, option: opt)
     }
     
     public func deleteEntry(entry: Int64) throws {
-        throw UseCaseError.unimplement
+        try entryRepo.DeleteEntries(entrys: [entry])
     }
     
 }

@@ -87,7 +87,8 @@ public struct EntryUpdate {
 }
 
 public struct ChangeParentOption{
-    
+    public var newName: String = ""
+    public init(){ }
 }
 
 public struct EntryFilter {
@@ -98,6 +99,10 @@ public struct EntryFilter {
     public var page: Pagination? = nil
     public var order: EntryOrder? = nil
     public var orderDesc: Bool? = nil
+    
+    public init(parent: Int64) {
+        self.parent = parent
+    }
 }
 
 public enum EntryOrder {

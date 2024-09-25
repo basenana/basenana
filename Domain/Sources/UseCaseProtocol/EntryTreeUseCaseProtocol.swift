@@ -11,7 +11,7 @@ import Entities
 
 public protocol EntryTreeUseCaseProtocol {
     func getTreeRoot() throws -> Group
-    func listChildren() throws -> [EntryInfo]
-    func changeParent(entryID: Int64, newParentID: Int64) throws
-    func deleteEntries(entrys: [Int64]) throws
+    func listChildren(entry: Int64) throws -> [EntryInfo]
+    func changeParent(entry: Int64, newParent: Int64) throws
+    func deleteEntries(entries: [Int64]) throws
 }

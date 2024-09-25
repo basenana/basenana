@@ -152,6 +152,7 @@ public class EntriesClient: EntriesClientProtocol {
         var req = Api_V1_ChangeParentRequest()
         req.entryID = entry
         req.newParentID = newParent
+        req.newName = option.newName
         let _ = try entryClient.changeParent(req, callOptions: defaultCallOptions).response.wait()
     }
     

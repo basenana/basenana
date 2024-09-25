@@ -11,13 +11,15 @@ import Entities
 import UseCaseProtocol
 
 
+@available(macOS 14.0, *)
+@Observable
 @MainActor
-class TreeViewModel: Observable {
+class TreeViewModel {
     
-    public var selectedGroup: Entities.Group? = nil
-    public var store: StateStore
-    
-    private var entryTreeUserCase: EntryTreeUseCaseProtocol
+    var selectedGroup: Entities.Group? = nil
+    var store: StateStore
+
+    var entryTreeUserCase: EntryTreeUseCaseProtocol
     
     init(store: StateStore, entryTreeUserCase: EntryTreeUseCaseProtocol) {
         self.store = store
@@ -25,12 +27,21 @@ class TreeViewModel: Observable {
     }
     
     func resetGroupTree() {
-        
+        print("[resetGroupTree] load and reset group root")
+        do {
+            let root = try entryTreeUserCase.getTreeRoot()
+            guard let fc = root.children else {
+                return
+            }
+            
+            self.store.groupTree.reset(groups: fc)
+        } catch {
+            print("[resetGroupTree] load group root failed \(error)")
+            return
+        }
     }
     
     func moveEntriesToGroup(entries: [Int64], newParent: Int64) {
         
     }
 }
-
-

@@ -20,21 +20,23 @@ struct TreeListView: View {
     }
     
     var body: some View {
-        OutlineGroup(viewModel.store.groupTree.children ?? [], children: \.children){ child in
-            NavigationLink(value: Destination.groupList(group: child.id), label: {
-                HStack{
-                    Image(systemName: "folder")
-                    Text("\(child.groupName)")
-                        .multilineTextAlignment(.leading)
+        VStack{
+            OutlineGroup(viewModel.store.groupTree.children ?? [], children: \.children){ child in
+                NavigationLink(value: Destination.groupList(group: child.id), label: {
+                    HStack{
+                        Image(systemName: "folder")
+                        Text("\(child.groupName)")
+                            .multilineTextAlignment(.leading)
+                    }
+                    .padding(.vertical, 4)
+                })
+                .id(child.id)
+                .dropDestination(for: String.self){ entryIDInfos, localtion in
+                    viewModel.moveEntriesToGroup(entries: parseIDInfo(entryInfos: entryIDInfos), newParent: child.id)
+                    return false
                 }
-                .padding(.vertical, 4)
-            })
-            .id(child.id)
-            .dropDestination(for: String.self){ entryIDInfos, localtion in
-                viewModel.moveEntriesToGroup(entries: parseIDInfo(entryInfos: entryIDInfos), newParent: child.id)
-                return false
+                .draggable(IDHelper(kind: "group", id: child.id).Encode())
             }
-            .draggable(IDHelper(kind: "group", id: child.id).Encode())
         }
         .task {
             viewModel.resetGroupTree()
@@ -53,7 +55,9 @@ import DomainTestHelpers
 
 #Preview {
     if #available(macOS 14.0, *) {
-        TreeListView(viewModel: TreeViewModel(store: StateStore.empty, entryTreeUserCase: MockEntryTreeUseCase()))
+        List{
+            TreeListView(viewModel: TreeViewModel(store: StateStore.empty, entryTreeUserCase: MockEntryTreeUseCase()))
+        }
     }
 }
 

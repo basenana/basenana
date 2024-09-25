@@ -9,5 +9,5 @@
 import UseCase
 
 public func MockEntryTreeUseCase() -> EntryTreeUseCase {
-    return EntryTreeUseCase(entryRepo: MockEntryRepository())
+    return EntryTreeUseCase(entryRepo: MockEntryRepository.shared)
 }

@@ -11,6 +11,7 @@ import RepositoryProtocol
 import UseCaseProtocol
 
 public class EntryTreeUseCase: EntryTreeUseCaseProtocol {
+    
     private var entryRepo: EntryRepositoryProtocol
     
     public init(entryRepo: EntryRepositoryProtocol) {
@@ -18,18 +19,19 @@ public class EntryTreeUseCase: EntryTreeUseCaseProtocol {
     }
     
     public func getTreeRoot() throws -> any Entities.Group {
-        throw UseCaseError.unimplement
+        return try entryRepo.GroupTree()
     }
     
-    public func listChildren() throws -> [any Entities.EntryInfo] {
-        throw UseCaseError.unimplement
+    public func listChildren(entry: Int64) throws -> [any Entities.EntryInfo] {
+        return try entryRepo.ListGroupChildren(filter: EntryFilter(parent: entry))
     }
     
-    public func changeParent(entryID: Int64, newParentID: Int64) throws {
-        throw UseCaseError.unimplement
+    public func changeParent(entry: Int64, newParent: Int64) throws {
+        return try entryRepo.ChangeParent(entry: entry, newParent: newParent, option: ChangeParentOption())
     }
     
-    public func deleteEntries(entrys: [Int64]) throws {
-        throw UseCaseError.unimplement
+    public func deleteEntries(entries: [Int64]) throws {
+        return try entryRepo.DeleteEntries(entrys: entries)
     }
+    
 }

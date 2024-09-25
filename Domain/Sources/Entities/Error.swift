@@ -14,6 +14,7 @@ public enum RepositoryError: Error {
     case invalidPort
     case invalidAccessKey
     case invalidResourceID
+    case notFound
     case streamBroken
     case loginFailed(Error)
 }

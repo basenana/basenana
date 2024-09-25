@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(macOS 14.0, *)
 public class StateStore: Observable {
     public static var empty = StateStore()
     

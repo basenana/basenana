@@ -275,7 +275,6 @@
 		3FC54F072C948FDB00803A1D /* Search */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Search; sourceTree = "<group>"; };
 		3FC54F082C948FF000803A1D /* Notify */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Notify; sourceTree = "<group>"; };
 		3FC54F0A2C94902100803A1D /* Job */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Job; sourceTree = "<group>"; };
-		3FC54F0D2C94904600803A1D /* Packer */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Packer; sourceTree = "<group>"; };
 		3FCEC3CF2C319142002D8662 /* WorkflowJobView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowJobView.swift; sourceTree = "<group>"; };
 		3FDC2EA22BDCEEB200344DF8 /* SomeHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SomeHelpers.swift; sourceTree = "<group>"; };
 		3FDC2EA62BE3CC8C00344DF8 /* HTMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLParser.swift; sourceTree = "<group>"; };
@@ -371,7 +370,6 @@
 				3FC54F002C948C9200803A1D /* Workflow */,
 				3FC54EFF2C948C8100803A1D /* Inbox */,
 				3FC54F0A2C94902100803A1D /* Job */,
-				3FC54F0D2C94904600803A1D /* Packer */,
 				3FC54F082C948FF000803A1D /* Notify */,
 				3FC54EF32C94874400803A1D /* Domain */,
 				3FC54F032C948E4C00803A1D /* Data */,
