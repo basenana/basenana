@@ -57,7 +57,6 @@ public func isVisitable(en: EntryDetail) -> Bool{
     return !en.name.starts(with: ".")
 }
 
-
 public protocol EntryProperty {
     var key: String { get }
     var value : String { get }

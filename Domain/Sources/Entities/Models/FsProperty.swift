@@ -7,9 +7,11 @@
 
 import Foundation
 
+public struct Property {
+    public static let WebSiteName     = "org.basenana.web.site_name"
+    public static let WebSiteURL      = "org.basenana.web.site_url"
+    public static let WebPageURL      = "org.basenana.web.url"
+    public static let WebPageUpdateAt = "org.basenana.web.updated_at"
+    public static let WebPageTitle    = "org.basenana.web.title"
+}
 
-let PropertyWebSiteName     = "org.basenana.web.site_name"
-let PropertyWebSiteURL      = "org.basenana.web.site_url"
-let PropertyWebPageURL      = "org.basenana.web.url"
-let PropertyWebPageUpdateAt = "org.basenana.web.updated_at"
-let PropertyWebPageTitle    = "org.basenana.web.title"

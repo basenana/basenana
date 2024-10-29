@@ -23,6 +23,9 @@ let package = Package(
             name: "UseCase",
             targets: ["UseCase"]),
         .library(
+            name: "Functions",
+            targets: ["Functions"]),
+        .library(
             name: "DomainTestHelpers",
             targets: ["DomainTestHelpers"]),
     ],
@@ -48,6 +51,10 @@ let package = Package(
         .target(
             name: "UseCase",
             dependencies: ["RepositoryProtocol", "UseCaseProtocol"]
+        ),
+        .target(
+            name: "Functions",
+            dependencies: ["Entities"]
         ),
         .target(
             name: "DomainTestHelpers",

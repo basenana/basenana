@@ -63,6 +63,7 @@
 		3F317C4F2C2476C300F42D37 /* StackContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F317C4D2C2476C300F42D37 /* StackContentView.swift */; };
 		3F3711DF2CA01BFA00098460 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB192BF656B90056E6AA /* GRDB */; };
 		3F3711E22CA022D100098460 /* TreeListView in Frameworks */ = {isa = PBXBuildFile; productRef = 3F3711E12CA022D100098460 /* TreeListView */; };
+		3F39E95C2CBD5F710096824E /* MenuView in Frameworks */ = {isa = PBXBuildFile; productRef = 3F39E95B2CBD5F710096824E /* MenuView */; };
 		3F4A78C82BC99D160035F90F /* SidebarGroupsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78C72BC99D160035F90F /* SidebarGroupsView.swift */; };
 		3F4A78CA2BC99D600035F90F /* SidebarButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78C92BC99D600035F90F /* SidebarButtonView.swift */; };
 		3F4A78CF2BCC2A660035F90F /* FsClientSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78CE2BCC2A660035F90F /* FsClientSet.swift */; };
@@ -113,9 +114,7 @@
 		3FC54EE72C84A22E00803A1D /* Readability.js in Resources */ = {isa = PBXBuildFile; fileRef = 3FC54EE22C84A22E00803A1D /* Readability.js */; };
 		3FC54EE82C84A22E00803A1D /* readability_images.js in Resources */ = {isa = PBXBuildFile; fileRef = 3FC54EE32C84A22E00803A1D /* readability_images.js */; };
 		3FC54EE92C84A22E00803A1D /* readability_images.js in Resources */ = {isa = PBXBuildFile; fileRef = 3FC54EE32C84A22E00803A1D /* readability_images.js */; };
-		3FC54F042C948E4C00803A1D /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 3FC54F032C948E4C00803A1D /* Data */; };
 		3FC54F052C948E4C00803A1D /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 3FC54F032C948E4C00803A1D /* Data */; };
-		3FC54F0B2C94902100803A1D /* Job in Resources */ = {isa = PBXBuildFile; fileRef = 3FC54F0A2C94902100803A1D /* Job */; };
 		3FC54F0C2C94902100803A1D /* Job in Resources */ = {isa = PBXBuildFile; fileRef = 3FC54F0A2C94902100803A1D /* Job */; };
 		3FCE74B32C27D6C300C4E783 /* EnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F317C1C2C231ABB00F42D37 /* EnvironmentKey.swift */; };
 		3FCEC3CC2C314D0B002D8662 /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F071B962C299AC100F19C63 /* SearchModel.swift */; };
@@ -306,6 +305,7 @@
 				3FB782452BC1A82700327191 /* GRPCReflectionService in Frameworks */,
 				3F4A78DB2BCF7FFB0035F90F /* SwiftyBeaver in Frameworks */,
 				3F19E20C2C140A6C00B84293 /* Reeeed in Frameworks */,
+				3F39E95C2CBD5F710096824E /* MenuView in Frameworks */,
 				3FB782472BC1A82700327191 /* _GRPCCore in Frameworks */,
 				3F3711E22CA022D100098460 /* TreeListView in Frameworks */,
 				3F7444B72BE3D1B000CC9C1E /* SwiftSoup in Frameworks */,
@@ -670,6 +670,7 @@
 				3FA180132C157A8A004176EA /* WebArchiver */,
 				3FB2AC752C2AFD80007E755B /* FeedKit */,
 				3F3711E12CA022D100098460 /* TreeListView */,
+				3F39E95B2CBD5F710096824E /* MenuView */,
 			);
 			productName = basenana;
 			productReference = 3F1BBE192B8E147F005D533F /* Basenana.app */;
@@ -800,8 +801,6 @@
 			files = (
 				3FC54EE82C84A22E00803A1D /* readability_images.js in Resources */,
 				3F1BBE272B8E1480005D533F /* Preview Assets.xcassets in Resources */,
-				3FC54F0B2C94902100803A1D /* Job in Resources */,
-				3FC54F042C948E4C00803A1D /* Data in Resources */,
 				3FC54EE42C84A22E00803A1D /* readability_initialization.js in Resources */,
 				3F1BBE232B8E1480005D533F /* Assets.xcassets in Resources */,
 				3FC54EE62C84A22E00803A1D /* Readability.js in Resources */,
@@ -1535,6 +1534,10 @@
 		3F3711E12CA022D100098460 /* TreeListView */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TreeListView;
+		};
+		3F39E95B2CBD5F710096824E /* MenuView */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MenuView;
 		};
 		3F4A78DA2BCF7FFB0035F90F /* SwiftyBeaver */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -9,17 +9,18 @@ import SwiftUI
 import Entities
 import AppState
 import SwiftData
+import MenuView
 
 
 @available(macOS 14.0, *)
 struct TreeListView: View {
     @State private var viewModel: TreeViewModel
     
-    init(viewModel: TreeViewModel) {
+    public init(viewModel: TreeViewModel) {
         self.viewModel = viewModel
     }
     
-    var body: some View {
+    public var body: some View {
         VStack{
             OutlineGroup(viewModel.store.groupTree.children ?? [], children: \.children){ child in
                 NavigationLink(value: Destination.groupList(group: child.id), label: {
@@ -41,9 +42,10 @@ struct TreeListView: View {
         .task {
             viewModel.resetGroupTree()
         }
-        //        .contextMenu{
-        //                        MenuView()
-        //        }
+        .contextMenu{
+            // TODO: set selected entry
+            MenuView(viewModel: MenuViewModel(store: viewModel.store, entry: nil))
+        }
     }
 }
 

@@ -11,9 +11,16 @@ let package = Package(
         .library(
             name: "TreeListView",
             targets: ["TreeListView"]),
+        .library(
+            name: "MenuView",
+            targets: ["MenuView"]),
+        .library(
+            name: "GroupTableView",
+            targets: ["GroupTableView"]),
     ],
     dependencies: [
         .package(name: "Domain", path: "../Domain"),
+        .package(name: "Styleguide", path: "../Styleguide"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -21,6 +28,7 @@ let package = Package(
         .target(
             name: "TreeListView",
             dependencies: [
+                "MenuView",
                 .product(name: "Entities", package: "Domain"),
                 .product(name: "AppState", package: "Domain"),
                 .product(name: "UseCaseProtocol", package: "Domain"),
@@ -29,7 +37,24 @@ let package = Package(
         ),
         .target(
             name: "MenuView",
-            dependencies: []
+            dependencies: [
+                .product(name: "Entities", package: "Domain"),
+                .product(name: "AppState", package: "Domain"),
+                .product(name: "Functions", package: "Domain"),
+                .product(name: "UseCaseProtocol", package: "Domain"),
+                .product(name: "DomainTestHelpers", package: "Domain"),
+                .product(name: "Styleguide", package: "Styleguide"),
+            ]
+        ),
+        .target(
+            name: "GroupTableView",
+            dependencies: [
+                "MenuView",
+                .product(name: "Entities", package: "Domain"),
+                .product(name: "AppState", package: "Domain"),
+                .product(name: "UseCaseProtocol", package: "Domain"),
+                .product(name: "DomainTestHelpers", package: "Domain"),
+            ]
         ),
         .testTarget(
             name: "EntryTests",
