@@ -46,6 +46,10 @@ public struct DocumentUpdate {
     public var docId: Int64
     public var unread: Bool? = nil
     public var marked: Bool? = nil
+    
+    public init(docId: Int64) {
+        self.docId = docId
+    }
 }
 
 public struct DocumentFilter {
@@ -57,11 +61,23 @@ public struct DocumentFilter {
     public var page: Pagination? = nil
     public var order: DocumentOrder? = nil
     public var orderDesc: Bool? = nil
+    
+    public init(){ }
 }
 
 public struct DocumentID {
     public var documentID: Int64
     public var entryID: Int64
+    
+    public init(documentID: Int64) {
+        self.documentID = documentID
+        self.entryID = 0
+    }
+    
+    public init(entryID: Int64) {
+        self.entryID = entryID
+        self.documentID = 0
+    }
 }
 
 public enum DocumentOrder {

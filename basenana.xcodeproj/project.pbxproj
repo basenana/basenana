@@ -19,6 +19,7 @@
 		3F071BA72C29B3CE00F19C63 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F071BA62C29B3CE00F19C63 /* Style.swift */; };
 		3F071BA82C29B3CE00F19C63 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F071BA62C29B3CE00F19C63 /* Style.swift */; };
 		3F0AEC762BA48EC7000DA928 /* GroupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEC752BA48EC7000DA928 /* GroupService.swift */; };
+		3F0F62052CEB7A26006B00E3 /* DocumentListView in Frameworks */ = {isa = PBXBuildFile; productRef = 3F0F62042CEB7A26006B00E3 /* DocumentListView */; };
 		3F19E2092C14086700B84293 /* Reeeed in Frameworks */ = {isa = PBXBuildFile; productRef = 3F19E2082C14086700B84293 /* Reeeed */; };
 		3F19E20C2C140A6C00B84293 /* Reeeed in Frameworks */ = {isa = PBXBuildFile; productRef = 3F19E20B2C140A6C00B84293 /* Reeeed */; };
 		3F1BBE1D2B8E147F005D533F /* basenanaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE1C2B8E147F005D533F /* basenanaApp.swift */; };
@@ -71,6 +72,7 @@
 		3F4A78DD2BCF80080035F90F /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78DC2BCF80080035F90F /* Logging.swift */; };
 		3F4A78E12BD299110035F90F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78E02BD299110035F90F /* SettingsView.swift */; };
 		3F7444B72BE3D1B000CC9C1E /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 3F7444B62BE3D1B000CC9C1E /* SwiftSoup */; };
+		3F77C0E52CEB28E200452F24 /* GroupTableView in Frameworks */ = {isa = PBXBuildFile; productRef = 3F77C0E42CEB28E200452F24 /* GroupTableView */; };
 		3F81C9C52BAF1A6D00FEE130 /* GroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C42BAF1A6D00FEE130 /* GroupViewModel.swift */; };
 		3F81C9C72BAFCB8900FEE130 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C62BAFCB8900FEE130 /* ContentView.swift */; };
 		3F84C8CB2C146E29003DC6DA /* WebArchiver in Frameworks */ = {isa = PBXBuildFile; productRef = 3F84C8CA2C146E29003DC6DA /* WebArchiver */; };
@@ -96,6 +98,8 @@
 		3FAC06CB2C268CF40067E7A5 /* DocumentMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06CA2C268CF40067E7A5 /* DocumentMenuView.swift */; };
 		3FAC06CC2C268CF40067E7A5 /* DocumentMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06CA2C268CF40067E7A5 /* DocumentMenuView.swift */; };
 		3FB2AC762C2AFD80007E755B /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB2AC752C2AFD80007E755B /* FeedKit */; };
+		3FB5D3552CEC3B96006AAE8A /* DocumentReadView in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB5D3542CEC3B96006AAE8A /* DocumentReadView */; };
+		3FB5D3572CEC62F6006AAE8A /* InboxView in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB5D3562CEC62F6006AAE8A /* InboxView */; };
 		3FB782412BC1A82700327191 /* CGRPCZlib in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782402BC1A82700327191 /* CGRPCZlib */; };
 		3FB782432BC1A82700327191 /* GRPC in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782422BC1A82700327191 /* GRPC */; };
 		3FB782452BC1A82700327191 /* GRPCReflectionService in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782442BC1A82700327191 /* GRPCReflectionService */; };
@@ -267,7 +271,6 @@
 		3FC54EF32C94874400803A1D /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
 		3FC54EFF2C948C8100803A1D /* Inbox */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Inbox; sourceTree = "<group>"; };
 		3FC54F002C948C9200803A1D /* Workflow */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Workflow; sourceTree = "<group>"; };
-		3FC54F012C948CB100803A1D /* Dialogue */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Dialogue; sourceTree = "<group>"; };
 		3FC54F022C948CF500803A1D /* Document */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Document; sourceTree = "<group>"; };
 		3FC54F032C948E4C00803A1D /* Data */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Data; sourceTree = "<group>"; };
 		3FC54F062C948FB900803A1D /* Entry */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Entry; sourceTree = "<group>"; };
@@ -305,11 +308,15 @@
 				3FB782452BC1A82700327191 /* GRPCReflectionService in Frameworks */,
 				3F4A78DB2BCF7FFB0035F90F /* SwiftyBeaver in Frameworks */,
 				3F19E20C2C140A6C00B84293 /* Reeeed in Frameworks */,
+				3FB5D3572CEC62F6006AAE8A /* InboxView in Frameworks */,
 				3F39E95C2CBD5F710096824E /* MenuView in Frameworks */,
 				3FB782472BC1A82700327191 /* _GRPCCore in Frameworks */,
+				3F0F62052CEB7A26006B00E3 /* DocumentListView in Frameworks */,
 				3F3711E22CA022D100098460 /* TreeListView in Frameworks */,
 				3F7444B72BE3D1B000CC9C1E /* SwiftSoup in Frameworks */,
 				3FB782432BC1A82700327191 /* GRPC in Frameworks */,
+				3F77C0E52CEB28E200452F24 /* GroupTableView in Frameworks */,
+				3FB5D3552CEC3B96006AAE8A /* DocumentReadView in Frameworks */,
 				3FB2AC762C2AFD80007E755B /* FeedKit in Frameworks */,
 				3FB782412BC1A82700327191 /* CGRPCZlib in Frameworks */,
 				3FA180142C157A8A004176EA /* WebArchiver in Frameworks */,
@@ -366,7 +373,6 @@
 				3FC54F062C948FB900803A1D /* Entry */,
 				3FC54F022C948CF500803A1D /* Document */,
 				3FC54F072C948FDB00803A1D /* Search */,
-				3FC54F012C948CB100803A1D /* Dialogue */,
 				3FC54F002C948C9200803A1D /* Workflow */,
 				3FC54EFF2C948C8100803A1D /* Inbox */,
 				3FC54F0A2C94902100803A1D /* Job */,
@@ -671,6 +677,10 @@
 				3FB2AC752C2AFD80007E755B /* FeedKit */,
 				3F3711E12CA022D100098460 /* TreeListView */,
 				3F39E95B2CBD5F710096824E /* MenuView */,
+				3F77C0E42CEB28E200452F24 /* GroupTableView */,
+				3F0F62042CEB7A26006B00E3 /* DocumentListView */,
+				3FB5D3542CEC3B96006AAE8A /* DocumentReadView */,
+				3FB5D3562CEC62F6006AAE8A /* InboxView */,
 			);
 			productName = basenana;
 			productReference = 3F1BBE192B8E147F005D533F /* Basenana.app */;
@@ -1521,6 +1531,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		3F0F62042CEB7A26006B00E3 /* DocumentListView */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DocumentListView;
+		};
 		3F19E2082C14086700B84293 /* Reeeed */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3F19E2072C14086700B84293 /* XCRemoteSwiftPackageReference "reeeed" */;
@@ -1549,6 +1563,10 @@
 			package = 3FDC2EA52BE3CC2C00344DF8 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
 		};
+		3F77C0E42CEB28E200452F24 /* GroupTableView */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GroupTableView;
+		};
 		3F84C8CA2C146E29003DC6DA /* WebArchiver */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3F84C8C92C146E29003DC6DA /* XCRemoteSwiftPackageReference "WebArchiver" */;
@@ -1563,6 +1581,14 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3FB2AC742C2AFD80007E755B /* XCRemoteSwiftPackageReference "FeedKit" */;
 			productName = FeedKit;
+		};
+		3FB5D3542CEC3B96006AAE8A /* DocumentReadView */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DocumentReadView;
+		};
+		3FB5D3562CEC62F6006AAE8A /* InboxView */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = InboxView;
 		};
 		3FB782402BC1A82700327191 /* CGRPCZlib */ = {
 			isa = XCSwiftPackageProductDependency;

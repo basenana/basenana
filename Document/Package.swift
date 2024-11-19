@@ -5,19 +5,43 @@ import PackageDescription
 
 let package = Package(
     name: "Document",
+    platforms: [.macOS(.v10_15)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "Document",
-            targets: ["Document"]),
+            name: "DocumentListView",
+            targets: ["DocumentListView"]),
+        .library(
+            name: "DocumentReadView",
+            targets: ["DocumentReadView"]),
+    ],
+    dependencies: [
+        .package(name: "Domain", path: "../Domain"),
+        .package(name: "Styleguide", path: "../Styleguide"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "Document"),
+            name: "DocumentListView",
+            dependencies: [
+                .product(name: "Entities", package: "Domain"),
+                .product(name: "AppState", package: "Domain"),
+                .product(name: "UseCaseProtocol", package: "Domain"),
+                .product(name: "DomainTestHelpers", package: "Domain"),
+            ]
+        ),
+        .target(
+            name: "DocumentReadView",
+            dependencies: [
+                .product(name: "Entities", package: "Domain"),
+                .product(name: "AppState", package: "Domain"),
+                .product(name: "UseCaseProtocol", package: "Domain"),
+                .product(name: "DomainTestHelpers", package: "Domain"),
+            ]
+        ),
         .testTarget(
             name: "DocumentTests",
-            dependencies: ["Document"]),
+            dependencies: []),
     ]
 )

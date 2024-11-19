@@ -10,8 +10,10 @@ import Entities
 
 
 public protocol DocumentUseCaseProtocol {
+    func listUnreadDocuments(page: Int, pageSize: Int) throws -> [DocumentInfo]
+    func listMarkedDocuments(page: Int, pageSize: Int) throws -> [DocumentInfo]
     func getDocumentDetails(entry: Int64) throws -> DocumentDetail
     func getDocumentDetails(document: Int64) throws -> DocumentDetail
-    func setDocumentMarkState(ismark: Bool) throws
-    func setDocumentReadState(unread: Bool) throws
+    func setDocumentMarkState(document: Int64, ismark: Bool) throws
+    func setDocumentReadState(document: Int64, unread: Bool) throws
 }

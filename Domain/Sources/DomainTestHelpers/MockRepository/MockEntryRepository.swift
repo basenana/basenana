@@ -1,5 +1,5 @@
 //
-//  MockEntryRepository.swift
+//  MockDocRepository.swift
 //  Entry
 //
 //  Created by Hypo on 2024/9/22.
@@ -14,11 +14,11 @@ var entiesForTest: [MockEntryDetail] = [
     .init(id: 1010, name: "group1", aliases: "", parent: 1, kind: "Group", isGroup: true, size: 0, version: 0, namespace: "default", storage: "default", uid: 0, gid: 0, permissions: [], createdAt: Date(), changedAt: Date(), modifiedAt: Date(), accessAt: Date(), properties: []),
     .init(id: 1011, name: "group1.1", aliases: "", parent: 1010, kind: "Group", isGroup: true, size: 0, version: 0, namespace: "default", storage: "default", uid: 0, gid: 0, permissions: [], createdAt: Date(), changedAt: Date(), modifiedAt: Date(), accessAt: Date(), properties: []),
     .init(id: 1012, name: "group1.2", aliases: "", parent: 1010, kind: "Group", isGroup: true, size: 0, version: 0, namespace: "default", storage: "default", uid: 0, gid: 0, permissions: [], createdAt: Date(), changedAt: Date(), modifiedAt: Date(), accessAt: Date(), properties: []),
-    .init(id: 1013, name: "file1.3", aliases: "", parent: 1010, kind: "Group", isGroup: false, size: 0, version: 0, namespace: "default", storage: "default", uid: 0, gid: 0, permissions: [], createdAt: Date(), changedAt: Date(), modifiedAt: Date(), accessAt: Date(), properties: []),
+    .init(id: 1013, name: "file1.3", aliases: "", parent: 1010, kind: "Raw", isGroup: false, size: 0, version: 0, namespace: "default", storage: "default", uid: 0, gid: 0, permissions: [], createdAt: Date(), changedAt: Date(), modifiedAt: Date(), accessAt: Date(), properties: []),
     .init(id: 1020, name: "group2", aliases: "", parent: 1, kind: "Group", isGroup: true, size: 0, version: 0, namespace: "default", storage: "default", uid: 0, gid: 0, permissions: [], createdAt: Date(), changedAt: Date(), modifiedAt: Date(), accessAt: Date(), properties: []),
     .init(id: 1021, name: "group2.1", aliases: "", parent: 1020, kind: "Group", isGroup: true, size: 0, version: 0, namespace: "default", storage: "default", uid: 0, gid: 0, permissions: [], createdAt: Date(), changedAt: Date(), modifiedAt: Date(), accessAt: Date(), properties: []),
     .init(id: 1022, name: "group2.2", aliases: "", parent: 1020, kind: "Group", isGroup: true, size: 0, version: 0, namespace: "default", storage: "default", uid: 0, gid: 0, permissions: [], createdAt: Date(), changedAt: Date(), modifiedAt: Date(), accessAt: Date(), properties: []),
-    .init(id: 1023, name: "file2.3", aliases: "", parent: 1020, kind: "Group", isGroup: false, size: 0, version: 0, namespace: "default", storage: "default", uid: 0, gid: 0, permissions: [], createdAt: Date(), changedAt: Date(), modifiedAt: Date(), accessAt: Date(), properties: []),
+    .init(id: 1023, name: "file2.3", aliases: "", parent: 1020, kind: "Raw", isGroup: false, size: 0, version: 0, namespace: "default", storage: "default", uid: 0, gid: 0, permissions: [], createdAt: Date(), changedAt: Date(), modifiedAt: Date(), accessAt: Date(), properties: []),
 ]
 
 

@@ -9,6 +9,7 @@ import SwiftUI
 import Foundation
 import Entities
 import AppState
+import UseCase
 
 
 @available(macOS 14.0, *)
@@ -22,14 +23,19 @@ public class GroupTableViewModel {
     var document: DocumentDetail? = nil
     
     var store: StateStore
+    var usercase: EntryTreeUseCase
     
-    init(id: Int64, store: StateStore) {
+    init(id: Int64, store: StateStore, usercase: EntryTreeUseCase) {
         self.id = id
         self.store = store
+        self.usercase = usercase
     }
     
     func loadChildren() {
-        
+        let newChildren = try! usercase.listChildren(entry: id)
+        for child in newChildren {
+            self.children.append(EntryRow(info: child))
+        }
     }
 }
 

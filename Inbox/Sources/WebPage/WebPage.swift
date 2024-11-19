@@ -1,14 +1,15 @@
 //
-//  HtmlParser.swift
-//  basenana
+//  WebPage.swift
+//  Inbox
 //
-//  Created by Hypo on 2024/5/2.
+//  Created by Hypo on 2024/05/02.
 //
+
 
 import Foundation
 import SwiftSoup
 import WebArchiver
-import Reeeed
+//import Reeeed
 
 public enum WebError: Error {
     case InvalidUrl(String)
@@ -18,42 +19,13 @@ public enum WebError: Error {
 }
 
 
-func parseURLTitle(urlStr: String) throws -> String {
-    guard let url = URL(string: urlStr) else {
-        throw WebError.InvalidUrl(urlStr)
-    }
-    
-    var htmlStr: String = ""
-    let group = DispatchGroup()
-    group.enter()
-    let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-        if let error = error {
-            log.error("fetch url \(urlStr) error: \(error)")
-        } else if let data = data {
-            htmlStr = String(data: data, encoding: .utf8) ?? ""
-        }
-        group.leave()
-    }
-    task.resume()
-    group.wait()
-    
-    if htmlStr == "" {
-        return "unknown"
-    }
-    
-    let doc: Document = try! SwiftSoup.parse(htmlStr)
-    let titleStr = try doc.title()
-    
-    return titleStr
+public struct WebPage {
+    public var url: URL
+    public var title: String = ""
+    public var htmlContent: String = ""
 }
 
-struct WebPage {
-    var url: URL
-    var title: String = ""
-    var htmlContent: String = ""
-}
-
-func fetchWebPage(url urlString: String) throws -> WebPage {
+public func fetchWebPage(url urlString: String) throws -> WebPage {
     guard let url = URL(string: urlString) else {
         throw WebError.InvalidUrl(urlString)
     }
@@ -63,7 +35,7 @@ func fetchWebPage(url urlString: String) throws -> WebPage {
     group.enter()
     let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
         if let error = error {
-            log.error("fetch url \(urlString) error: \(error)")
+            print("fetch url \(urlString) error: \(error)")
         } else if let data = data {
             wp.htmlContent = String(data: data, encoding: .utf8) ?? ""
         }
@@ -81,7 +53,6 @@ func fetchWebPage(url urlString: String) throws -> WebPage {
 
     return wp
 }
-
 
 
 func webarchiveBaseMainResource(url: URL, mainResource: String) -> Data?{

@@ -5,6 +5,8 @@
 //  Created by Hypo on 2024/9/22.
 //
 
+import Foundation
+
 
 public struct IDHelper {
     var kind: String
@@ -41,3 +43,4 @@ public func parseIDInfo(entryInfos: [String]) -> [Int64] {
     }
     return entryIDList
 }
+

@@ -17,19 +17,45 @@ public class DocumentUseCase: DocumentUseCaseProtocol {
         self.docRepo = docRepo
     }
     
+    public func listUnreadDocuments(page: Int, pageSize: Int) throws -> [any Entities.DocumentInfo] {
+        var filter = DocumentFilter()
+        filter.page = Pagination()
+        filter.page!.page = Int64(page)
+        filter.page!.pageSize = Int64(pageSize)
+        filter.unread = true
+        filter.order = .createdAt
+        filter.orderDesc = true
+        return try docRepo.ListDocuments(filter: filter)
+    }
+    
+    public func listMarkedDocuments(page: Int, pageSize: Int) throws -> [any Entities.DocumentInfo] {
+        var filter = DocumentFilter()
+        filter.page = Pagination()
+        filter.page!.page = Int64(page)
+        filter.page!.pageSize = Int64(pageSize)
+        filter.marked = true
+        filter.order = .createdAt
+        filter.orderDesc = true
+        return try docRepo.ListDocuments(filter: filter)
+    }
+
     public func getDocumentDetails(entry: Int64) throws -> any Entities.DocumentDetail {
-        throw UseCaseError.unimplement
+        return try docRepo.GetDocumentDetail(id: DocumentID(entryID: entry))
     }
     
     public func getDocumentDetails(document: Int64) throws -> any Entities.DocumentDetail {
-        throw UseCaseError.unimplement
+        return try docRepo.GetDocumentDetail(id: DocumentID(documentID: document))
     }
     
-    public func setDocumentMarkState(ismark: Bool) throws {
-        throw UseCaseError.unimplement
+    public func setDocumentMarkState(document: Int64, ismark: Bool) throws {
+        var docUpdate = DocumentUpdate(docId: document)
+        docUpdate.marked = ismark
+        return try docRepo.UpdateDocument(doc: docUpdate)
     }
     
-    public func setDocumentReadState(unread: Bool) throws {
-        throw UseCaseError.unimplement
+    public func setDocumentReadState(document: Int64, unread: Bool) throws {
+        var docUpdate = DocumentUpdate(docId: document)
+        docUpdate.unread = unread
+        return try docRepo.UpdateDocument(doc: docUpdate)
     }
 }

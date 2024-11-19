@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Foundation
+import AppState
 import Entities
 import MenuView
 
@@ -70,13 +71,33 @@ public struct GroupTableView: View {
 }
 
 
+func bytesToHumanReadableString(bytes: Int64) -> String {
+    let kilobyte: Int64 = 1024
+    let megabyte = kilobyte * 1024
+    let gigabyte = megabyte * 1024
+    let terabyte = gigabyte * 1024
+    
+    if bytes < kilobyte {
+        return "\(bytes) B"
+    } else if bytes < megabyte {
+        return String(format: "%.2f KB", Double(bytes) / Double(kilobyte))
+    } else if bytes < gigabyte {
+        return String(format: "%.2f MB", Double(bytes) / Double(megabyte))
+    } else if bytes < terabyte {
+        return String(format: "%.2f GB", Double(bytes) / Double(gigabyte))
+    } else {
+        return String(format: "%.2f TB", Double(bytes) / Double(terabyte))
+    }
+}
+
+
 #if DEBUG
 
 import DomainTestHelpers
 
 #Preview {
     if #available(macOS 14.0, *) {
-        //        GroupTableView(viewModel: GroupTableViewModel(store: StateStore.empty, entryTreeUserCase: MockEntryTreeUseCase()))
+        GroupTableView(viewModel: GroupTableViewModel(id: 1010, store: StateStore.empty, usercase: MockEntryTreeUseCase()))
     }
 }
 

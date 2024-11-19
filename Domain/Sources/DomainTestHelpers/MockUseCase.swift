@@ -15,3 +15,11 @@ public func MockEntryTreeUseCase() -> EntryTreeUseCase {
 public func MockEntryUseCase() -> EntryUseCase {
     return EntryUseCase(entryRepo: MockEntryRepository.shared)
 }
+
+public func MockDocumentUseCase() -> DocumentUseCase {
+    return DocumentUseCase(docRepo: MockDocRepository.shared)
+}
+
+public func MockInboxUseCase() -> InboxUseCase {
+    return InboxUseCase(inboxRepo: MockInboxRepository.shared, entryRepo: MockEntryRepository.shared, fileRepo: MockFileRepository.shared)
+}
