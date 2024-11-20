@@ -10,12 +10,13 @@ import Entities
 import NetworkCore
 
 
+@available(macOS 11.0, *)
 public class DocumentClient: DocumentClientProtocol {
     
     var client: Api_V1_DocumentClientProtocol
     
-    init(client: Api_V1_DocumentClientProtocol) {
-        self.client = client
+    public init(clientSet: ClientSet) {
+        self.client = clientSet.document
     }
     
     public func ListDocuments(filter: DocumentFilter) throws -> [APIDocumentInfo] {

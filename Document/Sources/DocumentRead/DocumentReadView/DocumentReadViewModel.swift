@@ -7,8 +7,8 @@
 import SwiftUI
 import Foundation
 import Entities
-import UseCase
 import AppState
+import UseCaseProtocol
 
 
 @available(macOS 14.0, *)
@@ -17,19 +17,23 @@ import AppState
 public class DocumentReadViewModel {
     var docID: Int64
     var store: StateStore
-    var usercase: DocumentUseCase
+    var usecase: DocumentUseCaseProtocol
     
     var document: DocumentDetail? = nil
     
-    init(docID:Int64, store: StateStore, usercase: DocumentUseCase) {
+    init(docID:Int64, store: StateStore, usecase: DocumentUseCaseProtocol) {
         self.docID = docID
         self.store = store
-        self.usercase = usercase
+        self.usecase = usecase
     }
     
     func loadDocument() {
-        let detail = try! usercase.getDocumentDetails(document: docID)
-        document = detail
+        do {
+            let detail = try usecase.getDocumentDetails(document: docID)
+            document = detail
+        } catch {
+            store.alert.display(msg: "load document failed: \(error)")
+        }
     }
     
 }

@@ -7,9 +7,9 @@
 import SwiftUI
 import Foundation
 import Entities
-import UseCase
 import WebPage
 import AppState
+import UseCaseProtocol
 
 @available(macOS 14.0, *)
 @Observable
@@ -22,9 +22,9 @@ public class InboxViewModel {
     var errorMsg: String = ""
     
     var store: StateStore
-    var usecase: InboxUseCase
+    var usecase: InboxUseCaseProtocol
     
-    init(store: StateStore, usecase: InboxUseCase){
+    init(store: StateStore, usecase: InboxUseCaseProtocol){
         self.store = store
         self.usecase = usecase
     }
@@ -42,7 +42,7 @@ public class InboxViewModel {
         do {
             try usecase.quickInbox(url: url, fileName: title, fileType: safeFileType)
         } catch {
-            errorMsg = "inbox failed \(error)"
+            errorMsg = "inbox failed: \(error)"
         }
     }
     

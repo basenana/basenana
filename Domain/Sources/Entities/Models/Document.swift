@@ -87,3 +87,8 @@ public enum DocumentOrder {
     case unread
     case createdAt
 }
+
+public enum DocumentPrespective {
+    case unread
+    case marked
+}

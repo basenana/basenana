@@ -15,7 +15,7 @@ public class EntryRepository: EntryRepositoryProtocol {
     
     private var core: EntriesClientProtocol
     
-    init(core: EntriesClientProtocol) {
+    public init(core: EntriesClientProtocol) {
         self.core = core
     }
     

@@ -10,12 +10,13 @@ import Entities
 import NetworkCore
 
 
+@available(macOS 11.0, *)
 public class WorkflowClient: WorkflowClientProtocol {
     
     var client: Api_V1_WorkflowClientProtocol
     
-    init(client: Api_V1_WorkflowClientProtocol) {
-        self.client = client
+    public init(clientSet: ClientSet) {
+        self.client = clientSet.workflow
     }
     
     public func ListWorkflows() throws -> [NetworkCore.APIWorkflow] {

@@ -12,9 +12,11 @@ import UseCaseProtocol
 public class DocumentUseCase: DocumentUseCaseProtocol {
     
     private var docRepo: DocumentRepositoryProtocol
-    
-    public init(docRepo: DocumentRepositoryProtocol) {
+    private var entryRepo: EntryRepositoryProtocol
+
+    public init(docRepo: DocumentRepositoryProtocol, entryRepo: EntryRepositoryProtocol) {
         self.docRepo = docRepo
+        self.entryRepo = entryRepo
     }
     
     public func listUnreadDocuments(page: Int, pageSize: Int) throws -> [any Entities.DocumentInfo] {
@@ -47,6 +49,21 @@ public class DocumentUseCase: DocumentUseCaseProtocol {
         return try docRepo.GetDocumentDetail(id: DocumentID(documentID: document))
     }
     
+    public func getDocumentProperty(entry: Int64, key: String) throws -> Entities.EntryProperty? {
+        let entry = try entryRepo.GetEntryDetail(entry: entry)
+        for p in entry.properties {
+            if p.key == key {
+                return p
+            }
+        }
+        return nil
+    }
+
+    public func getDocumentProperty(document: Int64, key: String) throws -> Entities.EntryProperty? {
+        let doc = try getDocumentDetails(document: document)
+        return try getDocumentProperty(entry: doc.oid, key: key)
+    }
+
     public func setDocumentMarkState(document: Int64, ismark: Bool) throws {
         var docUpdate = DocumentUpdate(docId: document)
         docUpdate.marked = ismark

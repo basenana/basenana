@@ -10,14 +10,15 @@ import Entities
 import NetworkCore
 
 
+@available(macOS 11.0, *)
 public class EntriesClient: EntriesClientProtocol {
     
     var entryClient: Api_V1_EntriesClientProtocol
     var propertyClient: Api_V1_PropertiesClientProtocol
-
-    init(entryClient: Api_V1_EntriesClientProtocol, propertyClient: Api_V1_PropertiesClientProtocol) {
-        self.entryClient = entryClient
-        self.propertyClient = propertyClient
+    
+    public init(clientSet: ClientSet) {
+        self.entryClient = clientSet.entries
+        self.propertyClient = clientSet.properties
     }
     
     public func GroupTree() throws -> any Entities.Group {

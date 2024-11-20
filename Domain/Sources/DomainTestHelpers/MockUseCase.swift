@@ -5,21 +5,22 @@
 //  Created by Hypo on 2024/9/22.
 //
 
-
 import UseCase
+import UseCaseProtocol
 
-public func MockEntryTreeUseCase() -> EntryTreeUseCase {
+
+public func MockEntryTreeUseCase() -> EntryTreeUseCaseProtocol {
     return EntryTreeUseCase(entryRepo: MockEntryRepository.shared)
 }
 
-public func MockEntryUseCase() -> EntryUseCase {
+public func MockEntryUseCase() -> EntryUseCaseProtocol {
     return EntryUseCase(entryRepo: MockEntryRepository.shared)
 }
 
-public func MockDocumentUseCase() -> DocumentUseCase {
-    return DocumentUseCase(docRepo: MockDocRepository.shared)
+public func MockDocumentUseCase() -> DocumentUseCaseProtocol {
+    return DocumentUseCase(docRepo: MockDocRepository.shared, entryRepo: MockEntryRepository.shared)
 }
 
-public func MockInboxUseCase() -> InboxUseCase {
+public func MockInboxUseCase() -> InboxUseCaseProtocol {
     return InboxUseCase(inboxRepo: MockInboxRepository.shared, entryRepo: MockEntryRepository.shared, fileRepo: MockFileRepository.shared)
 }

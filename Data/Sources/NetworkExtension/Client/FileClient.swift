@@ -11,12 +11,13 @@ import NetworkCore
 import Foundation
 
 
+@available(macOS 11.0, *)
 public class FileClient: FileClientProtocol {
     
     var client: Api_V1_EntriesClientProtocol
     
-    init(client: Api_V1_EntriesClientProtocol) {
-        self.client = client
+    public init(clientSet: ClientSet) {
+        self.client = clientSet.entries
     }
     
     public func WriteFile(entry: Int64, off: Int64, len: Int64, input: Stream) throws {

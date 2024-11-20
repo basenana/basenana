@@ -14,9 +14,11 @@ import Entities
 @available(macOS 14.0, *)
 public struct DocumentListView: View {
     var viewModel: DocumentListViewModel
+    var prespective: DocumentPrespective
     @State var section = DocumentListSection()
     
-    public init(viewModel: DocumentListViewModel) {
+    public init(prespective: DocumentPrespective, viewModel: DocumentListViewModel) {
+        self.prespective = prespective
         self.viewModel = viewModel
     }
     
@@ -28,10 +30,14 @@ public struct DocumentListView: View {
                     DocumentListSectionView(sectionName: section.sectionNames[document.id])
                 }
                 
-                DocumentItemView(doc: document, viewModel: viewModel)
-                .task {
-                    section.updateSection(next: document)
-                    viewModel.checkAndLoadNextPage(document)
+                Button(action: {
+                    viewModel.store.dispatch(.gotoDestination(.readDocument(document: document.id)))
+                }){
+                    DocumentItemView(doc: document, viewModel: viewModel)
+                    .task {
+                        section.updateSection(next: document)
+                        viewModel.checkAndLoadNextPage(document, prespective: prespective)
+                    }
                 }
             }
             if viewModel.isLoading {
@@ -39,10 +45,11 @@ public struct DocumentListView: View {
             }
         }
         .task {
-            viewModel.listNextPage()
+            viewModel.listNextPage(prespective: prespective)
         }
         .toolbar(removing: .sidebarToggle)
         .frame(minWidth: 300, idealWidth: 300)
+        .navigationTitle(viewModel.listModel.Title)
     }
 }
 
@@ -106,7 +113,7 @@ import DomainTestHelpers
 
 #Preview {
     if #available(macOS 14.0, *) {
-        DocumentListView(viewModel: DocumentListViewModel(listModel: .Unread, store: StateStore.empty, usercase: MockDocumentUseCase()))
+        DocumentListView(prespective: .unread, viewModel: DocumentListViewModel(store: StateStore.empty, usecase: MockDocumentUseCase()))
     }
 }
 

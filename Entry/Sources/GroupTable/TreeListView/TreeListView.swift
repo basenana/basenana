@@ -9,7 +9,6 @@ import SwiftUI
 import Entities
 import AppState
 import SwiftData
-import MenuView
 
 
 @available(macOS 14.0, *)
@@ -22,7 +21,7 @@ struct TreeListView: View {
     
     public var body: some View {
         VStack{
-            OutlineGroup(viewModel.store.groupTree.children ?? [], children: \.children){ child in
+            OutlineGroup(viewModel.groupTree.children ?? [], children: \.children){ child in
                 NavigationLink(value: Destination.groupList(group: child.id), label: {
                     HStack{
                         Image(systemName: "folder")
@@ -44,7 +43,7 @@ struct TreeListView: View {
         }
         .contextMenu{
             // TODO: set selected entry
-            MenuView(viewModel: MenuViewModel(store: viewModel.store, entry: nil))
+            MenuView(parentID: -1, viewModel: viewModel)
         }
     }
 }
@@ -58,7 +57,7 @@ import DomainTestHelpers
 #Preview {
     if #available(macOS 14.0, *) {
         List{
-            TreeListView(viewModel: TreeViewModel(store: StateStore.empty, entryTreeUserCase: MockEntryTreeUseCase()))
+            TreeListView(viewModel: TreeViewModel(store: StateStore.empty, treeUsecase: MockEntryTreeUseCase(), entryUsecase: MockEntryUseCase()))
         }
     }
 }

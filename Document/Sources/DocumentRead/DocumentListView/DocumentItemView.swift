@@ -48,9 +48,6 @@ struct DocumentItemView: View {
                 .foregroundColor(Color.gray)
         }
         .padding(.vertical, 3)
-        .task {
-            viewModel.initDocumentProperties(doc: doc)
-        }
     }
     
     func getProperty(k: String) -> EntryProperty? {

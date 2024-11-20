@@ -9,44 +9,29 @@ import Foundation
 import Entities
 
 
-public enum DocumentPrespective {
-    case none
-    case unread
-    case marked
-    
-    var Title: String {
-        switch self {
-        case .none:
-            return "Basenana"
-        case .unread:
-            return "Unread"
-        case .marked:
-            return "Marked"
-        }
-    }
-}
-
-
 public enum Destination: Identifiable, Hashable {
     
     case mainContent
-    case fridayChat
-    case readDocuments(prespective: DocumentPrespective)
+    case listDocuments(prespective: DocumentPrespective)
+    case readDocument(document: Int64)
     case groupList(group: Int64)
     case workflowDashboard
+    case fridayChat
 
     public var id: String {
         switch self {
         case .mainContent:
             return "mainContent"
-        case .fridayChat:
-            return "fridayChat"
-        case .readDocuments(prespective: let prespective):
-            return "readDocument_\(prespective)"
+        case .listDocuments(prespective: let prespective):
+            return "listDocument_\(prespective)"
+        case .readDocument(document: let document):
+            return "readDocument_\(document)"
         case .groupList(group: let group):
             return "groupList_\(group)"
         case .workflowDashboard:
             return "workflowDashboard"
+        case .fridayChat:
+            return "fridayChat"
         }
     }
     
@@ -59,7 +44,7 @@ public enum Destination: Identifiable, Hashable {
 
 extension DocumentPrespective {
     var destination: Destination {
-        return .readDocuments(prespective: self)
+        return .listDocuments(prespective: self)
     }
 }
 

@@ -19,7 +19,6 @@
 		3F071BA72C29B3CE00F19C63 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F071BA62C29B3CE00F19C63 /* Style.swift */; };
 		3F071BA82C29B3CE00F19C63 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F071BA62C29B3CE00F19C63 /* Style.swift */; };
 		3F0AEC762BA48EC7000DA928 /* GroupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0AEC752BA48EC7000DA928 /* GroupService.swift */; };
-		3F0F62052CEB7A26006B00E3 /* DocumentListView in Frameworks */ = {isa = PBXBuildFile; productRef = 3F0F62042CEB7A26006B00E3 /* DocumentListView */; };
 		3F19E2092C14086700B84293 /* Reeeed in Frameworks */ = {isa = PBXBuildFile; productRef = 3F19E2082C14086700B84293 /* Reeeed */; };
 		3F19E20C2C140A6C00B84293 /* Reeeed in Frameworks */ = {isa = PBXBuildFile; productRef = 3F19E20B2C140A6C00B84293 /* Reeeed */; };
 		3F1BBE1D2B8E147F005D533F /* basenanaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE1C2B8E147F005D533F /* basenanaApp.swift */; };
@@ -63,8 +62,6 @@
 		3F317C4E2C2476C300F42D37 /* StackContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F317C4D2C2476C300F42D37 /* StackContentView.swift */; };
 		3F317C4F2C2476C300F42D37 /* StackContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F317C4D2C2476C300F42D37 /* StackContentView.swift */; };
 		3F3711DF2CA01BFA00098460 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB192BF656B90056E6AA /* GRDB */; };
-		3F3711E22CA022D100098460 /* TreeListView in Frameworks */ = {isa = PBXBuildFile; productRef = 3F3711E12CA022D100098460 /* TreeListView */; };
-		3F39E95C2CBD5F710096824E /* MenuView in Frameworks */ = {isa = PBXBuildFile; productRef = 3F39E95B2CBD5F710096824E /* MenuView */; };
 		3F4A78C82BC99D160035F90F /* SidebarGroupsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78C72BC99D160035F90F /* SidebarGroupsView.swift */; };
 		3F4A78CA2BC99D600035F90F /* SidebarButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78C92BC99D600035F90F /* SidebarButtonView.swift */; };
 		3F4A78CF2BCC2A660035F90F /* FsClientSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78CE2BCC2A660035F90F /* FsClientSet.swift */; };
@@ -72,7 +69,19 @@
 		3F4A78DD2BCF80080035F90F /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78DC2BCF80080035F90F /* Logging.swift */; };
 		3F4A78E12BD299110035F90F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78E02BD299110035F90F /* SettingsView.swift */; };
 		3F7444B72BE3D1B000CC9C1E /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 3F7444B62BE3D1B000CC9C1E /* SwiftSoup */; };
-		3F77C0E52CEB28E200452F24 /* GroupTableView in Frameworks */ = {isa = PBXBuildFile; productRef = 3F77C0E42CEB28E200452F24 /* GroupTableView */; };
+		3F7A1DEB2CECCFB000C2BDC8 /* DocumentRead in Frameworks */ = {isa = PBXBuildFile; productRef = 3F7A1DEA2CECCFB000C2BDC8 /* DocumentRead */; };
+		3F7A1DED2CECCFC300C2BDC8 /* GroupTable in Frameworks */ = {isa = PBXBuildFile; productRef = 3F7A1DEC2CECCFC300C2BDC8 /* GroupTable */; };
+		3F7A1DEF2CECCFC300C2BDC8 /* QuickInbox in Frameworks */ = {isa = PBXBuildFile; productRef = 3F7A1DEE2CECCFC300C2BDC8 /* QuickInbox */; };
+		3F7A1DF22CEDB7C900C2BDC8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7A1DF12CEDB7C600C2BDC8 /* ContentView.swift */; };
+		3F7A1DF32CEDB7C900C2BDC8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7A1DF12CEDB7C600C2BDC8 /* ContentView.swift */; };
+		3F7A1DF62CEDB81B00C2BDC8 /* Factory in Frameworks */ = {isa = PBXBuildFile; productRef = 3F7A1DF52CEDB81B00C2BDC8 /* Factory */; };
+		3F7A1DF82CEDBC4400C2BDC8 /* NetworkCore in Frameworks */ = {isa = PBXBuildFile; productRef = 3F7A1DF72CEDBC4400C2BDC8 /* NetworkCore */; };
+		3F7A1DFA2CEDBC4400C2BDC8 /* NetworkExtension in Frameworks */ = {isa = PBXBuildFile; productRef = 3F7A1DF92CEDBC4400C2BDC8 /* NetworkExtension */; };
+		3F7A1DFC2CEDBC4400C2BDC8 /* Repositories in Frameworks */ = {isa = PBXBuildFile; productRef = 3F7A1DFB2CEDBC4400C2BDC8 /* Repositories */; };
+		3F7A1DFF2CEDC16D00C2BDC8 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 3F7A1DFE2CEDC16D00C2BDC8 /* Swinject */; };
+		3F7A1E012CEDC16D00C2BDC8 /* Swinject-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 3F7A1E002CEDC16D00C2BDC8 /* Swinject-Dynamic */; };
+		3F7A1E042CEDCA5800C2BDC8 /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7A1E032CEDCA5800C2BDC8 /* Container.swift */; };
+		3F7A1E052CEDCA5800C2BDC8 /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7A1E032CEDCA5800C2BDC8 /* Container.swift */; };
 		3F81C9C52BAF1A6D00FEE130 /* GroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C42BAF1A6D00FEE130 /* GroupViewModel.swift */; };
 		3F81C9C72BAFCB8900FEE130 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F81C9C62BAFCB8900FEE130 /* ContentView.swift */; };
 		3F84C8CB2C146E29003DC6DA /* WebArchiver in Frameworks */ = {isa = PBXBuildFile; productRef = 3F84C8CA2C146E29003DC6DA /* WebArchiver */; };
@@ -98,12 +107,9 @@
 		3FAC06CB2C268CF40067E7A5 /* DocumentMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06CA2C268CF40067E7A5 /* DocumentMenuView.swift */; };
 		3FAC06CC2C268CF40067E7A5 /* DocumentMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06CA2C268CF40067E7A5 /* DocumentMenuView.swift */; };
 		3FB2AC762C2AFD80007E755B /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB2AC752C2AFD80007E755B /* FeedKit */; };
-		3FB5D3552CEC3B96006AAE8A /* DocumentReadView in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB5D3542CEC3B96006AAE8A /* DocumentReadView */; };
-		3FB5D3572CEC62F6006AAE8A /* InboxView in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB5D3562CEC62F6006AAE8A /* InboxView */; };
 		3FB782412BC1A82700327191 /* CGRPCZlib in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782402BC1A82700327191 /* CGRPCZlib */; };
 		3FB782432BC1A82700327191 /* GRPC in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782422BC1A82700327191 /* GRPC */; };
 		3FB782452BC1A82700327191 /* GRPCReflectionService in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782442BC1A82700327191 /* GRPCReflectionService */; };
-		3FB782472BC1A82700327191 /* _GRPCCore in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782462BC1A82700327191 /* _GRPCCore */; };
 		3FB782492BC1A82700327191 /* protoc-gen-grpc-swift in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782482BC1A82700327191 /* protoc-gen-grpc-swift */; };
 		3FB782542BC2D0F600327191 /* fsapi-v1.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB782502BC2D0F600327191 /* fsapi-v1.grpc.swift */; };
 		3FB782552BC2D0F600327191 /* fsapi-v1.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB782512BC2D0F600327191 /* fsapi-v1.pb.swift */; };
@@ -247,6 +253,8 @@
 		3F4A78DC2BCF80080035F90F /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		3F4A78E02BD299110035F90F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		3F7444B82BE50DE900CC9C1E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = basenana/Info.plist; sourceTree = SOURCE_ROOT; };
+		3F7A1DF12CEDB7C600C2BDC8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		3F7A1E032CEDCA5800C2BDC8 /* Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Container.swift; sourceTree = "<group>"; };
 		3F81C9C42BAF1A6D00FEE130 /* GroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupViewModel.swift; sourceTree = "<group>"; };
 		3F81C9C62BAFCB8900FEE130 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		3F9FF9982C2829B900C9BBA4 /* Datetime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Datetime.swift; sourceTree = "<group>"; };
@@ -305,20 +313,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				3FB782492BC1A82700327191 /* protoc-gen-grpc-swift in Frameworks */,
+				3F7A1DEB2CECCFB000C2BDC8 /* DocumentRead in Frameworks */,
+				3F7A1DF82CEDBC4400C2BDC8 /* NetworkCore in Frameworks */,
 				3FB782452BC1A82700327191 /* GRPCReflectionService in Frameworks */,
+				3F7A1DFC2CEDBC4400C2BDC8 /* Repositories in Frameworks */,
+				3F7A1DED2CECCFC300C2BDC8 /* GroupTable in Frameworks */,
+				3F7A1DEF2CECCFC300C2BDC8 /* QuickInbox in Frameworks */,
+				3F7A1DFF2CEDC16D00C2BDC8 /* Swinject in Frameworks */,
 				3F4A78DB2BCF7FFB0035F90F /* SwiftyBeaver in Frameworks */,
 				3F19E20C2C140A6C00B84293 /* Reeeed in Frameworks */,
-				3FB5D3572CEC62F6006AAE8A /* InboxView in Frameworks */,
-				3F39E95C2CBD5F710096824E /* MenuView in Frameworks */,
-				3FB782472BC1A82700327191 /* _GRPCCore in Frameworks */,
-				3F0F62052CEB7A26006B00E3 /* DocumentListView in Frameworks */,
-				3F3711E22CA022D100098460 /* TreeListView in Frameworks */,
 				3F7444B72BE3D1B000CC9C1E /* SwiftSoup in Frameworks */,
 				3FB782432BC1A82700327191 /* GRPC in Frameworks */,
-				3F77C0E52CEB28E200452F24 /* GroupTableView in Frameworks */,
-				3FB5D3552CEC3B96006AAE8A /* DocumentReadView in Frameworks */,
 				3FB2AC762C2AFD80007E755B /* FeedKit in Frameworks */,
+				3F7A1DF62CEDB81B00C2BDC8 /* Factory in Frameworks */,
 				3FB782412BC1A82700327191 /* CGRPCZlib in Frameworks */,
+				3F7A1E012CEDC16D00C2BDC8 /* Swinject-Dynamic in Frameworks */,
+				3F7A1DFA2CEDBC4400C2BDC8 /* NetworkExtension in Frameworks */,
 				3FA180142C157A8A004176EA /* WebArchiver in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -400,6 +410,7 @@
 		3F1BBE1B2B8E147F005D533F /* basenana */ = {
 			isa = PBXGroup;
 			children = (
+				3F7A1DF02CEDB7BA00C2BDC8 /* macOS */,
 				ED0CBB532BF656BA0056E6AA /* Info-dev.plist */,
 				3F7444B82BE50DE900CC9C1E /* Info.plist */,
 				3F317C212C231C3D00F42D37 /* DataFlow */,
@@ -583,6 +594,23 @@
 			path = Inbox;
 			sourceTree = "<group>";
 		};
+		3F7A1DF02CEDB7BA00C2BDC8 /* macOS */ = {
+			isa = PBXGroup;
+			children = (
+				3F7A1E022CEDCA2100C2BDC8 /* Content */,
+			);
+			path = macOS;
+			sourceTree = "<group>";
+		};
+		3F7A1E022CEDCA2100C2BDC8 /* Content */ = {
+			isa = PBXGroup;
+			children = (
+				3F7A1DF12CEDB7C600C2BDC8 /* ContentView.swift */,
+				3F7A1E032CEDCA5800C2BDC8 /* Container.swift */,
+			);
+			path = Content;
+			sourceTree = "<group>";
+		};
 		3FB782532BC2D0F600327191 /* FsAPI */ = {
 			isa = PBXGroup;
 			children = (
@@ -668,19 +696,21 @@
 				3FB782402BC1A82700327191 /* CGRPCZlib */,
 				3FB782422BC1A82700327191 /* GRPC */,
 				3FB782442BC1A82700327191 /* GRPCReflectionService */,
-				3FB782462BC1A82700327191 /* _GRPCCore */,
 				3FB782482BC1A82700327191 /* protoc-gen-grpc-swift */,
 				3F4A78DA2BCF7FFB0035F90F /* SwiftyBeaver */,
 				3F7444B62BE3D1B000CC9C1E /* SwiftSoup */,
 				3F19E20B2C140A6C00B84293 /* Reeeed */,
 				3FA180132C157A8A004176EA /* WebArchiver */,
 				3FB2AC752C2AFD80007E755B /* FeedKit */,
-				3F3711E12CA022D100098460 /* TreeListView */,
-				3F39E95B2CBD5F710096824E /* MenuView */,
-				3F77C0E42CEB28E200452F24 /* GroupTableView */,
-				3F0F62042CEB7A26006B00E3 /* DocumentListView */,
-				3FB5D3542CEC3B96006AAE8A /* DocumentReadView */,
-				3FB5D3562CEC62F6006AAE8A /* InboxView */,
+				3F7A1DEA2CECCFB000C2BDC8 /* DocumentRead */,
+				3F7A1DEC2CECCFC300C2BDC8 /* GroupTable */,
+				3F7A1DEE2CECCFC300C2BDC8 /* QuickInbox */,
+				3F7A1DF52CEDB81B00C2BDC8 /* Factory */,
+				3F7A1DF72CEDBC4400C2BDC8 /* NetworkCore */,
+				3F7A1DF92CEDBC4400C2BDC8 /* NetworkExtension */,
+				3F7A1DFB2CEDBC4400C2BDC8 /* Repositories */,
+				3F7A1DFE2CEDC16D00C2BDC8 /* Swinject */,
+				3F7A1E002CEDC16D00C2BDC8 /* Swinject-Dynamic */,
 			);
 			productName = basenana;
 			productReference = 3F1BBE192B8E147F005D533F /* Basenana.app */;
@@ -791,6 +821,8 @@
 				3F19E2072C14086700B84293 /* XCRemoteSwiftPackageReference "reeeed" */,
 				3F84C8C92C146E29003DC6DA /* XCRemoteSwiftPackageReference "WebArchiver" */,
 				3FB2AC742C2AFD80007E755B /* XCRemoteSwiftPackageReference "FeedKit" */,
+				3F7A1DF42CEDB81B00C2BDC8 /* XCRemoteSwiftPackageReference "Factory" */,
+				3F7A1DFD2CEDC16D00C2BDC8 /* XCRemoteSwiftPackageReference "Swinject" */,
 			);
 			productRefGroup = 3F1BBE1A2B8E147F005D533F /* Products */;
 			projectDirPath = "";
@@ -858,6 +890,7 @@
 				3FDC2EA32BDCEEB200344DF8 /* SomeHelpers.swift in Sources */,
 				ED85A3BE2BBAB21A0040598E /* DialogueView.swift in Sources */,
 				3F317C482C2459BA00F42D37 /* Helper.swift in Sources */,
+				3F7A1E042CEDCA5800C2BDC8 /* Container.swift in Sources */,
 				3F317C4E2C2476C300F42D37 /* StackContentView.swift in Sources */,
 				3F4A78CA2BC99D600035F90F /* SidebarButtonView.swift in Sources */,
 				3F317C322C231D3400F42D37 /* AppEnvironment.swift in Sources */,
@@ -886,6 +919,7 @@
 				3FAC06BC2C25BEC40067E7A5 /* LoginView.swift in Sources */,
 				ED2A0B432BFF1A2200CFF463 /* PageModel.swift in Sources */,
 				3F071B9A2C29A20900F19C63 /* NotificationModel.swift in Sources */,
+				3F7A1DF22CEDB7C900C2BDC8 /* ContentView.swift in Sources */,
 				3F1BBE592B932251005D533F /* GroupView.swift in Sources */,
 				ED079DCB2C28116F004F416B /* DialogueButtonView.swift in Sources */,
 				ED917E782B9607BE004FCB9A /* DocumentModel.swift in Sources */,
@@ -979,6 +1013,7 @@
 				ED0CBB322BF656B90056E6AA /* Assets.swift in Sources */,
 				ED079DC92C2800CA004F416B /* MessageListView.swift in Sources */,
 				ED079DC82C2800C7004F416B /* DialogueTitleView.swift in Sources */,
+				3F7A1E052CEDCA5800C2BDC8 /* Container.swift in Sources */,
 				3FAC06C32C25DE050067E7A5 /* GroupTableView.swift in Sources */,
 				EDC5AA822C06F92A003B78AD /* MessageView.swift in Sources */,
 				3F317C2D2C231D1A00F42D37 /* AppAction.swift in Sources */,
@@ -1010,6 +1045,7 @@
 				3F317C432C244D7F00F42D37 /* AlertModel.swift in Sources */,
 				ED0CBB3E2BF656B90056E6AA /* DocumentItemView.swift in Sources */,
 				3FCEC3D12C319142002D8662 /* WorkflowJobView.swift in Sources */,
+				3F7A1DF32CEDB7C900C2BDC8 /* ContentView.swift in Sources */,
 				3F317C462C24574B00F42D37 /* Mapping.swift in Sources */,
 				ED0CBB3F2BF656B90056E6AA /* ContentView.swift in Sources */,
 			);
@@ -1464,6 +1500,22 @@
 				minimumVersion = 2.0.1;
 			};
 		};
+		3F7A1DF42CEDB81B00C2BDC8 /* XCRemoteSwiftPackageReference "Factory" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hmlongco/Factory";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.4.1;
+			};
+		};
+		3F7A1DFD2CEDC16D00C2BDC8 /* XCRemoteSwiftPackageReference "Swinject" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Swinject/Swinject.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.9.1;
+			};
+		};
 		3F84C8C92C146E29003DC6DA /* XCRemoteSwiftPackageReference "WebArchiver" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hyponet/WebArchiver.git";
@@ -1531,10 +1583,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3F0F62042CEB7A26006B00E3 /* DocumentListView */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = DocumentListView;
-		};
 		3F19E2082C14086700B84293 /* Reeeed */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3F19E2072C14086700B84293 /* XCRemoteSwiftPackageReference "reeeed" */;
@@ -1544,14 +1592,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3F19E2072C14086700B84293 /* XCRemoteSwiftPackageReference "reeeed" */;
 			productName = Reeeed;
-		};
-		3F3711E12CA022D100098460 /* TreeListView */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = TreeListView;
-		};
-		3F39E95B2CBD5F710096824E /* MenuView */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MenuView;
 		};
 		3F4A78DA2BCF7FFB0035F90F /* SwiftyBeaver */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1563,9 +1603,44 @@
 			package = 3FDC2EA52BE3CC2C00344DF8 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
 		};
-		3F77C0E42CEB28E200452F24 /* GroupTableView */ = {
+		3F7A1DEA2CECCFB000C2BDC8 /* DocumentRead */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = GroupTableView;
+			productName = DocumentRead;
+		};
+		3F7A1DEC2CECCFC300C2BDC8 /* GroupTable */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GroupTable;
+		};
+		3F7A1DEE2CECCFC300C2BDC8 /* QuickInbox */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = QuickInbox;
+		};
+		3F7A1DF52CEDB81B00C2BDC8 /* Factory */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F7A1DF42CEDB81B00C2BDC8 /* XCRemoteSwiftPackageReference "Factory" */;
+			productName = Factory;
+		};
+		3F7A1DF72CEDBC4400C2BDC8 /* NetworkCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NetworkCore;
+		};
+		3F7A1DF92CEDBC4400C2BDC8 /* NetworkExtension */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NetworkExtension;
+		};
+		3F7A1DFB2CEDBC4400C2BDC8 /* Repositories */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Repositories;
+		};
+		3F7A1DFE2CEDC16D00C2BDC8 /* Swinject */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F7A1DFD2CEDC16D00C2BDC8 /* XCRemoteSwiftPackageReference "Swinject" */;
+			productName = Swinject;
+		};
+		3F7A1E002CEDC16D00C2BDC8 /* Swinject-Dynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F7A1DFD2CEDC16D00C2BDC8 /* XCRemoteSwiftPackageReference "Swinject" */;
+			productName = "Swinject-Dynamic";
 		};
 		3F84C8CA2C146E29003DC6DA /* WebArchiver */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1582,14 +1657,6 @@
 			package = 3FB2AC742C2AFD80007E755B /* XCRemoteSwiftPackageReference "FeedKit" */;
 			productName = FeedKit;
 		};
-		3FB5D3542CEC3B96006AAE8A /* DocumentReadView */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = DocumentReadView;
-		};
-		3FB5D3562CEC62F6006AAE8A /* InboxView */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = InboxView;
-		};
 		3FB782402BC1A82700327191 /* CGRPCZlib */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3FB7823F2BC1A82700327191 /* XCRemoteSwiftPackageReference "grpc-swift" */;
@@ -1604,11 +1671,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3FB7823F2BC1A82700327191 /* XCRemoteSwiftPackageReference "grpc-swift" */;
 			productName = GRPCReflectionService;
-		};
-		3FB782462BC1A82700327191 /* _GRPCCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3FB7823F2BC1A82700327191 /* XCRemoteSwiftPackageReference "grpc-swift" */;
-			productName = _GRPCCore;
 		};
 		3FB782482BC1A82700327191 /* protoc-gen-grpc-swift */ = {
 			isa = XCSwiftPackageProductDependency;

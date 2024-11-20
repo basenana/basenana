@@ -8,8 +8,6 @@
 
 import Foundation
 import SwiftSoup
-import WebArchiver
-//import Reeeed
 
 public enum WebError: Error {
     case InvalidUrl(String)
@@ -24,6 +22,7 @@ public struct WebPage {
     public var title: String = ""
     public var htmlContent: String = ""
 }
+
 
 public func fetchWebPage(url urlString: String) throws -> WebPage {
     guard let url = URL(string: urlString) else {
@@ -52,18 +51,5 @@ public func fetchWebPage(url urlString: String) throws -> WebPage {
     wp.title = try doc.title()
 
     return wp
-}
-
-
-func webarchiveBaseMainResource(url: URL, mainResource: String) -> Data?{
-    var pData: Data?
-    let group = DispatchGroup()
-    group.enter()
-    WebArchiver.archiveWithMainResource(url: url, htmlContent: mainResource){ result in
-        pData = result.plistData
-        group.leave()
-    }
-    group.wait()
-    return pData
 }
 

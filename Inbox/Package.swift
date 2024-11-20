@@ -9,11 +9,8 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "InboxView",
-            targets: ["InboxView"]),
-        .library(
-            name: "WebPage",
-            targets: ["WebPage"]),
+            name: "QuickInbox",
+            targets: ["QuickInbox"]),
     ],
     dependencies: [
         .package(name: "Domain", path: "../Domain"),
@@ -25,7 +22,7 @@ let package = Package(
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "InboxView",
+            name: "QuickInbox",
             dependencies: [
                 .product(name: "Entities", package: "Domain"),
                 .product(name: "AppState", package: "Domain"),

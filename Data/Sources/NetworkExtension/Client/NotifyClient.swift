@@ -10,12 +10,13 @@ import Entities
 import NetworkCore
 
 
+@available(macOS 11.0, *)
 public class NotifyClient: NotifyClientProtocol {
     
     var client: Api_V1_NotifyClientProtocol
     
-    init(client: Api_V1_NotifyClientProtocol) {
-        self.client = client
+    public init(clientSet: ClientSet) {
+        self.client = clientSet.notify
     }
     
     public func ListMessage(all: Bool) throws -> [NetworkCore.APINotification] {

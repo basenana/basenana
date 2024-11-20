@@ -15,29 +15,25 @@ import NIOSSL
 let clientEventLoopGroup = PlatformSupport.makeEventLoopGroup(loopCount: System.coreCount/2+1)
 
 @available(macOS 11.0, *)
-public class Connection {
-    static var share = Connection()
+public class FSAPI {
+    private var host: String
+    private var port: Int
+    private var accessTokenKey: String
+    private var secretToken: String
     
-    @AppStorage("org.basenana.nanafs.host", store: UserDefaults.standard)
-    private var host: String = ""
-    
-    @AppStorage("org.basenana.nanafs.port", store: UserDefaults.standard)
-    private var port: Int = 0
-    
-    @AppStorage("org.basenana.nanafs.auth.accessToken", store: UserDefaults.standard)
-    private var accessTokenKey: String = ""
-    
-    @AppStorage("org.basenana.nanafs.auth.secretToken", store: UserDefaults.standard)
-    private var secretToken: String = ""
-    
-    @AppStorage("org.basenana.nanafs.namespace", store: UserDefaults.standard)
-    private var namespace: String = ""
+    public init(host: String, port: Int, accessTokenKey: String, secretToken: String) {
+        self.host = host
+        self.port = port
+        self.accessTokenKey = accessTokenKey
+        self.secretToken = secretToken
+    }
     
     var isLogined: Bool = false
     var clientCrt: [UInt8] = []
     var clientKey: [UInt8] = []
+    var namespace: String = ""
     
-    public func login() throws -> GRPCChannel {
+    public func login() throws -> ClientSet {
         if self.host == ""{
             throw RepositoryError.invalidHost
         }
@@ -72,11 +68,41 @@ public class Connection {
         }
         
         self.isLogined = true
-        return ClientConnection
+        return try ClientSet(host: host, port: port, clientCrt: clientCrt, clientKey: clientKey, namespace: namespace)
+    }
+}
+
+
+@available(macOS 11.0, *)
+public class ClientSet {
+    
+    var inbox: Api_V1_InboxClientProtocol
+    var entries: Api_V1_EntriesClientProtocol
+    var properties: Api_V1_PropertiesClientProtocol
+    var document: Api_V1_DocumentClientProtocol
+    var dialogue: Api_V1_RoomClientProtocol
+    var workflow: Api_V1_WorkflowClientProtocol
+    var notify: Api_V1_NotifyClientProtocol
+    
+    private var namespace: String
+    
+    public init(host: String, port: Int, clientCrt: [UInt8], clientKey: [UInt8], namespace: String) throws {
+        let tlsChannel = ClientConnection
             .usingTLSBackedByNIOSSL(on: clientEventLoopGroup)
             .withTLS(certificateChain: [try .init(bytes: clientCrt, format: .pem)])
             .withTLS(privateKey: try .init(bytes: clientKey, format: .pem))
             .withTLS(certificateVerification: .none)
             .connect(host: host, port: port)
+        
+        self.inbox = Api_V1_InboxNIOClient(channel: tlsChannel)
+        self.entries = Api_V1_EntriesNIOClient(channel: tlsChannel)
+        self.properties = Api_V1_PropertiesNIOClient(channel: tlsChannel)
+        self.document = Api_V1_DocumentNIOClient(channel: tlsChannel)
+        self.dialogue = Api_V1_RoomNIOClient(channel: tlsChannel)
+        self.workflow = Api_V1_WorkflowNIOClient(channel: tlsChannel)
+        self.notify = Api_V1_NotifyNIOClient(channel: tlsChannel)
+        
+        self.namespace = namespace
     }
 }
+

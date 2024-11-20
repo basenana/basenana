@@ -38,7 +38,7 @@ import DomainTestHelpers
 
 #Preview {
     if #available(macOS 14.0, *) {
-        DocumentReadView(viewModel: DocumentReadViewModel(docID: 1001, store: StateStore.empty, usercase: MockDocumentUseCase()))
+        DocumentReadView(viewModel: DocumentReadViewModel(docID: 1001, store: StateStore.empty, usecase: MockDocumentUseCase()))
     }
 }
 

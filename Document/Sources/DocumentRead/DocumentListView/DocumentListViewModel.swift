@@ -8,12 +8,21 @@
 import SwiftUI
 import Foundation
 import Entities
-import UseCase
 import AppState
+import UseCaseProtocol
 
-enum ListMode {
+public enum ListMode {
     case Unread
     case Marked
+    
+    var Title: String {
+        switch self {
+        case .Unread:
+            return "Unread"
+        case .Marked:
+            return "Marked"
+        }
+    }
 }
 
 
@@ -21,9 +30,9 @@ enum ListMode {
 @Observable
 @MainActor
 public class DocumentListViewModel {
-    var listModel: ListMode
     var store: StateStore
-    var usercase: DocumentUseCase
+    var usecase: DocumentUseCaseProtocol
+    
     var mainDocuments: [DocumentItem] = []
     var selection: Set<DocumentItem.ID> = []
     var documentProperties: [Int64:[EntryProperty]] = [:]
@@ -33,26 +42,33 @@ public class DocumentListViewModel {
     var pageSize: Int = 20
     var hasMore = true
     
-    init(listModel: ListMode, store: StateStore, usercase: DocumentUseCase) {
-        self.listModel = listModel
+    init(store: StateStore, usecase: DocumentUseCaseProtocol) {
         self.store = store
-        self.usercase = usercase
-    }
-    
-    func initDocumentProperties(doc: DocumentItem) {
+        self.usecase = usecase
     }
     
     func getDocumentProperties(docID: Int64, key: String) -> EntryProperty? {
+        do {
+            let ep = try usecase.getDocumentProperty(document: docID, key: key)
+            return ep
+        } catch {
+            store.alert.display(msg: "get document property failed: \(error)")
+        }
         return nil
     }
         
-    func listNextPage() {
+    func listNextPage(prespective: DocumentPrespective) {
         var nextPage: [DocumentInfo] = []
-        switch listModel {
-        case .Unread:
-            nextPage = try! usercase.listUnreadDocuments(page: page, pageSize: pageSize)
-        case .Marked:
-            nextPage = try! usercase.listMarkedDocuments(page: page, pageSize: pageSize)
+        do {
+            switch prespective {
+            case .unread:
+                nextPage = try usecase.listUnreadDocuments(page: page, pageSize: pageSize)
+            case .marked:
+                nextPage = try usecase.listMarkedDocuments(page: page, pageSize: pageSize)
+            }
+        } catch {
+            store.alert.display(msg: "list document page failed: \(error)")
+            return
         }
         
         page += 1
@@ -60,14 +76,14 @@ public class DocumentListViewModel {
             hasMore = false
         }
         for nextDoc in nextPage {
-            mainDocuments.append(DocumentItem(info: nextDoc, keepLowProfile: listModel == .Unread && !nextDoc.unread))
+            mainDocuments.append(DocumentItem(info: nextDoc, keepLowProfile: prespective == .unread && !nextDoc.unread))
         }
     }
 
-    func checkAndLoadNextPage<Item: Identifiable>(_ item: Item) {
+    func checkAndLoadNextPage<Item: Identifiable>(_ item: Item, prespective: DocumentPrespective) {
         if hasMore && (mainDocuments.isLastItem(item) || mainDocuments.isEmpty) {
             self.isLoading = true
-            listNextPage()
+            listNextPage(prespective: prespective)
             self.isLoading = false
         }
     }

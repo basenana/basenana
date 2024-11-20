@@ -10,12 +10,13 @@ import Entities
 import NetworkCore
 
 
+@available(macOS 11.0, *)
 public class DialogueClient: DialogueClientProtocol {
     
     var client: Api_V1_RoomClientProtocol
     
-    init(client: Api_V1_RoomClientProtocol) {
-        self.client = client
+    public init(clientSet: ClientSet) {
+        self.client = clientSet.dialogue
     }
     
     public func ListRoomes(entry: Int64) throws -> [NetworkCore.APIRoom] {
@@ -80,5 +81,4 @@ public class DialogueClient: DialogueClientProtocol {
         }
         handler(reply!, false)
     }
-    
 }

@@ -9,21 +9,24 @@ import SwiftUI
 import Foundation
 import AppState
 import Entities
-import MenuView
 
 
 @available(macOS 14.0, *)
 public struct GroupTableView: View {
+    private var groupID: Int64
     
-    @State private var viewModel: GroupTableViewModel
+    @State private var viewModel: TreeViewModel
+    @State var selection: Set<EntryRow.ID> = []
+    @State var selectedDocument: DocumentDetail? = nil
     @State private var order: [KeyPathComparator<EntryRow>] = [.init(\.name, order: .forward)]
-    
-    public init(viewModel: GroupTableViewModel) {
+
+    public init(groupID: Int64, viewModel: TreeViewModel) {
+        self.groupID = groupID
         self.viewModel = viewModel
     }
     
     public var body: some View {
-        Table(of: EntryRow.self, selection: $viewModel.selection, sortOrder: $order) {
+        Table(of: EntryRow.self, selection: $selection, sortOrder: $order) {
             TableColumn("Name", value: \.name) { entry in
                 HStack {
                     Image(systemName: entry.isGroup ? "folder" : "doc.text")
@@ -37,7 +40,7 @@ public struct GroupTableView: View {
                     Text("--")
                         .frame(maxWidth: .infinity, alignment: .trailing)
                 } else {
-                    Text(bytesToHumanReadableString(bytes: $0.size))
+                    Text($0.readableSize)
                         .frame(maxWidth: .infinity, alignment: .trailing)
                 }
             }
@@ -45,27 +48,34 @@ public struct GroupTableView: View {
                 Text("\($0.modifiedAt, format: Date.FormatStyle(date: .numeric, time: .standard))")
             }
         } rows: {
-            ForEach(viewModel.children, id: \.id) { child in
+            ForEach(viewModel.opendGroupChildren, id: \.id) { child in
                 TableRow(child)
                     .draggable(IDHelper(kind: "entry", id: child.id).Encode())
             }
         }
         .task {
-            viewModel.loadChildren()
+            viewModel.openGroup(groupID: groupID)
         }
         .contextMenu{
-            if viewModel.selection.count == 1 {
-                let selectedID = viewModel.selection.first!
-                let selected = viewModel.children.filter({ $0.id == selectedID }).first
-                MenuView(viewModel: MenuViewModel(store: viewModel.store, entry: selected?.info))
-            }else {
-                MenuView(viewModel: MenuViewModel(store: viewModel.store))
+            if let selected = getSelectedEntry() {
+                MenuView(parentID: groupID, targetEntry: selected.id, viewModel: viewModel)
+            } else {
+                MenuView(parentID: groupID, viewModel: viewModel)
             }
         }
         .onChange(of: order){
             withAnimation {
-                viewModel.children.sort(using: order)
+                viewModel.opendGroupChildren.sort(using: order)
             }
+        }
+    }
+    
+    func getSelectedEntry() -> EntryRow?{
+        if selection.count == 1 {
+            let selectedID = selection.first!
+            return viewModel.opendGroupChildren.filter({ $0.id == selectedID }).first
+        }else {
+            return nil
         }
     }
 }
@@ -97,7 +107,7 @@ import DomainTestHelpers
 
 #Preview {
     if #available(macOS 14.0, *) {
-        GroupTableView(viewModel: GroupTableViewModel(id: 1010, store: StateStore.empty, usercase: MockEntryTreeUseCase()))
+        GroupTableView(groupID: 1010, viewModel: TreeViewModel(store: StateStore.empty, treeUsecase: MockEntryTreeUseCase(), entryUsecase: MockEntryUseCase()))
     }
 }
 

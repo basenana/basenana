@@ -10,12 +10,13 @@ import Entities
 import NetworkCore
 
 
+@available(macOS 11.0, *)
 public class InboxClient: InboxClientProtocol {
     
     var client: Api_V1_InboxClientProtocol
     
-    init(client: Api_V1_InboxClientProtocol) {
-        self.client = client
+    public init(clientSet: ClientSet) {
+        self.client = clientSet.inbox
     }
     
     public func QuickInbox(_ f: Entities.QuickInbox) throws {

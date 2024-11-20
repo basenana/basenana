@@ -9,14 +9,8 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "TreeListView",
-            targets: ["TreeListView"]),
-        .library(
-            name: "MenuView",
-            targets: ["MenuView"]),
-        .library(
-            name: "GroupTableView",
-            targets: ["GroupTableView"]),
+            name: "GroupTable",
+            targets: ["GroupTable"]),
     ],
     dependencies: [
         .package(name: "Domain", path: "../Domain"),
@@ -26,34 +20,13 @@ let package = Package(
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "TreeListView",
+            name: "GroupTable",
             dependencies: [
-                "MenuView",
-                .product(name: "Entities", package: "Domain"),
-                .product(name: "AppState", package: "Domain"),
-                .product(name: "UseCaseProtocol", package: "Domain"),
-                .product(name: "DomainTestHelpers", package: "Domain"),
-            ]
-        ),
-        .target(
-            name: "MenuView",
-            dependencies: [
-                .product(name: "Entities", package: "Domain"),
-                .product(name: "AppState", package: "Domain"),
-                .product(name: "Functions", package: "Domain"),
-                .product(name: "UseCaseProtocol", package: "Domain"),
-                .product(name: "DomainTestHelpers", package: "Domain"),
-                .product(name: "Styleguide", package: "Styleguide"),
-            ]
-        ),
-        .target(
-            name: "GroupTableView",
-            dependencies: [
-                "MenuView",
                 .product(name: "Entities", package: "Domain"),
                 .product(name: "AppState", package: "Domain"),
                 .product(name: "UseCaseProtocol", package: "Domain"),
                 .product(name: "DomainTestHelpers", package: "Domain"),
+                .product(name: "Styleguide", package: "Styleguide"),
             ]
         ),
         .testTarget(

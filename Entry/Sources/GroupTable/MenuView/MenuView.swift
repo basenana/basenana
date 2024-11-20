@@ -14,15 +14,26 @@ import Styleguide
 
 @available(macOS 14.0, *)
 public struct MenuView: View {
-    @State private var viewModel: MenuViewModel
+    private var parentID: Int64
+    private var targetID: Int64 = -1 // default no select
+    private var viewModel: TreeViewModel
     
-    public init(viewModel: MenuViewModel) {
+    @State private var targetEntry: EntryDetail? = nil
+
+    public init(parentID: Int64, viewModel: TreeViewModel) {
+        self.parentID = parentID
+        self.viewModel = viewModel
+    }
+    
+    public init(parentID: Int64, targetEntry: Int64, viewModel: TreeViewModel) {
+        self.parentID = parentID
+        self.targetID = targetEntry
         self.viewModel = viewModel
     }
     
     public var body: some View {
         VStack {
-            if let group = viewModel.group {
+            if targetEntry?.isGroup ?? false {
                 Section{
                     Button("Open", action: {
                         // goto group view
@@ -42,30 +53,10 @@ public struct MenuView: View {
                 }
             }
             
-            // web page
-            Section{
-                Button("Launch URL", action: {
-                    for pk in [Property.WebPageURL, Property.WebSiteURL]{
-                        if let proVal = viewModel.getProperty(k: pk){
-                            if let pageUrl = URL(string: proVal){
-                                //                                openURL.callAsFunction(pageUrl){ result in
-                                //                                    log.info("open docuemnt url \(proVal), resule: \(result)")
-                                //                                }
-                                break
-                            }
-                        }
-                    }
-                })
-                Button("Copy URL", action: {
-                    for pk in [Property.WebPageURL, Property.WebSiteURL]{
-                        if let proVal = viewModel.getProperty(k: pk){
-                            //                            copyToClipBoard(textToCopy: pro.value)
-                            break
-                        }
-                    }
-                })
+            if !(targetEntry?.isGroup ?? true){
+                WebFileMenuView(viewModel: viewModel, targetEntry: targetEntry!)
             }
-            
+
             Section{
                 Button("Rename", action: {})
                 Button("Delete", action: {})
@@ -73,7 +64,7 @@ public struct MenuView: View {
             
             Section{
                 Menu("Move To") {
-                    ForEach(viewModel.store.groupTree.children ?? []){ childGroup in
+                    ForEach(viewModel.groupTree.children ?? []){ childGroup in
                         GroupDestinationView(
                             group: childGroup,
                             childKeyPath: \.children,
@@ -82,7 +73,7 @@ public struct MenuView: View {
                     }
                 }
                 Menu("Replicate To") {
-                    ForEach(viewModel.store.groupTree.children ?? []){ childGroup in
+                    ForEach(viewModel.groupTree.children ?? []){ childGroup in
                         GroupDestinationView(
                             group: childGroup,
                             childKeyPath: \.children,
@@ -92,20 +83,13 @@ public struct MenuView: View {
                 }
             }
             
-            if viewModel.group == nil {
+            if !(targetEntry?.isGroup ?? true){
                 Section{
                     Menu("Mark") {
                         Button("As Marked", action: { print("Option 1 selected") })
                         Button("As Unread", action: { print("Option 2 selected") })
                     }
                 }
-            }
-        }
-        .task {
-            do {
-                try await viewModel.initEntryCache()
-            } catch {
-                print("fetch entry property failed \(error)")
             }
         }
     }
@@ -150,7 +134,7 @@ let entries = try! MockEntryTreeUseCase().listChildren(entry: 1)
 #Preview {
     if #available(macOS 14.0, *) {
         List{
-            MenuView(viewModel: MenuViewModel(store: StateStore.empty, entry: entries[0]))
+            MenuView(parentID: 1010, viewModel: TreeViewModel(store: StateStore.empty, treeUsecase: MockEntryTreeUseCase(), entryUsecase: MockEntryUseCase()))
         }
     }
 }

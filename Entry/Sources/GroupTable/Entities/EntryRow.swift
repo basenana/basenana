@@ -1,43 +1,11 @@
 //
-//  GroupTableViewModel.swift
+//  EntryRow.swift
 //  Entry
 //
-//  Created by Hypo on 2024/10/14.
+//  Created by Hypo on 2024/11/19.
 //
-
-import SwiftUI
 import Foundation
 import Entities
-import AppState
-import UseCase
-
-
-@available(macOS 14.0, *)
-@Observable
-@MainActor
-public class GroupTableViewModel {
-    var id: Int64
-    var children: [EntryRow] = []
-    
-    var selection: Set<EntryRow.ID> = []
-    var document: DocumentDetail? = nil
-    
-    var store: StateStore
-    var usercase: EntryTreeUseCase
-    
-    init(id: Int64, store: StateStore, usercase: EntryTreeUseCase) {
-        self.id = id
-        self.store = store
-        self.usercase = usercase
-    }
-    
-    func loadChildren() {
-        let newChildren = try! usercase.listChildren(entry: id)
-        for child in newChildren {
-            self.children.append(EntryRow(info: child))
-        }
-    }
-}
 
 
 struct EntryRow: Hashable, Identifiable {
@@ -75,5 +43,27 @@ struct EntryRow: Hashable, Identifiable {
     
     static func == (lhs: EntryRow, rhs: EntryRow) -> Bool {
         return lhs.info.id == rhs.info.id
+    }
+    
+    var readableSize: String {
+        get {
+            let kilobyte: Int64 = 1024
+            let megabyte = kilobyte * 1024
+            let gigabyte = megabyte * 1024
+            let terabyte = gigabyte * 1024
+            
+            let bytes = size
+            if bytes < kilobyte {
+                return "\(bytes) B"
+            } else if bytes < megabyte {
+                return String(format: "%.2f KB", Double(bytes) / Double(kilobyte))
+            } else if bytes < gigabyte {
+                return String(format: "%.2f MB", Double(bytes) / Double(megabyte))
+            } else if bytes < terabyte {
+                return String(format: "%.2f GB", Double(bytes) / Double(gigabyte))
+            } else {
+                return String(format: "%.2f TB", Double(bytes) / Double(terabyte))
+            }
+        }
     }
 }
