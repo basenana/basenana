@@ -49,19 +49,13 @@ public class DocumentUseCase: DocumentUseCaseProtocol {
         return try docRepo.GetDocumentDetail(id: DocumentID(documentID: document))
     }
     
-    public func getDocumentProperty(entry: Int64, key: String) throws -> Entities.EntryProperty? {
-        let entry = try entryRepo.GetEntryDetail(entry: entry)
-        for p in entry.properties {
-            if p.key == key {
-                return p
-            }
-        }
-        return nil
+    public func getDocumentEntry(entry: Int64) throws -> Entities.EntryDetail? {
+        return try entryRepo.GetEntryDetail(entry: entry)
     }
 
-    public func getDocumentProperty(document: Int64, key: String) throws -> Entities.EntryProperty? {
+    public func getDocumentEntry(document: Int64) throws -> Entities.EntryDetail? {
         let doc = try getDocumentDetails(document: document)
-        return try getDocumentProperty(entry: doc.oid, key: key)
+        return try getDocumentEntry(entry: doc.oid)
     }
 
     public func setDocumentMarkState(document: Int64, ismark: Bool) throws {

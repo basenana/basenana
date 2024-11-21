@@ -36,7 +36,9 @@
 		3F7A1E052CEDCA5800C2BDC8 /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7A1E032CEDCA5800C2BDC8 /* Container.swift */; };
 		3F7A1E0B2CEE0EDF00C2BDC8 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7A1E0A2CEE0EDE00C2BDC8 /* Environment.swift */; };
 		3F7A1E0C2CEE0EDF00C2BDC8 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7A1E0A2CEE0EDE00C2BDC8 /* Environment.swift */; };
+		3F7A1E122CEF6A1000C2BDC8 /* SwiftUIMasonry in Frameworks */ = {isa = PBXBuildFile; productRef = 3F7A1E112CEF6A1000C2BDC8 /* SwiftUIMasonry */; };
 		3F84C8CB2C146E29003DC6DA /* WebArchiver in Frameworks */ = {isa = PBXBuildFile; productRef = 3F84C8CA2C146E29003DC6DA /* WebArchiver */; };
+		3F9022B02CEF7B9A0045A1E3 /* AppState in Frameworks */ = {isa = PBXBuildFile; productRef = 3F9022AF2CEF7B9A0045A1E3 /* AppState */; };
 		3FA180142C157A8A004176EA /* WebArchiver in Frameworks */ = {isa = PBXBuildFile; productRef = 3FA180132C157A8A004176EA /* WebArchiver */; };
 		3FAC06BC2C25BEC40067E7A5 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06BB2C25BEC40067E7A5 /* LoginView.swift */; };
 		3FAC06BD2C25BEC40067E7A5 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06BB2C25BEC40067E7A5 /* LoginView.swift */; };
@@ -118,6 +120,7 @@
 				3F7A1DEB2CECCFB000C2BDC8 /* DocumentRead in Frameworks */,
 				3F7A1DF82CEDBC4400C2BDC8 /* NetworkCore in Frameworks */,
 				3FB782452BC1A82700327191 /* GRPCReflectionService in Frameworks */,
+				3F7A1E122CEF6A1000C2BDC8 /* SwiftUIMasonry in Frameworks */,
 				3F7A1DFC2CEDBC4400C2BDC8 /* Repositories in Frameworks */,
 				3F7A1DED2CECCFC300C2BDC8 /* GroupTable in Frameworks */,
 				3F7A1DEF2CECCFC300C2BDC8 /* QuickInbox in Frameworks */,
@@ -126,6 +129,7 @@
 				3F19E20C2C140A6C00B84293 /* Reeeed in Frameworks */,
 				3F7444B72BE3D1B000CC9C1E /* SwiftSoup in Frameworks */,
 				3FB782432BC1A82700327191 /* GRPC in Frameworks */,
+				3F9022B02CEF7B9A0045A1E3 /* AppState in Frameworks */,
 				3FB2AC762C2AFD80007E755B /* FeedKit in Frameworks */,
 				3F7A1DF62CEDB81B00C2BDC8 /* Factory in Frameworks */,
 				3FB782412BC1A82700327191 /* CGRPCZlib in Frameworks */,
@@ -325,6 +329,8 @@
 				3F7A1DF92CEDBC4400C2BDC8 /* NetworkExtension */,
 				3F7A1DFB2CEDBC4400C2BDC8 /* Repositories */,
 				3F7A1DFE2CEDC16D00C2BDC8 /* Swinject */,
+				3F7A1E112CEF6A1000C2BDC8 /* SwiftUIMasonry */,
+				3F9022AF2CEF7B9A0045A1E3 /* AppState */,
 			);
 			productName = basenana;
 			productReference = 3F1BBE192B8E147F005D533F /* Basenana.app */;
@@ -437,6 +443,7 @@
 				3FB2AC742C2AFD80007E755B /* XCRemoteSwiftPackageReference "FeedKit" */,
 				3F7A1DF42CEDB81B00C2BDC8 /* XCRemoteSwiftPackageReference "Factory" */,
 				3F7A1DFD2CEDC16D00C2BDC8 /* XCRemoteSwiftPackageReference "Swinject" */,
+				3F7A1E102CEF6A1000C2BDC8 /* XCRemoteSwiftPackageReference "SwiftUIMasonry" */,
 			);
 			productRefGroup = 3F1BBE1A2B8E147F005D533F /* Products */;
 			projectDirPath = "";
@@ -692,7 +699,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = org.basenana.app.basenana;
@@ -731,7 +738,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.basenana.app.basenana;
 				PRODUCT_NAME = Basenana;
@@ -999,6 +1006,14 @@
 				minimumVersion = 2.9.1;
 			};
 		};
+		3F7A1E102CEF6A1000C2BDC8 /* XCRemoteSwiftPackageReference "SwiftUIMasonry" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ciaranrobrien/SwiftUIMasonry";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		3F84C8C92C146E29003DC6DA /* XCRemoteSwiftPackageReference "WebArchiver" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hyponet/WebArchiver.git";
@@ -1120,10 +1135,19 @@
 			package = 3F7A1DFD2CEDC16D00C2BDC8 /* XCRemoteSwiftPackageReference "Swinject" */;
 			productName = Swinject;
 		};
+		3F7A1E112CEF6A1000C2BDC8 /* SwiftUIMasonry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F7A1E102CEF6A1000C2BDC8 /* XCRemoteSwiftPackageReference "SwiftUIMasonry" */;
+			productName = SwiftUIMasonry;
+		};
 		3F84C8CA2C146E29003DC6DA /* WebArchiver */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3F84C8C92C146E29003DC6DA /* XCRemoteSwiftPackageReference "WebArchiver" */;
 			productName = WebArchiver;
+		};
+		3F9022AF2CEF7B9A0045A1E3 /* AppState */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppState;
 		};
 		3FA180132C157A8A004176EA /* WebArchiver */ = {
 			isa = XCSwiftPackageProductDependency;

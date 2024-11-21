@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "Data",
-    platforms: [.macOS(.v10_15)],
+    platforms: [.macOS(.v14)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library( name: "Repositories", targets: ["Repositories"]),
@@ -32,10 +32,6 @@ let package = Package(
             name: "NetworkCore",
             dependencies: [
                 .product(name: "GRPC", package: "grpc-swift"),
-//                .product(name: "SwiftProtobuf", package: "grpc-swift"),
-//                .product(name: "NIO", package: "grpc-swift"),
-//                .product(name: "NIOSSL", package: "grpc-swift"),
-//                .product(name: "NIOConcurrencyHelpers", package: "grpc-swift"),
             ]
         ),
         .target(

@@ -13,6 +13,9 @@ import Entities
 struct DocumentItemView: View {
     var doc: DocumentItem
     var viewModel: DocumentListViewModel
+    
+    @State var parentEntry: EntryDetail? = nil
+    @State var properties: [EntryProperty] = []
 
     init(doc: DocumentItem, viewModel: DocumentListViewModel ) {
         self.doc = doc
@@ -23,17 +26,17 @@ struct DocumentItemView: View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading){
                 HStack(alignment: .top) {
-                    Text("\(self.groupName().prefix(25))")
+                    Text("\(groupName.prefix(25))")
                         .foregroundColor(Color.gray)
                     
                     Spacer()
                     
-                    Text(docTime())
+                    Text(docTime)
                         .font(.caption)
                         .foregroundColor(doc.keepLowProfile ? Color.gray : Color.primary  )
                 }
                 
-                Text(docTitle())
+                Text(docTitle)
                     .font(.headline)
                     .foregroundColor(doc.keepLowProfile ? Color.gray : Color.primary  )
                 
@@ -44,66 +47,49 @@ struct DocumentItemView: View {
                 .foregroundColor(Color.gray)
                 .frame(minWidth: 0, idealWidth: 200,  maxWidth: .infinity, minHeight: 0, idealHeight: 40, maxHeight: 50, alignment: .leading)
             
-            Text(docURL())
+            Text(docURL)
                 .foregroundColor(Color.gray)
         }
         .padding(.vertical, 3)
-    }
-    
-    func getProperty(k: String) -> EntryProperty? {
-        // FIXME: this is too slow
-//        return viewModel.getDocumentProperties(docID: doc.id, key: k)
-        return nil
-    }
-    
-    func docTitle() -> String {
-        if let p = getProperty(k: Property.WebPageTitle){
-            return p.value
+        .task {
+            if let entry = viewModel.getDocumentEntry(entry: doc.info.oid){
+                properties = entry.properties
+                parentEntry = viewModel.getDocumentEntry(entry: entry.parent)
+            }
         }
-        
-        return doc.info.name
     }
     
-    func docTime() -> String {
+    var docTitle: String {
+        return properties.filter({ $0.key == Property.WebPageTitle}).first?.value ?? doc.info.name
+    }
+    
+    var docTime: String {
         var datetime = doc.info.createdAt
         
-        if let p = getProperty(k: Property.WebPageUpdateAt){
-            // parse datetime from RFC3339
-            if let paresedDate = rfc3339Formatter.date(from: p.value) {
-                datetime = paresedDate
-            }else {
-                print("parse web page update at failed, got \(p.value)")
-            }
+        let updateAt = properties.filter({ $0.key == Property.WebPageUpdateAt}).first?.value ?? ""
+        guard updateAt != "" else {
+            return dateFormatter.string(from: datetime)
+        }
+        
+        
+        if let paresedDate = rfc3339Formatter.date(from: updateAt) {
+            datetime = paresedDate
+        }else {
+            print("parse web page update at failed, got \(updateAt)")
         }
         
         return dateFormatter.string(from: datetime)
     }
 
-    func docURL() -> String {
-        var urlStr: String = ""
-        for keyStr in [Property.WebPageURL, Property.WebSiteURL]{
-            if let p = getProperty(k: keyStr){
-                urlStr =  p.value
-                break
-            }
+    var docURL: String {
+        if let urlStr = properties.filter({ ($0.key == Property.WebPageURL || $0.key == Property.WebSiteURL) && !$0.value.isEmpty }).first?.value{
+            return URL(string: urlStr)?.host() ?? parentEntry?.name ?? ""
         }
-        
-        guard !urlStr.isEmpty else {
-            return ""
-        }
-        
-        return URL(string: urlStr)?.host() ?? ""
+        return parentEntry?.name ?? ""
     }
 
-    func groupName() -> String {
-        if let p = getProperty(k: Property.WebSiteName){
-            if p.value.count > 20 {
-                return "\(p.value.prefix(20))..."
-            }
-            return p.value
-        }
-        
-        return ""
+    var groupName: String {
+        return properties.filter({ $0.key == Property.WebSiteName}).first?.value ?? ""
     }
     
     let rfc3339Formatter = RFC3339Formatter()

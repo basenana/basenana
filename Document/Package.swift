@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "Document",
-    platforms: [.macOS(.v10_15)],
+    platforms: [.macOS(.v14)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
@@ -15,6 +15,7 @@ let package = Package(
     dependencies: [
         .package(name: "Domain", path: "../Domain"),
         .package(name: "Styleguide", path: "../Styleguide"),
+        .package(url: "https://github.com/ciaranrobrien/SwiftUIMasonry", branch: "main")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -26,6 +27,7 @@ let package = Package(
                 .product(name: "AppState", package: "Domain"),
                 .product(name: "UseCaseProtocol", package: "Domain"),
                 .product(name: "DomainTestHelpers", package: "Domain"),
+                "SwiftUIMasonry",
             ]
         ),
         .testTarget(

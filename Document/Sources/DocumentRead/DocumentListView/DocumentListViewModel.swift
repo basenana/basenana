@@ -33,12 +33,20 @@ public class DocumentListViewModel {
         self.usecase = usecase
     }
     
-    func getDocumentProperties(docID: Int64, key: String) -> EntryProperty? {
+    func getDocumentEntry(entry: Int64) -> EntryDetail? {
         do {
-            let ep = try usecase.getDocumentProperty(document: docID, key: key)
-            return ep
+            return try usecase.getDocumentEntry(entry: entry)
         } catch {
-            store.alert.display(msg: "get document property failed: \(error)")
+            store.alert.display(msg: "get entry failed: \(error)")
+        }
+        return nil
+    }
+
+    func getDocumentEntry(docID: Int64) -> EntryDetail? {
+        do {
+            return try usecase.getDocumentEntry(document: docID)
+        } catch {
+            store.alert.display(msg: "get document entry failed: \(error)")
         }
         return nil
     }

@@ -16,8 +16,8 @@ public protocol DocumentUseCaseProtocol {
     func getDocumentDetails(entry: Int64) throws -> DocumentDetail
     func getDocumentDetails(document: Int64) throws -> DocumentDetail
     
-    func getDocumentProperty(entry: Int64, key: String) throws -> Entities.EntryProperty?
-    func getDocumentProperty(document: Int64, key: String) throws -> Entities.EntryProperty?
+    func getDocumentEntry(entry: Int64) throws -> Entities.EntryDetail?
+    func getDocumentEntry(document: Int64) throws -> Entities.EntryDetail?
     
     func setDocumentMarkState(document: Int64, ismark: Bool) throws
     func setDocumentReadState(document: Int64, unread: Bool) throws
