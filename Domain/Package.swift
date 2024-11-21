@@ -5,19 +5,57 @@ import PackageDescription
 
 let package = Package(
     name: "Domain",
+    platforms: [.macOS(.v14)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "Domain",
-            targets: ["Domain"]),
+            name: "Entities",
+            targets: ["Entities"]),
+        .library(
+            name: "AppState",
+            targets: ["AppState"]),
+        .library(
+            name: "RepositoryProtocol",
+            targets: ["RepositoryProtocol"]),
+        .library(
+            name: "UseCaseProtocol",
+            targets: ["UseCaseProtocol"]),
+        .library(
+            name: "UseCase",
+            targets: ["UseCase"]),
+        .library(
+            name: "DomainTestHelpers",
+            targets: ["DomainTestHelpers"]),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "Domain"),
+            name: "Entities",
+            dependencies: []
+        ),
+        .target(
+            name: "AppState",
+            dependencies: ["Entities"]
+        ),
+        .target(
+            name: "RepositoryProtocol",
+            dependencies: ["Entities"]
+        ),
+        .target(
+            name: "UseCaseProtocol",
+            dependencies: ["Entities"]
+        ),
+        .target(
+            name: "UseCase",
+            dependencies: ["RepositoryProtocol", "UseCaseProtocol"]
+        ),
+        .target(
+            name: "DomainTestHelpers",
+            dependencies: ["Entities", "RepositoryProtocol", "UseCase"]
+        ),
         .testTarget(
             name: "DomainTests",
-            dependencies: ["Domain"]),
+            dependencies: ["Entities", "RepositoryProtocol", "UseCase"]),
     ]
 )
