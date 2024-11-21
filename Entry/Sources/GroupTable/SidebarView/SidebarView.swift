@@ -20,18 +20,16 @@ public struct SidebarView: View {
     }
     
     public var body: some View {
-        List(selection: viewModel.store.binding(for: \.sidebarSelection, toAction: {
-                .updateSidebarSelection(select: $0)
-        })){
+        List(selection: viewModel.store.binding(for: \.sidebarSelection, toAction: { .updateSidebarSelection(select: $0) })){
             NavigationLink(value: Destination.groupList(group: viewModel.store.fsInfo.inboxID)){
                 SidebarIconView(imageName: "tray.full.fill", title: "Inbox", color: .blue)
             }.id("nav_inbox")
             
-            NavigationLink(value: Destination.readDocuments(prespective: .unread)){
+            NavigationLink(value: Destination.listDocuments(prespective: .unread)){
                 SidebarIconView(imageName: "circle.inset.filled", title: "Unread", color: .brown)
             }.id("nav_unread")
             
-            NavigationLink(value: Destination.readDocuments(prespective: .marked)){
+            NavigationLink(value: Destination.listDocuments(prespective: .marked)){
                 SidebarIconView(imageName: "bookmark.fill", title: "Marked", color: .yellow)
             }.id("nav_marked")
             
@@ -39,6 +37,9 @@ public struct SidebarView: View {
             Section("GROUPS"){
                 TreeListView(viewModel: viewModel)
             }
+        }
+        .task {
+            viewModel.resetGroupTree()
         }
         .listStyle(.sidebar)
         .padding(.bottom, 20)

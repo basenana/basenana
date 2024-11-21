@@ -13,19 +13,17 @@ import Entities
 
 @available(macOS 14.0, *)
 public struct DocumentListView: View {
-    var viewModel: DocumentListViewModel
-    var prespective: DocumentPrespective
+    @State var viewModel: DocumentListViewModel
     @State var section = DocumentListSection()
     
-    public init(prespective: DocumentPrespective, viewModel: DocumentListViewModel) {
-        self.prespective = prespective
+    public init(viewModel: DocumentListViewModel) {
         self.viewModel = viewModel
     }
     
     public var body: some View {
         VStack {
             List(viewModel.mainDocuments) { document in
-                if viewModel.listModel == .Unread {
+                if viewModel.prespective == .unread {
                     // group by document time
                     DocumentListSectionView(sectionName: section.sectionNames[document.id])
                 }
@@ -36,7 +34,7 @@ public struct DocumentListView: View {
                     DocumentItemView(doc: document, viewModel: viewModel)
                     .task {
                         section.updateSection(next: document)
-                        viewModel.checkAndLoadNextPage(document, prespective: prespective)
+                        viewModel.checkAndLoadNextPage(document)
                     }
                 }
             }
@@ -45,11 +43,11 @@ public struct DocumentListView: View {
             }
         }
         .task {
-            viewModel.listNextPage(prespective: prespective)
+            viewModel.initNextPage()
         }
         .toolbar(removing: .sidebarToggle)
         .frame(minWidth: 300, idealWidth: 300)
-        .navigationTitle(viewModel.listModel.Title)
+        .navigationTitle(viewModel.prespective.Title)
     }
 }
 
@@ -113,7 +111,7 @@ import DomainTestHelpers
 
 #Preview {
     if #available(macOS 14.0, *) {
-        DocumentListView(prespective: .unread, viewModel: DocumentListViewModel(store: StateStore.empty, usecase: MockDocumentUseCase()))
+        DocumentListView(viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.empty, usecase: MockDocumentUseCase()))
     }
 }
 

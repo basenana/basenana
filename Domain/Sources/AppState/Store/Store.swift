@@ -16,6 +16,7 @@ public class StateStore {
     public var destinations = [Destination]()
     public var sidebarSelection: Destination = .mainContent
     public var alert = Alert()
+    public var notifications = [String]()
     public var fsInfo = FSInfo()
     public var config = Config()
     
@@ -55,12 +56,21 @@ public class FSInfo {
     public var namespace = ""
     public var rootID: Int64 = 0
     public var inboxID: Int64 = 0
+    
+    init(){}
+    
+    public init(namespace: String, rootID: Int64, inboxID: Int64) {
+        self.fsApiReady = true
+        self.namespace = namespace
+        self.rootID = rootID
+        self.inboxID = inboxID
+    }
 }
 
 
 public class Alert {
-    var alertMessage: String = ""
-    var needAlert: Bool = false
+    public var alertMessage: String = ""
+    public var needAlert: Bool = false
     
     public func display(msg: String) {
         self.alertMessage = msg

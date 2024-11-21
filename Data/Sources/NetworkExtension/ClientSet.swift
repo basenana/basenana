@@ -59,8 +59,8 @@ public class FSAPI {
             let call = auth.accessToken(request, callOptions: defaultCallOptions)
             do {
                 let response = try call.response.wait()
-                let encodedClientCrt = try response.clientCrt.base64Decoded()
-                let encodedClientKey = try response.clientKey.base64Decoded()
+                self.clientCrt = try response.clientCrt.base64Decoded()
+                self.clientKey = try response.clientKey.base64Decoded()
                 self.namespace = response.namespace
             } catch {
                 throw RepositoryError.loginFailed(error)
@@ -68,6 +68,7 @@ public class FSAPI {
         }
         
         self.isLogined = true
+        print("login succeed")
         return try ClientSet(host: host, port: port, clientCrt: clientCrt, clientKey: clientKey, namespace: namespace)
     }
 }
@@ -104,5 +105,38 @@ public class ClientSet {
         
         self.namespace = namespace
     }
+    
+    public func fsInfo() throws -> FSInfo {
+        let result = FSInfo()
+        result.namespace = namespace
+        
+        do {
+            var req = Api_V1_FindEntryDetailRequest()
+            req.root = true
+            let resp = try entries.findEntryDetail(req, callOptions: defaultCallOptions).response.wait()
+            result.rootID = resp.entry.id
+        } catch {
+            print("refush fs info error, get root entry failed \(error)")
+            throw error
+        }
+        
+        do {
+            var req = Api_V1_FindEntryDetailRequest()
+            req.parentID = result.rootID
+            req.name = ".inbox"
+            let resp = try entries.findEntryDetail(req, callOptions: defaultCallOptions).response.wait()
+            result.inboxID = resp.entry.id
+        } catch {
+            print("refush fs info error, get inbox entry failed \(error)")
+            throw error
+        }
+        
+        return result
+    }
 }
 
+public class FSInfo {
+    public var namespace = ""
+    public var rootID: Int64 = 0
+    public var inboxID: Int64 = 0
+}

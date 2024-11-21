@@ -91,4 +91,13 @@ public enum DocumentOrder {
 public enum DocumentPrespective {
     case unread
     case marked
+    
+    public var Title: String {
+        switch self {
+        case .unread:
+            return "Unread"
+        case .marked:
+            return "Marked"
+        }
+    }
 }

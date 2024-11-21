@@ -13,7 +13,7 @@ import Entities
 struct DocumentItemView: View {
     var doc: DocumentItem
     var viewModel: DocumentListViewModel
-    
+
     init(doc: DocumentItem, viewModel: DocumentListViewModel ) {
         self.doc = doc
         self.viewModel = viewModel
@@ -28,12 +28,12 @@ struct DocumentItemView: View {
                     
                     Spacer()
                     
-                    Text(self.docTime())
+                    Text(docTime())
                         .font(.caption)
                         .foregroundColor(doc.keepLowProfile ? Color.gray : Color.primary  )
                 }
                 
-                Text(self.docTitle())
+                Text(docTitle())
                     .font(.headline)
                     .foregroundColor(doc.keepLowProfile ? Color.gray : Color.primary  )
                 
@@ -44,14 +44,16 @@ struct DocumentItemView: View {
                 .foregroundColor(Color.gray)
                 .frame(minWidth: 0, idealWidth: 200,  maxWidth: .infinity, minHeight: 0, idealHeight: 40, maxHeight: 50, alignment: .leading)
             
-            Text(self.docURL())
+            Text(docURL())
                 .foregroundColor(Color.gray)
         }
         .padding(.vertical, 3)
     }
     
     func getProperty(k: String) -> EntryProperty? {
-        return viewModel.getDocumentProperties(docID: doc.id, key: k)
+        // FIXME: this is too slow
+//        return viewModel.getDocumentProperties(docID: doc.id, key: k)
+        return nil
     }
     
     func docTitle() -> String {

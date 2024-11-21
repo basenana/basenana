@@ -10,10 +10,19 @@ import Swinject
 import AppState
 
 
-struct macOSContentView: View {
-    let state = StateStore.empty
-    
+@MainActor
+struct ContentView: View {
+    @State private var state = StateStore.empty
+    @State private var environment = Environment()
+
     var body: some View {
-        Text("Hello")
+        if !state.fsInfo.fsApiReady || environment.clientSet == nil {
+            LoginView(state: state, environment: $environment)
+                .frame(minWidth: 400, maxWidth: 400, minHeight: 500, maxHeight: 500)
+        }else {
+            StackContentView(state: state, environment: $environment)
+        }
     }
 }
+
+

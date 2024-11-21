@@ -21,7 +21,7 @@ public class DocumentReadViewModel {
     
     var document: DocumentDetail? = nil
     
-    init(docID:Int64, store: StateStore, usecase: DocumentUseCaseProtocol) {
+    public init(docID:Int64, store: StateStore, usecase: DocumentUseCaseProtocol) {
         self.docID = docID
         self.store = store
         self.usecase = usecase

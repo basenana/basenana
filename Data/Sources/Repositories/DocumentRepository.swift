@@ -14,7 +14,7 @@ import RepositoryProtocol
 public class DocumentRepository: DocumentRepositoryProtocol {
     private var core: DocumentClientProtocol
     
-    init(core: DocumentClientProtocol) {
+    public init(core: DocumentClientProtocol) {
         self.core = core
     }
     

@@ -11,38 +11,24 @@ import Entities
 import AppState
 import UseCaseProtocol
 
-public enum ListMode {
-    case Unread
-    case Marked
-    
-    var Title: String {
-        switch self {
-        case .Unread:
-            return "Unread"
-        case .Marked:
-            return "Marked"
-        }
-    }
-}
-
 
 @available(macOS 14.0, *)
 @Observable
 @MainActor
 public class DocumentListViewModel {
+    var prespective: DocumentPrespective
     var store: StateStore
     var usecase: DocumentUseCaseProtocol
     
     var mainDocuments: [DocumentItem] = []
-    var selection: Set<DocumentItem.ID> = []
-    var documentProperties: [Int64:[EntryProperty]] = [:]
     
     var isLoading: Bool = false
     var page: Int = 1
     var pageSize: Int = 20
     var hasMore = true
     
-    init(store: StateStore, usecase: DocumentUseCaseProtocol) {
+    public init(prespective: DocumentPrespective, store: StateStore, usecase: DocumentUseCaseProtocol) {
+        self.prespective = prespective
         self.store = store
         self.usecase = usecase
     }
@@ -56,34 +42,46 @@ public class DocumentListViewModel {
         }
         return nil
     }
+    
+    func initNextPage() {
+        self.page = 1
+        let firstPage = listNextPage()
         
-    func listNextPage(prespective: DocumentPrespective) {
-        var nextPage: [DocumentInfo] = []
-        do {
-            switch prespective {
-            case .unread:
-                nextPage = try usecase.listUnreadDocuments(page: page, pageSize: pageSize)
-            case .marked:
-                nextPage = try usecase.listMarkedDocuments(page: page, pageSize: pageSize)
-            }
-        } catch {
-            store.alert.display(msg: "list document page failed: \(error)")
-            return
-        }
-        
-        page += 1
-        if nextPage.isEmpty {
-            hasMore = false
-        }
-        for nextDoc in nextPage {
+        print("reinit main documents: current cached \(mainDocuments.count)")
+        mainDocuments = []
+        for nextDoc in firstPage {
             mainDocuments.append(DocumentItem(info: nextDoc, keepLowProfile: prespective == .unread && !nextDoc.unread))
         }
     }
+    
+    func listNextPage() -> [DocumentInfo] {
+        var nextPageList: [DocumentInfo] = []
+        do {
+            switch prespective {
+            case .unread:
+                nextPageList = try usecase.listUnreadDocuments(page: page, pageSize: pageSize)
+            case .marked:
+                nextPageList = try usecase.listMarkedDocuments(page: page, pageSize: pageSize)
+            }
+            
+            if nextPageList.isEmpty {
+                hasMore = false
+            }
+            page += 1
+        } catch {
+            store.alert.display(msg: "list document page failed: \(error)")
+        }
+        
+        return nextPageList
+    }
 
-    func checkAndLoadNextPage<Item: Identifiable>(_ item: Item, prespective: DocumentPrespective) {
+    func checkAndLoadNextPage<Item: Identifiable>(_ item: Item) {
         if hasMore && (mainDocuments.isLastItem(item) || mainDocuments.isEmpty) {
             self.isLoading = true
-            listNextPage(prespective: prespective)
+            let nextPage = listNextPage()
+            for nextDoc in nextPage {
+                mainDocuments.append(DocumentItem(info: nextDoc, keepLowProfile: prespective == .unread && !nextDoc.unread))
+            }
             self.isLoading = false
         }
     }

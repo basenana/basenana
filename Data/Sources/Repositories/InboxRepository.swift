@@ -15,7 +15,7 @@ public class InboxRepository: InboxRepositoryProtocol {
     
     private var core: InboxClientProtocol
     
-    init(core: InboxClientProtocol) {
+    public init(core: InboxClientProtocol) {
         self.core = core
     }
     

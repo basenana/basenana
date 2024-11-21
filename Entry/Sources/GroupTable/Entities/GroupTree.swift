@@ -23,9 +23,6 @@ public class GroupTree {
         allGroups = [:]
         
         for grp in groups {
-            if grp.children == nil {
-                continue
-            }
             children!.append(paresGroupTreeChild(group: grp))
         }
     }

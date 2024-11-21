@@ -67,3 +67,17 @@ struct EntryRow: Hashable, Identifiable {
         }
     }
 }
+
+func sanitizeFileName(_ fileName: String) -> String {
+    let illegalFileNameCharacters = CharacterSet(charactersIn: "/\\?%*|\"<>")
+    
+    var sanitizedFileName = fileName.components(separatedBy: illegalFileNameCharacters).joined(separator: "_")
+    
+    sanitizedFileName = sanitizedFileName.trimmingCharacters(in: .whitespacesAndNewlines)
+    
+    if sanitizedFileName == "." || sanitizedFileName == ".." {
+        return ""
+    }
+    
+    return sanitizedFileName
+}

@@ -15,7 +15,7 @@ public class FileRepository: FileRepositoryProtocol {
     
     private var core: FileClientProtocol
     
-    init(core: FileClientProtocol) {
+    public init(core: FileClientProtocol) {
         self.core = core
     }
     

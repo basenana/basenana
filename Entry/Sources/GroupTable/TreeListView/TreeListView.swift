@@ -20,26 +20,21 @@ struct TreeListView: View {
     }
     
     public var body: some View {
-        VStack{
-            OutlineGroup(viewModel.groupTree.children ?? [], children: \.children){ child in
-                NavigationLink(value: Destination.groupList(group: child.id), label: {
-                    HStack{
-                        Image(systemName: "folder")
-                        Text("\(child.groupName)")
-                            .multilineTextAlignment(.leading)
-                    }
-                    .padding(.vertical, 4)
-                })
-                .id(child.id)
-                .dropDestination(for: String.self){ entryIDInfos, localtion in
-                    viewModel.moveEntriesToGroup(entries: parseIDInfo(entryInfos: entryIDInfos), newParent: child.id)
-                    return false
+        OutlineGroup(viewModel.groupTree.children ?? [], children: \.children){ child in
+            NavigationLink(value: Destination.groupList(group: child.id), label: {
+                HStack{
+                    Image(systemName: "folder")
+                    Text("\(child.groupName)")
+                        .multilineTextAlignment(.leading)
                 }
-                .draggable(IDHelper(kind: "group", id: child.id).Encode())
+                .padding(.vertical, 4)
+            })
+            .id(child.id)
+            .dropDestination(for: String.self){ entryIDInfos, localtion in
+                viewModel.moveEntriesToGroup(entries: parseIDInfo(entryInfos: entryIDInfos), newParent: child.id)
+                return false
             }
-        }
-        .task {
-            viewModel.resetGroupTree()
+            .draggable(IDHelper(kind: "group", id: child.id).Encode())
         }
         .contextMenu{
             // TODO: set selected entry

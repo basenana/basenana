@@ -24,7 +24,7 @@ public class InboxViewModel {
     var store: StateStore
     var usecase: InboxUseCaseProtocol
     
-    init(store: StateStore, usecase: InboxUseCaseProtocol){
+    public init(store: StateStore, usecase: InboxUseCaseProtocol){
         self.store = store
         self.usecase = usecase
     }

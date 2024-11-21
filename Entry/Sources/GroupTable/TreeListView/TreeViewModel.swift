@@ -34,7 +34,7 @@ public class TreeViewModel {
     var treeUsecase: EntryTreeUseCaseProtocol
     var entryUsecase: EntryUseCaseProtocol
 
-    init(store: StateStore, treeUsecase: EntryTreeUseCaseProtocol, entryUsecase: EntryUseCaseProtocol) {
+    public init(store: StateStore, treeUsecase: EntryTreeUseCaseProtocol, entryUsecase: EntryUseCaseProtocol) {
         self.store = store
         self.treeUsecase = treeUsecase
         self.entryUsecase = entryUsecase
