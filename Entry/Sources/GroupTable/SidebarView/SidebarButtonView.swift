@@ -10,17 +10,23 @@ import Styleguide
 
 @available(macOS 14.0, *)
 struct SidebarButtonView: View {
+    @State private var viewModel: TreeViewModel
+    
+    init(viewModel: TreeViewModel) {
+        self.viewModel = viewModel
+    }
+    
     var body: some View {
         HStack(content: {
             Button(action: {
-//                store.dispatch(.showSheet(sheetKind: .quickInbox))
+                viewModel.showQuickInbox.toggle()
             }, label: {
                 Image(systemName: "tray.and.arrow.down")
             })
             .buttonStyle(.accessoryBar)
             
             Button(action: {
-//                store.dispatch(.showSheet(sheetKind: .createGroup(parent: store.getSelectedGroup(), grpType: .standard)))
+                viewModel.showCreateGroup.toggle()
             }, label: {
                 Image(systemName: "folder.badge.plus")
             })
@@ -35,6 +41,12 @@ struct SidebarButtonView: View {
             })
             .buttonStyle(.accessoryBar)
         })
+        .sheet(isPresented: $viewModel.showQuickInbox){
+            InboxView(viewModel: viewModel)
+        }
+        .sheet(isPresented: $viewModel.showCreateGroup){
+            GroupCreateView(groupType: .standard, viewModel: viewModel)
+        }
         .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/,alignment: .leading)
         .padding(5)
     }

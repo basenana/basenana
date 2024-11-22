@@ -43,7 +43,7 @@ public struct SidebarView: View {
         }
         .listStyle(.sidebar)
         .padding(.bottom, 20)
-        .overlay(alignment: .bottom, content: {SidebarButtonView()})
+        .overlay(alignment: .bottom, content: {SidebarButtonView(viewModel: viewModel)})
     }
 }
 

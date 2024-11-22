@@ -58,9 +58,9 @@ public struct GroupTableView: View {
         }
         .contextMenu{
             if let selected = getSelectedEntry() {
-                MenuView(parentID: groupID, targetEntry: selected.id, viewModel: viewModel)
+                MenuView(targetID: selected.id, viewModel: viewModel)
             } else {
-                MenuView(parentID: groupID, viewModel: viewModel)
+                MenuView(targetID: groupID, viewModel: viewModel)
             }
         }
         .onChange(of: order){
@@ -107,7 +107,7 @@ import DomainTestHelpers
 
 #Preview {
     if #available(macOS 14.0, *) {
-        GroupTableView(groupID: 1010, viewModel: TreeViewModel(store: StateStore.empty, treeUsecase: MockEntryTreeUseCase(), entryUsecase: MockEntryUseCase()))
+        GroupTableView(groupID: 1010, viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
     }
 }
 

@@ -52,6 +52,7 @@ public class MockEntryInfo: EntryInfo {
 }
 
 public class MockEntryDetail: EntryDetail {
+    
     public var id: Int64
     
     public var name: String
@@ -110,14 +111,16 @@ public class MockEntryDetail: EntryDetail {
         self.properties = properties
     }
     
-    func toInfo() -> MockEntryInfo {
+    public func toInfo() -> (any Entities.EntryInfo)? {
         return MockEntryInfo(id: id, name: name, kind: kind, isGroup: isGroup, size: size, parentID: parent, createdAt: createdAt, changedAt: changedAt, modifiedAt: modifiedAt, accessAt: accessAt)
     }
     
-    func toGroup() -> Group {
-        return MockGroup(id: id, groupName: name, parentID: parent)
+    public func toGroup() -> (any Entities.Group)? {
+        if isGroup {
+            return MockGroup(id: id, groupName: name, parentID: parent)
+        }
+        return nil
     }
-
 }
 
 

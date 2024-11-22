@@ -45,6 +45,10 @@ public class GroupTree {
         return gvl
     }
     
+    public func getGroup(groupID: Int64) -> GroupLeaf? {
+        return allGroups[groupID]
+    }
+
     public func changeParent(groupID: Int64, newParentID: Int64) {
         if let group = self.allGroups[groupID] {
             if group.parentID == newParentID {

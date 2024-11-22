@@ -38,7 +38,11 @@ struct TreeListView: View {
         }
         .contextMenu{
             // TODO: set selected entry
-            MenuView(parentID: -1, viewModel: viewModel)
+            if let s = viewModel.selectedLeaf {
+                MenuView(targetID: s.id, viewModel: viewModel)
+            }else{
+                MenuView(targetID: viewModel.root.id, viewModel: viewModel)
+            }
         }
     }
 }
@@ -52,7 +56,7 @@ import DomainTestHelpers
 #Preview {
     if #available(macOS 14.0, *) {
         List{
-            TreeListView(viewModel: TreeViewModel(store: StateStore.empty, treeUsecase: MockEntryTreeUseCase(), entryUsecase: MockEntryUseCase()))
+            TreeListView(viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
         }
     }
 }

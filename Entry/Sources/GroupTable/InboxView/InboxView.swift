@@ -9,29 +9,30 @@ import SwiftUI
 import Foundation
 import AppState
 import Entities
+import WebPage
 
 
 @available(macOS 14.0, *)
 public struct InboxView: View {
-    private var viewModel: InboxViewModel
+    private var viewModel: TreeViewModel
     
     @State private var urlInput: String = ""
     @State private var urlTitle: String = ""
     @State private var fileTypeOption = "webarchive"
     @State private var showPreview: Bool = false
+    @State private var page: WebPage? = nil
+    @State private var errorMessage: String = ""
     
-    init(viewModel: InboxViewModel) {
+    init(viewModel: TreeViewModel) {
         self.viewModel = viewModel
     }
     
     public var body: some View {
         VStack {
             Form{
-                TextField("URL", text: $urlInput, onCommit: {
-                    viewModel.tryLoadWebPage(urlInput: urlInput, urlTitle: $urlTitle)
-                })
-                .textFieldStyle(.squareBorder)
-                .padding(.vertical, 5)
+                TextField("URL", text: $urlInput, onCommit: { tryLoadWebPage() })
+                    .textFieldStyle(.squareBorder)
+                    .padding(.vertical, 5)
                 
                 TextField("Title", text: $urlTitle)
                     .textFieldStyle(.squareBorder)
@@ -45,14 +46,14 @@ public struct InboxView: View {
                 .padding(.vertical, 5)
             }
             HStack {
-                if viewModel.errorMsg != ""{
-                    Text("\(viewModel.errorMsg)")
+                if errorMessage != ""{
+                    Text("\(errorMessage)")
                         .foregroundStyle(.red)
                         .padding(.vertical, 5)
                 }
                 
                 // preview
-                if viewModel.page != nil {
+                if let safePage = self.page {
                     Button(action: {
                         self.showPreview = true
                     }) {
@@ -65,7 +66,7 @@ public struct InboxView: View {
                     }
                     .popover(isPresented: $showPreview) {
                         VStack {
-                            InboxPreviewView(viewModel: viewModel)
+                            InboxPreviewView(page: safePage)
                         }
                         .frame(width: 500, height: 600)
                     }
@@ -74,7 +75,7 @@ public struct InboxView: View {
                 
                 // inbox
                 Button {
-                    viewModel.doInbox(url: urlInput, title: urlTitle, fileType: fileTypeOption)
+                    inbox()
                 } label: {
                     Text("Inbox")
                         .font(.body)
@@ -91,6 +92,29 @@ public struct InboxView: View {
         .padding(50)
         .frame(minWidth: 600, minHeight: 150)
     }
+    
+    func inbox() {
+        viewModel.quickInbox(url: urlInput, title: urlTitle, fileType: fileTypeOption, errorMsg: $errorMessage)
+        viewModel.showQuickInbox.toggle()
+    }
+
+    func tryLoadWebPage() {
+        let urlStr = urlInput
+        guard urlStr != "" else {
+            return
+        }
+        if let _ = URL(string: urlStr){
+            Task{
+                do {
+                    let loadedPage = try fetchWebPage(url: urlStr)
+                    self.page = loadedPage
+                    urlTitle = self.page?.title ?? ""
+                }catch {
+                    errorMessage = "fetch web page failed \(error)"
+                }
+            }
+        }
+    }
 }
 
 
@@ -100,7 +124,7 @@ import DomainTestHelpers
 
 #Preview {
     if #available(macOS 14.0, *) {
-        InboxView(viewModel: InboxViewModel(store: StateStore.empty, usecase: MockInboxUseCase()))
+        InboxView(viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
     }
 }
 

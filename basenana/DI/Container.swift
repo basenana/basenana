@@ -14,7 +14,6 @@ import RepositoryProtocol
 import UseCaseProtocol
 import Repositories
 import UseCase
-import QuickInbox
 import GroupTable
 import DocumentRead
 
@@ -33,7 +32,7 @@ class DIContainer {
         
         // ViewModels
         self.c.register(TreeViewModel.self) { r in
-            TreeViewModel(store: state, treeUsecase: r.resolve(EntryTreeUseCaseProtocol.self)!, entryUsecase: r.resolve(EntryUseCaseProtocol.self)!)
+            TreeViewModel(store: state, entryUsecase: r.resolve(EntryUseCaseProtocol.self)!)
         }.inObjectScope(.container)
         self.c.register(DocumentListViewModel.self, name: DocumentPrespective.marked.Title){ r in
             DocumentListViewModel(prespective: .marked, store: state, usecase: r.resolve(DocumentUseCaseProtocol.self)!)
@@ -44,22 +43,13 @@ class DIContainer {
         self.c.register(DocumentReadViewModel.self) { r, docID in
             DocumentReadViewModel(docID: docID, store: state, usecase: r.resolve(DocumentUseCaseProtocol.self)!)
         }
-        self.c.register(InboxViewModel.self) { r in
-            InboxViewModel(store: state, usecase: r.resolve(InboxUseCaseProtocol.self)!)
-        }
         
         // UseCases
         self.c.register(EntryUseCaseProtocol.self) { r in
-            EntryUseCase(entryRepo: r.resolve(EntryRepositoryProtocol.self)!)
-        }.inObjectScope(.container)
-        self.c.register(EntryTreeUseCaseProtocol.self) { r in
-            EntryTreeUseCase(entryRepo: r.resolve(EntryRepositoryProtocol.self)!)
+            EntryUseCase(inboxRepo: r.resolve(InboxRepositoryProtocol.self)!, entryRepo: r.resolve(EntryRepositoryProtocol.self)!, fileRepo: r.resolve(FileRepositoryProtocol.self)!)
         }.inObjectScope(.container)
         self.c.register(DocumentUseCaseProtocol.self) { r in
             DocumentUseCase(docRepo: r.resolve(DocumentRepositoryProtocol.self)!, entryRepo: r.resolve(EntryRepositoryProtocol.self)!)
-        }.inObjectScope(.container)
-        self.c.register(InboxUseCaseProtocol.self) { r in
-            InboxUseCase(inboxRepo: r.resolve(InboxRepositoryProtocol.self)!, entryRepo: r.resolve(EntryRepositoryProtocol.self)!, fileRepo: r.resolve(FileRepositoryProtocol.self)!)
         }.inObjectScope(.container)
 
         // Repositories

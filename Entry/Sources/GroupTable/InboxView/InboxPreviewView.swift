@@ -13,18 +13,14 @@ import WebPage
 
 @available(macOS 14.0, *)
 public struct InboxPreviewView: View {
-    var viewModel: InboxViewModel
+    var page: WebPage
     
-    init(viewModel: InboxViewModel) {
-        self.viewModel = viewModel
+    init(page: WebPage) {
+        self.page = page
     }
     
     public var body: some View {
-        if let safePage = viewModel.page{
-            ReadabilityView(page: safePage)
-        }else {
-            Text("Loading")
-        }
+        ReadabilityView(page: page)
     }
 }
 

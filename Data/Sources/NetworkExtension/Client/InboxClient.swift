@@ -28,7 +28,7 @@ public class InboxClient: InboxClientProtocol {
             req.url = f.url
         case .Raw:
             req.sourceType = .urlSource // TODO: support raw source
-            req.data = f.data
+            req.data = f.data!
         }
         
         switch f.fileType {

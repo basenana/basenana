@@ -14,20 +14,12 @@ import Styleguide
 
 @available(macOS 14.0, *)
 public struct MenuView: View {
-    private var parentID: Int64
-    private var targetID: Int64 = -1 // default no select
-    private var viewModel: TreeViewModel
-    
+    private var targetID: Int64
     @State private var targetEntry: EntryDetail? = nil
+    @State private var viewModel: TreeViewModel
 
-    public init(parentID: Int64, viewModel: TreeViewModel) {
-        self.parentID = parentID
-        self.viewModel = viewModel
-    }
-    
-    public init(parentID: Int64, targetEntry: Int64, viewModel: TreeViewModel) {
-        self.parentID = parentID
-        self.targetID = targetEntry
+    public init(targetID: Int64, viewModel: TreeViewModel) {
+        self.targetID = targetID
         self.viewModel = viewModel
     }
     
@@ -35,26 +27,33 @@ public struct MenuView: View {
         VStack {
             if targetEntry?.isGroup ?? false {
                 Section{
-                    Button("Open", action: {
-                        // goto group view
-                    })
+                    Button("Open", action: { viewModel.store.dispatch(.gotoDestination(.groupList(group: targetID))) })
                 }
             }
+            
+            Text(targetEntry?.name ?? "\(targetID)")
             
             Section{
                 Menu("New") {
                     Button("Group", action: {
                         // show create group form
+                        viewModel.createGroupType = .standard
+                        viewModel.showCreateGroup.toggle()
                     })
                     Button("RSS Feed", action: {
                         // show create rss form
+                        viewModel.createGroupType = .feed
+                        viewModel.showCreateGroup.toggle()
                     })
-                    Button("Dynamic Group", action: {})
+                    Button("Dynamic Group", action: {
+                        viewModel.createGroupType = .dynamic
+                        viewModel.showCreateGroup.toggle()
+                    })
                 }
             }
             
             if !(targetEntry?.isGroup ?? true){
-                WebFileMenuView(viewModel: viewModel, targetEntry: targetEntry!)
+                FileMenuView(viewModel: viewModel, targetEntry: targetEntry!)
             }
 
             Section{
@@ -91,6 +90,12 @@ public struct MenuView: View {
                     }
                 }
             }
+        }
+        .sheet(isPresented: $viewModel.showCreateGroup){
+            GroupCreateView(groupType: viewModel.createGroupType, viewModel: viewModel)
+        }
+        .onAppear{
+            targetEntry = viewModel.describeEntry(entry: targetID)
         }
     }
 }
@@ -129,12 +134,12 @@ struct GroupDestinationView: View {
 
 import DomainTestHelpers
 
-let entries = try! MockEntryTreeUseCase().listChildren(entry: 1)
+let entries = try! MockEntryUseCase().listChildren(entry: 1)
 
 #Preview {
     if #available(macOS 14.0, *) {
         List{
-            MenuView(parentID: 1010, viewModel: TreeViewModel(store: StateStore.empty, treeUsecase: MockEntryTreeUseCase(), entryUsecase: MockEntryUseCase()))
+            MenuView(targetID: 1010, viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
         }
     }
 }
