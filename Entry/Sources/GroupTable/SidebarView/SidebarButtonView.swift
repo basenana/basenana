@@ -26,6 +26,7 @@ struct SidebarButtonView: View {
             .buttonStyle(.accessoryBar)
             
             Button(action: {
+                viewModel.createGroupType = .standard
                 viewModel.showCreateGroup.toggle()
             }, label: {
                 Image(systemName: "folder.badge.plus")
@@ -45,7 +46,7 @@ struct SidebarButtonView: View {
             InboxView(viewModel: viewModel)
         }
         .sheet(isPresented: $viewModel.showCreateGroup){
-            GroupCreateView(groupType: .standard, viewModel: viewModel)
+            GroupCreateView(viewModel: viewModel)
         }
         .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/,alignment: .leading)
         .padding(5)

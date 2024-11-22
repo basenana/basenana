@@ -29,20 +29,15 @@ struct TreeListView: View {
                 }
                 .padding(.vertical, 4)
             })
+            .contextMenu{
+                MenuView(targetID: child.id, viewModel: viewModel)
+            }
             .id(child.id)
             .dropDestination(for: String.self){ entryIDInfos, localtion in
                 viewModel.moveEntriesToGroup(entries: parseIDInfo(entryInfos: entryIDInfos), newParent: child.id)
                 return false
             }
             .draggable(IDHelper(kind: "group", id: child.id).Encode())
-        }
-        .contextMenu{
-            // TODO: set selected entry
-            if let s = viewModel.selectedLeaf {
-                MenuView(targetID: s.id, viewModel: viewModel)
-            }else{
-                MenuView(targetID: viewModel.root.id, viewModel: viewModel)
-            }
         }
     }
 }

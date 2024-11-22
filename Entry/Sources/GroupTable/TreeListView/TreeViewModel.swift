@@ -18,21 +18,16 @@ public class TreeViewModel {
     
     // tree store
     var groupTree: GroupTree = GroupTree()
-    var selectedLeaf: Entities.Group? {
-        get {
-            if case .groupList(group: let groupID) = store.sidebarSelection {
-                return getGroup(groupID: groupID)
-            }
-            return nil
-        }
-    }
-    var root: Entities.Group = UnknownGroup.shared
     
+    var root: Entities.Group = UnknownGroup.shared
+    var inbox: Entities.Group = UnknownGroup.shared
+
     // current opened group
     var opendGroup: Entities.Group? = nil
     var opendGroupChildren: [EntryRow] = []
     
     var showCreateGroup: Bool = false
+    var createGroupInParent: Int64 = 0
     var createGroupType: GroupType = .standard
     var showQuickInbox: Bool = false
     
@@ -49,14 +44,17 @@ public class TreeViewModel {
     func findCurrentParent() -> Entities.Group {
         // current opened group's parent
         if let og = opendGroup {
-            if let p = getGroup(groupID: og.parentID) {
+            print("findCurrentParent: opened group \(og.groupName)")
+            if let p = getGroup(groupID: og.id) {
                 return p
             }
         }
         // root group
+        print("findCurrentParent: root \(store.fsInfo.rootID)")
         if let r = getGroup(groupID: store.fsInfo.rootID){
             return r
         }
+        print("findCurrentParent: not found")
         return UnknownGroup.shared
     }
     
@@ -67,6 +65,7 @@ public class TreeViewModel {
             guard let fc = root.children else {
                 return
             }
+            inbox = getGroup(groupID: store.fsInfo.inboxID) ?? UnknownGroup.shared
             
             self.groupTree.reset(groups: fc)
         } catch {
@@ -89,7 +88,6 @@ public class TreeViewModel {
             }
         } catch {
             store.alert.display(msg: "open group failed: \(error)")
-            return
         }
     }
     

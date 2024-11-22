@@ -11,17 +11,18 @@ import Entities
 
 
 struct GroupCreateView: View {
-    var parent: Entities.Group
-    var groupType: GroupType
-    
     @State private var viewModel: TreeViewModel
+    @State var parent: Entities.Group
+    @State var groupType: GroupType
     
-    init(groupType: GroupType, viewModel: TreeViewModel) {
-        self.groupType = groupType
+    init(viewModel: TreeViewModel) {
         self.viewModel = viewModel
-        self.parent = viewModel.findCurrentParent()
-
-        self.parentName = parent.groupName
+        self.groupType = viewModel.createGroupType
+        if viewModel.createGroupInParent != 0 {
+            self.parent = viewModel.getGroup(groupID: viewModel.createGroupInParent) ?? UnknownGroup.shared
+        }else{
+            self.parent = viewModel.findCurrentParent()
+        }
     }
     
     @State private var parentName: String = ""
@@ -75,7 +76,7 @@ struct GroupCreateView: View {
             .padding(.top, 10)
         }
         .onAppear{
-            parentName = viewModel.findCurrentParent().groupName
+            parentName = parent.groupName
         }
         .padding(50)
         .frame(minWidth: 500)
@@ -111,7 +112,7 @@ import AppState
 import DomainTestHelpers
 
 #Preview {
-    GroupCreateView(groupType: .feed, viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
+    GroupCreateView(viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
 }
 
 #endif

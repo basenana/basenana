@@ -51,17 +51,17 @@ public struct GroupTableView: View {
             ForEach(viewModel.opendGroupChildren, id: \.id) { child in
                 TableRow(child)
                     .draggable(IDHelper(kind: "entry", id: child.id).Encode())
+                    .contextMenu{
+                        MenuView(targetID: child.id, viewModel: viewModel)
+                    }
             }
         }
         .task {
             viewModel.openGroup(groupID: groupID)
         }
+        .navigationTitle(viewModel.opendGroup?.groupName ?? "")
         .contextMenu{
-            if let selected = getSelectedEntry() {
-                MenuView(targetID: selected.id, viewModel: viewModel)
-            } else {
-                MenuView(targetID: groupID, viewModel: viewModel)
-            }
+            MenuView(targetID: groupID, viewModel: viewModel)
         }
         .onChange(of: order){
             withAnimation {

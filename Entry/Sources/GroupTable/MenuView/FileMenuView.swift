@@ -15,11 +15,11 @@ import UseCaseProtocol
 @available(macOS 14.0, *)
 struct FileMenuView: View {
     private var viewModel: TreeViewModel
-    private var targetEntry: EntryDetail
+    private var target: EntryDetail
     
-    init(viewModel: TreeViewModel, targetEntry: EntryDetail) {
+    init(viewModel: TreeViewModel, target: EntryDetail) {
         self.viewModel = viewModel
-        self.targetEntry = targetEntry
+        self.target = target
     }
     
     var body: some View {
@@ -38,7 +38,7 @@ struct FileMenuView: View {
     
     func getEntryProperty(keys: [String]) -> EntryProperty?{
         for k in keys {
-            for p in targetEntry.properties {
+            for p in target.properties {
                 if p.key == k {
                     return p
                 }

@@ -14,10 +14,10 @@ import Styleguide
 
 @available(macOS 14.0, *)
 public struct MenuView: View {
-    private var targetID: Int64
-    @State private var targetEntry: EntryDetail? = nil
+    @State private var targetID: Int64
+    @State private var target: EntryDetail? = nil
     @State private var viewModel: TreeViewModel
-
+    
     public init(targetID: Int64, viewModel: TreeViewModel) {
         self.targetID = targetID
         self.viewModel = viewModel
@@ -25,64 +25,73 @@ public struct MenuView: View {
     
     public var body: some View {
         VStack {
-            if targetEntry?.isGroup ?? false {
+#if DEBUG
+            Text("target: \(target?.name ?? "unload: id-\(targetID)")")
+#endif
+            
+            if canBeOpen() {
                 Section{
-                    Button("Open", action: { viewModel.store.dispatch(.gotoDestination(.groupList(group: targetID))) })
+                    Button("Open", action: { viewModel.store.dispatch(.gotoDestination(.groupList(group: target!.id))) })
                 }
             }
             
-            Text(targetEntry?.name ?? "\(targetID)")
-            
-            Section{
-                Menu("New") {
-                    Button("Group", action: {
-                        // show create group form
-                        viewModel.createGroupType = .standard
-                        viewModel.showCreateGroup.toggle()
-                    })
-                    Button("RSS Feed", action: {
-                        // show create rss form
-                        viewModel.createGroupType = .feed
-                        viewModel.showCreateGroup.toggle()
-                    })
-                    Button("Dynamic Group", action: {
-                        viewModel.createGroupType = .dynamic
-                        viewModel.showCreateGroup.toggle()
-                    })
-                }
-            }
-            
-            if !(targetEntry?.isGroup ?? true){
-                FileMenuView(viewModel: viewModel, targetEntry: targetEntry!)
-            }
-
-            Section{
-                Button("Rename", action: {})
-                Button("Delete", action: {})
-            }
-            
-            Section{
-                Menu("Move To") {
-                    ForEach(viewModel.groupTree.children ?? []){ childGroup in
-                        GroupDestinationView(
-                            group: childGroup,
-                            childKeyPath: \.children,
-                            action: { _ in }
-                        )
-                    }
-                }
-                Menu("Replicate To") {
-                    ForEach(viewModel.groupTree.children ?? []){ childGroup in
-                        GroupDestinationView(
-                            group: childGroup,
-                            childKeyPath: \.children,
-                            action: { _ in }
-                        )
+            if canCreateGroup(){
+                Section{
+                    Menu("New") {
+                        Button("Group", action: {
+                            // show create group form
+                            viewModel.createGroupType = .standard
+                            viewModel.createGroupInParent = targetID
+                            viewModel.showCreateGroup.toggle()
+                        })
+                        Button("RSS Feed", action: {
+                            // show create rss form
+                            viewModel.createGroupType = .feed
+                            viewModel.createGroupInParent = targetID
+                            viewModel.showCreateGroup.toggle()
+                        })
+                        Button("Dynamic Group", action: {
+                            viewModel.createGroupType = .dynamic
+                            viewModel.createGroupInParent = targetID
+                            viewModel.showCreateGroup.toggle()
+                        })
                     }
                 }
             }
             
-            if !(targetEntry?.isGroup ?? true){
+            if isFileTarget() {
+                FileMenuView(viewModel: viewModel, target: target!)
+            }
+            
+            if canBeEdit() {
+                Section{
+                    Button("Rename", action: {})
+                    Button("Delete", action: {})
+                }
+                
+                Section{
+                    Menu("Move To") {
+                        ForEach(viewModel.groupTree.children ?? []){ childGroup in
+                            GroupDestinationView(
+                                group: childGroup,
+                                childKeyPath: \.children,
+                                action: { _ in }
+                            )
+                        }
+                    }
+                    Menu("Replicate To") {
+                        ForEach(viewModel.groupTree.children ?? []){ childGroup in
+                            GroupDestinationView(
+                                group: childGroup,
+                                childKeyPath: \.children,
+                                action: { _ in }
+                            )
+                        }
+                    }
+                }
+            }
+            
+            if isFileTarget() {
                 Section{
                     Menu("Mark") {
                         Button("As Marked", action: { print("Option 1 selected") })
@@ -91,12 +100,25 @@ public struct MenuView: View {
                 }
             }
         }
-        .sheet(isPresented: $viewModel.showCreateGroup){
-            GroupCreateView(groupType: viewModel.createGroupType, viewModel: viewModel)
+        .task {
+            target = viewModel.describeEntry(entry: targetID)
         }
-        .onAppear{
-            targetEntry = viewModel.describeEntry(entry: targetID)
-        }
+    }
+    
+    func isFileTarget() -> Bool {
+        return target != nil && !target!.isGroup
+    }
+    
+    func canBeOpen() -> Bool {
+        return target != nil && target!.isGroup && target!.id != viewModel.root.id
+    }
+    
+    func canCreateGroup() -> Bool {
+        return target != nil && target!.id != viewModel.inbox.id
+    }
+    
+    func canBeEdit() -> Bool {
+        return target != nil && target!.id != viewModel.root.id && target!.id != viewModel.inbox.id
     }
 }
 
