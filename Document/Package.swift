@@ -15,7 +15,7 @@ let package = Package(
     dependencies: [
         .package(name: "Domain", path: "../Domain"),
         .package(name: "Styleguide", path: "../Styleguide"),
-        .package(url: "https://github.com/ciaranrobrien/SwiftUIMasonry", branch: "main")
+        .package(url: "https://github.com/ciaranrobrien/SwiftUIMasonry", branch: "main"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.

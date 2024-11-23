@@ -48,8 +48,8 @@ struct SidebarButtonView: View {
         .sheet(isPresented: $viewModel.showCreateGroup){
             GroupCreateView(viewModel: viewModel)
         }
-        .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/,alignment: .leading)
         .padding(5)
+        .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/,alignment: .leading)
     }
 }
 

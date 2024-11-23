@@ -22,6 +22,10 @@ public class DocumentListViewModel {
     
     var mainDocuments: [DocumentItem] = []
     
+    // docunents need to display
+    var sectionDocuments: [DocumentSection] = []
+    var cachedDocuments: [Int64:DocumentItem] = [:]
+    
     var isLoading: Bool = false
     var page: Int = 1
     var pageSize: Int = 20
@@ -41,7 +45,7 @@ public class DocumentListViewModel {
         }
         return nil
     }
-
+    
     func getDocumentEntry(docID: Int64) -> EntryDetail? {
         do {
             return try usecase.getDocumentEntry(document: docID)
@@ -54,15 +58,19 @@ public class DocumentListViewModel {
     func initNextPage() {
         self.page = 1
         let firstPage = listNextPage()
+        self.isLoading = true
         
         print("reinit main documents: current cached \(mainDocuments.count)")
-        mainDocuments = []
+        sectionDocuments = []
+        cachedDocuments = [:]
         for nextDoc in firstPage {
-            mainDocuments.append(DocumentItem(info: nextDoc, keepLowProfile: prespective == .unread && !nextDoc.unread))
+            insertToSectionDocuments(doc: DocumentItem(info: nextDoc, keepLowProfile: prespective == .unread && !nextDoc.unread))
         }
+        self.isLoading = false
     }
     
     func listNextPage() -> [DocumentInfo] {
+        print("ready to list next page document, page=\(page)")
         var nextPageList: [DocumentInfo] = []
         do {
             switch prespective {
@@ -73,6 +81,7 @@ public class DocumentListViewModel {
             }
             
             if nextPageList.isEmpty {
+                print("no more documents, page=\(page)")
                 hasMore = false
             }
             page += 1
@@ -82,30 +91,43 @@ public class DocumentListViewModel {
         
         return nextPageList
     }
-
-    func checkAndLoadNextPage<Item: Identifiable>(_ item: Item) {
-        if hasMore && (mainDocuments.isLastItem(item) || mainDocuments.isEmpty) {
+    
+    func insertToSectionDocuments(doc: DocumentItem) {
+        guard cachedDocuments[doc.id] == nil else {
+            return
+        }
+        
+        cachedDocuments[doc.id] = doc
+        let sid = doc.sectionName
+        for i in sectionDocuments.indices {
+            if sectionDocuments[i].id == sid {
+                sectionDocuments[i].documents.append(doc)
+                return
+            }
+        }
+        
+        let s = DocumentSection(id: sid, documents: [doc])
+        sectionDocuments.append(s)
+    }
+    
+    func checkAndLoadNextSection<Item: Identifiable>(_ item: Item) {
+        guard hasMore else {
+            return
+        }
+        if sectionDocuments.isLastItem(item) || sectionDocuments.isEmpty {
             self.isLoading = true
-            let nextPage = listNextPage()
-            for nextDoc in nextPage {
-                mainDocuments.append(DocumentItem(info: nextDoc, keepLowProfile: prespective == .unread && !nextDoc.unread))
+            let currentSection = sectionDocuments.count
+            while hasMore && sectionDocuments.count == currentSection {
+                let nextPage = listNextPage()
+                for nextDoc in nextPage {
+                    insertToSectionDocuments(doc: DocumentItem(info: nextDoc, keepLowProfile: prespective == .unread && !nextDoc.unread))
+                }
             }
             self.isLoading = false
         }
     }
-    
 }
 
-
-struct DocumentItem: Identifiable {
-    var id: Int64 {
-        get {
-            return info.id
-        }
-    }
-    var info: DocumentInfo
-    var keepLowProfile: Bool = false
-}
 
 
 extension RandomAccessCollection where Self.Element: Identifiable {

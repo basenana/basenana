@@ -45,8 +45,8 @@ public struct SidebarView: View {
             TreeMenuView(viewModel: viewModel)
         }
         .listStyle(.sidebar)
-        .padding(.bottom, 20)
-        .overlay(alignment: .bottom, content: {SidebarButtonView(viewModel: viewModel)})
+        .padding(.bottom, 40)
+        .overlay(alignment: .bottom, content: { SidebarButtonView(viewModel: viewModel) })
     }
 }
 
