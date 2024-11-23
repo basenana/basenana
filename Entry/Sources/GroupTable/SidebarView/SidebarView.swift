@@ -42,7 +42,7 @@ public struct SidebarView: View {
             viewModel.resetGroupTree()
         }
         .contextMenu{
-            MenuView(targetID: viewModel.store.fsInfo.rootID, viewModel: viewModel)
+            TreeMenuView(viewModel: viewModel)
         }
         .listStyle(.sidebar)
         .padding(.bottom, 20)

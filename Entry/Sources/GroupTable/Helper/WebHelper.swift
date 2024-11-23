@@ -4,6 +4,8 @@
 //
 //  Created by Hypo on 2024/11/23.
 //
+import SwiftUI
+import WebKit
 import Foundation
 
 func parseUrlString(urlStr: String) -> URL?{
@@ -14,5 +16,5 @@ func parseUrlString(urlStr: String) -> URL?{
 }
 
 func openUrlInBrowser(url: URL) {
-    
+    NSWorkspace.shared.open(url)
 }

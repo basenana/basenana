@@ -68,6 +68,7 @@ public class FSInfo {
 }
 
 
+@Observable
 public class Alert {
     public var alertMessage: String = ""
     public var needAlert: Bool = false

@@ -15,6 +15,9 @@ import Entities
 public struct GroupTableView: View {
     private var groupID: Int64
     
+    @State private var group: EntryDetail? = nil
+    @State private var children: [EntryRow] = []
+
     @State private var viewModel: TreeViewModel
     @State var selection: Set<EntryRow.ID> = []
     @State var selectedDocument: DocumentDetail? = nil
@@ -52,16 +55,18 @@ public struct GroupTableView: View {
                 TableRow(child)
                     .draggable(IDHelper(kind: "entry", id: child.id).Encode())
                     .contextMenu{
-                        MenuView(targetID: child.id, viewModel: viewModel)
+                        EntryMenuView(target: child.info, viewModel: viewModel)
                     }
             }
         }
         .task {
             viewModel.openGroup(groupID: groupID)
         }
-        .navigationTitle(viewModel.opendGroup?.groupName ?? "")
+        .navigationTitle(viewModel.opendGroup?.name ?? "")
         .contextMenu{
-            MenuView(targetID: groupID, viewModel: viewModel)
+            if let grp = viewModel.opendGroup {
+                EntryMenuView(target: grp.toInfo()!, viewModel: viewModel)
+            }
         }
         .onChange(of: order){
             withAnimation {

@@ -23,7 +23,7 @@ public class TreeViewModel {
     var inbox: Entities.Group = UnknownGroup.shared
 
     // current opened group
-    var opendGroup: Entities.Group? = nil
+    var opendGroup: EntryDetail? = nil
     var opendGroupChildren: [EntryRow] = []
     
     var showCreateGroup: Bool = false
@@ -44,7 +44,7 @@ public class TreeViewModel {
     func findCurrentParent() -> Entities.Group {
         // current opened group's parent
         if let og = opendGroup {
-            print("findCurrentParent: opened group \(og.groupName)")
+            print("findCurrentParent: opened group \(og.name)")
             if let p = getGroup(groupID: og.id) {
                 return p
             }
@@ -75,13 +75,12 @@ public class TreeViewModel {
     
     func openGroup(groupID: Int64) {
         do {
-            let groupEntry = try entryUsecase.getEntryDetails(entry: groupID)
-            if !groupEntry.isGroup {
+            opendGroup = try entryUsecase.getEntryDetails(entry: groupID)
+            if opendGroup == nil || !opendGroup!.isGroup {
                 throw BizError.notGroup
             }
-            self.opendGroup = groupEntry.toGroup()
-            self.opendGroupChildren = []
             
+            self.opendGroupChildren = []
             let newChildren = try entryUsecase.listChildren(entry: groupID)
             for child in newChildren {
                 self.opendGroupChildren.append(EntryRow(info: child))
@@ -112,7 +111,7 @@ public class TreeViewModel {
         if let og = opendGroup {
             if og.id == store.fsInfo.inboxID {
                 // reopen inbox
-                openGroup(groupID: og.id)
+                let _ = openGroup(groupID: og.id)
             }
         }
     }
@@ -127,7 +126,7 @@ public class TreeViewModel {
             let newGroup = try entryUsecase.createGroups(parent: parentID, option: option)
             
             // insert to the tree
-            groupTree.addChildGroup(parentID: parentID, childID: newGroup.id, childName: newGroup.name, grandChildren: [])
+            groupTree.addChildGroup(parentID: parentID, child: newGroup.toGroup()!, grandChildren: [])
             
             // insert to the window
             if let openedGroup = opendGroup {

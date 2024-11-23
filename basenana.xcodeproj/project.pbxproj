@@ -47,7 +47,6 @@
 		3FB782452BC1A82700327191 /* GRPCReflectionService in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782442BC1A82700327191 /* GRPCReflectionService */; };
 		3FB782492BC1A82700327191 /* protoc-gen-grpc-swift in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782482BC1A82700327191 /* protoc-gen-grpc-swift */; };
 		3FC54F052C948E4C00803A1D /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 3FC54F032C948E4C00803A1D /* Data */; };
-		3FC54F0C2C94902100803A1D /* Job in Resources */ = {isa = PBXBuildFile; fileRef = 3FC54F0A2C94902100803A1D /* Job */; };
 		3FCEC3CE2C314D41002D8662 /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3FCEC3CD2C314D41002D8662 /* FeedKit */; };
 		ED0CBB3C2BF656B90056E6AA /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78E02BD299110035F90F /* SettingsView.swift */; };
 		ED0CBB3D2BF656B90056E6AA /* basenanaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE1C2B8E147F005D533F /* basenanaApp.swift */; };
@@ -104,7 +103,6 @@
 		3FC54F062C948FB900803A1D /* Entry */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Entry; sourceTree = "<group>"; };
 		3FC54F072C948FDB00803A1D /* Search */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Search; sourceTree = "<group>"; };
 		3FC54F082C948FF000803A1D /* Notify */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Notify; sourceTree = "<group>"; };
-		3FC54F0A2C94902100803A1D /* Job */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Job; sourceTree = "<group>"; };
 		ED0CBB522BF656B90056E6AA /* basenana dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "basenana dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED0CBB532BF656BA0056E6AA /* Info-dev.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-dev.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -186,7 +184,6 @@
 				3FC54F022C948CF500803A1D /* Document */,
 				3FC54F072C948FDB00803A1D /* Search */,
 				3FC54F002C948C9200803A1D /* Workflow */,
-				3FC54F0A2C94902100803A1D /* Job */,
 				3FC54F082C948FF000803A1D /* Notify */,
 				3FC54EF32C94874400803A1D /* Domain */,
 				3FC54F032C948E4C00803A1D /* Data */,
@@ -481,7 +478,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				ED0CBB4C2BF656B90056E6AA /* Preview Assets.xcassets in Resources */,
-				3FC54F0C2C94902100803A1D /* Job in Resources */,
 				3FC54F052C948E4C00803A1D /* Data in Resources */,
 				ED0CBB4D2BF656B90056E6AA /* Assets.xcassets in Resources */,
 			);

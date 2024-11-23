@@ -30,7 +30,7 @@ struct TreeListView: View {
                 .padding(.vertical, 4)
             })
             .contextMenu{
-                MenuView(targetID: child.id, viewModel: viewModel)
+                TreeMenuView(target: child.group, viewModel: viewModel)
             }
             .id(child.id)
             .dropDestination(for: String.self){ entryIDInfos, localtion in

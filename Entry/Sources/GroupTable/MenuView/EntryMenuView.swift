@@ -1,5 +1,5 @@
 //
-//  MenuView.swift
+//  EntryMenuView.swift
 //  Entry
 //
 //  Created by Hypo on 2024/9/22.
@@ -13,25 +13,28 @@ import Styleguide
 
 
 @available(macOS 14.0, *)
-public struct MenuView: View {
-    @State private var targetID: Int64
-    @State private var target: EntryDetail? = nil
+public struct EntryMenuView: View {
+    @State private var target: EntryInfo
+    @State private var targetDetail: EntryDetail?
     @State private var viewModel: TreeViewModel
     
-    public init(targetID: Int64, viewModel: TreeViewModel) {
-        self.targetID = targetID
+    public init(target: EntryInfo, viewModel: TreeViewModel) {
+        self.target = target
+        self.viewModel = viewModel
+    }
+    
+    public init(target: EntryDetail, viewModel: TreeViewModel) {
+        self.target = target.toInfo()!
+        self.targetDetail = target
         self.viewModel = viewModel
     }
     
     public var body: some View {
         VStack {
-#if DEBUG
-            Text("target: \(target?.name ?? "unload: id-\(targetID)")")
-#endif
             
             if canBeOpen() {
                 Section{
-                    Button("Open", action: { viewModel.store.dispatch(.gotoDestination(.groupList(group: target!.id))) })
+                    Button("Open", action: { viewModel.store.dispatch(.gotoDestination(.groupList(group: target.id))) })
                 }
             }
             
@@ -41,18 +44,18 @@ public struct MenuView: View {
                         Button("Group", action: {
                             // show create group form
                             viewModel.createGroupType = .standard
-                            viewModel.createGroupInParent = targetID
+                            viewModel.createGroupInParent = target.id
                             viewModel.showCreateGroup.toggle()
                         })
                         Button("RSS Feed", action: {
                             // show create rss form
                             viewModel.createGroupType = .feed
-                            viewModel.createGroupInParent = targetID
+                            viewModel.createGroupInParent = target.id
                             viewModel.showCreateGroup.toggle()
                         })
                         Button("Dynamic Group", action: {
                             viewModel.createGroupType = .dynamic
-                            viewModel.createGroupInParent = targetID
+                            viewModel.createGroupInParent = target.id
                             viewModel.showCreateGroup.toggle()
                         })
                     }
@@ -60,7 +63,7 @@ public struct MenuView: View {
             }
             
             if isFileTarget() {
-                FileMenuView(viewModel: viewModel, target: target!)
+                FileMenuView(viewModel: viewModel, target: viewModel.describeEntry(entry: target.id))
             }
             
             if canBeEdit() {
@@ -100,25 +103,22 @@ public struct MenuView: View {
                 }
             }
         }
-        .task {
-            target = viewModel.describeEntry(entry: targetID)
-        }
     }
     
     func isFileTarget() -> Bool {
-        return target != nil && !target!.isGroup
+        return !target.isGroup
     }
     
     func canBeOpen() -> Bool {
-        return target != nil && target!.isGroup && target!.id != viewModel.root.id
+        return target.isGroup && target.id != viewModel.root.id
     }
     
     func canCreateGroup() -> Bool {
-        return target != nil && target!.id != viewModel.inbox.id
+        return target.id != viewModel.inbox.id
     }
     
     func canBeEdit() -> Bool {
-        return target != nil && target!.id != viewModel.root.id && target!.id != viewModel.inbox.id
+        return target.id != viewModel.root.id && target.id != viewModel.inbox.id
     }
 }
 
@@ -151,17 +151,55 @@ struct GroupDestinationView: View {
 }
 
 
+struct FileMenuView: View {
+    private var viewModel: TreeViewModel
+    private var target: EntryDetail?
+    
+    init(viewModel: TreeViewModel, target: EntryDetail?) {
+        self.viewModel = viewModel
+        self.target = target
+    }
+    
+    var body: some View {
+        // web file
+        if let u = parseUrlString(urlStr: getEntryProperty(keys: [Property.WebPageURL, Property.WebSiteURL])?.value ?? "" ){
+            Section(){
+                Button("Launch URL", action: {
+                    openUrlInBrowser(url: u)
+                })
+                Button("Copy URL", action: {
+                    copyToClipBoard(content: "\(u)")
+                })
+            }
+        }
+    }
+    
+    func getEntryProperty(keys: [String]) -> EntryProperty?{
+        guard target != nil else {
+            return nil
+        }
+        for k in keys {
+            for p in target!.properties {
+                if p.key == k {
+                    return p
+                }
+            }
+        }
+        return nil
+    }
+}
+
 
 #if DEBUG
 
 import DomainTestHelpers
 
-let entries = try! MockEntryUseCase().listChildren(entry: 1)
+let entry = try! MockEntryUseCase().getEntryDetails(entry: 1010)
 
 #Preview {
     if #available(macOS 14.0, *) {
         List{
-            MenuView(targetID: 1010, viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
+            EntryMenuView(target: entry, viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
         }
     }
 }

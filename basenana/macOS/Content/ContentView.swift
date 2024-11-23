@@ -13,7 +13,7 @@ import AppState
 @MainActor
 struct ContentView: View {
     @State private var state = StateStore.empty
-    @State private var environment = Environment()
+    @State private var environment = Environment.shared
 
     var body: some View {
         if !state.fsInfo.fsApiReady || environment.clientSet == nil {
