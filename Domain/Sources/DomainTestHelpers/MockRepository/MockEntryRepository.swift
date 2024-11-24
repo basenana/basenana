@@ -111,13 +111,14 @@ public class MockEntryRepository: EntryRepositoryProtocol {
     }
     
     public func ListGroupChildren(filter: Entities.EntryFilter) throws -> [any Entities.EntryInfo] {
-        var result: [MockEntryInfo] = []
+        var result: [EntryInfo] = []
         guard let entryIDs = self.groups[filter.parent] else {
             return result
         }
         
         for entry in entryIDs {
-            result.append(self.repo[entry]!.toInfo())
+            let detail = self.repo[entry]! as EntryDetail
+            result.append(detail.toInfo()!)
         }
         
         return result

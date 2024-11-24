@@ -15,6 +15,9 @@ import Entities
 public struct GroupTableView: View {
     private var groupID: Int64
     
+    @State private var group: EntryDetail? = nil
+    @State private var children: [EntryRow] = []
+
     @State private var viewModel: TreeViewModel
     @State var selection: Set<EntryRow.ID> = []
     @State var selectedDocument: DocumentDetail? = nil
@@ -51,16 +54,18 @@ public struct GroupTableView: View {
             ForEach(viewModel.opendGroupChildren, id: \.id) { child in
                 TableRow(child)
                     .draggable(IDHelper(kind: "entry", id: child.id).Encode())
+                    .contextMenu{
+                        EntryMenuView(target: child.info, viewModel: viewModel)
+                    }
             }
         }
         .task {
             viewModel.openGroup(groupID: groupID)
         }
+        .navigationTitle(viewModel.opendGroup?.name ?? "")
         .contextMenu{
-            if let selected = getSelectedEntry() {
-                MenuView(parentID: groupID, targetEntry: selected.id, viewModel: viewModel)
-            } else {
-                MenuView(parentID: groupID, viewModel: viewModel)
+            if let grp = viewModel.opendGroup {
+                EntryMenuView(target: grp.toInfo()!, viewModel: viewModel)
             }
         }
         .onChange(of: order){
@@ -107,7 +112,7 @@ import DomainTestHelpers
 
 #Preview {
     if #available(macOS 14.0, *) {
-        GroupTableView(groupID: 1010, viewModel: TreeViewModel(store: StateStore.empty, treeUsecase: MockEntryTreeUseCase(), entryUsecase: MockEntryUseCase()))
+        GroupTableView(groupID: 1010, viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
     }
 }
 

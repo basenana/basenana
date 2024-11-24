@@ -29,16 +29,15 @@ struct TreeListView: View {
                 }
                 .padding(.vertical, 4)
             })
+            .contextMenu{
+                TreeMenuView(target: child.group, viewModel: viewModel)
+            }
             .id(child.id)
             .dropDestination(for: String.self){ entryIDInfos, localtion in
                 viewModel.moveEntriesToGroup(entries: parseIDInfo(entryInfos: entryIDInfos), newParent: child.id)
                 return false
             }
             .draggable(IDHelper(kind: "group", id: child.id).Encode())
-        }
-        .contextMenu{
-            // TODO: set selected entry
-            MenuView(parentID: -1, viewModel: viewModel)
         }
     }
 }
@@ -52,7 +51,7 @@ import DomainTestHelpers
 #Preview {
     if #available(macOS 14.0, *) {
         List{
-            TreeListView(viewModel: TreeViewModel(store: StateStore.empty, treeUsecase: MockEntryTreeUseCase(), entryUsecase: MockEntryUseCase()))
+            TreeListView(viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
         }
     }
 }

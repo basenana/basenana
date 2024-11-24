@@ -20,11 +20,13 @@ public class DocumentListViewModel {
     var store: StateStore
     var usecase: DocumentUseCaseProtocol
     
-    var mainDocuments: [DocumentItem] = []
+    // docunents need to display
+    var sectionDocuments: [DocumentSection] = []
+    var cachedDocuments: [Int64:Bool] = [:]
     
     var isLoading: Bool = false
     var page: Int = 1
-    var pageSize: Int = 20
+    var pageSize: Int = 40
     var hasMore = true
     
     public init(prespective: DocumentPrespective, store: StateStore, usecase: DocumentUseCaseProtocol) {
@@ -32,6 +34,8 @@ public class DocumentListViewModel {
         self.store = store
         self.usecase = usecase
     }
+    
+    // entry
     
     func getDocumentEntry(entry: Int64) -> EntryDetail? {
         do {
@@ -41,7 +45,7 @@ public class DocumentListViewModel {
         }
         return nil
     }
-
+    
     func getDocumentEntry(docID: Int64) -> EntryDetail? {
         do {
             return try usecase.getDocumentEntry(document: docID)
@@ -51,18 +55,64 @@ public class DocumentListViewModel {
         return nil
     }
     
-    func initNextPage() {
-        self.page = 1
-        let firstPage = listNextPage()
+    // document mark
+    
+    func setDocumentReadStatus(section: String, document: Int64, isUnread: Bool) {
+        if let s = sectionDocuments.filter( {$0.id == section} ).first {
+            for i in s.documents.indices {
+                if s.documents[i].id != document {
+                    continue
+                }
+                
+                s.documents[i].isUnread = isUnread
+                break
+            }
+        }
         
-        print("reinit main documents: current cached \(mainDocuments.count)")
-        mainDocuments = []
-        for nextDoc in firstPage {
-            mainDocuments.append(DocumentItem(info: nextDoc, keepLowProfile: prespective == .unread && !nextDoc.unread))
+        do {
+            try usecase.setDocumentReadState(document: document, unread: isUnread)
+        } catch {
+            store.alert.display(msg: "set document unread=\(isUnread) failed: \(error)")
         }
     }
     
+    func setDocumentMarkStatus(section: String, document: Int64, isMark: Bool) {
+        if let s = sectionDocuments.filter( {$0.id == section} ).first {
+            for i in s.documents.indices {
+                if s.documents[i].id != document {
+                    continue
+                }
+                
+                s.documents[i].isMarked = isMark
+                break
+            }
+        }
+        
+        do {
+            try usecase.setDocumentMarkState(document: document, ismark: isMark)
+        } catch {
+            store.alert.display(msg: "set document isMark=\(isMark) failed: \(error)")
+        }
+    }
+    
+    // list document
+    
+    func initNextPage() {
+        self.page = 1
+        let firstPage = listNextPage()
+        self.isLoading = true
+        
+        print("reinit main documents: current cached \(sectionDocuments.count)")
+        sectionDocuments.removeAll()
+        cachedDocuments.removeAll()
+        for nextDoc in firstPage {
+            insertToSectionDocuments(doc: DocumentItem(info: nextDoc, readable: prespective == .unread ? true : false))
+        }
+        self.isLoading = false
+    }
+    
     func listNextPage() -> [DocumentInfo] {
+        print("ready to list next page document, page=\(page)")
         var nextPageList: [DocumentInfo] = []
         do {
             switch prespective {
@@ -73,6 +123,7 @@ public class DocumentListViewModel {
             }
             
             if nextPageList.isEmpty {
+                print("no more documents, page=\(page)")
                 hasMore = false
             }
             page += 1
@@ -82,29 +133,46 @@ public class DocumentListViewModel {
         
         return nextPageList
     }
-
-    func checkAndLoadNextPage<Item: Identifiable>(_ item: Item) {
-        if hasMore && (mainDocuments.isLastItem(item) || mainDocuments.isEmpty) {
-            self.isLoading = true
-            let nextPage = listNextPage()
-            for nextDoc in nextPage {
-                mainDocuments.append(DocumentItem(info: nextDoc, keepLowProfile: prespective == .unread && !nextDoc.unread))
-            }
-            self.isLoading = false
+    
+    func insertToSectionDocuments(doc: DocumentItem) {
+        guard cachedDocuments[doc.id] == nil else {
+            return
         }
+        
+        cachedDocuments[doc.id] = true
+        let sid = doc.sectionName
+        for i in sectionDocuments.indices {
+            if sectionDocuments[i].id == sid {
+                sectionDocuments[i].documents.append(doc)
+                return
+            }
+        }
+        
+        let s = DocumentSection(id: sid, documents: [doc])
+        sectionDocuments.append(s)
     }
     
-}
-
-
-struct DocumentItem: Identifiable {
-    var id: Int64 {
-        get {
-            return info.id
+    func checkAndLoadNextPage<Item: Identifiable>(_ section: String, _ item: Item) {
+        guard hasMore else {
+            return
         }
+        
+        if let section = sectionDocuments.filter({$0.id == section}).first {
+            if !sectionDocuments.isLastItem(section) {
+                return
+            }
+            if !section.documents.isLastItem(item) && !section.documents.isEmpty {
+                return
+            }
+        }
+        
+        self.isLoading = true
+        let nextPage = listNextPage()
+        for nextDoc in nextPage {
+            insertToSectionDocuments(doc: DocumentItem(info: nextDoc, readable: prespective == .unread ? true : false))
+        }
+        self.isLoading = false
     }
-    var info: DocumentInfo
-    var keepLowProfile: Bool = false
 }
 
 

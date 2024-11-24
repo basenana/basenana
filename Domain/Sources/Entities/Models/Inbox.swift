@@ -17,7 +17,15 @@ public struct QuickInbox {
     public var url: String
     
     // source is raw
-    public var data: Data
+    public var data: Data? = nil
+    
+    public init(sourceType: SourceType, fileType: FileType, filename: String) {
+        self.sourceType = sourceType
+        self.fileType = fileType
+        self.filename = filename
+        self.url = ""
+        self.data = nil
+    }
 }
 
 public enum FileType {

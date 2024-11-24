@@ -41,9 +41,12 @@ public struct SidebarView: View {
         .task {
             viewModel.resetGroupTree()
         }
+        .contextMenu{
+            TreeMenuView(viewModel: viewModel)
+        }
         .listStyle(.sidebar)
-        .padding(.bottom, 20)
-        .overlay(alignment: .bottom, content: {SidebarButtonView()})
+        .padding(.bottom, 40)
+        .overlay(alignment: .bottom, content: { SidebarButtonView(viewModel: viewModel) })
     }
 }
 

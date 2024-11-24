@@ -8,6 +8,11 @@
 import Foundation
 
 
+public enum BizError: Error {
+    case notGroup
+}
+
+
 public enum RepositoryError: Error {
     case unimplement
     case invalidHost

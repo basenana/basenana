@@ -110,6 +110,17 @@ public struct APIEntryDetail: EntryDetail {
         self.properties = properties
     }
     
+    public func toInfo() -> (any Entities.EntryInfo)? {
+        return APIEntryInfo(id: id, name: name, kind: kind, isGroup: isGroup, size: size, parentID: parent, createdAt: createdAt, changedAt: changedAt, modifiedAt: modifiedAt, accessAt: accessAt)
+    }
+    
+
+    public func toGroup() -> (any Entities.Group)? {
+        if !self.isGroup {
+            return nil
+        }
+        return APIGroup(id: id, groupName: name, parentID: parent)
+    }
 }
 
 public struct APIEntryProperty: EntryProperty {

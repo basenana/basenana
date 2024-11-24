@@ -68,12 +68,11 @@ class ReadabilityUserScript: WKUserScript {
 }
 
 func loadReadabilityVenderFile(name: String, type: String) throws -> String {
-    let bundle = Bundle(for: Readability.self)
-    guard let filePath = bundle.path(forResource: name, ofType: type) else {
+    guard let filePath = Bundle.module.url(forResource: name, withExtension: type) else {
         throw WebError.InvalidPath
     }
     
-    return try String(contentsOfFile: filePath)
+    return try String(contentsOf: filePath)
 }
 
 

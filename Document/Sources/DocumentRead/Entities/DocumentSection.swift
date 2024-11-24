@@ -1,0 +1,77 @@
+//
+//  DocumentSection.swift
+//  Document
+//
+//  Created by Hypo on 2024/11/23.
+//
+
+import SwiftUI
+import Foundation
+import Entities
+
+
+@Observable
+class DocumentSection: Identifiable {
+    var id: String
+    var documents: [DocumentItem]
+    
+    init(id: String, documents: [DocumentItem]) {
+        self.id = id
+        self.documents = documents
+    }
+}
+
+@Observable
+class DocumentItem: Identifiable {
+    var id: Int64 {
+        get {
+            return info.id
+        }
+    }
+    
+    // editable
+    var isUnread: Bool
+    var isMarked: Bool
+    
+    var info: DocumentInfo
+    var readable: Bool = false
+    
+    var keepLowProfile: Bool {
+        return readable && !isUnread
+    }
+    
+    init(info: DocumentInfo) {
+        self.info = info
+        self.readable = false
+        
+        self.isMarked = info.marked
+        self.isUnread = info.unread
+    }
+    
+    init(info: DocumentInfo, readable: Bool) {
+        self.info = info
+        self.readable = readable
+        
+        self.isMarked = info.marked
+        self.isUnread = info.unread
+    }
+
+    var sectionName: String {
+        if Calendar.current.isDateInToday(info.createdAt){
+            return "TODAY"
+        }
+        if Calendar.current.isDateInYesterday(info.createdAt){
+            return "YESTERDAY"
+        }
+        
+        return dateFormatter.string(from: info.createdAt)
+    }
+    
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        formatter.dateFormat = "yyyy/MM/dd"
+        return formatter
+    }()
+}

@@ -46,6 +46,9 @@ public protocol EntryDetail {
     var accessAt: Date { get }
     
     var properties: [EntryProperty] { get }
+    
+    func toInfo() -> EntryInfo?
+    func toGroup() -> Group?
 }
 
 
@@ -71,6 +74,12 @@ public struct EntryCreate {
     
     public var RSS: RSSConfig?
 
+    public init(parent: Int64, name: String, kind: String) {
+        self.parent = parent
+        self.name = name
+        self.kind = kind
+        self.RSS = nil
+    }
 }
 
 public struct RSSConfig {
@@ -78,6 +87,13 @@ public struct RSSConfig {
     public var siteName: String
     public var siteURL: String
     public var fileType: FileType
+    
+    public init(feed: String, siteName: String, siteURL: String, fileType: FileType) {
+        self.feed = feed
+        self.siteName = siteName
+        self.siteURL = siteURL
+        self.fileType = fileType
+    }
 }
 
 public struct EntryUpdate {

@@ -15,6 +15,9 @@ let package = Package(
     dependencies: [
         .package(name: "Domain", path: "../Domain"),
         .package(name: "Styleguide", path: "../Styleguide"),
+        .package(url: "https://github.com/nmdias/FeedKit", from: "9.1.2"),
+        .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.7.2"),
+        .package(url: "https://github.com/hyponet/WebArchiver", branch: "master"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -22,11 +25,25 @@ let package = Package(
         .target(
             name: "GroupTable",
             dependencies: [
+                "WebPage",
                 .product(name: "Entities", package: "Domain"),
                 .product(name: "AppState", package: "Domain"),
                 .product(name: "UseCaseProtocol", package: "Domain"),
                 .product(name: "DomainTestHelpers", package: "Domain"),
                 .product(name: "Styleguide", package: "Styleguide"),
+                .product(name: "FeedKit", package: "FeedKit"),
+            ]
+        ),
+        .target(
+            name: "WebPage",
+            dependencies: [
+                .product(name: "WebArchiver", package: "WebArchiver"),
+                .product(name: "SwiftSoup", package: "SwiftSoup"),
+            ],
+            resources: [
+                .process("Readability/Readability.js"),
+                .process("Readability/readability_images.js"),
+                .process("Readability/readability_initialization.js"),
             ]
         ),
         .testTarget(

@@ -11,14 +11,13 @@ import Entities
 
 @available(macOS 14.0, *)
 @Observable
-public class GroupTree {
-    public var children: [GroupLeaf]? = []
-    
+class GroupTree {
+    var children: [GroupLeaf]? = []
     var allGroups: [Int64: GroupLeaf] = [:]
     
-    public init(){}
+    init(){}
     
-    public func reset(groups: [Entities.Group]) {
+    func reset(groups: [Entities.Group]) {
         children = []
         allGroups = [:]
         
@@ -27,8 +26,8 @@ public class GroupTree {
         }
     }
     
-    private func paresGroupTreeChild(group: Entities.Group) -> GroupLeaf {
-        let gvl = GroupLeaf(id: group.id, groupName: group.groupName, parentID: group.parentID)
+    func paresGroupTreeChild(group: Entities.Group) -> GroupLeaf {
+        let gvl = GroupLeaf(group: group)
         allGroups[gvl.id] = gvl
         
         
@@ -45,14 +44,18 @@ public class GroupTree {
         return gvl
     }
     
-    public func changeParent(groupID: Int64, newParentID: Int64) {
-        if let group = self.allGroups[groupID] {
-            if group.parentID == newParentID {
+    func getGroup(groupID: Int64) -> GroupLeaf? {
+        return allGroups[groupID]
+    }
+
+    func changeParent(groupID: Int64, newParentID: Int64) {
+        if let leaf = self.allGroups[groupID] {
+            if leaf.parentID == newParentID {
                 return
             }
             if let newParent = self.allGroups[newParentID]{
                 for exist in newParent.children ?? [] {
-                    if exist.groupName == group.groupName {
+                    if exist.groupName == leaf.groupName {
                         return
                     }
                 }
@@ -60,15 +63,15 @@ public class GroupTree {
             if isInLoop(groupID: groupID, newParentID: newParentID) {
                 return
             }
-            self.removeChildGroup(parentID: group.parentID, childID: group.id)
-            self.addChildGroup(parentID: newParentID, childID: group.id, childName: group.groupName, grandChildren: group.children)
+            self.removeChildGroup(parentID: leaf.parentID, childID: leaf.id)
+            self.addChildGroup(parentID: newParentID, child: leaf.group, grandChildren: leaf.children)
             return
         }
         return
     }
     
-    public func addChildGroup(parentID: Int64, childID: Int64, childName: String, grandChildren: [GroupLeaf]?){
-        let newGroup = GroupLeaf(id: childID, groupName: childName, parentID: parentID)
+    func addChildGroup(parentID: Int64, child: Entities.Group, grandChildren: [GroupLeaf]?){
+        let newGroup = GroupLeaf(group: child)
         if grandChildren != nil{
             newGroup.children = grandChildren
         }
@@ -80,14 +83,15 @@ public class GroupTree {
             }
             
             for ch in parent.children! {
-                if ch.id == childID {
-                    ch.groupName = childName
+                if ch.id == child.id {
+                    ch.group = child
+                    ch.children = grandChildren
                     return
                 }
             }
             
             parent.children!.append(newGroup)
-            self.allGroups[childID] = newGroup
+            self.allGroups[child.id] = newGroup
         }else {
             if children == nil {
                 children = []
@@ -98,7 +102,7 @@ public class GroupTree {
         
     }
     
-    public func removeChildGroup(parentID: Int64, childID: Int64){
+    func removeChildGroup(parentID: Int64, childID: Int64){
         guard let _ = self.allGroups[childID] else {
             print("[removeChildGroup] delete \(parentID)/\(childID) but child not found")
             return
@@ -131,25 +135,32 @@ public class GroupTree {
 }
 
 
-public class GroupLeaf: Identifiable, Hashable {
-    public var id: Int64
-    public var groupName: String
-    public var parentID: Int64
-    public var children: [GroupLeaf]?
-    
-    public init(id: Int64, groupName: String, parentID: Int64, children: [GroupLeaf]? = nil) {
-        self.id = id
-        self.groupName = groupName
-        self.parentID = parentID
-        self.children = children
+class GroupLeaf: Identifiable, Hashable {
+    var id: Int64 {
+        group.id
+    }
+    var groupName: String {
+        group.groupName
+    }
+    var parentID: Int64 {
+        group.parentID
     }
     
-    public func hash(into hasher: inout Hasher) {
+    
+    var group: Entities.Group
+    var children: [GroupLeaf]?
+
+    init(group: Entities.Group, children: [GroupLeaf]? = nil) {
+        self.group = group
+        self.children = children
+    }
+
+    func hash(into hasher: inout Hasher) {
         hasher.combine(id)
         hasher.combine(groupName)
     }
     
-    public static func == (lhs: GroupLeaf, rhs: GroupLeaf) -> Bool {
+    static func == (lhs: GroupLeaf, rhs: GroupLeaf) -> Bool {
         return lhs.id == rhs.id
     }
 }

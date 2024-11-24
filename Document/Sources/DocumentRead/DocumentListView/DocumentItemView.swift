@@ -11,50 +11,68 @@ import Entities
 
 @available(macOS 14.0, *)
 struct DocumentItemView: View {
-    var doc: DocumentItem
-    var viewModel: DocumentListViewModel
+    private var section: String
+    @State var doc: DocumentItem
+    @State var viewModel: DocumentListViewModel
     
+    @State var entry: EntryDetail? = nil
     @State var parentEntry: EntryDetail? = nil
     @State var properties: [EntryProperty] = []
-
-    init(doc: DocumentItem, viewModel: DocumentListViewModel ) {
+    
+    init(section: String, doc: DocumentItem, viewModel: DocumentListViewModel ) {
+        self.section = section
         self.doc = doc
         self.viewModel = viewModel
     }
     
     var body: some View {
         VStack(alignment: .leading) {
-            VStack(alignment: .leading){
-                HStack(alignment: .top) {
-                    Text("\(groupName.prefix(25))")
-                        .foregroundColor(Color.gray)
-                    
-                    Spacer()
-                    
-                    Text(docTime)
-                        .font(.caption)
-                        .foregroundColor(doc.keepLowProfile ? Color.gray : Color.primary  )
-                }
+            Text(docTitle)
+                .font(.title2)
+                .multilineTextAlignment(.leading)
+                .foregroundColor(doc.keepLowProfile ? Color.gray : Color.primary  )
+            
+            Spacer(minLength: 10)
+            
+            HStack(alignment: .top) {
+                Text("\(groupName.prefix(25))")
+                    .font(.caption)
+                    .fontWeight(.light)
+                    .foregroundColor(Color.gray)
+                Spacer()
                 
-                Text(docTitle)
-                    .font(.headline)
-                    .foregroundColor(doc.keepLowProfile ? Color.gray : Color.primary  )
-                
+                Text(docTime)
+                    .font(.caption)
+                    .fontWeight(.light)
+                    .foregroundColor(Color.gray)
             }
             
-            Text("\(doc.info.subContent.prefix(100))")
+            
+            DocumentBannerView(bannerURL: "")
+                .padding(.vertical, 5)
+            
+            Text(doc.info.subContent.trimmingCharacters(in: .whitespaces))
                 .font(.body)
                 .foregroundColor(Color.gray)
-                .frame(minWidth: 0, idealWidth: 200,  maxWidth: .infinity, minHeight: 0, idealHeight: 40, maxHeight: 50, alignment: .leading)
+                .multilineTextAlignment(.leading)
             
             Text(docURL)
+                .font(.caption2)
+                .fontWeight(.light)
                 .foregroundColor(Color.gray)
+
         }
-        .padding(.vertical, 3)
+        .padding(30)
+        .contextMenu {
+            if let en = entry {
+                DocumentMenuView(section: section, document: $doc, entry: en, viewModel: viewModel)
+            }
+        }
         .task {
-            if let entry = viewModel.getDocumentEntry(entry: doc.info.oid){
-                properties = entry.properties
-                parentEntry = viewModel.getDocumentEntry(entry: entry.parent)
+            if let getEntry = viewModel.getDocumentEntry(entry: doc.info.oid){
+                entry = getEntry
+                properties = getEntry.properties
+                parentEntry = viewModel.getDocumentEntry(entry: getEntry.parent)
             }
         }
     }
@@ -80,14 +98,14 @@ struct DocumentItemView: View {
         
         return dateFormatter.string(from: datetime)
     }
-
+    
     var docURL: String {
         if let urlStr = properties.filter({ ($0.key == Property.WebPageURL || $0.key == Property.WebSiteURL) && !$0.value.isEmpty }).first?.value{
             return URL(string: urlStr)?.host() ?? parentEntry?.name ?? ""
         }
         return parentEntry?.name ?? ""
     }
-
+    
     var groupName: String {
         return properties.filter({ $0.key == Property.WebSiteName}).first?.value ?? ""
     }
@@ -103,3 +121,30 @@ struct DocumentItemView: View {
     }()
 }
 
+
+struct DocumentBannerView: View{
+    var bannerURL: String
+    
+    var body: some View {
+        Rectangle()
+            .fill(Color.gray)
+            .frame(alignment: .center)
+        //                .resizable()
+            .scaledToFit()
+    }
+}
+
+
+#if DEBUG
+
+import AppState
+import DomainTestHelpers
+
+#Preview {
+    let uc = MockDocumentUseCase()
+    let doc = try! uc.listUnreadDocuments(page: 1, pageSize: 1).first!
+    
+    DocumentItemView(section: "", doc: DocumentItem(info: doc), viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.empty, usecase: uc))
+}
+
+#endif
