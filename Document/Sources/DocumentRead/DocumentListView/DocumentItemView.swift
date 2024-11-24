@@ -11,13 +11,16 @@ import Entities
 
 @available(macOS 14.0, *)
 struct DocumentItemView: View {
+    private var section: String
     @State var doc: DocumentItem
     @State var viewModel: DocumentListViewModel
     
+    @State var entry: EntryDetail? = nil
     @State var parentEntry: EntryDetail? = nil
     @State var properties: [EntryProperty] = []
     
-    init(doc: DocumentItem, viewModel: DocumentListViewModel ) {
+    init(section: String, doc: DocumentItem, viewModel: DocumentListViewModel ) {
+        self.section = section
         self.doc = doc
         self.viewModel = viewModel
     }
@@ -60,10 +63,16 @@ struct DocumentItemView: View {
 
         }
         .padding(30)
+        .contextMenu {
+            if let en = entry {
+                DocumentMenuView(section: section, document: $doc, entry: en, viewModel: viewModel)
+            }
+        }
         .task {
-            if let entry = viewModel.getDocumentEntry(entry: doc.info.oid){
-                properties = entry.properties
-                parentEntry = viewModel.getDocumentEntry(entry: entry.parent)
+            if let getEntry = viewModel.getDocumentEntry(entry: doc.info.oid){
+                entry = getEntry
+                properties = getEntry.properties
+                parentEntry = viewModel.getDocumentEntry(entry: getEntry.parent)
             }
         }
     }
@@ -135,7 +144,7 @@ import DomainTestHelpers
     let uc = MockDocumentUseCase()
     let doc = try! uc.listUnreadDocuments(page: 1, pageSize: 1).first!
     
-    DocumentItemView(doc: DocumentItem(info: doc), viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.empty, usecase: uc))
+    DocumentItemView(section: "", doc: DocumentItem(info: doc), viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.empty, usecase: uc))
 }
 
 #endif

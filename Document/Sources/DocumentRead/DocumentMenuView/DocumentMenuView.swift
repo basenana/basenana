@@ -7,68 +7,96 @@
 
 import SwiftUI
 import Foundation
+import Entities
 
 struct DocumentMenuView: View {
+    private var section: String = ""
+    @Binding var document: DocumentItem
+    @State var entry: EntryDetail
+    @State var viewModel: DocumentListViewModel
+    
+    init(section: String, document: Binding<DocumentItem>, entry: EntryDetail, viewModel: DocumentListViewModel) {
+        self.section = section
+        self._document = document
+        self.entry = entry
+        self.viewModel = viewModel
+    }
+    
     
     var body: some View {
         VStack {
+            
+            if let u = parseUrlString(urlStr: getEntryProperty(keys: [Property.WebPageURL, Property.WebSiteURL])?.value ?? "" ){
+                Section(){
+                    Button("Launch URL", action: {
+                        openUrlInBrowser(url: u)
+                    })
+                    Button("Copy URL", action: {
+                        copyToClipBoard(content: "\(u)")
+                    })
+                }
+            }
+            
             Section{
                 Button("Go To Group", action: {
+                    viewModel.store.dispatch(.gotoDestination(.groupList(group: entry.parent)))
                 })
             }
             
             Section{
-                Button("Launch URL", action: {
-                })
-                Button("Copy URL", action: {
-                })
+                Menu("Mark To"){
+                    DocumentMarkMenuView(section: section, document: $document, viewModel: viewModel)
+                }
             }
-            
-//            Section{
-//                Menu("Mark To"){
-//                    DocumentMarkMenuView(doc: $doc, readerViewModel: $readerViewModel)
-//                }
-//            }
         }
+    }
+    
+    func getEntryProperty(keys: [String]) -> EntryProperty?{
+        for k in keys {
+            for p in entry.properties {
+                if p.key == k {
+                    return p
+                }
+            }
+        }
+        return nil
     }
 }
     
 
 struct DocumentMarkMenuView: View {
+    private var section: String
+    @Binding var document: DocumentItem
+    @State var viewModel: DocumentListViewModel
+    
+    init(section: String, document: Binding<DocumentItem>, viewModel: DocumentListViewModel) {
+        self.section = section
+        self._document = document
+        self.viewModel = viewModel
+    }
+    
     var body: some View {
         Button {
             withAnimation(.easeInOut) {
-//                var isRead = readerViewModel.readed.contains(doc.id)
-//                isRead.toggle()
-//                store.dispatch(.updateDocument(docUpdate: DocumentUpdate(docId: doc.id, unread: !isRead)))
-//                if isRead {
-//                    readerViewModel.readed.insert(doc.id)
-//                }else{
-//                    readerViewModel.readed.remove(doc.id)
-//                }
+                document.isUnread.toggle()
+                viewModel.setDocumentReadStatus(section: section, document: document.id, isUnread: document.isUnread)
             }
         } label: {
-//            Image(systemName: readerViewModel.readed.contains(doc.id) ? "circle.slash" : "circle.fill")
-//                .resizable()
-//                .frame(width: 5, height: 5)
-//            Text(readerViewModel.readed.contains(doc.id) ? "Unread" : "Read")
+            Image(systemName: document.isUnread ? "circle.slash" : "circle.fill")
+                .resizable()
+                .frame(width: 5, height: 5)
+            Text(document.isUnread ? "Read" : "Unread")
         }
         Button {
             withAnimation(.easeInOut) {
-//                var isMark = readerViewModel.marked.contains(doc.id)
-//                isMark.toggle()
-//                store.dispatch(.updateDocument(docUpdate: DocumentUpdate(docId: doc.id, marked: isMark)))
-//                if isMark {
-//                    readerViewModel.marked.insert(doc.id)
-//                }else{
-//                    readerViewModel.marked.remove(doc.id)
-//                }
+                document.isMarked.toggle()
+                viewModel.setDocumentMarkStatus(section: section, document: document.id, isMark: document.isMarked)
             }
         } label: {
-//            Image(systemName: readerViewModel.marked.contains(doc.id) ? "bookmark.slash": "bookmark.fill")
-//                .resizable()
-//                .frame(width: 5, height: 5)
-//            Text(readerViewModel.marked.contains(doc.id) ? "Unmark": "Mark")
+            Image(systemName: document.isMarked ? "bookmark.slash": "bookmark.fill")
+                .resizable()
+                .frame(width: 5, height: 5)
+            Text(document.isMarked ? "Unmark": "Mark")
         }
     }
 }

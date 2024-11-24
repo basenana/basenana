@@ -21,25 +21,41 @@ class DocumentSection: Identifiable {
     }
 }
 
-struct DocumentItem: Identifiable {
+@Observable
+class DocumentItem: Identifiable {
     var id: Int64 {
         get {
             return info.id
         }
     }
+    
+    // editable
+    var isUnread: Bool
+    var isMarked: Bool
+    
     var info: DocumentInfo
-    var keepLowProfile: Bool = false
+    var readable: Bool = false
+    
+    var keepLowProfile: Bool {
+        return readable && !isUnread
+    }
     
     init(info: DocumentInfo) {
         self.info = info
-        self.keepLowProfile = false
-    }
-
-    init(info: DocumentInfo, keepLowProfile: Bool) {
-        self.info = info
-        self.keepLowProfile = keepLowProfile
+        self.readable = false
+        
+        self.isMarked = info.marked
+        self.isUnread = info.unread
     }
     
+    init(info: DocumentInfo, readable: Bool) {
+        self.info = info
+        self.readable = readable
+        
+        self.isMarked = info.marked
+        self.isUnread = info.unread
+    }
+
     var sectionName: String {
         if Calendar.current.isDateInToday(info.createdAt){
             return "TODAY"

@@ -25,13 +25,22 @@ struct DocumentSectionListView: View {
         Section(header: DocumentSectionTitleView(title: section.id) ){
             Masonry(.vertical, lines: .adaptive(minSize: 350), content: {
                 ForEach(section.documents){ document in
-                    Button(action: {
-                        viewModel.store.dispatch(.gotoDestination(.readDocument(document: document.id)))
-                    }){
-                        DocumentItemView(doc: document, viewModel: viewModel)
-                            .frame(maxWidth: 350)
+                    LazyVStack{
+                        Button(action: {
+                            if document.isUnread {
+                                document.isUnread = false
+                                viewModel.setDocumentReadStatus(section: section.id, document: document.id, isUnread: false)
+                            }
+                            viewModel.store.dispatch(.gotoDestination(.readDocument(document: document.id)))
+                        }){
+                            DocumentItemView(section: section.id, doc: document, viewModel: viewModel)
+                                .frame(maxWidth: 350)
+                                .onAppear {
+                                    viewModel.checkAndLoadNextPage(section.id, document)
+                                }
+                        }
+                        .buttonStyle(.link)
                     }
-                    .buttonStyle(.link)
                 }
             })
         }

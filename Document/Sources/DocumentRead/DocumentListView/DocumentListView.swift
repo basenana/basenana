@@ -26,9 +26,6 @@ public struct DocumentListView: View {
                 LazyVStack {
                     ForEach(viewModel.sectionDocuments){ section in
                         DocumentSectionListView(section: section, viewModel: viewModel)
-                            .onAppear {
-                                viewModel.checkAndLoadNextSection(section)
-                            }
                     }
                 }
             }
