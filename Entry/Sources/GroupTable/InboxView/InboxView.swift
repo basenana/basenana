@@ -12,8 +12,7 @@ import Entities
 import WebPage
 
 
-@available(macOS 14.0, *)
-public struct InboxView: View {
+public struct QuickInboxView: View {
     private var viewModel: TreeViewModel
     
     @State private var urlInput: String = ""
@@ -94,8 +93,9 @@ public struct InboxView: View {
     }
     
     func inbox() {
-        viewModel.quickInbox(url: urlInput, title: urlTitle, fileType: fileTypeOption, errorMsg: $errorMessage)
-        viewModel.showQuickInbox.toggle()
+        if viewModel.quickInbox(url: urlInput, title: urlTitle, fileType: fileTypeOption, errorMsg: $errorMessage){
+            viewModel.showQuickInbox.toggle()
+        }
     }
 
     func tryLoadWebPage() {
@@ -103,6 +103,7 @@ public struct InboxView: View {
         guard urlStr != "" else {
             return
         }
+        errorMessage = ""
         if let _ = URL(string: urlStr){
             Task{
                 do {
@@ -124,7 +125,7 @@ import DomainTestHelpers
 
 #Preview {
     if #available(macOS 14.0, *) {
-        InboxView(viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
+        QuickInboxView(viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
     }
 }
 
