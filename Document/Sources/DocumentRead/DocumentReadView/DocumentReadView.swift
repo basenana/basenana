@@ -27,7 +27,7 @@ public struct DocumentReadView: View {
         .navigationTitle(viewModel.document?.name ?? "")
         .frame(minWidth: 200, minHeight: 100)
         .task {
-            viewModel.loadDocument()
+            await viewModel.loadDocument()
         }
     }
 }

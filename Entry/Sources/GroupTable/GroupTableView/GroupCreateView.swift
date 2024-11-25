@@ -12,17 +12,12 @@ import Entities
 
 struct GroupCreateView: View {
     @State private var viewModel: TreeViewModel
-    @State var parent: Entities.Group
+    @State var parent: Entities.Group = UnknownGroup.shared
     @State var groupType: GroupType
     
     init(viewModel: TreeViewModel) {
         self.viewModel = viewModel
         self.groupType = viewModel.createGroupType
-        if viewModel.createGroupInParent != 0 {
-            self.parent = viewModel.getGroup(groupID: viewModel.createGroupInParent) ?? UnknownGroup.shared
-        }else{
-            self.parent = viewModel.findCurrentParent()
-        }
     }
     
     @State private var parentName: String = ""
@@ -60,8 +55,10 @@ struct GroupCreateView: View {
                         .padding(.trailing, 20)
                 }
                 Button {
-                    viewModel.createGroup(parentID: parent.id, option: buildOption())
-                    viewModel.showCreateGroup.toggle()
+                    Task {
+                        await viewModel.createGroup(parentID: parent.id, option: buildOption())
+                        viewModel.showCreateGroup.toggle()
+                    }
                 } label: {
                     Text("Create")
                         .font(.body)
@@ -75,7 +72,12 @@ struct GroupCreateView: View {
             .frame(maxWidth: .infinity, alignment: .trailing)
             .padding(.top, 10)
         }
-        .onAppear{
+        .task{
+            if viewModel.createGroupInParent != 0 {
+                parent = await viewModel.getGroup(groupID: viewModel.createGroupInParent) ?? UnknownGroup.shared
+            }else{
+                parent = await viewModel.findCurrentParent()
+            }
             parentName = parent.groupName
         }
         .padding(50)
@@ -83,7 +85,7 @@ struct GroupCreateView: View {
     }
     
     func buildOption() -> EntryCreate {
-        var opt = EntryCreate(parent: parent.id, name: siteName, kind: "group")
+        var opt = EntryCreate(parent: parent.id, name: groupName, kind: "group")
         opt.RSS = RSSConfig(feed: rssFeed, siteName: siteName, siteURL: siteURL, fileType: .Webarchive)
         return opt
     }

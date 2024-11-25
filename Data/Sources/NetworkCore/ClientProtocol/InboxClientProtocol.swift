@@ -10,5 +10,5 @@ import Entities
 
 
 public protocol InboxClientProtocol {
-    func QuickInbox(_ :QuickInbox) throws
+    func QuickInbox(_ :QuickInbox) async throws
 }

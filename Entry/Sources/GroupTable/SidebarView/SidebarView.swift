@@ -39,7 +39,7 @@ public struct SidebarView: View {
             }
         }
         .task {
-            viewModel.resetGroupTree()
+            await viewModel.resetGroupTree()
         }
         .contextMenu{
             TreeMenuView(viewModel: viewModel)

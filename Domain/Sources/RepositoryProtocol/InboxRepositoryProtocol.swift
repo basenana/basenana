@@ -10,6 +10,6 @@ import Entities
 
 
 public protocol InboxRepositoryProtocol {
-    func QuickInbox(_ :QuickInbox) throws
+    func QuickInbox(_ :QuickInbox) async throws
 }
 

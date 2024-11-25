@@ -27,10 +27,9 @@ public class DocumentReadViewModel {
         self.usecase = usecase
     }
     
-    func loadDocument() {
+    func loadDocument() async {
         do {
-            let detail = try usecase.getDocumentDetails(document: docID)
-            document = detail
+            document = try await usecase.getDocumentDetails(document: docID)
         } catch {
             store.alert.display(msg: "load document failed: \(error)")
         }

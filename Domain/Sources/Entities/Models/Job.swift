@@ -16,10 +16,7 @@ public protocol WorkflowJob {
     
 }
 
-public protocol Job {
-    
-}
-
 public struct WorkflowJobOption {
     
 }
+

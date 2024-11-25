@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
+import Entities
 
-@available(macOS 14.0, *)
 @Observable
 @MainActor
 public class StateStore {
@@ -17,6 +17,7 @@ public class StateStore {
     public var sidebarSelection: Destination = .mainContent
     public var alert = Alert()
     public var notifications = [String]()
+    public var backgroupJobs = [BackgroundJob]()
     public var fsInfo = FSInfo()
     public var config = Config()
     

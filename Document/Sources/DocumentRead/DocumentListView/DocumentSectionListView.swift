@@ -27,16 +27,18 @@ struct DocumentSectionListView: View {
                 ForEach(section.documents){ document in
                     LazyVStack{
                         Button(action: {
-                            if document.isUnread {
-                                document.isUnread = false
-                                viewModel.setDocumentReadStatus(section: section.id, document: document.id, isUnread: false)
+                            Task {
+                                if document.isUnread {
+                                    document.isUnread = false
+                                    await viewModel.setDocumentReadStatus(section: section.id, document: document.id, isUnread: false)
+                                }
                             }
                             viewModel.store.dispatch(.gotoDestination(.readDocument(document: document.id)))
                         }){
                             DocumentItemView(section: section.id, doc: document, viewModel: viewModel)
                                 .frame(maxWidth: 350)
-                                .onAppear {
-                                    viewModel.checkAndLoadNextPage(section.id, document)
+                                .task(priority: .background) {
+                                    await viewModel.checkAndLoadNextPage(section.id, document)
                                 }
                         }
                         .buttonStyle(.link)

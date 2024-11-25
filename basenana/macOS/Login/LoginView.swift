@@ -101,7 +101,7 @@ struct LoginView: View {
             return
         }
         do {
-            let fsInfo = try environment.clientSet!.fsInfo()
+            let fsInfo = try await environment.clientSet!.fsInfo()
             state.dispatch(.setFsInfo(fsInfo: AppState.FSInfo(namespace: fsInfo.namespace, rootID: fsInfo.rootID, inboxID: fsInfo.inboxID)))
         } catch {
             errorMessage = "query fs info failed: \(error)"

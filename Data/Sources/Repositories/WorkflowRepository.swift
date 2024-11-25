@@ -19,15 +19,15 @@ public class WorkflowRepository: WorkflowRepositoryProtocol {
         self.core = core
     }
     
-    public func ListWorkflows() throws -> [any Entities.Workflow] {
-        return try core.ListWorkflows()
+    public func ListWorkflows() async throws -> [any Entities.Workflow] {
+        return try await core.ListWorkflows()
     }
     
-    public func ListWorkflowJobs(workflow: String) throws -> [any Entities.WorkflowJob] {
-        return try core.ListWorkflowJobs(workflow: workflow)
+    public func ListWorkflowJobs(workflow: String) async throws -> [any Entities.WorkflowJob] {
+        return try await core.ListWorkflowJobs(workflow: workflow)
     }
     
-    public func TriggerWorkflow(workflow: String, option: Entities.WorkflowJobOption) throws -> any Entities.WorkflowJob {
-        return try core.TriggerWorkflow(workflow: workflow, option: option)
+    public func TriggerWorkflow(workflow: String, option: Entities.WorkflowJobOption) async throws -> any Entities.WorkflowJob {
+        return try await core.TriggerWorkflow(workflow: workflow, option: option)
     }
 }

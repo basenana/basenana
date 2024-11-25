@@ -18,3 +18,16 @@ public protocol NotificationMessage {
     var status: String { get }
     var time: Date { get }
 }
+
+
+public class BackgroundJob: Identifiable {
+    public var id: String
+    public var name: String
+    public var startAt: Date
+    
+    public init(name: String, startAt: Date) {
+        self.id = "\(RFC3339Formatter().string(from: Date()))-\(randomString(randomOfLength: 10))"
+        self.name = name
+        self.startAt = startAt
+    }
+}

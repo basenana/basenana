@@ -29,6 +29,12 @@ struct DocumentMenuView: View {
             if let u = parseUrlString(urlStr: getEntryProperty(keys: [Property.WebPageURL, Property.WebSiteURL])?.value ?? "" ){
                 Section(){
                     Button("Launch URL", action: {
+                        Task {
+                            if document.isUnread {
+                                document.isUnread = false
+                                await viewModel.setDocumentReadStatus(section: section, document: document.id, isUnread: false)
+                            }
+                        }
                         openUrlInBrowser(url: u)
                     })
                     Button("Copy URL", action: {
@@ -79,7 +85,9 @@ struct DocumentMarkMenuView: View {
         Button {
             withAnimation(.easeInOut) {
                 document.isUnread.toggle()
-                viewModel.setDocumentReadStatus(section: section, document: document.id, isUnread: document.isUnread)
+                Task {
+                    await viewModel.setDocumentReadStatus(section: section, document: document.id, isUnread: document.isUnread)
+                }
             }
         } label: {
             Image(systemName: document.isUnread ? "circle.slash" : "circle.fill")
@@ -90,7 +98,9 @@ struct DocumentMarkMenuView: View {
         Button {
             withAnimation(.easeInOut) {
                 document.isMarked.toggle()
-                viewModel.setDocumentMarkStatus(section: section, document: document.id, isMark: document.isMarked)
+                Task {
+                    await viewModel.setDocumentMarkStatus(section: section, document: document.id, isMark: document.isMarked)
+                }
             }
         } label: {
             Image(systemName: document.isMarked ? "bookmark.slash": "bookmark.fill")

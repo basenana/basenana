@@ -34,7 +34,7 @@ public struct DocumentListView: View {
             }
         }
         .task {
-            viewModel.initNextPage()
+            await viewModel.initNextPage()
         }
         .toolbar(removing: .sidebarToggle)
         .frame(minWidth: 300, idealWidth: 300)

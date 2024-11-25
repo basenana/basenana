@@ -13,5 +13,3 @@ public struct APIWorkflow: Workflow {}
 
 public struct APIWorkflowJob: WorkflowJob {}
 
-public struct APIJob: Job {}
-

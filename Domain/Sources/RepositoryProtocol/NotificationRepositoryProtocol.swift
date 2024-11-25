@@ -10,8 +10,8 @@ import Entities
 
 
 public protocol NotificationRepositoryProtocol {
-    func ListMessage(all: Bool) throws -> [NotificationMessage]
-    func ReadMeesage(id: String) throws
+    func ListMessage(all: Bool) async throws -> [NotificationMessage]
+    func ReadMeesage(id: String) async throws
 }
 
 

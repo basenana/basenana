@@ -39,24 +39,24 @@ public class MockEntryRepository: EntryRepositoryProtocol {
         }
     }
     
-    public func GroupTree() throws -> any Entities.Group {
+    public func GroupTree() async throws -> any Entities.Group {
         let root = MockGroup(id: 1, groupName: "root", parentID: 1, children: [])
-        let children = try ListGroupChildren(filter: EntryFilter(parent: 1))
+        let children = try await ListGroupChildren(filter: EntryFilter(parent: 1))
         
         for ch in children {
             if !ch.isGroup || ch.id == 1 {
                 continue
             }
-            root.children!.append(try buildTree(grp: ch.id))
+            root.children!.append(try await buildTree(grp: ch.id))
         }
         return root
     }
     
-    func buildTree(grp: Int64) throws -> MockGroup {
-        let en = try GetEntryDetail(entry: grp)
+    func buildTree(grp: Int64) async throws -> MockGroup {
+        let en = try await GetEntryDetail(entry: grp)
         let result = MockGroup(id: en.id, groupName: en.name, parentID: en.parent)
         
-        let children = try ListGroupChildren(filter: EntryFilter(parent: grp))
+        let children = try await ListGroupChildren(filter: EntryFilter(parent: grp))
         if children.isEmpty {
             return result
         }
@@ -66,16 +66,16 @@ public class MockEntryRepository: EntryRepositoryProtocol {
             if !ch.isGroup {
                 continue
             }
-            result.children!.append(try buildTree(grp: ch.id))
+            result.children!.append(try await buildTree(grp: ch.id))
         }
         return result
     }
 
-    public func RootEntry() throws -> any Entities.EntryDetail {
-        return try GetEntryDetail(entry: 1)
+    public func RootEntry() async throws -> any Entities.EntryDetail {
+        return try await GetEntryDetail(entry: 1)
     }
     
-    public func FindEntry(parent: Int64, name: String) throws -> any Entities.EntryDetail {
+    public func FindEntry(parent: Int64, name: String) async throws -> any Entities.EntryDetail {
         for kv in self.repo {
             let en = kv.value
             if en.parent == parent && en.name == name {
@@ -85,23 +85,23 @@ public class MockEntryRepository: EntryRepositoryProtocol {
         throw RepositoryError.notFound
     }
     
-    public func GetEntryDetail(entry: Int64) throws -> any Entities.EntryDetail {
+    public func GetEntryDetail(entry: Int64) async throws -> any Entities.EntryDetail {
         guard let en = repo[entry] else {
             throw RepositoryError.notFound
         }
         return en
     }
     
-    public func CreateEntry(entry: Entities.EntryCreate) throws -> any Entities.EntryInfo {
+    public func CreateEntry(entry: Entities.EntryCreate) async throws -> any Entities.EntryInfo {
         throw RepositoryError.unimplement
     }
     
-    public func UpdateEntry(entry: Entities.EntryUpdate) throws -> any Entities.EntryDetail {
-        let en = try GetEntryDetail(entry: entry.id)
+    public func UpdateEntry(entry: Entities.EntryUpdate) async throws -> any Entities.EntryDetail {
+        let en = try await GetEntryDetail(entry: entry.id)
         return en
     }
     
-    public func DeleteEntries(entrys: [Int64]) throws {
+    public func DeleteEntries(entrys: [Int64]) async throws {
         for entry in entrys {
             guard let en = self.repo.removeValue(forKey: entry) else {
                 continue
@@ -110,7 +110,7 @@ public class MockEntryRepository: EntryRepositoryProtocol {
         }
     }
     
-    public func ListGroupChildren(filter: Entities.EntryFilter) throws -> [any Entities.EntryInfo] {
+    public func ListGroupChildren(filter: Entities.EntryFilter) async throws -> [any Entities.EntryInfo] {
         var result: [EntryInfo] = []
         guard let entryIDs = self.groups[filter.parent] else {
             return result
@@ -124,19 +124,19 @@ public class MockEntryRepository: EntryRepositoryProtocol {
         return result
     }
     
-    public func ChangeParent(entry: Int64, newParent: Int64, option: Entities.ChangeParentOption) throws {
+    public func ChangeParent(entry: Int64, newParent: Int64, option: Entities.ChangeParentOption) async throws {
         throw RepositoryError.unimplement
     }
     
-    public func AddProperty(entry: Int64, key: String, val: String) throws {
+    public func AddProperty(entry: Int64, key: String, val: String) async throws {
         throw RepositoryError.unimplement
     }
     
-    public func UpdateProperty(entry: Int64, key: String, val: String) throws {
+    public func UpdateProperty(entry: Int64, key: String, val: String) async throws {
         throw RepositoryError.unimplement
     }
     
-    public func DeleteProperty(entry: Int64, key: String) throws {
+    public func DeleteProperty(entry: Int64, key: String) async throws {
         throw RepositoryError.unimplement
     }
     

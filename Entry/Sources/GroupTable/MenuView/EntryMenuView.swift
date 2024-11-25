@@ -62,8 +62,8 @@ public struct EntryMenuView: View {
                 }
             }
             
-            if isFileTarget() {
-                FileMenuView(viewModel: viewModel, target: viewModel.describeEntry(entry: target.id))
+            if targetDetail != nil && isFileTarget() {
+                FileMenuView(viewModel: viewModel, target: targetDetail!)
             }
             
             if canBeEdit() {
@@ -78,7 +78,7 @@ public struct EntryMenuView: View {
                             GroupDestinationView(
                                 group: childGroup,
                                 childKeyPath: \.children,
-                                action: { let _ = viewModel.moveEntriesToGroup(entryURLs: [EntryUrl(entryID: target.id)], newParent: $0.id ) }
+                                action: { let _ = await viewModel.moveEntriesToGroup(entryURLs: [EntryUrl(entryID: target.id)], newParent: $0.id ) }
                             )
                         }
                     }
@@ -103,6 +103,9 @@ public struct EntryMenuView: View {
                 }
             }
         }
+        .task {
+            targetDetail = await viewModel.describeEntry(entry: target.id)
+        }
     }
     
     func isFileTarget() -> Bool {
@@ -126,7 +129,7 @@ public struct EntryMenuView: View {
 struct GroupDestinationView: View {
     let group: GroupLeaf
     let childKeyPath: KeyPath<GroupLeaf, [GroupLeaf]?>
-    let action: (_: GroupLeaf) ->Void
+    let action: (_: GroupLeaf) async -> Void
     
     var body: some View {
         if group[keyPath: childKeyPath] != nil {
@@ -134,7 +137,7 @@ struct GroupDestinationView: View {
                 isExpanded: /*@START_MENU_TOKEN@*/.constant(true)/*@END_MENU_TOKEN@*/,
                 content: {
                     Menu(group.groupName) {
-                        Button("\(group.groupName) 👈🏻", action: { action(group) })
+                        Button("\(group.groupName) 👈🏻", action: { Task { await action(group) }})
                         Divider()
                         ForEach(group[keyPath: childKeyPath] ?? []) { childGroup in
                             GroupDestinationView(group: childGroup, childKeyPath: childKeyPath, action: action)
@@ -144,7 +147,7 @@ struct GroupDestinationView: View {
                 label: {}
             ).disclosureGroupStyle(GroupDestDisclosureStyle())
         } else {
-            Button(group.groupName, action: { action(group) })
+            Button(group.groupName, action: { Task { await action(group) }})
         }
     }
 }
@@ -192,15 +195,31 @@ struct FileMenuView: View {
 #if DEBUG
 
 import DomainTestHelpers
-
-let entry = try! MockEntryUseCase().getEntryDetails(entry: 1010)
-
-#Preview {
-    if #available(macOS 14.0, *) {
-        List{
-            EntryMenuView(target: entry, viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
+struct EntryMenuPreview: View {
+    @State private var entry: EntryInfo? = nil
+    
+    var body: some View {
+        List {
+            if let entry = entry {
+                EntryMenuView(target: entry, viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
+            } else {
+                Text("Loading...")
+            }
+        }
+        .task {
+            do {
+                entry = try await MockEntryUseCase().getEntryDetails(entry: 1010).toInfo()
+            } catch {
+                print("Failed to load entry details: \(error)")
+            }
         }
     }
+}
+
+
+
+#Preview {
+    EntryMenuPreview()
 }
 
 #endif

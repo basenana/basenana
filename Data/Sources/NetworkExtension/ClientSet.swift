@@ -77,13 +77,13 @@ public class FSAPI {
 @available(macOS 11.0, *)
 public class ClientSet {
     
-    var inbox: Api_V1_InboxClientProtocol
-    var entries: Api_V1_EntriesClientProtocol
-    var properties: Api_V1_PropertiesClientProtocol
-    var document: Api_V1_DocumentClientProtocol
-    var dialogue: Api_V1_RoomClientProtocol
-    var workflow: Api_V1_WorkflowClientProtocol
-    var notify: Api_V1_NotifyClientProtocol
+    var inbox: Api_V1_InboxAsyncClientProtocol
+    var entries: Api_V1_EntriesAsyncClientProtocol
+    var properties: Api_V1_PropertiesAsyncClientProtocol
+    var document: Api_V1_DocumentAsyncClientProtocol
+    var dialogue: Api_V1_RoomAsyncClientProtocol
+    var workflow: Api_V1_WorkflowAsyncClientProtocol
+    var notify: Api_V1_NotifyAsyncClientProtocol
     
     private var namespace: String
     
@@ -95,25 +95,25 @@ public class ClientSet {
             .withTLS(certificateVerification: .none)
             .connect(host: host, port: port)
         
-        self.inbox = Api_V1_InboxNIOClient(channel: tlsChannel)
-        self.entries = Api_V1_EntriesNIOClient(channel: tlsChannel)
-        self.properties = Api_V1_PropertiesNIOClient(channel: tlsChannel)
-        self.document = Api_V1_DocumentNIOClient(channel: tlsChannel)
-        self.dialogue = Api_V1_RoomNIOClient(channel: tlsChannel)
-        self.workflow = Api_V1_WorkflowNIOClient(channel: tlsChannel)
-        self.notify = Api_V1_NotifyNIOClient(channel: tlsChannel)
+        self.inbox = Api_V1_InboxAsyncClient(channel: tlsChannel)
+        self.entries = Api_V1_EntriesAsyncClient(channel: tlsChannel)
+        self.properties = Api_V1_PropertiesAsyncClient(channel: tlsChannel)
+        self.document = Api_V1_DocumentAsyncClient(channel: tlsChannel)
+        self.dialogue = Api_V1_RoomAsyncClient(channel: tlsChannel)
+        self.workflow = Api_V1_WorkflowAsyncClient(channel: tlsChannel)
+        self.notify = Api_V1_NotifyAsyncClient(channel: tlsChannel)
         
         self.namespace = namespace
     }
     
-    public func fsInfo() throws -> FSInfo {
+    public func fsInfo() async throws -> FSInfo {
         let result = FSInfo()
         result.namespace = namespace
         
         do {
             var req = Api_V1_FindEntryDetailRequest()
             req.root = true
-            let resp = try entries.findEntryDetail(req, callOptions: defaultCallOptions).response.wait()
+            let resp = try await entries.findEntryDetail(req, callOptions: defaultCallOptions)
             result.rootID = resp.entry.id
         } catch {
             print("refush fs info error, get root entry failed \(error)")
@@ -124,7 +124,7 @@ public class ClientSet {
             var req = Api_V1_FindEntryDetailRequest()
             req.parentID = result.rootID
             req.name = ".inbox"
-            let resp = try entries.findEntryDetail(req, callOptions: defaultCallOptions).response.wait()
+            let resp = try await entries.findEntryDetail(req, callOptions: defaultCallOptions)
             result.inboxID = resp.entry.id
         } catch {
             print("refush fs info error, get inbox entry failed \(error)")

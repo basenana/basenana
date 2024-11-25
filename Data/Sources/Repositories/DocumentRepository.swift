@@ -18,16 +18,16 @@ public class DocumentRepository: DocumentRepositoryProtocol {
         self.core = core
     }
     
-    public func ListDocuments(filter: Entities.DocumentFilter) throws -> [any Entities.DocumentInfo] {
-        return try core.ListDocuments(filter: filter)
+    public func ListDocuments(filter: Entities.DocumentFilter) async throws -> [any Entities.DocumentInfo] {
+        return try await core.ListDocuments(filter: filter)
     }
     
-    public func GetDocumentDetail(id: Entities.DocumentID) throws -> any Entities.DocumentDetail {
-        return try core.GetDocumentDetail(id: id)
+    public func GetDocumentDetail(id: Entities.DocumentID) async throws -> any Entities.DocumentDetail {
+        return try await core.GetDocumentDetail(id: id)
     }
     
-    public func UpdateDocument(doc: Entities.DocumentUpdate) throws {
-        return try core.UpdateDocument(doc: doc)
+    public func UpdateDocument(doc: Entities.DocumentUpdate) async throws {
+        return try await core.UpdateDocument(doc: doc)
     }
     
 }

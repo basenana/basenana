@@ -13,7 +13,8 @@ import Entities
 
 @available(macOS 14.0, *)
 public struct GroupTableView: View {
-    private var groupID: Int64
+    @State private var groupID: Int64
+    @State private var groupName: String? = nil
     
     @State private var group: EntryDetail? = nil
     @State private var children: [EntryRow] = []
@@ -25,9 +26,10 @@ public struct GroupTableView: View {
     
     public init(groupID: Int64, viewModel: TreeViewModel) {
         self.groupID = groupID
+        self.groupName = ""
         self.viewModel = viewModel
     }
-    
+
     public var body: some View {
         VStack {
             Table(of: EntryRow.self, selection: $selection, sortOrder: $order) {
@@ -58,7 +60,9 @@ public struct GroupTableView: View {
                         TableRow(child)
                             .draggable(EntryUrl(entryID: child.id))
                             .dropDestination(for: URL.self){ urls in
-                                let _ = viewModel.moveEntriesToGroup(entryURLs: urls, newParent: child.id)
+                                Task {
+                                    let _ = await viewModel.moveEntriesToGroup(entryURLs: urls, newParent: child.id)
+                                }
                             }
                             .contextMenu{
                                 EntryMenuView(target: child.info, viewModel: viewModel)
@@ -79,9 +83,17 @@ public struct GroupTableView: View {
                 }
             }
             .task {
-                viewModel.openGroup(groupID: groupID)
+                await viewModel.openGroup(groupID: groupID)
+                
+                if let opg = viewModel.opendGroup {
+                    if opg.id == viewModel.inbox.id {
+                        groupName = "Inbox"
+                    } else {
+                        groupName = opg.name
+                    }
+                }
             }
-            .navigationTitle(viewModel.opendGroup?.name ?? "")
+            .navigationTitle(groupName ?? "")
             .contextMenu{
                 if let grp = viewModel.opendGroup {
                     EntryMenuView(target: grp.toInfo()!, viewModel: viewModel)
@@ -89,7 +101,10 @@ public struct GroupTableView: View {
             }
         }
         .dropDestination(for: URL.self){ urls, _  in
-            return viewModel.moveEntriesToGroup(entryURLs: urls, newParent: groupID)
+            Task {
+                await viewModel.moveEntriesToGroup(entryURLs: urls, newParent: groupID)
+            }
+            return true
         }
     }
     

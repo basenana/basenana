@@ -19,12 +19,12 @@ public class FileRepository: FileRepositoryProtocol {
         self.core = core
     }
     
-    public func WriteFile(entry: Int64, off: Int64, len: Int64, input: Stream) throws {
-        return try core.WriteFile(entry: entry, off: off, len: len, input: input)
+    public func WriteFile(entry: Int64, off: Int64, len: Int64, input: Stream) async throws {
+        return try await core.WriteFile(entry: entry, off: off, len: len, input: input)
     }
     
-    public func ReadFile(entry: Int64, off: Int64, len: Int64) throws -> Stream {
-        return try core.ReadFile(entry: entry, off: off, len: len)
+    public func ReadFile(entry: Int64, off: Int64, len: Int64) async throws -> Stream {
+        return try await core.ReadFile(entry: entry, off: off, len: len)
     }
     
 }

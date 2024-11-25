@@ -69,10 +69,10 @@ struct DocumentItemView: View {
             }
         }
         .task {
-            if let getEntry = viewModel.getDocumentEntry(entry: doc.info.oid){
+            if let getEntry = await viewModel.getDocumentEntry(entry: doc.info.oid) {
                 entry = getEntry
                 properties = getEntry.properties
-                parentEntry = viewModel.getDocumentEntry(entry: getEntry.parent)
+                parentEntry = await viewModel.getDocumentEntry(entry: getEntry.parent)
             }
         }
     }
@@ -140,11 +140,27 @@ struct DocumentBannerView: View{
 import AppState
 import DomainTestHelpers
 
+struct EntryMenuPreview: View {
+    @State private var doc: DocumentInfo? = nil
+    @State private var uc = MockDocumentUseCase()
+
+    var body: some View {
+        
+        VStack{
+            DocumentItemView(section: "", doc: DocumentItem(info: doc!), viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.empty, usecase: uc))
+        }
+        .task {
+            do {
+                doc = try await uc.listUnreadDocuments(page: 1, pageSize: 1).first!
+            } catch {
+                print("Failed to load entry details: \(error)")
+            }
+        }
+    }
+}
+
 #Preview {
-    let uc = MockDocumentUseCase()
-    let doc = try! uc.listUnreadDocuments(page: 1, pageSize: 1).first!
-    
-    DocumentItemView(section: "", doc: DocumentItem(info: doc), viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.empty, usecase: uc))
+    EntryMenuPreview()
 }
 
 #endif

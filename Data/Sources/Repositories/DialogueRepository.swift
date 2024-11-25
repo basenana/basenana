@@ -18,29 +18,29 @@ public class DialogueRepository: DialogueRepositoryProtocol {
         self.core = core
     }
     
-    public func ListRoomes(entry: Int64) throws -> [any Entities.Room] {
-        return try core.ListRoomes(entry: entry)
+    public func ListRoomes(entry: Int64) async throws -> [any Entities.Room] {
+        return try await core.ListRoomes(entry: entry)
     }
     
-    public func OpenRoom(entry: Int64, room: Int64, option: Entities.RoomOption) throws -> any Entities.Room {
-        return try core.OpenRoom(entry: entry, room: room, option: option)
+    public func OpenRoom(entry: Int64, room: Int64, option: Entities.RoomOption) async throws -> any Entities.Room {
+        return try await core.OpenRoom(entry: entry, room: room, option: option)
     }
     
-    public func UpdateRoom(room: Int64, option: Entities.RoomOption) throws {
-        return try core.UpdateRoom(room: room, option: option)
+    public func UpdateRoom(room: Int64, option: Entities.RoomOption) async throws {
+        return try await core.UpdateRoom(room: room, option: option)
     }
     
-    public func DeleteRoom(room: Int64) throws {
-        return try core.DeleteRoom(room: room)
+    public func DeleteRoom(room: Int64) async throws {
+        return try await core.DeleteRoom(room: room)
     }
     
-    public func ClearRoom(room: Int64) throws {
-        return try core.ClearRoom(room: room)
+    public func ClearRoom(room: Int64) async throws {
+        return try await core.ClearRoom(room: room)
     }
     
-    public func ChatInRoom(room: Int64, message: String, handler: @escaping (Entities.RoomMessage, Bool) -> Void) throws {
-        return try core.ChatInRoom(room: room, message: message){ msg, next in
-            handler(msg, next)
+    public func ChatInRoom(room: Int64, message: String, handler: @escaping (Entities.RoomMessage, Bool) async -> Void) async throws {
+        return try await core.ChatInRoom(room: room, message: message){ msg, next in
+            await handler(msg, next)
         }
     }
     

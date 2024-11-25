@@ -34,7 +34,10 @@ struct TreeListView: View {
             }
             .id(child.id)
             .dropDestination(for: URL.self){ urls, _ in
-                return viewModel.moveEntriesToGroup(entryURLs: urls, newParent: child.id)
+                Task {
+                    let _ = await viewModel.moveEntriesToGroup(entryURLs: urls, newParent: child.id)
+                }
+                return true
             }
             .draggable(EntryUrl(entryID: child.id))
         }

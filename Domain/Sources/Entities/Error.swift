@@ -22,9 +22,11 @@ public enum RepositoryError: Error {
     case notFound
     case streamBroken
     case loginFailed(Error)
+    case canceled
 }
 
 
 public enum UseCaseError: Error {
+    case canceled
     case unimplement
 }
