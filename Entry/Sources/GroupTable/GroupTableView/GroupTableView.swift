@@ -15,6 +15,7 @@ import Entities
 public struct GroupTableView: View {
     @State private var groupID: Int64
     @State private var groupName: String? = nil
+    @State private var groupTree = GroupTree.shared
     
     @State private var group: EntryDetail? = nil
     @State private var children: [EntryRow] = []
@@ -86,7 +87,7 @@ public struct GroupTableView: View {
                 await viewModel.openGroup(groupID: groupID)
                 
                 if let opg = viewModel.opendGroup {
-                    if opg.id == viewModel.inbox.id {
+                    if opg.name == ".inbox" {
                         groupName = "Inbox"
                     } else {
                         groupName = opg.name

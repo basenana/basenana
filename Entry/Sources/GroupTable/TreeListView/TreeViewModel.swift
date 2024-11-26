@@ -16,7 +16,7 @@ import UseCaseProtocol
 public class TreeViewModel {
     
     // tree store
-    var groupTree: GroupTree = GroupTree()
+    var groupTree = GroupTree.shared
     
     var root: Entities.Group = UnknownGroup.shared
     var inbox: Entities.Group = UnknownGroup.shared
@@ -60,13 +60,7 @@ public class TreeViewModel {
     func resetGroupTree() async {
         print("[resetGroupTree] load and reset group root")
         do {
-            root = try await entryUsecase.getTreeRoot()
-            guard let fc = root.children else {
-                return
-            }
-            inbox = await getGroup(groupID: store.fsInfo.inboxID) ?? UnknownGroup.shared
-            
-            self.groupTree.reset(groups: fc)
+            self.groupTree.reset(root: try await entryUsecase.getTreeRoot())
         } catch {
             store.alert.display(msg: "load group tree failed: \(error)")
         }
@@ -216,7 +210,6 @@ public class TreeViewModel {
                         }
                     }
                     
-                    return true
                 } catch {
                     store.alert.display(msg: "move entry failed \(error)")
                     return false
@@ -230,7 +223,7 @@ public class TreeViewModel {
                 return false
             }
         }
-        return false
+        return true
     }
     
     func replicateEntryToGroup(entry: Int64, newParent: Int64) {

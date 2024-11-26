@@ -13,6 +13,7 @@ import SwiftData
 
 @available(macOS 14.0, *)
 struct TreeListView: View {
+    @State private var groupTree = GroupTree.shared
     @State private var viewModel: TreeViewModel
     
     public init(viewModel: TreeViewModel) {
@@ -20,7 +21,7 @@ struct TreeListView: View {
     }
     
     public var body: some View {
-        OutlineGroup(viewModel.groupTree.children ?? [], children: \.children){ child in
+        OutlineGroup(groupTree.children ?? [], children: \.children){ child in
             NavigationLink(value: Destination.groupList(group: child.id), label: {
                 HStack{
                     Image(systemName: "folder")

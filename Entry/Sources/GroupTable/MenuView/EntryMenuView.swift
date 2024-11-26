@@ -14,6 +14,7 @@ import Styleguide
 
 @available(macOS 14.0, *)
 public struct EntryMenuView: View {
+    @State private var groupTree = GroupTree.shared
     @State private var target: EntryInfo
     @State private var targetDetail: EntryDetail?
     @State private var viewModel: TreeViewModel
@@ -74,7 +75,7 @@ public struct EntryMenuView: View {
                 
                 Section{
                     Menu("Move To") {
-                        ForEach(viewModel.groupTree.children ?? []){ childGroup in
+                        ForEach(groupTree.children ?? []){ childGroup in
                             GroupDestinationView(
                                 group: childGroup,
                                 childKeyPath: \.children,
@@ -83,7 +84,7 @@ public struct EntryMenuView: View {
                         }
                     }
                     Menu("Replicate To") {
-                        ForEach(viewModel.groupTree.children ?? []){ childGroup in
+                        ForEach(groupTree.children ?? []){ childGroup in
                             GroupDestinationView(
                                 group: childGroup,
                                 childKeyPath: \.children,
@@ -113,15 +114,15 @@ public struct EntryMenuView: View {
     }
     
     func canBeOpen() -> Bool {
-        return target.isGroup && target.id != viewModel.root.id
+        return target.isGroup && target.id != groupTree.root.id
     }
     
     func canCreateGroup() -> Bool {
-        return target.id != viewModel.inbox.id
+        return target.name != ".inbox"
     }
     
     func canBeEdit() -> Bool {
-        return target.id != viewModel.root.id && target.id != viewModel.inbox.id
+        return target.id != groupTree.root.id && target.name != ".inbox"
     }
 }
 

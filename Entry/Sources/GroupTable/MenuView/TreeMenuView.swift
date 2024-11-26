@@ -13,6 +13,7 @@ import UseCaseProtocol
 
 
 struct TreeMenuView: View {
+    @State private var groupTree = GroupTree.shared
     @State private var target: Entities.Group
     @State private var targetDetail: EntryDetail?
     @State private var viewModel: TreeViewModel
@@ -23,7 +24,7 @@ struct TreeMenuView: View {
     }
     
     public init(viewModel: TreeViewModel) {
-        self.target = viewModel.root
+        self.target = GroupTree.shared.root
         self.viewModel = viewModel
     }
 
@@ -61,7 +62,7 @@ struct TreeMenuView: View {
                 
                 Section{
                     Menu("Move To") {
-                        ForEach(viewModel.groupTree.children ?? []){ childGroup in
+                        ForEach(groupTree.children ?? []){ childGroup in
                             GroupDestinationView(
                                 group: childGroup,
                                 childKeyPath: \.children,
@@ -70,7 +71,7 @@ struct TreeMenuView: View {
                         }
                     }
                     Menu("Replicate To") {
-                        ForEach(viewModel.groupTree.children ?? []){ childGroup in
+                        ForEach(groupTree.children ?? []){ childGroup in
                             GroupDestinationView(
                                 group: childGroup,
                                 childKeyPath: \.children,
@@ -85,10 +86,10 @@ struct TreeMenuView: View {
     }
     
     func canCreateGroup() -> Bool {
-        return target.id != viewModel.inbox.id
+        return target.groupName != ".inbox"
     }
     
     func canBeEdit() -> Bool {
-        return target.id != viewModel.root.id && target.id != viewModel.inbox.id
+        return target.id != groupTree.root.id && target.groupName != ".inbox"
     }
 }
