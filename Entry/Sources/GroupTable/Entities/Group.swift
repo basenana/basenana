@@ -43,3 +43,17 @@ enum GroupType: Identifiable {
         }
     }
 }
+
+
+@Observable
+class GroupState {
+    static var shared = GroupState()
+    
+    var groupTableChange: Date = Date()
+    
+    private init() {}
+    
+    func requestReopen() {
+        groupTableChange = Date()
+    }
+}

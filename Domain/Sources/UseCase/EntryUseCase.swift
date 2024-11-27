@@ -83,9 +83,19 @@ public class EntryUseCase: EntryUseCaseProtocol {
         }
     }
     
-    public func changeParent(entry: Int64, newParent: Int64) async throws {
+    public func changeParent(entries: [Int64], newParent: Int64, finisher: @escaping (EntryDetail, EntryDetail) -> Void) async throws {
         do {
-            return try await entryRepo.ChangeParent(entry: entry, newParent: newParent, option: ChangeParentOption())
+            let parent = try await getEntryDetails(entry: newParent)
+            if !parent.isGroup {
+                throw BizError.notGroup
+            }
+            
+            for eid in entries {
+                let entry = try await getEntryDetails(entry: eid)
+                try await entryRepo.ChangeParent(entry: eid, newParent: newParent, option: ChangeParentOption())
+                finisher(entry, parent)
+            }
+            
         } catch RepositoryError.canceled {
             return
         }

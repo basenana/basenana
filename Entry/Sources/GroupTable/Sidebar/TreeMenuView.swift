@@ -66,16 +66,7 @@ struct TreeMenuView: View {
                             GroupDestinationView(
                                 group: childGroup,
                                 childKeyPath: \.children,
-                                action: { let _ = await viewModel.moveEntriesToGroup(entryURLs: [EntryUrl(entryID: target.id)], newParent: $0.id ) }
-                            )
-                        }
-                    }
-                    Menu("Replicate To") {
-                        ForEach(groupTree.children ?? []){ childGroup in
-                            GroupDestinationView(
-                                group: childGroup,
-                                childKeyPath: \.children,
-                                action: { viewModel.replicateEntryToGroup(entry: target.id, newParent: $0.id) }
+                                action: { moveEntriesToGroup(newParent: $0.id ) }
                             )
                         }
                     }
@@ -86,10 +77,16 @@ struct TreeMenuView: View {
     }
     
     func canCreateGroup() -> Bool {
-        return target.groupName != ".inbox"
+        return !isInternalFile(target)
     }
     
     func canBeEdit() -> Bool {
-        return target.id != groupTree.root.id && target.groupName != ".inbox"
+        return target.id != groupTree.root.id && !isInternalFile(target)
+    }
+    
+    func moveEntriesToGroup(newParent: Int64) {
+        Task {
+            let _ = await viewModel.moveEntriesToGroup(entries: [target.id], newParent: newParent)
+        }
     }
 }

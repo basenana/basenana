@@ -19,7 +19,7 @@ public protocol EntryUseCaseProtocol {
 
     func getTreeRoot() async throws -> Group
     func listChildren(entry: Int64) async throws -> [EntryInfo]
-    func changeParent(entry: Int64, newParent: Int64) async throws
+    func changeParent(entries: [Int64], newParent: Int64, finisher: @escaping (EntryDetail, EntryDetail) -> Void) async throws
     func createGroups(parent: Int64, option: EntryCreate) async throws -> EntryInfo
     
     func UploadFile(parent: Int64, filePath: String) async throws -> EntryInfo

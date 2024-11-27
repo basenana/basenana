@@ -15,27 +15,17 @@ import Styleguide
 @available(macOS 14.0, *)
 public struct EntryMenuView: View {
     @State private var groupTree = GroupTree.shared
-    @State private var target: EntryInfo
-    @State private var targetDetail: EntryDetail?
-    @State private var viewModel: TreeViewModel
+    @State private var viewModel: GroupTableViewModel
     
-    public init(target: EntryInfo, viewModel: TreeViewModel) {
-        self.target = target
-        self.viewModel = viewModel
-    }
-    
-    public init(target: EntryDetail, viewModel: TreeViewModel) {
-        self.target = target.toInfo()!
-        self.targetDetail = target
+    public init(viewModel: GroupTableViewModel) {
         self.viewModel = viewModel
     }
     
     public var body: some View {
         VStack {
-            
             if canBeOpen() {
                 Section{
-                    Button("Open", action: { viewModel.store.dispatch(.gotoDestination(.groupList(group: target.id))) })
+                    Button("Open", action: { viewModel.store.dispatch(.gotoDestination(.groupList(group: targets.first!.id))) })
                 }
             }
             
@@ -45,32 +35,31 @@ public struct EntryMenuView: View {
                         Button("Group", action: {
                             // show create group form
                             viewModel.createGroupType = .standard
-                            viewModel.createGroupInParent = target.id
                             viewModel.showCreateGroup.toggle()
                         })
                         Button("RSS Feed", action: {
                             // show create rss form
                             viewModel.createGroupType = .feed
-                            viewModel.createGroupInParent = target.id
                             viewModel.showCreateGroup.toggle()
                         })
                         Button("Dynamic Group", action: {
                             viewModel.createGroupType = .dynamic
-                            viewModel.createGroupInParent = target.id
                             viewModel.showCreateGroup.toggle()
                         })
                     }
                 }
             }
             
-            if targetDetail != nil && isFileTarget() {
-                FileMenuView(viewModel: viewModel, target: targetDetail!)
+            if isFileTarget() {
+                FileMenuView(viewModel: viewModel, target: targets.first!)
             }
             
             if canBeEdit() {
                 Section{
-                    Button("Rename", action: {})
-                    Button("Delete", action: {})
+                    if onlyOneSelected() {
+                        Button("Rename", action: { viewModel.showRenameEntry.toggle() })
+                    }
+                    Button("Delete", action: { viewModel.showDeleteConfirm.toggle() })
                 }
                 
                 Section{
@@ -79,7 +68,7 @@ public struct EntryMenuView: View {
                             GroupDestinationView(
                                 group: childGroup,
                                 childKeyPath: \.children,
-                                action: { let _ = await viewModel.moveEntriesToGroup(entryURLs: [EntryUrl(entryID: target.id)], newParent: $0.id ) }
+                                action: { moveEntriesToGroup(newParent: $0.id ) }
                             )
                         }
                     }
@@ -88,7 +77,7 @@ public struct EntryMenuView: View {
                             GroupDestinationView(
                                 group: childGroup,
                                 childKeyPath: \.children,
-                                action: { viewModel.replicateEntryToGroup(entry: target.id, newParent: $0.id) }
+                                action: { replicateEntryToGroup(newParent: $0.id) }
                             )
                         }
                     }
@@ -104,25 +93,72 @@ public struct EntryMenuView: View {
                 }
             }
         }
-        .task {
-            targetDetail = await viewModel.describeEntry(entry: target.id)
+    }
+    
+    var targets: [EntryInfo] {
+        get {
+            viewModel.children.filter( { viewModel.selection.contains($0.id)} ).map({ $0.info })
         }
+    }
+
+    func hasSelected() -> Bool {
+        return targets.count > 0
+    }
+    
+    func onlyOneSelected() -> Bool {
+        return targets.count == 1
     }
     
     func isFileTarget() -> Bool {
-        return !target.isGroup
+        guard !onlyOneSelected() else {
+            return false
+        }
+        
+        if let target = targets.first {
+            return !target.isGroup
+        }
+        return false
     }
     
     func canBeOpen() -> Bool {
-        return target.isGroup && target.id != groupTree.root.id
+        guard onlyOneSelected() else {
+            return false
+        }
+        if let target = targets.first {
+            return target.isGroup && target.id != groupTree.root.id
+        }
+        return false
     }
     
     func canCreateGroup() -> Bool {
-        return target.name != ".inbox"
+        if let grp = viewModel.group {
+            return !isInternalFile(grp.toInfo()!)
+        }
+        return false
     }
     
     func canBeEdit() -> Bool {
-        return target.id != groupTree.root.id && target.name != ".inbox"
+        guard !targets.isEmpty else {
+            return false
+        }
+        for target in targets {
+            if  target.id == groupTree.root.id || isInternalFile(target){
+                return false
+            }
+        }
+        return true
+    }
+    
+    func moveEntriesToGroup(newParent: Int64) {
+        Task {
+            let _ = await viewModel.moveEntriesToGroup(entries: targets.map({$0.id}), newParent: newParent)
+        }
+    }
+    
+    func replicateEntryToGroup(newParent: Int64) {
+        Task {
+            await viewModel.replicateEntryToGroup(entries: targets.map({$0.id}), newParent: newParent)
+        }
     }
 }
 
@@ -155,15 +191,18 @@ struct GroupDestinationView: View {
 
 
 struct FileMenuView: View {
-    private var viewModel: TreeViewModel
-    private var target: EntryDetail?
+    private var viewModel: GroupTableViewModel
     
-    init(viewModel: TreeViewModel, target: EntryDetail?) {
+    @State private var target: EntryInfo
+    @State private var targetDetail: EntryDetail? = nil
+
+    init(viewModel: GroupTableViewModel, target: EntryInfo) {
         self.viewModel = viewModel
         self.target = target
     }
     
     var body: some View {
+        LazyVStack {
         // web file
         if let u = parseUrlString(urlStr: getEntryProperty(keys: [Property.WebPageURL, Property.WebSiteURL])?.value ?? "" ){
             Section(){
@@ -175,14 +214,18 @@ struct FileMenuView: View {
                 })
             }
         }
+        }
+        .task {
+            targetDetail = await viewModel.describeEntry(entry: target.id)
+        }
     }
     
     func getEntryProperty(keys: [String]) -> EntryProperty?{
-        guard target != nil else {
+        guard targetDetail != nil else {
             return nil
         }
         for k in keys {
-            for p in target!.properties {
+            for p in targetDetail!.properties {
                 if p.key == k {
                     return p
                 }
@@ -197,22 +240,10 @@ struct FileMenuView: View {
 
 import DomainTestHelpers
 struct EntryMenuPreview: View {
-    @State private var entry: EntryInfo? = nil
     
     var body: some View {
         List {
-            if let entry = entry {
-                EntryMenuView(target: entry, viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
-            } else {
-                Text("Loading...")
-            }
-        }
-        .task {
-            do {
-                entry = try await MockEntryUseCase().getEntryDetails(entry: 1010).toInfo()
-            } catch {
-                print("Failed to load entry details: \(error)")
-            }
+            EntryMenuView(viewModel: GroupTableViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
         }
     }
 }

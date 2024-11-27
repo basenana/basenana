@@ -15,17 +15,12 @@ import Entities
 public struct GroupTableView: View {
     @State private var groupID: Int64
     @State private var groupName: String? = nil
-    @State private var groupTree = GroupTree.shared
     
-    @State private var group: EntryDetail? = nil
-    @State private var children: [EntryRow] = []
-    
-    @State private var viewModel: TreeViewModel
-    @State var selection: Set<EntryRow.ID> = []
-    @State var selectedDocument: DocumentDetail? = nil
+    @State private var groupState = GroupState.shared
+    @State private var viewModel: GroupTableViewModel
     @State private var order: [KeyPathComparator<EntryRow>] = [.init(\.name, order: .forward)]
     
-    public init(groupID: Int64, viewModel: TreeViewModel) {
+    public init(groupID: Int64, viewModel: GroupTableViewModel) {
         self.groupID = groupID
         self.groupName = ""
         self.viewModel = viewModel
@@ -33,7 +28,7 @@ public struct GroupTableView: View {
 
     public var body: some View {
         VStack {
-            Table(of: EntryRow.self, selection: $selection, sortOrder: $order) {
+            Table(of: EntryRow.self, selection: $viewModel.selection, sortOrder: $order) {
                 TableColumn("Name", value: \.name) { entry in
                     HStack {
                         Image(systemName: entry.isGroup ? "folder" : "doc.text")
@@ -55,7 +50,7 @@ public struct GroupTableView: View {
                     Text("\($0.modifiedAt, format: Date.FormatStyle(date: .numeric, time: .standard))")
                 }
             } rows: {
-                ForEach(viewModel.opendGroupChildren, id: \.id) { child in
+                ForEach(viewModel.children, id: \.id) { child in
                     if child.isGroup{
                         
                         TableRow(child)
@@ -65,28 +60,22 @@ public struct GroupTableView: View {
                                     let _ = await viewModel.moveEntriesToGroup(entryURLs: urls, newParent: child.id)
                                 }
                             }
-                            .contextMenu{
-                                EntryMenuView(target: child.info, viewModel: viewModel)
-                            }
                     } else {
                         
                         TableRow(child)
                             .draggable(EntryUrl(entryID: child.id))
-                            .contextMenu{
-                                EntryMenuView(target: child.info, viewModel: viewModel)
-                            }
                     }
                 }
             }
             .onChange(of: order){
                 withAnimation {
-                    viewModel.opendGroupChildren.sort(using: order)
+                    viewModel.children.sort(using: order)
                 }
             }
             .task {
                 await viewModel.openGroup(groupID: groupID)
                 
-                if let opg = viewModel.opendGroup {
+                if let opg = viewModel.group {
                     if opg.name == ".inbox" {
                         groupName = "Inbox"
                     } else {
@@ -96,9 +85,13 @@ public struct GroupTableView: View {
             }
             .navigationTitle(groupName ?? "")
             .contextMenu{
-                if let grp = viewModel.opendGroup {
-                    EntryMenuView(target: grp.toInfo()!, viewModel: viewModel)
-                }
+                EntryMenuView(viewModel: viewModel)
+            }
+        }
+        .onChange(of: groupState.groupTableChange ){
+            Task {
+                // reopen
+                await viewModel.openGroup(groupID: groupID)
             }
         }
         .dropDestination(for: URL.self){ urls, _  in
@@ -106,15 +99,6 @@ public struct GroupTableView: View {
                 await viewModel.moveEntriesToGroup(entryURLs: urls, newParent: groupID)
             }
             return true
-        }
-    }
-    
-    func getSelectedEntry() -> EntryRow?{
-        if selection.count == 1 {
-            let selectedID = selection.first!
-            return viewModel.opendGroupChildren.filter({ $0.id == selectedID }).first
-        }else {
-            return nil
         }
     }
 }
@@ -146,7 +130,7 @@ import DomainTestHelpers
 
 #Preview {
     if #available(macOS 14.0, *) {
-        GroupTableView(groupID: 1010, viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
+        GroupTableView(groupID: 1010, viewModel: GroupTableViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
     }
 }
 

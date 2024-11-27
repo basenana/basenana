@@ -17,6 +17,7 @@ public class TreeViewModel {
     
     // tree store
     var groupTree = GroupTree.shared
+    var groupState = GroupState.shared
     
     var root: Entities.Group = UnknownGroup.shared
     var inbox: Entities.Group = UnknownGroup.shared
@@ -104,6 +105,7 @@ public class TreeViewModel {
             return false
         }
         
+        groupState.requestReopen()
         if let og = opendGroup {
             if og.id == store.fsInfo.inboxID {
                 // reopen inbox
@@ -161,72 +163,58 @@ public class TreeViewModel {
     }
     
     func moveEntriesToGroup(entryURLs: [URL], newParent: Int64) async -> Bool {
-        
-        let parent = await describeEntry(entry: newParent)
-        guard parent != nil else {
-            return false
-        }
-        
-        if !parent!.isGroup {
-            store.alert.display(msg: "\(parent!.name) not a group")
-            return false
-        }
+        var entries = [Int64]()
+        var files = [Int64]()
         
         for url in entryURLs {
-            print("[moveEntriesToGroup] move \(url) to \(parent!.id)")
             switch url.scheme {
             case "basenana":
-                print("[moveEntriesToGroup] move internal object")
                 
                 let targetID = parseEntryIDFromURL(url: url)
                 guard targetID != nil && targetID! > 0 else {
-                    store.alert.display(msg: "\(url) not a valid entry")
+                    store.dispatch(.alert(msg: "\(url) not a valid entry"))
                     return false
                 }
-                
-                let target = await describeEntry(entry: targetID!)
-                guard target != nil else {
-                    store.alert.display(msg: "\(targetID!) not a valid entry")
-                    return false
-                }
-                
-                do {
-                    try await entryUsecase.changeParent(entry: target!.id, newParent: parent!.id)
-                    
-                    // update views
-                    if target!.isGroup {
-                        if let grp = groupTree.getGroup(groupID: target!.id) {
-                            groupTree.removeChildGroup(parentID: target!.parent, childID: target!.id)
-                            groupTree.addChildGroup(parentID: parent!.id, child: grp.group, grandChildren: grp.children)
-                        }
-                    }
-                    
-                    if let og = opendGroup {
-                        if og.id == target!.parent { // remove from old view
-                            opendGroupChildren.removeAll { $0.id == target?.id }
-                        }
-                        if og.id == newParent { // insert to new view
-                            opendGroupChildren.append(EntryRow(info: target!.toInfo()!))
-                        }
-                    }
-                    
-                } catch {
-                    store.alert.display(msg: "move entry failed \(error)")
-                    return false
-                }
+                entries.append(targetID!)
                 
             case "file":
-                print("[moveEntriesToGroup] upload file")
-                store.alert.display(msg: "not support upload a file")
+                
+                print("[moveEntriesAndUpdateTree] upload file")
+                return false
             default:
-                print("[moveEntriesToGroup] unknown url schema \(url)")
+                
+                print("[moveEntriesAndUpdateTree] unknown url schema \(url)")
                 return false
             }
         }
-        return true
+        
+        if !entries.isEmpty {
+            return await moveEntriesToGroup(entries: entries, newParent: newParent)
+        }
+        
+        return false
     }
     
-    func replicateEntryToGroup(entry: Int64, newParent: Int64) {
+    func moveEntriesToGroup(entries: [Int64], newParent: Int64) async -> Bool {
+        do {
+            try await entryUsecase.changeParent(entries: entries, newParent: newParent) { target, parent in
+                if target.isGroup {
+                    if let grp = GroupTree.shared.getGroup(groupID: target.id) {
+                        GroupTree.shared.removeChildGroup(parentID: target.parent, childID: target.id)
+                        GroupTree.shared.addChildGroup(parentID: parent.id, child: grp.group, grandChildren: grp.children)
+                    }
+                }
+            }
+            groupState.requestReopen()
+        } catch {
+            store.alert.display(msg: "move entry failed \(error)")
+            return false
+        }
+        
+        return false
+    }
+    
+    func replicateEntryToGroup(entries: [Int64], newParent: Int64) {
         store.dispatch(.alert(msg: "not support"))
     }
 }

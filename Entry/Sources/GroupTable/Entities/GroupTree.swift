@@ -9,7 +9,6 @@ import SwiftUI
 import Entities
 
 
-@available(macOS 14.0, *)
 @Observable
 class GroupTree {
     static var shared = GroupTree()
@@ -20,8 +19,8 @@ class GroupTree {
     var root: Entities.Group = UnknownGroup.shared
     var inbox: Entities.Group = UnknownGroup.shared
 
-    init(){}
-    
+    private init() {}
+
     func reset(root: Entities.Group) {
         self.root = root
         
