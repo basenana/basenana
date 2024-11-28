@@ -11,15 +11,22 @@ import Entities
 
 
 struct GroupCreateView: View {
-    @State private var viewModel: TreeViewModel
-    @State var parent: Entities.Group = UnknownGroup.shared
+    @State private var parent: Entities.Group
     @State var groupType: GroupType
+    @State private var viewModel: GroupCreateViewModel
     
-    init(viewModel: TreeViewModel) {
+    @Binding private var showCreateGroup: Bool
+
+    init(parent: Entities.Group, groupType: GroupType, viewModel: GroupCreateViewModel, showCreateGroup: Binding<Bool>) {
+        self.parent = parent
+        self.groupType = groupType
         self.viewModel = viewModel
-        self.groupType = viewModel.createGroupType
+        self._showCreateGroup = showCreateGroup
+        
+        self.parentName = parent.groupName
     }
     
+    // Common
     @State private var parentName: String = ""
     @State private var groupName: String = ""
     
@@ -57,7 +64,7 @@ struct GroupCreateView: View {
                 Button {
                     Task {
                         await viewModel.createGroup(parentID: parent.id, option: buildOption())
-                        viewModel.showCreateGroup.toggle()
+                        showCreateGroup.toggle()
                     }
                 } label: {
                     Text("Create")
@@ -72,12 +79,7 @@ struct GroupCreateView: View {
             .frame(maxWidth: .infinity, alignment: .trailing)
             .padding(.top, 10)
         }
-        .task{
-            if viewModel.createGroupInParent != 0 {
-                parent = await viewModel.getGroup(groupID: viewModel.createGroupInParent) ?? UnknownGroup.shared
-            }else{
-                parent = await viewModel.findCurrentParent()
-            }
+        .onAppear{
             parentName = parent.groupName
         }
         .padding(50)
@@ -113,8 +115,22 @@ struct GroupCreateView: View {
 import AppState
 import DomainTestHelpers
 
+struct GroupCreateViewPreview: View {
+    
+    var body: some View {
+        List {
+            GroupCreateView(
+                parent: UnknownGroup.shared,
+                groupType: .feed,
+                viewModel: GroupCreateViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()),
+                showCreateGroup: .constant(true))
+        }
+    }
+}
+
+
 #Preview {
-    GroupCreateView(viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
+    GroupCreateViewPreview()
 }
 
 #endif

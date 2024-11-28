@@ -11,7 +11,6 @@ import AppState
 import Entities
 
 
-@available(macOS 14.0, *)
 public struct GroupTableView: View {
     @State private var groupID: Int64
     @State private var groupName: String? = nil
@@ -25,67 +24,20 @@ public struct GroupTableView: View {
         self.groupName = ""
         self.viewModel = viewModel
     }
-
+    
     public var body: some View {
         VStack {
-            Table(of: EntryRow.self, selection: $viewModel.selection, sortOrder: $order) {
-                TableColumn("Name", value: \.name) { entry in
-                    HStack {
-                        Image(systemName: entry.isGroup ? "folder" : "doc.text")
-                            .frame(width: 12, alignment: .center)
-                        Text("\(entry.name)")
-                    }
+            GroupTableContentView(viewModel: viewModel)
+        }
+        .task {
+            await viewModel.openGroup(groupID: groupID)
+            
+            if let opg = viewModel.group {
+                if opg.name == ".inbox" {
+                    groupName = "Inbox"
+                } else {
+                    groupName = opg.name
                 }
-                TableColumn("Kind", value: \.kind)
-                TableColumn("Size", value: \.size) {
-                    if $0.isGroup {
-                        Text("--")
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                    } else {
-                        Text($0.readableSize)
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                    }
-                }
-                TableColumn("Date Modified", value: \.modifiedAt) {
-                    Text("\($0.modifiedAt, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                }
-            } rows: {
-                ForEach(viewModel.children, id: \.id) { child in
-                    if child.isGroup{
-                        
-                        TableRow(child)
-                            .draggable(EntryUrl(entryID: child.id))
-                            .dropDestination(for: URL.self){ urls in
-                                Task {
-                                    let _ = await viewModel.moveEntriesToGroup(entryURLs: urls, newParent: child.id)
-                                }
-                            }
-                    } else {
-                        
-                        TableRow(child)
-                            .draggable(EntryUrl(entryID: child.id))
-                    }
-                }
-            }
-            .onChange(of: order){
-                withAnimation {
-                    viewModel.children.sort(using: order)
-                }
-            }
-            .task {
-                await viewModel.openGroup(groupID: groupID)
-                
-                if let opg = viewModel.group {
-                    if opg.name == ".inbox" {
-                        groupName = "Inbox"
-                    } else {
-                        groupName = opg.name
-                    }
-                }
-            }
-            .navigationTitle(groupName ?? "")
-            .contextMenu{
-                EntryMenuView(viewModel: viewModel)
             }
         }
         .onChange(of: groupState.groupTableChange ){
@@ -100,8 +52,83 @@ public struct GroupTableView: View {
             }
             return true
         }
+        .sheet(isPresented: $viewModel.showCreateGroup){
+            GroupCreateView(
+                parent: viewModel.group?.toGroup() ?? UnknownGroup.shared,
+                groupType: viewModel.createGroupType,
+                viewModel: GroupCreateViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase),
+                showCreateGroup: $viewModel.showCreateGroup)
+        }
+        .navigationTitle(groupName ?? "")
+        .contextMenu{
+            EntryMenuView(viewModel: viewModel)
+        }
+        .toolbar{
+            ToolbarItemGroup(placement: .primaryAction){
+                FileToolBarView(viewModel: viewModel)
+            }
+        }
     }
 }
+
+
+private struct GroupTableContentView: View {
+    @State private var viewModel: GroupTableViewModel
+    @State private var order: [KeyPathComparator<EntryRow>] = [.init(\.name, order: .forward)]
+    
+    init(viewModel: GroupTableViewModel) {
+        self.viewModel = viewModel
+    }
+    
+    public var body: some View {
+        Table(of: EntryRow.self, selection: $viewModel.selection, sortOrder: $order) {
+            TableColumn("Name", value: \.name) { entry in
+                HStack {
+                    Image(systemName: entry.isGroup ? "folder" : "doc.text")
+                        .frame(width: 12, alignment: .center)
+                    Text("\(entry.name)")
+                }
+            }
+            TableColumn("Kind", value: \.kind)
+            TableColumn("Size", value: \.size) {
+                if $0.isGroup {
+                    Text("--")
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                } else {
+                    Text($0.readableSize)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                }
+            }
+            TableColumn("Date Modified", value: \.modifiedAt) {
+                Text("\($0.modifiedAt, format: Date.FormatStyle(date: .numeric, time: .standard))")
+            }
+        } rows: {
+            ForEach(viewModel.children, id: \.id) { child in
+                if child.isGroup{
+                    
+                    TableRow(child)
+                        .draggable(EntryUrl(entryID: child.id))
+                        .dropDestination(for: URL.self){ urls in
+                            Task {
+                                let _ = await viewModel.moveEntriesToGroup(entryURLs: urls, newParent: child.id)
+                            }
+                        }
+                } else {
+                    
+                    TableRow(child)
+                        .draggable(EntryUrl(entryID: child.id))
+                }
+            }
+        }
+        .onChange(of: order){
+            withAnimation {
+                viewModel.children.sort(using: order)
+            }
+        }
+    }
+}
+
+
 
 
 func bytesToHumanReadableString(bytes: Int64) -> String {

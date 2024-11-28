@@ -8,9 +8,9 @@
 import SwiftUI
 import Styleguide
 
-@available(macOS 14.0, *)
 struct SidebarButtonView: View {
     @State private var viewModel: TreeViewModel
+    @State private var groupTree = GroupTree.shared
     
     init(viewModel: TreeViewModel) {
         self.viewModel = viewModel
@@ -27,6 +27,7 @@ struct SidebarButtonView: View {
             
             Button(action: {
                 viewModel.createGroupType = .standard
+                viewModel.createGroupInParent = groupTree.root
                 viewModel.showCreateGroup.toggle()
             }, label: {
                 Image(systemName: "folder.badge.plus")
@@ -36,7 +37,7 @@ struct SidebarButtonView: View {
             Spacer()
             
             Button(action: {
-//                store.dispatch(.setDestination(to: [.workflowDashboard]))
+                //                store.dispatch(.setDestination(to: [.workflowDashboard]))
             }, label: {
                 Image(systemName: "ellipsis.curlybraces")
             })
@@ -46,7 +47,11 @@ struct SidebarButtonView: View {
             QuickInboxView(viewModel: viewModel)
         }
         .sheet(isPresented: $viewModel.showCreateGroup){
-            GroupCreateView(viewModel: viewModel)
+            GroupCreateView(
+                parent: viewModel.createGroupInParent,
+                groupType: .standard,
+                viewModel: GroupCreateViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase),
+                showCreateGroup: $viewModel.showCreateGroup)
         }
         .padding(5)
         .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/,alignment: .leading)

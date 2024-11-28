@@ -12,7 +12,6 @@ import AppState
 import Styleguide
 
 
-@available(macOS 14.0, *)
 public struct EntryMenuView: View {
     @State private var groupTree = GroupTree.shared
     @State private var viewModel: GroupTableViewModel
@@ -48,10 +47,6 @@ public struct EntryMenuView: View {
                         })
                     }
                 }
-            }
-            
-            if isFileTarget() {
-                FileMenuView(viewModel: viewModel, target: targets.first!)
             }
             
             if canBeEdit() {
@@ -97,7 +92,7 @@ public struct EntryMenuView: View {
     
     var targets: [EntryInfo] {
         get {
-            viewModel.children.filter( { viewModel.selection.contains($0.id)} ).map({ $0.info })
+            viewModel.selectedEntries
         }
     }
 
@@ -186,52 +181,6 @@ struct GroupDestinationView: View {
         } else {
             Button(group.groupName, action: { Task { await action(group) }})
         }
-    }
-}
-
-
-struct FileMenuView: View {
-    private var viewModel: GroupTableViewModel
-    
-    @State private var target: EntryInfo
-    @State private var targetDetail: EntryDetail? = nil
-
-    init(viewModel: GroupTableViewModel, target: EntryInfo) {
-        self.viewModel = viewModel
-        self.target = target
-    }
-    
-    var body: some View {
-        LazyVStack {
-        // web file
-        if let u = parseUrlString(urlStr: getEntryProperty(keys: [Property.WebPageURL, Property.WebSiteURL])?.value ?? "" ){
-            Section(){
-                Button("Launch URL", action: {
-                    openUrlInBrowser(url: u)
-                })
-                Button("Copy URL", action: {
-                    copyToClipBoard(content: "\(u)")
-                })
-            }
-        }
-        }
-        .task {
-            targetDetail = await viewModel.describeEntry(entry: target.id)
-        }
-    }
-    
-    func getEntryProperty(keys: [String]) -> EntryProperty?{
-        guard targetDetail != nil else {
-            return nil
-        }
-        for k in keys {
-            for p in targetDetail!.properties {
-                if p.key == k {
-                    return p
-                }
-            }
-        }
-        return nil
     }
 }
 

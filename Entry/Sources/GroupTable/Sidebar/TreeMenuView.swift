@@ -23,11 +23,6 @@ struct TreeMenuView: View {
         self.viewModel = viewModel
     }
     
-    public init(viewModel: TreeViewModel) {
-        self.target = GroupTree.shared.root
-        self.viewModel = viewModel
-    }
-
     public var body: some View {
         VStack {
             if canCreateGroup(){
@@ -36,18 +31,18 @@ struct TreeMenuView: View {
                         Button("Group", action: {
                             // show create group form
                             viewModel.createGroupType = .standard
-                            viewModel.createGroupInParent = target.id
+                            viewModel.createGroupInParent = target
                             viewModel.showCreateGroup.toggle()
                         })
                         Button("RSS Feed", action: {
                             // show create rss form
                             viewModel.createGroupType = .feed
-                            viewModel.createGroupInParent = target.id
+                            viewModel.createGroupInParent = target
                             viewModel.showCreateGroup.toggle()
                         })
                         Button("Dynamic Group", action: {
                             viewModel.createGroupType = .dynamic
-                            viewModel.createGroupInParent = target.id
+                            viewModel.createGroupInParent = target
                             viewModel.showCreateGroup.toggle()
                         })
                     }

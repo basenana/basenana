@@ -36,6 +36,12 @@ public class GroupTableViewModel {
         self.entryUsecase = entryUsecase
     }
     
+    var selectedEntries: [EntryInfo] {
+        get {
+            children.filter( { selection.contains($0.id)} ).map({ $0.info })
+        }
+    }
+    
     func openGroup(groupID: Int64) async {
         do {
             group = try await entryUsecase.getEntryDetails(entry: groupID)
@@ -54,7 +60,7 @@ public class GroupTableViewModel {
             store.alert.display(msg: "open group failed: \(error)")
         }
     }
-    
+
     func describeEntry(entry: Int64) async -> Entities.EntryDetail? {
         if let cachedDetail = inspectedDetails[entry]{
             return cachedDetail

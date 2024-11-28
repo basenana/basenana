@@ -19,18 +19,11 @@ public class TreeViewModel {
     var groupTree = GroupTree.shared
     var groupState = GroupState.shared
     
-    var root: Entities.Group = UnknownGroup.shared
-    var inbox: Entities.Group = UnknownGroup.shared
-
-    // current opened group
-    var opendGroup: EntryDetail? = nil
-    var opendGroupChildren: [EntryRow] = []
-    
     var showCreateGroup: Bool = false
-    var createGroupInParent: Int64 = 0
+    var createGroupInParent: Entities.Group = UnknownGroup.shared
     var createGroupType: GroupType = .standard
-    var showQuickInbox: Bool = false
     
+    var showQuickInbox: Bool = false
 
     var store: StateStore
     var entryUsecase: EntryUseCaseProtocol
@@ -40,49 +33,12 @@ public class TreeViewModel {
         self.entryUsecase = entryUsecase
     }
     
-    // current parent
-    func findCurrentParent() async -> Entities.Group {
-        // current opened group's parent
-        if let og = opendGroup {
-            print("findCurrentParent: opened group \(og.name)")
-            if let p = await getGroup(groupID: og.id) {
-                return p
-            }
-        }
-        // root group
-        print("findCurrentParent: root \(store.fsInfo.rootID)")
-        if let r = await getGroup(groupID: store.fsInfo.rootID){
-            return r
-        }
-        print("findCurrentParent: not found")
-        return UnknownGroup.shared
-    }
-    
     func resetGroupTree() async {
         print("[resetGroupTree] load and reset group root")
         do {
             self.groupTree.reset(root: try await entryUsecase.getTreeRoot())
         } catch {
             store.alert.display(msg: "load group tree failed: \(error)")
-        }
-    }
-    
-    func openGroup(groupID: Int64) async {
-        do {
-            opendGroup = try await entryUsecase.getEntryDetails(entry: groupID)
-            if opendGroup == nil || !opendGroup!.isGroup {
-                throw BizError.notGroup
-            }
-            
-            self.opendGroupChildren = []
-            let newChildren = try await entryUsecase.listChildren(entry: groupID)
-            for child in newChildren {
-                self.opendGroupChildren.append(EntryRow(info: child))
-            }
-        } catch let error as UseCaseError where error == .canceled {
-            // do nothing
-        } catch {
-            store.alert.display(msg: "open group failed: \(error)")
         }
     }
     
@@ -106,37 +62,7 @@ public class TreeViewModel {
         }
         
         groupState.requestReopen()
-        if let og = opendGroup {
-            if og.id == store.fsInfo.inboxID {
-                // reopen inbox
-                let _ = await openGroup(groupID: og.id)
-            }
-        }
         return true
-    }
-    
-    func createGroup(parentID: Int64, option: EntryCreate) async {
-        guard groupTree.getGroup(groupID: parentID) != nil else {
-            store.alert.display(msg: "creatr group failed: parent \(parentID) not exist")
-            return
-        }
-        
-        do {
-            let newGroup = try await entryUsecase.createGroups(parent: parentID, option: option)
-            
-            // insert to the tree
-            groupTree.addChildGroup(parentID: parentID, child: newGroup.toGroup()!, grandChildren: [])
-            
-            // insert to the window
-            if let openedGroup = opendGroup {
-                if openedGroup.id == parentID {
-                    opendGroupChildren.append(EntryRow(info: newGroup))
-                }
-            }
-        } catch {
-            store.alert.display(msg: "creatr group failed: \(error)")
-            return
-        }
     }
     
     func describeEntry(entry: Int64) async -> Entities.EntryDetail? {
