@@ -50,7 +50,6 @@ struct FileToolBarView: View {
                             // parse url
                             if let pro = getEntryProperty(keys: [Property.WebPageURL, Property.WebSiteURL]) {
                                 if let u = URL(string: pro.value) {
-                                    print("get target \(targetDetail?.name ?? "")")
                                     targetURL = u
                                 }
                             }

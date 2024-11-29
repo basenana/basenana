@@ -1,5 +1,5 @@
 //
-//  GroupCreateViewModel.swift
+//  CreateDeleteViewModel.swift
 //  Entry
 //
 //  Created by Hypo on 2024/11/28.
@@ -12,7 +12,7 @@ import UseCaseProtocol
 
 @Observable
 @MainActor
-public class GroupCreateViewModel {
+public class CreateDeleteViewModel {
     var groupTree = GroupTree.shared
     var groupState = GroupState.shared
 

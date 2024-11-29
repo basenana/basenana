@@ -13,11 +13,11 @@ import Entities
 struct GroupCreateView: View {
     @State private var parent: Entities.Group
     @State var groupType: GroupType
-    @State private var viewModel: GroupCreateViewModel
+    @State private var viewModel: CreateDeleteViewModel
     
     @Binding private var showCreateGroup: Bool
 
-    init(parent: Entities.Group, groupType: GroupType, viewModel: GroupCreateViewModel, showCreateGroup: Binding<Bool>) {
+    init(parent: Entities.Group, groupType: GroupType, viewModel: CreateDeleteViewModel, showCreateGroup: Binding<Bool>) {
         self.parent = parent
         self.groupType = groupType
         self.viewModel = viewModel
@@ -122,7 +122,7 @@ struct GroupCreateViewPreview: View {
             GroupCreateView(
                 parent: UnknownGroup.shared,
                 groupType: .feed,
-                viewModel: GroupCreateViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()),
+                viewModel: CreateDeleteViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()),
                 showCreateGroup: .constant(true))
         }
     }

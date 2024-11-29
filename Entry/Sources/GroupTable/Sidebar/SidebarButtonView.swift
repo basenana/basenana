@@ -50,7 +50,7 @@ struct SidebarButtonView: View {
             GroupCreateView(
                 parent: viewModel.createGroupInParent,
                 groupType: .standard,
-                viewModel: GroupCreateViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase),
+                viewModel: CreateDeleteViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase),
                 showCreateGroup: $viewModel.showCreateGroup)
         }
         .padding(5)

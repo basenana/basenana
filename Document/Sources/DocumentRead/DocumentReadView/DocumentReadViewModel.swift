@@ -20,7 +20,8 @@ public class DocumentReadViewModel {
     var usecase: DocumentUseCaseProtocol
     
     var document: DocumentDetail? = nil
-    
+    var entry: EntryDetail? = nil
+
     public init(docID:Int64, store: StateStore, usecase: DocumentUseCaseProtocol) {
         self.docID = docID
         self.store = store
@@ -29,6 +30,7 @@ public class DocumentReadViewModel {
     
     func loadDocument() async {
         do {
+            entry = try await usecase.getDocumentEntry(document: docID)
             document = try await usecase.getDocumentDetails(document: docID)
         } catch {
             store.alert.display(msg: "load document failed: \(error)")

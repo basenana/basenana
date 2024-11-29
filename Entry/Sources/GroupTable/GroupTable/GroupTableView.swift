@@ -56,7 +56,7 @@ public struct GroupTableView: View {
             GroupCreateView(
                 parent: viewModel.group?.toGroup() ?? UnknownGroup.shared,
                 groupType: viewModel.createGroupType,
-                viewModel: GroupCreateViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase),
+                viewModel: CreateDeleteViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase),
                 showCreateGroup: $viewModel.showCreateGroup)
         }
         .navigationTitle(groupName ?? "")

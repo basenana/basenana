@@ -26,6 +26,11 @@ public struct DocumentReadView: View {
         }
         .navigationTitle(viewModel.document?.name ?? "")
         .frame(minWidth: 200, minHeight: 100)
+        .toolbar{
+            ToolbarItemGroup(placement: .primaryAction){
+                DocumentToolBarView(viewModel: viewModel)
+            }
+        }
         .task {
             await viewModel.loadDocument()
         }
