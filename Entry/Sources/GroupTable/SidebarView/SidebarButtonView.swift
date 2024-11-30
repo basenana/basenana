@@ -43,7 +43,7 @@ struct SidebarButtonView: View {
             .buttonStyle(.accessoryBar)
         })
         .sheet(isPresented: $viewModel.showQuickInbox){
-            InboxView(viewModel: viewModel)
+            QuickInboxView(viewModel: viewModel)
         }
         .sheet(isPresented: $viewModel.showCreateGroup){
             GroupCreateView(viewModel: viewModel)

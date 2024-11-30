@@ -65,7 +65,7 @@ struct TreeMenuView: View {
                             GroupDestinationView(
                                 group: childGroup,
                                 childKeyPath: \.children,
-                                action: { _ in }
+                                action: { let _ = viewModel.moveEntriesToGroup(entryURLs: [EntryUrl(entryID: target.id)], newParent: $0.id ) }
                             )
                         }
                     }
@@ -74,7 +74,7 @@ struct TreeMenuView: View {
                             GroupDestinationView(
                                 group: childGroup,
                                 childKeyPath: \.children,
-                                action: { _ in }
+                                action: { viewModel.replicateEntryToGroup(entry: target.id, newParent: $0.id) }
                             )
                         }
                     }

@@ -91,7 +91,7 @@ public class TreeViewModel {
     }
     
     // quick inbox
-    func quickInbox(url: String, title: String, fileType: String, errorMsg: Binding<String>) {
+    func quickInbox(url: String, title: String, fileType: String, errorMsg: Binding<String>) -> Bool {
         var safeFileType: Entities.FileType = .Webarchive
         switch fileType{
         case "html":
@@ -102,10 +102,11 @@ public class TreeViewModel {
             safeFileType = .Webarchive
         }
         do {
-            try entryUsecase.quickInbox(url: url, fileName: title, fileType: safeFileType)
+            print("quick inbox url=\(url) fileName=\(title) fileType=\(safeFileType)")
+            try entryUsecase.quickInbox(url: url, fileName: sanitizeFileName(title), fileType: safeFileType)
         } catch {
             errorMsg.wrappedValue = "inbox failed: \(error)"
-            return
+            return false
         }
         
         if let og = opendGroup {
@@ -114,6 +115,7 @@ public class TreeViewModel {
                 let _ = openGroup(groupID: og.id)
             }
         }
+        return true
     }
     
     func createGroup(parentID: Int64, option: EntryCreate){
@@ -159,7 +161,74 @@ public class TreeViewModel {
         return nil
     }
     
-    func moveEntriesToGroup(entries: [Int64], newParent: Int64) {
+    func moveEntriesToGroup(entryURLs: [URL], newParent: Int64) -> Bool {
         
+        let parent = describeEntry(entry: newParent)
+        guard parent != nil else {
+            return false
+        }
+        
+        if !parent!.isGroup {
+            store.alert.display(msg: "\(parent!.name) not a group")
+            return false
+        }
+        
+        for url in entryURLs {
+            print("[moveEntriesToGroup] move \(url) to \(parent!.id)")
+            switch url.scheme {
+            case "basenana":
+                print("[moveEntriesToGroup] move internal object")
+                
+                let targetID = parseEntryIDFromURL(url: url)
+                guard targetID != nil && targetID! > 0 else {
+                    store.alert.display(msg: "\(url) not a valid entry")
+                    return false
+                }
+                
+                let target = describeEntry(entry: targetID!)
+                guard target != nil else {
+                    store.alert.display(msg: "\(targetID!) not a valid entry")
+                    return false
+                }
+                
+                do {
+                    try entryUsecase.changeParent(entry: target!.id, newParent: parent!.id)
+                    
+                    // update views
+                    if target!.isGroup {
+                        if let grp = groupTree.getGroup(groupID: target!.id) {
+                            groupTree.removeChildGroup(parentID: target!.parent, childID: target!.id)
+                            groupTree.addChildGroup(parentID: parent!.id, child: grp.group, grandChildren: grp.children)
+                        }
+                    }
+                    
+                    if let og = opendGroup {
+                        if og.id == target!.parent { // remove from old view
+                            opendGroupChildren.removeAll { $0.id == target?.id }
+                        }
+                        if og.id == newParent { // insert to new view
+                            opendGroupChildren.append(EntryRow(info: target!.toInfo()!))
+                        }
+                    }
+                    
+                    return true
+                } catch {
+                    store.alert.display(msg: "move entry failed \(error)")
+                    return false
+                }
+                
+            case "file":
+                print("[moveEntriesToGroup] upload file")
+                store.alert.display(msg: "not support upload a file")
+            default:
+                print("[moveEntriesToGroup] unknown url schema \(url)")
+                return false
+            }
+        }
+        return false
+    }
+    
+    func replicateEntryToGroup(entry: Int64, newParent: Int64) {
+        store.dispatch(.alert(msg: "not support"))
     }
 }

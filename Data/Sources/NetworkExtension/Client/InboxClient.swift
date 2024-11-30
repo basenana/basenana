@@ -26,11 +26,13 @@ public class InboxClient: InboxClientProtocol {
         case .Url:
             req.sourceType = .urlSource
             req.url = f.url
+            req.clutterFree = true
         case .Raw:
             req.sourceType = .urlSource // TODO: support raw source
             req.data = f.data!
         }
         
+        req.filename = f.filename
         switch f.fileType {
         case .Bookmark:
             req.fileType = .bookmarkFile

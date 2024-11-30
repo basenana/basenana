@@ -33,11 +33,10 @@ struct TreeListView: View {
                 TreeMenuView(target: child.group, viewModel: viewModel)
             }
             .id(child.id)
-            .dropDestination(for: String.self){ entryIDInfos, localtion in
-                viewModel.moveEntriesToGroup(entries: parseIDInfo(entryInfos: entryIDInfos), newParent: child.id)
-                return false
+            .dropDestination(for: URL.self){ urls, _ in
+                return viewModel.moveEntriesToGroup(entryURLs: urls, newParent: child.id)
             }
-            .draggable(IDHelper(kind: "group", id: child.id).Encode())
+            .draggable(EntryUrl(entryID: child.id))
         }
     }
 }

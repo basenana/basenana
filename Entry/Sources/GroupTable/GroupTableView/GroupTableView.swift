@@ -17,61 +17,79 @@ public struct GroupTableView: View {
     
     @State private var group: EntryDetail? = nil
     @State private var children: [EntryRow] = []
-
+    
     @State private var viewModel: TreeViewModel
     @State var selection: Set<EntryRow.ID> = []
     @State var selectedDocument: DocumentDetail? = nil
     @State private var order: [KeyPathComparator<EntryRow>] = [.init(\.name, order: .forward)]
-
+    
     public init(groupID: Int64, viewModel: TreeViewModel) {
         self.groupID = groupID
         self.viewModel = viewModel
     }
     
     public var body: some View {
-        Table(of: EntryRow.self, selection: $selection, sortOrder: $order) {
-            TableColumn("Name", value: \.name) { entry in
-                HStack {
-                    Image(systemName: entry.isGroup ? "folder" : "doc.text")
-                        .frame(width: 12, alignment: .center)
-                    Text("\(entry.name)")
-                }
-            }
-            TableColumn("Kind", value: \.kind)
-            TableColumn("Size", value: \.size) {
-                if $0.isGroup {
-                    Text("--")
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                } else {
-                    Text($0.readableSize)
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                }
-            }
-            TableColumn("Date Modified", value: \.modifiedAt) {
-                Text("\($0.modifiedAt, format: Date.FormatStyle(date: .numeric, time: .standard))")
-            }
-        } rows: {
-            ForEach(viewModel.opendGroupChildren, id: \.id) { child in
-                TableRow(child)
-                    .draggable(IDHelper(kind: "entry", id: child.id).Encode())
-                    .contextMenu{
-                        EntryMenuView(target: child.info, viewModel: viewModel)
+        VStack {
+            Table(of: EntryRow.self, selection: $selection, sortOrder: $order) {
+                TableColumn("Name", value: \.name) { entry in
+                    HStack {
+                        Image(systemName: entry.isGroup ? "folder" : "doc.text")
+                            .frame(width: 12, alignment: .center)
+                        Text("\(entry.name)")
                     }
+                }
+                TableColumn("Kind", value: \.kind)
+                TableColumn("Size", value: \.size) {
+                    if $0.isGroup {
+                        Text("--")
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                    } else {
+                        Text($0.readableSize)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                    }
+                }
+                TableColumn("Date Modified", value: \.modifiedAt) {
+                    Text("\($0.modifiedAt, format: Date.FormatStyle(date: .numeric, time: .standard))")
+                }
+            } rows: {
+                ForEach(viewModel.opendGroupChildren, id: \.id) { child in
+                    if child.isGroup{
+                        
+                        TableRow(child)
+                            .draggable(EntryUrl(entryID: child.id))
+                            .dropDestination(for: URL.self){ urls in
+                                let _ = viewModel.moveEntriesToGroup(entryURLs: urls, newParent: child.id)
+                            }
+                            .contextMenu{
+                                EntryMenuView(target: child.info, viewModel: viewModel)
+                            }
+                    } else {
+                        
+                        TableRow(child)
+                            .draggable(EntryUrl(entryID: child.id))
+                            .contextMenu{
+                                EntryMenuView(target: child.info, viewModel: viewModel)
+                            }
+                    }
+                }
+            }
+            .onChange(of: order){
+                withAnimation {
+                    viewModel.opendGroupChildren.sort(using: order)
+                }
+            }
+            .task {
+                viewModel.openGroup(groupID: groupID)
+            }
+            .navigationTitle(viewModel.opendGroup?.name ?? "")
+            .contextMenu{
+                if let grp = viewModel.opendGroup {
+                    EntryMenuView(target: grp.toInfo()!, viewModel: viewModel)
+                }
             }
         }
-        .task {
-            viewModel.openGroup(groupID: groupID)
-        }
-        .navigationTitle(viewModel.opendGroup?.name ?? "")
-        .contextMenu{
-            if let grp = viewModel.opendGroup {
-                EntryMenuView(target: grp.toInfo()!, viewModel: viewModel)
-            }
-        }
-        .onChange(of: order){
-            withAnimation {
-                viewModel.opendGroupChildren.sort(using: order)
-            }
+        .dropDestination(for: URL.self){ urls, _  in
+            return viewModel.moveEntriesToGroup(entryURLs: urls, newParent: groupID)
         }
     }
     

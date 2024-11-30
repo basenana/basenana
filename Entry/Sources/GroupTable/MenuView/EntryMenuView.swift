@@ -78,7 +78,7 @@ public struct EntryMenuView: View {
                             GroupDestinationView(
                                 group: childGroup,
                                 childKeyPath: \.children,
-                                action: { _ in }
+                                action: { let _ = viewModel.moveEntriesToGroup(entryURLs: [EntryUrl(entryID: target.id)], newParent: $0.id ) }
                             )
                         }
                     }
@@ -87,7 +87,7 @@ public struct EntryMenuView: View {
                             GroupDestinationView(
                                 group: childGroup,
                                 childKeyPath: \.children,
-                                action: { _ in }
+                                action: { viewModel.replicateEntryToGroup(entry: target.id, newParent: $0.id) }
                             )
                         }
                     }
@@ -123,7 +123,6 @@ public struct EntryMenuView: View {
 }
 
 
-@available(macOS 14.0, *)
 struct GroupDestinationView: View {
     let group: GroupLeaf
     let childKeyPath: KeyPath<GroupLeaf, [GroupLeaf]?>
@@ -135,7 +134,7 @@ struct GroupDestinationView: View {
                 isExpanded: /*@START_MENU_TOKEN@*/.constant(true)/*@END_MENU_TOKEN@*/,
                 content: {
                     Menu(group.groupName) {
-                        Button(group.groupName, action: { action(group) })
+                        Button("\(group.groupName) 👈🏻", action: { action(group) })
                         Divider()
                         ForEach(group[keyPath: childKeyPath] ?? []) { childGroup in
                             GroupDestinationView(group: childGroup, childKeyPath: childKeyPath, action: action)
