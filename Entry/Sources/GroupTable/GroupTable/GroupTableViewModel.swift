@@ -60,7 +60,7 @@ public class GroupTableViewModel {
             store.alert.display(msg: "open group failed: \(error)")
         }
     }
-
+    
     func describeEntry(entry: Int64) async -> Entities.EntryDetail? {
         if let cachedDetail = inspectedDetails[entry]{
             return cachedDetail
@@ -79,7 +79,7 @@ public class GroupTableViewModel {
     
     func moveEntriesToGroup(entryURLs: [URL], newParent: Int64) async -> Bool {
         var entries = [Int64]()
-        var files = [Int64]()
+        var files = [URL]()
         
         for url in entryURLs {
             switch url.scheme {
@@ -93,11 +93,8 @@ public class GroupTableViewModel {
                 entries.append(targetID!)
                 
             case "file":
-                
-                print("[moveEntriesAndUpdateTree] upload file")
-                return false
+                files.append(url)
             default:
-                
                 print("[moveEntriesAndUpdateTree] unknown url schema \(url)")
                 return false
             }
@@ -105,6 +102,16 @@ public class GroupTableViewModel {
         
         if !entries.isEmpty {
             return await moveEntriesToGroup(entries: entries, newParent: newParent)
+        }
+        
+        if !files.isEmpty {
+            do {
+                try await uploadFiles(entryUsecase: entryUsecase, store: store, parentID: newParent, files: files)
+            } catch {
+                store.dispatch(.alert(msg: "upload files failed \(error)"))
+                return false
+            }
+            return true
         }
         
         return false

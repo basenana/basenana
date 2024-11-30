@@ -41,6 +41,15 @@ public struct SidebarView: View {
         .task {
             await viewModel.resetGroupTree()
         }
+        .sheet(isPresented: $viewModel.showRenameEntry){
+            if let enID = viewModel.renameEntry {
+                EntryRenameView(
+                    entry: enID,
+                    viewModel: EntryDetailViewModel(
+                        store: viewModel.store,entryUsecase: viewModel.entryUsecase),
+                    showRenameView: $viewModel.showRenameEntry)
+            }
+        }
         .listStyle(.sidebar)
         .padding(.bottom, 40)
         .overlay(alignment: .bottom, content: { SidebarButtonView(viewModel: viewModel) })

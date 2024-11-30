@@ -52,18 +52,22 @@ public class EntryUseCase: EntryUseCaseProtocol {
     }
     
     public func deleteEntry(entry: Int64) async throws {
-        do {
-            try await entryRepo.DeleteEntries(entrys: [entry])
-        } catch RepositoryError.canceled {
-            return
+        let entryDetail = try await entryRepo.GetEntryDetail(entry: entry)
+        if !entryDetail.isGroup{
+            return try await entryRepo.DeleteEntries(entrys: [entry])
         }
+        
+        let children = try await listChildren(entry: entry)
+        for child in children {
+            try await deleteEntry(entry: child.id)
+        }
+        
+        return try await entryRepo.DeleteEntries(entrys: [entry])
     }
     
     public func deleteEntries(entries: [Int64]) async throws {
-        do {
-            return try await entryRepo.DeleteEntries(entrys: entries)
-        } catch RepositoryError.canceled {
-            return
+        for entry in entries {
+            try await deleteEntry(entry: entry)
         }
     }
     

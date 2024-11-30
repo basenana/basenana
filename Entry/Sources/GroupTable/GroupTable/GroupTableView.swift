@@ -59,9 +59,35 @@ public struct GroupTableView: View {
                 viewModel: CreateDeleteViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase),
                 showCreateGroup: $viewModel.showCreateGroup)
         }
+        .sheet(isPresented: $viewModel.showRenameEntry){
+            if let en = viewModel.selectedEntries.first {
+                EntryRenameView(
+                    entry: en.id,
+                    viewModel: EntryDetailViewModel(
+                        store: viewModel.store,entryUsecase: viewModel.entryUsecase),
+                    showRenameView: $viewModel.showRenameEntry)
+            }
+        }
+        .sheet(isPresented: $viewModel.showDeleteConfirm){
+            if !viewModel.selection.isEmpty {
+                DeleteEntriesView(
+                    entryIDs: viewModel.selectedEntries.map({$0.id}),
+                    viewModel: CreateDeleteViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase),
+                    showDeleteView: $viewModel.showDeleteConfirm)
+            }
+        }
         .navigationTitle(groupName ?? "")
         .contextMenu{
             EntryMenuView(viewModel: viewModel)
+        }
+        .contextMenu(forSelectionType: EntryRow.ID.self) { items in
+            EntryMenuView(viewModel: viewModel)
+        } primaryAction: { items in
+            if  items.count == 1 {
+                if let grp = viewModel.children.filter({$0.id == items.first! && $0.isGroup}).first{
+                    viewModel.store.dispatch(.gotoDestination(.groupList(group: grp.id)))
+                }
+            }
         }
         .toolbar{
             ToolbarItemGroup(placement: .primaryAction){

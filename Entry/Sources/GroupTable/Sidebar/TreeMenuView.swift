@@ -51,7 +51,10 @@ struct TreeMenuView: View {
             
             if canBeEdit() {
                 Section{
-                    Button("Rename", action: {})
+                    Button("Rename", action: {
+                        viewModel.renameEntry = target.id
+                        viewModel.showRenameEntry.toggle()
+                    })
                     Button("Delete", action: {})
                 }
                 

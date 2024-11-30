@@ -24,6 +24,9 @@ public class TreeViewModel {
     var createGroupType: GroupType = .standard
     
     var showQuickInbox: Bool = false
+    
+    var showRenameEntry: Bool = false
+    var renameEntry: Int64? = nil
 
     var store: StateStore
     var entryUsecase: EntryUseCaseProtocol
