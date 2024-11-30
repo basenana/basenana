@@ -39,10 +39,16 @@ public struct SidebarView: View {
             }
         }
         .task {
-            viewModel.resetGroupTree()
+            await viewModel.resetGroupTree()
         }
-        .contextMenu{
-            TreeMenuView(viewModel: viewModel)
+        .sheet(isPresented: $viewModel.showRenameEntry){
+            if let enID = viewModel.renameEntry {
+                EntryRenameView(
+                    entry: enID,
+                    viewModel: EntryDetailViewModel(
+                        store: viewModel.store,entryUsecase: viewModel.entryUsecase),
+                    showRenameView: $viewModel.showRenameEntry)
+            }
         }
         .listStyle(.sidebar)
         .padding(.bottom, 40)

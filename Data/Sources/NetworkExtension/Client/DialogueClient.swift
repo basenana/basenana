@@ -7,78 +7,117 @@
 
 import Foundation
 import Entities
+import GRPC
 import NetworkCore
 
 
 @available(macOS 11.0, *)
 public class DialogueClient: DialogueClientProtocol {
     
-    var client: Api_V1_RoomClientProtocol
+    var client: Api_V1_RoomAsyncClientProtocol
     
     public init(clientSet: ClientSet) {
         self.client = clientSet.dialogue
     }
     
-    public func ListRoomes(entry: Int64) throws -> [NetworkCore.APIRoom] {
-        let resp = try client.listRooms(
-            Api_V1_ListRoomsRequest(), callOptions: defaultCallOptions).response.wait()
-        
+    public func ListRoomes(entry: Int64) async throws -> [NetworkCore.APIRoom] {
         var result: [NetworkCore.APIRoom] = []
-        for room in resp.rooms {
-            result.append(room.toRoom())
+        do {
+            let resp = try await client.listRooms(
+                Api_V1_ListRoomsRequest(), callOptions: defaultCallOptions)
+            for room in resp.rooms {
+                result.append(room.toRoom())
+            }
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
         }
+        
         return result
     }
     
-    public func OpenRoom(entry: Int64, room: Int64, option: Entities.RoomOption) throws -> NetworkCore.APIRoom {
+    public func OpenRoom(entry: Int64, room: Int64, option: Entities.RoomOption) async throws -> NetworkCore.APIRoom {
         var req = Api_V1_OpenRoomRequest()
         req.entryID = entry
         req.roomID = room
         req.option = Api_V1_OpenRoomRequest.Option()
         req.option.prompt = option.prompt
-        let resp = try client.openRoom(req, callOptions: defaultCallOptions).response.wait()
-        return resp.room.toRoom()
+        do {
+            let resp = try await client.openRoom(req, callOptions: defaultCallOptions)
+            return resp.room.toRoom()
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
+        }
     }
     
-    public func UpdateRoom(room: Int64, option: Entities.RoomOption) throws {
+    public func UpdateRoom(room: Int64, option: Entities.RoomOption) async throws {
         var req = Api_V1_UpdateRoomRequest()
         req.roomID = room
         req.prompt = option.prompt
-        let resp = try client.updateRoom(req, callOptions: defaultCallOptions).response.wait()
-        let _ = resp.roomID
+        do {
+            let resp = try await client.updateRoom(req, callOptions: defaultCallOptions)
+            let _ = resp.roomID
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
+        }
     }
     
-    public func DeleteRoom(room: Int64) throws {
+    public func DeleteRoom(room: Int64) async throws {
         var req = Api_V1_DeleteRoomRequest()
         req.roomID = room
-        let _ = try client.deleteRoom(req, callOptions: defaultCallOptions).response.wait()
+        do {
+            let _ = try await client.deleteRoom(req, callOptions: defaultCallOptions)
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
+        }
     }
     
-    public func ClearRoom(room: Int64) throws {
+    public func ClearRoom(room: Int64) async throws {
         var req = Api_V1_ClearRoomRequest()
         req.roomID = room
-        let _ = try client.clearRoom(req, callOptions: defaultCallOptions).response.wait()
+        do {
+            let _ = try await client.clearRoom(req, callOptions: defaultCallOptions)
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
+        }
     }
     
-    public func ChatInRoom(room: Int64, message: String, handler: @escaping (APIRoomMessage, Bool) -> Void) throws {
+    public func ChatInRoom(room: Int64, message: String, handler: @escaping (APIRoomMessage, Bool) async -> Void) async throws {
         var req = Api_V1_ChatRequest()
         req.roomID = room
         req.newRequest = message
         
         var reply: APIRoomMessage?
-        let _ = client.chatInRoom(req, callOptions: defaultCallOptions, handler: { resp in
-            if reply == nil {
-                reply = APIRoomMessage(
-                    id: resp.requestID, namespace: "", // TODO: need a namespace
-                    roomid: room, sender: resp.sender, message: resp.responseMessage,
-                    sendAt: resp.sendAt.date, createdAt: resp.createdAt.date)
-            }
-            handler(reply!, true)
-        })
+        var stream = client.chatInRoom(req, callOptions: defaultCallOptions).makeAsyncIterator()
         
-        if reply == nil {
-            throw RepositoryError.streamBroken
+        do {
+            while let resp = try await stream.next() {
+                if reply == nil {
+                    reply = APIRoomMessage(
+                        id: resp.requestID, namespace: "", // TODO: need a namespace
+                        roomid: room, sender: resp.sender, message: resp.responseMessage,
+                        sendAt: resp.sendAt.date, createdAt: resp.createdAt.date)
+                }
+                await handler(reply!, true)
+            }
+            
+            if reply == nil {
+                throw RepositoryError.streamBroken
+            }
+            await handler(reply!, false)
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
         }
-        handler(reply!, false)
     }
 }

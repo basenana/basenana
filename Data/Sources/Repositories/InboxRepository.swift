@@ -19,7 +19,7 @@ public class InboxRepository: InboxRepositoryProtocol {
         self.core = core
     }
     
-    public func QuickInbox(_ f: Entities.QuickInbox) throws {
-        return try core.QuickInbox(f)
+    public func QuickInbox(_ f: Entities.QuickInbox) async throws {
+        return try await core.QuickInbox(f)
     }
 }

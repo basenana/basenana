@@ -7,22 +7,43 @@
 
 import SwiftUI
 import Foundation
+import Entities
 import AppState
 
 
 struct BackgroundJobView: View {
     
     @State private var state: StateStore
-    
+    @State private var showList: Bool = false
+
     init(state: StateStore) {
         self.state = state
     }
     
     var body: some View {
-        Button(action: {
-            state.dispatch(.alert(msg: "not support"))
-        }, label: {
-            Image(systemName: "hourglass")
-        })
+        if !state.backgroupJobs.isEmpty {
+            Button(action: {
+                showList.toggle()
+            }, label: {
+                Image(systemName: "number.circle")
+            })
+            .popover(isPresented: $showList) {
+                List{
+                    ForEach(state.backgroupJobs){ j in
+                        HStack {
+                            Image(systemName: "arrow.triangle.2.circlepath.circle")
+                            VStack(alignment: .leading){
+                                Text(j.name).font(.headline)
+                                Text(RFC3339Formatter().string(from: j.startAt)).font(.caption2)
+                            }
+                        }
+                        .symbolEffect(.pulse)
+                        .padding(5)
+                    }
+                }
+                .listStyle(.sidebar)
+                .frame(width: 300, height: 400)
+            }
+        }
     }
 }

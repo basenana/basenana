@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GRPC
 import Entities
 import NetworkCore
 
@@ -13,50 +14,74 @@ import NetworkCore
 @available(macOS 11.0, *)
 public class EntriesClient: EntriesClientProtocol {
     
-    var entryClient: Api_V1_EntriesClientProtocol
-    var propertyClient: Api_V1_PropertiesClientProtocol
+    var entryClient: Api_V1_EntriesAsyncClientProtocol
+    var propertyClient: Api_V1_PropertiesAsyncClientProtocol
     
     public init(clientSet: ClientSet) {
         self.entryClient = clientSet.entries
         self.propertyClient = clientSet.properties
     }
     
-    public func GroupTree() throws -> any Entities.Group {
-        let req = Api_V1_GetGroupTreeRequest()
-        let resp = try entryClient.groupTree(req, callOptions: defaultCallOptions).response.wait()
-        
-        var root = resp.root.entry.toGroup()!
-        root.children = []
-        for grp in resp.root.children {
-            root.children!.append(paresGroupTreeChild(group: grp))
+    public func GroupTree() async throws -> any Entities.Group {
+        do {
+            let req = Api_V1_GetGroupTreeRequest()
+            let resp = try await entryClient.groupTree(req, callOptions: defaultCallOptions)
+            
+            var root = resp.root.entry.toGroup()!
+            root.children = []
+            for grp in resp.root.children {
+                root.children!.append(paresGroupTreeChild(group: grp))
+            }
+            
+            return root
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
         }
-        
-        return root
     }
     
-    public func RootEntry() throws -> NetworkCore.APIEntryDetail {
+    public func RootEntry() async throws -> NetworkCore.APIEntryDetail {
         var req = Api_V1_FindEntryDetailRequest()
         req.root = true
-        let resp = try entryClient.findEntryDetail(req, callOptions: defaultCallOptions).response.wait()
-        return resp.entry.toEntry(properties: resp.properties)
+        do{
+            let resp = try await entryClient.findEntryDetail(req, callOptions: defaultCallOptions)
+            return resp.entry.toEntry(properties: resp.properties)
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
+        }
     }
     
-    public func FindEntry(parent: Int64, name: String) throws -> NetworkCore.APIEntryDetail {
+    public func FindEntry(parent: Int64, name: String) async throws -> NetworkCore.APIEntryDetail {
         var req = Api_V1_FindEntryDetailRequest()
         req.parentID = parent
         req.name = name
-        let resp = try entryClient.findEntryDetail(req, callOptions: defaultCallOptions).response.wait()
-        return resp.entry.toEntry(properties: resp.properties)
+        do{
+            let resp = try await entryClient.findEntryDetail(req, callOptions: defaultCallOptions)
+            return resp.entry.toEntry(properties: resp.properties)
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
+        }
     }
     
-    public func GetEntryDetail(entry: Int64) throws -> NetworkCore.APIEntryDetail {
+    public func GetEntryDetail(entry: Int64) async throws -> NetworkCore.APIEntryDetail {
         var req = Api_V1_GetEntryDetailRequest()
         req.entryID = entry
-        let resp = try entryClient.getEntryDetail(req, callOptions: defaultCallOptions).response.wait()
-        return resp.entry.toEntry(properties: resp.properties)
+        do {
+            let resp = try await entryClient.getEntryDetail(req, callOptions: defaultCallOptions)
+            return resp.entry.toEntry(properties: resp.properties)
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
+        }
     }
     
-    public func CreateEntry(entry: Entities.EntryCreate) throws -> NetworkCore.APIEntryInfo {
+    public func CreateEntry(entry: Entities.EntryCreate) async throws -> NetworkCore.APIEntryInfo {
         var req = Api_V1_CreateEntryRequest()
         req.parentID = entry.parent
         req.name = entry.name
@@ -78,28 +103,46 @@ public class EntriesClient: EntriesClientProtocol {
             }
         }
         
-        let resp = try entryClient.createEntry(req, callOptions: defaultCallOptions).response.wait()
-        return resp.entry.toEntry()
+        do {
+            let resp = try await entryClient.createEntry(req, callOptions: defaultCallOptions)
+            return resp.entry.toEntry()
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
+        }
     }
     
-    public func UpdateEntry(entry: Entities.EntryUpdate) throws -> NetworkCore.APIEntryDetail {
+    public func UpdateEntry(entry: Entities.EntryUpdate) async throws -> NetworkCore.APIEntryDetail {
         var req = Api_V1_UpdateEntryRequest()
         req.entry.id = entry.id
         if entry.name != nil {
             req.entry.name = entry.name!
         }
         
-        let resp = try entryClient.updateEntry(req, callOptions: defaultCallOptions).response.wait()
-        return resp.entry.toEntry(properties: [])
+        do {
+            let resp = try await entryClient.updateEntry(req, callOptions: defaultCallOptions)
+            return resp.entry.toEntry(properties: [])
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
+        }
     }
     
-    public func DeleteEntries(entrys: [Int64]) throws {
+    public func DeleteEntries(entrys: [Int64]) async throws {
         var req = Api_V1_DeleteEntriesRequest()
         req.entryIds = entrys
-        let _ = try entryClient.deleteEntries(req, callOptions: defaultCallOptions).response.wait()
+        do {
+            let _ = try await entryClient.deleteEntries(req, callOptions: defaultCallOptions)
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
+        }
     }
     
-    public func ListGroupChildren(filter: EntryFilter) throws -> [NetworkCore.APIEntryInfo] {
+    public func ListGroupChildren(filter: EntryFilter) async throws -> [NetworkCore.APIEntryInfo] {
         var req = Api_V1_ListGroupChildrenRequest()
         req.parentID = filter.parent
         
@@ -133,51 +176,81 @@ public class EntriesClient: EntriesClientProtocol {
         if filter.orderDesc != nil {
             req.orderDesc = filter.orderDesc!
         }
-
+        
         if filter.page != nil {
             req.pagination = Api_V1_Pagination()
             req.pagination.page = filter.page!.page
             req.pagination.pageSize = filter.page!.pageSize
         }
-
-        let resp = try entryClient.listGroupChildren(req, callOptions: defaultCallOptions).response.wait()
         
-        var result: [NetworkCore.APIEntryInfo] = []
-        for ch in resp.entries {
-            result.append(ch.toEntry())
+        do {
+            let resp = try await entryClient.listGroupChildren(req, callOptions: defaultCallOptions)
+            
+            var result: [NetworkCore.APIEntryInfo] = []
+            for ch in resp.entries {
+                result.append(ch.toEntry())
+            }
+            return result
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
         }
-        return result
     }
     
-    public func ChangeParent(entry: Int64, newParent: Int64, option: Entities.ChangeParentOption) throws {
+    public func ChangeParent(entry: Int64, newParent: Int64, option: Entities.ChangeParentOption) async throws {
         var req = Api_V1_ChangeParentRequest()
         req.entryID = entry
         req.newParentID = newParent
         req.newName = option.newName
-        let _ = try entryClient.changeParent(req, callOptions: defaultCallOptions).response.wait()
+        do {
+            let _ = try await entryClient.changeParent(req, callOptions: defaultCallOptions)
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
+        }
     }
     
-    public func AddProperty(entry: Int64, key: String, val: String) throws {
+    public func AddProperty(entry: Int64, key: String, val: String) async throws {
         var req = Api_V1_AddPropertyRequest()
         req.entryID = entry
         req.key = key
         req.value = val
-        let _ = try propertyClient.addProperty(req, callOptions: defaultCallOptions).response.wait()
+        do {
+            let _ = try await propertyClient.addProperty(req, callOptions: defaultCallOptions)
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
+        }
     }
     
-    public func UpdateProperty(entry: Int64, key: String, val: String) throws {
+    public func UpdateProperty(entry: Int64, key: String, val: String) async throws {
         var req = Api_V1_UpdatePropertyRequest()
         req.entryID = entry
         req.key = key
         req.value = val
-        let _ = try propertyClient.updateProperty(req, callOptions: defaultCallOptions).response.wait()
+        do {
+            let _ = try await propertyClient.updateProperty(req, callOptions: defaultCallOptions)
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
+        }
     }
     
-    public func DeleteProperty(entry: Int64, key: String) throws {
+    public func DeleteProperty(entry: Int64, key: String) async throws {
         var req = Api_V1_DeletePropertyRequest()
         req.entryID = entry
         req.key = key
-        let _ = try propertyClient.deleteProperty(req, callOptions: defaultCallOptions).response.wait()
+        do {
+            let _ = try await propertyClient.deleteProperty(req, callOptions: defaultCallOptions)
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
+        }
     }
     
 }

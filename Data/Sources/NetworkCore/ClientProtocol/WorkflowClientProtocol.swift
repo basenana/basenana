@@ -10,7 +10,7 @@ import Entities
 
 
 public protocol WorkflowClientProtocol {
-    func ListWorkflows() throws -> [APIWorkflow]
-    func ListWorkflowJobs(workflow: String) throws -> [APIWorkflowJob]
-    func TriggerWorkflow(workflow: String, option: WorkflowJobOption) throws -> APIWorkflowJob
+    func ListWorkflows() async throws -> [APIWorkflow]
+    func ListWorkflowJobs(workflow: String) async throws -> [APIWorkflowJob]
+    func TriggerWorkflow(workflow: String, option: WorkflowJobOption) async throws -> APIWorkflowJob
 }

@@ -37,18 +37,22 @@ public class DocumentListViewModel {
     
     // entry
     
-    func getDocumentEntry(entry: Int64) -> EntryDetail? {
+    func getDocumentEntry(entry: Int64) async -> EntryDetail? {
         do {
-            return try usecase.getDocumentEntry(entry: entry)
+            return try await usecase.getDocumentEntry(entry: entry)
+        } catch UseCaseError.canceled {
+            // do nothing
         } catch {
             store.alert.display(msg: "get entry failed: \(error)")
         }
         return nil
     }
     
-    func getDocumentEntry(docID: Int64) -> EntryDetail? {
+    func getDocumentEntry(docID: Int64) async -> EntryDetail? {
         do {
-            return try usecase.getDocumentEntry(document: docID)
+            return try await usecase.getDocumentEntry(document: docID)
+        } catch let error as UseCaseError where error == .canceled {
+            // do nothing
         } catch {
             store.alert.display(msg: "get document entry failed: \(error)")
         }
@@ -57,7 +61,7 @@ public class DocumentListViewModel {
     
     // document mark
     
-    func setDocumentReadStatus(section: String, document: Int64, isUnread: Bool) {
+    func setDocumentReadStatus(section: String, document: Int64, isUnread: Bool) async {
         if let s = sectionDocuments.filter( {$0.id == section} ).first {
             for i in s.documents.indices {
                 if s.documents[i].id != document {
@@ -70,13 +74,13 @@ public class DocumentListViewModel {
         }
         
         do {
-            try usecase.setDocumentReadState(document: document, unread: isUnread)
+            try await usecase.setDocumentReadState(document: document, unread: isUnread)
         } catch {
             store.alert.display(msg: "set document unread=\(isUnread) failed: \(error)")
         }
     }
     
-    func setDocumentMarkStatus(section: String, document: Int64, isMark: Bool) {
+    func setDocumentMarkStatus(section: String, document: Int64, isMark: Bool) async {
         if let s = sectionDocuments.filter( {$0.id == section} ).first {
             for i in s.documents.indices {
                 if s.documents[i].id != document {
@@ -89,7 +93,7 @@ public class DocumentListViewModel {
         }
         
         do {
-            try usecase.setDocumentMarkState(document: document, ismark: isMark)
+            try await usecase.setDocumentMarkState(document: document, ismark: isMark)
         } catch {
             store.alert.display(msg: "set document isMark=\(isMark) failed: \(error)")
         }
@@ -97,9 +101,9 @@ public class DocumentListViewModel {
     
     // list document
     
-    func initNextPage() {
+    func initNextPage() async {
         self.page = 1
-        let firstPage = listNextPage()
+        let firstPage = await listNextPage()
         self.isLoading = true
         
         print("reinit main documents: current cached \(sectionDocuments.count)")
@@ -111,26 +115,30 @@ public class DocumentListViewModel {
         self.isLoading = false
     }
     
-    func listNextPage() -> [DocumentInfo] {
+    func listNextPage() async -> [DocumentInfo] {
         print("ready to list next page document, page=\(page)")
         var nextPageList: [DocumentInfo] = []
         do {
             switch prespective {
             case .unread:
-                nextPageList = try usecase.listUnreadDocuments(page: page, pageSize: pageSize)
+                nextPageList = try await usecase.listUnreadDocuments(page: page, pageSize: pageSize)
             case .marked:
-                nextPageList = try usecase.listMarkedDocuments(page: page, pageSize: pageSize)
+                nextPageList = try await usecase.listMarkedDocuments(page: page, pageSize: pageSize)
             }
             
             if nextPageList.isEmpty {
                 print("no more documents, page=\(page)")
                 hasMore = false
             }
-            page += 1
+        } catch let error as UseCaseError where error == .canceled {
+            // do nothing
+            return []
         } catch {
             store.alert.display(msg: "list document page failed: \(error)")
+            return []
         }
         
+        page += 1
         return nextPageList
     }
     
@@ -152,7 +160,7 @@ public class DocumentListViewModel {
         sectionDocuments.append(s)
     }
     
-    func checkAndLoadNextPage<Item: Identifiable>(_ section: String, _ item: Item) {
+    func checkAndLoadNextPage<Item: Identifiable>(_ section: String, _ item: Item) async {
         guard hasMore else {
             return
         }
@@ -167,11 +175,13 @@ public class DocumentListViewModel {
         }
         
         self.isLoading = true
-        let nextPage = listNextPage()
+        defer {
+            self.isLoading = false
+        }
+        let nextPage = await listNextPage()
         for nextDoc in nextPage {
             insertToSectionDocuments(doc: DocumentItem(info: nextDoc, readable: prespective == .unread ? true : false))
         }
-        self.isLoading = false
     }
 }
 

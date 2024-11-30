@@ -9,6 +9,6 @@ import Foundation
 
 
 public protocol NotifyClientProtocol {
-    func ListMessage(all: Bool) throws -> [APINotification]
-    func ReadMeesage(id: String) throws
+    func ListMessage(all: Bool) async throws -> [APINotification]
+    func ReadMeesage(id: String) async throws
 }

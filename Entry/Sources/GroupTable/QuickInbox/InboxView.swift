@@ -21,6 +21,7 @@ public struct QuickInboxView: View {
     @State private var showPreview: Bool = false
     @State private var page: WebPage? = nil
     @State private var errorMessage: String = ""
+    @State private var isInboxing: Bool = false
     
     init(viewModel: TreeViewModel) {
         self.viewModel = viewModel
@@ -74,14 +75,17 @@ public struct QuickInboxView: View {
                 
                 // inbox
                 Button {
-                    inbox()
+                    Task {
+                        await inbox()
+                    }
                 } label: {
-                    Text("Inbox")
+                    Text(isInboxing ? "..." : "Inbox")
                         .font(.body)
                         .padding(6)
                         .foregroundColor(.white)
                         .background(Color.blue)
                         .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .disabled(isInboxing)
                 }
                 .buttonStyle(PlainButtonStyle())
             }
@@ -92,8 +96,9 @@ public struct QuickInboxView: View {
         .frame(minWidth: 600, minHeight: 150)
     }
     
-    func inbox() {
-        if viewModel.quickInbox(url: urlInput, title: urlTitle, fileType: fileTypeOption, errorMsg: $errorMessage){
+    func inbox() async {
+        isInboxing = true
+        if await viewModel.quickInbox(url: urlInput, title: urlTitle, fileType: fileTypeOption, errorMsg: $errorMessage){
             viewModel.showQuickInbox.toggle()
         }
     }

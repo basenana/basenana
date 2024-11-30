@@ -9,21 +9,33 @@ import SwiftUI
 import Entities
 
 
-@available(macOS 14.0, *)
 @Observable
 class GroupTree {
+    static var shared = GroupTree()
+    
     var children: [GroupLeaf]? = []
     var allGroups: [Int64: GroupLeaf] = [:]
     
-    init(){}
-    
-    func reset(groups: [Entities.Group]) {
+    var root: Entities.Group = UnknownGroup.shared
+    var inbox: Entities.Group = UnknownGroup.shared
+
+    private init() {}
+
+    func reset(root: Entities.Group) {
+        self.root = root
+        
         children = []
         allGroups = [:]
         
-        for grp in groups {
+        guard root.children != nil else {
+            return
+        }
+        
+        for grp in root.children! {
             children!.append(paresGroupTreeChild(group: grp))
         }
+        
+        print("reset group tree root=\(root.id)")
     }
     
     func paresGroupTreeChild(group: Entities.Group) -> GroupLeaf {

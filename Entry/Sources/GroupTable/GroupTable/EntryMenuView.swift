@@ -12,29 +12,19 @@ import AppState
 import Styleguide
 
 
-@available(macOS 14.0, *)
 public struct EntryMenuView: View {
-    @State private var target: EntryInfo
-    @State private var targetDetail: EntryDetail?
-    @State private var viewModel: TreeViewModel
+    @State private var groupTree = GroupTree.shared
+    @State private var viewModel: GroupTableViewModel
     
-    public init(target: EntryInfo, viewModel: TreeViewModel) {
-        self.target = target
-        self.viewModel = viewModel
-    }
-    
-    public init(target: EntryDetail, viewModel: TreeViewModel) {
-        self.target = target.toInfo()!
-        self.targetDetail = target
+    public init(viewModel: GroupTableViewModel) {
         self.viewModel = viewModel
     }
     
     public var body: some View {
         VStack {
-            
             if canBeOpen() {
                 Section{
-                    Button("Open", action: { viewModel.store.dispatch(.gotoDestination(.groupList(group: target.id))) })
+                    Button("Open", action: { viewModel.store.dispatch(.gotoDestination(.groupList(group: targets.first!.id))) })
                 }
             }
             
@@ -44,50 +34,45 @@ public struct EntryMenuView: View {
                         Button("Group", action: {
                             // show create group form
                             viewModel.createGroupType = .standard
-                            viewModel.createGroupInParent = target.id
                             viewModel.showCreateGroup.toggle()
                         })
                         Button("RSS Feed", action: {
                             // show create rss form
                             viewModel.createGroupType = .feed
-                            viewModel.createGroupInParent = target.id
                             viewModel.showCreateGroup.toggle()
                         })
                         Button("Dynamic Group", action: {
                             viewModel.createGroupType = .dynamic
-                            viewModel.createGroupInParent = target.id
                             viewModel.showCreateGroup.toggle()
                         })
                     }
                 }
             }
             
-            if isFileTarget() {
-                FileMenuView(viewModel: viewModel, target: viewModel.describeEntry(entry: target.id))
-            }
-            
             if canBeEdit() {
                 Section{
-                    Button("Rename", action: {})
-                    Button("Delete", action: {})
+                    if onlyOneSelected() {
+                        Button("Rename", action: { viewModel.showRenameEntry.toggle() })
+                    }
+                    Button("Delete", action: { viewModel.showDeleteConfirm.toggle() })
                 }
                 
                 Section{
                     Menu("Move To") {
-                        ForEach(viewModel.groupTree.children ?? []){ childGroup in
+                        ForEach(groupTree.children ?? []){ childGroup in
                             GroupDestinationView(
                                 group: childGroup,
                                 childKeyPath: \.children,
-                                action: { let _ = viewModel.moveEntriesToGroup(entryURLs: [EntryUrl(entryID: target.id)], newParent: $0.id ) }
+                                action: { moveEntriesToGroup(newParent: $0.id ) }
                             )
                         }
                     }
                     Menu("Replicate To") {
-                        ForEach(viewModel.groupTree.children ?? []){ childGroup in
+                        ForEach(groupTree.children ?? []){ childGroup in
                             GroupDestinationView(
                                 group: childGroup,
                                 childKeyPath: \.children,
-                                action: { viewModel.replicateEntryToGroup(entry: target.id, newParent: $0.id) }
+                                action: { replicateEntryToGroup(newParent: $0.id) }
                             )
                         }
                     }
@@ -105,20 +90,70 @@ public struct EntryMenuView: View {
         }
     }
     
+    var targets: [EntryInfo] {
+        get {
+            viewModel.selectedEntries
+        }
+    }
+
+    func hasSelected() -> Bool {
+        return targets.count > 0
+    }
+    
+    func onlyOneSelected() -> Bool {
+        return targets.count == 1
+    }
+    
     func isFileTarget() -> Bool {
-        return !target.isGroup
+        guard !onlyOneSelected() else {
+            return false
+        }
+        
+        if let target = targets.first {
+            return !target.isGroup
+        }
+        return false
     }
     
     func canBeOpen() -> Bool {
-        return target.isGroup && target.id != viewModel.root.id
+        guard onlyOneSelected() else {
+            return false
+        }
+        if let target = targets.first {
+            return target.isGroup && target.id != groupTree.root.id
+        }
+        return false
     }
     
     func canCreateGroup() -> Bool {
-        return target.id != viewModel.inbox.id
+        if let grp = viewModel.group {
+            return !isInternalFile(grp.toInfo()!)
+        }
+        return false
     }
     
     func canBeEdit() -> Bool {
-        return target.id != viewModel.root.id && target.id != viewModel.inbox.id
+        guard !targets.isEmpty else {
+            return false
+        }
+        for target in targets {
+            if  target.id == groupTree.root.id || isInternalFile(target){
+                return false
+            }
+        }
+        return true
+    }
+    
+    func moveEntriesToGroup(newParent: Int64) {
+        Task {
+            let _ = await viewModel.moveEntriesToGroup(entries: targets.map({$0.id}), newParent: newParent)
+        }
+    }
+    
+    func replicateEntryToGroup(newParent: Int64) {
+        Task {
+            await viewModel.replicateEntryToGroup(entries: targets.map({$0.id}), newParent: newParent)
+        }
     }
 }
 
@@ -126,7 +161,7 @@ public struct EntryMenuView: View {
 struct GroupDestinationView: View {
     let group: GroupLeaf
     let childKeyPath: KeyPath<GroupLeaf, [GroupLeaf]?>
-    let action: (_: GroupLeaf) ->Void
+    let action: (_: GroupLeaf) async -> Void
     
     var body: some View {
         if group[keyPath: childKeyPath] != nil {
@@ -134,7 +169,7 @@ struct GroupDestinationView: View {
                 isExpanded: /*@START_MENU_TOKEN@*/.constant(true)/*@END_MENU_TOKEN@*/,
                 content: {
                     Menu(group.groupName) {
-                        Button("\(group.groupName) 👈🏻", action: { action(group) })
+                        Button("\(group.groupName) 👈🏻", action: { Task { await action(group) }})
                         Divider()
                         ForEach(group[keyPath: childKeyPath] ?? []) { childGroup in
                             GroupDestinationView(group: childGroup, childKeyPath: childKeyPath, action: action)
@@ -144,47 +179,8 @@ struct GroupDestinationView: View {
                 label: {}
             ).disclosureGroupStyle(GroupDestDisclosureStyle())
         } else {
-            Button(group.groupName, action: { action(group) })
+            Button(group.groupName, action: { Task { await action(group) }})
         }
-    }
-}
-
-
-struct FileMenuView: View {
-    private var viewModel: TreeViewModel
-    private var target: EntryDetail?
-    
-    init(viewModel: TreeViewModel, target: EntryDetail?) {
-        self.viewModel = viewModel
-        self.target = target
-    }
-    
-    var body: some View {
-        // web file
-        if let u = parseUrlString(urlStr: getEntryProperty(keys: [Property.WebPageURL, Property.WebSiteURL])?.value ?? "" ){
-            Section(){
-                Button("Launch URL", action: {
-                    openUrlInBrowser(url: u)
-                })
-                Button("Copy URL", action: {
-                    copyToClipBoard(content: "\(u)")
-                })
-            }
-        }
-    }
-    
-    func getEntryProperty(keys: [String]) -> EntryProperty?{
-        guard target != nil else {
-            return nil
-        }
-        for k in keys {
-            for p in target!.properties {
-                if p.key == k {
-                    return p
-                }
-            }
-        }
-        return nil
     }
 }
 
@@ -192,15 +188,19 @@ struct FileMenuView: View {
 #if DEBUG
 
 import DomainTestHelpers
-
-let entry = try! MockEntryUseCase().getEntryDetails(entry: 1010)
-
-#Preview {
-    if #available(macOS 14.0, *) {
-        List{
-            EntryMenuView(target: entry, viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
+struct EntryMenuPreview: View {
+    
+    var body: some View {
+        List {
+            EntryMenuView(viewModel: GroupTableViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
         }
     }
+}
+
+
+
+#Preview {
+    EntryMenuPreview()
 }
 
 #endif

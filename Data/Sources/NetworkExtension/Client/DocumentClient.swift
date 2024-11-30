@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GRPC
 import Entities
 import NetworkCore
 
@@ -13,13 +14,13 @@ import NetworkCore
 @available(macOS 11.0, *)
 public class DocumentClient: DocumentClientProtocol {
     
-    var client: Api_V1_DocumentClientProtocol
+    var client: Api_V1_DocumentAsyncClientProtocol
     
     public init(clientSet: ClientSet) {
         self.client = clientSet.document
     }
     
-    public func ListDocuments(filter: DocumentFilter) throws -> [APIDocumentInfo] {
+    public func ListDocuments(filter: DocumentFilter) async throws -> [APIDocumentInfo] {
         var req = Api_V1_ListDocumentsRequest()
         
         if filter.all != nil && filter.all! {
@@ -67,15 +68,21 @@ public class DocumentClient: DocumentClientProtocol {
             req.orderDesc = filter.orderDesc!
         }
         
-        let resp = try client.listDocuments(req, callOptions: defaultCallOptions).response.wait()
-        var result: [APIDocumentInfo] = []
-        for d in resp.documents {
-            result.append(d.toDocuement())
+        do {
+            let resp = try await client.listDocuments(req, callOptions: defaultCallOptions)
+            var result: [APIDocumentInfo] = []
+            for d in resp.documents {
+                result.append(d.toDocuement())
+            }
+            return result
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
         }
-        return result
     }
     
-    public func GetDocumentDetail(id: Entities.DocumentID) throws -> APIDocumentDetail {
+    public func GetDocumentDetail(id: Entities.DocumentID) async throws -> APIDocumentDetail {
         var req = Api_V1_GetDocumentDetailRequest()
         if id.documentID > 0 {
             req.documentID = id.documentID
@@ -85,12 +92,17 @@ public class DocumentClient: DocumentClientProtocol {
             throw RepositoryError.invalidResourceID
         }
         
-        let resp = try client.getDocumentDetail(req, callOptions: defaultCallOptions).response.wait()
-        
-        return resp.document.toDocuement()
+        do {
+            let resp = try await client.getDocumentDetail(req, callOptions: defaultCallOptions)
+            return resp.document.toDocuement()
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
+        }
     }
     
-    public func UpdateDocument(doc: Entities.DocumentUpdate) throws {
+    public func UpdateDocument(doc: Entities.DocumentUpdate) async throws {
         var req = Api_V1_UpdateDocumentRequest()
         
         req.document.id = doc.docId
@@ -100,7 +112,13 @@ public class DocumentClient: DocumentClientProtocol {
         if let mark = doc.marked {
             req.setMark = mark ? Api_V1_UpdateDocumentRequest.DocumentMark.marked:Api_V1_UpdateDocumentRequest.DocumentMark.unmarked
         }
-        let _ = try client.updateDocument(req, callOptions: defaultCallOptions).response.wait()
+        do {
+            let _ = try await client.updateDocument(req, callOptions: defaultCallOptions)
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
+        }
     }
     
 }

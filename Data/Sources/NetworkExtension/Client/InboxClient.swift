@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GRPC
 import Entities
 import NetworkCore
 
@@ -13,13 +14,13 @@ import NetworkCore
 @available(macOS 11.0, *)
 public class InboxClient: InboxClientProtocol {
     
-    var client: Api_V1_InboxClientProtocol
+    var client: Api_V1_InboxAsyncClientProtocol
     
     public init(clientSet: ClientSet) {
         self.client = clientSet.inbox
     }
     
-    public func QuickInbox(_ f: Entities.QuickInbox) throws {
+    public func QuickInbox(_ f: Entities.QuickInbox) async throws {
         var req = Api_V1_QuickInboxRequest()
         
         switch f.sourceType {
@@ -42,7 +43,13 @@ public class InboxClient: InboxClientProtocol {
             req.fileType = .webArchiveFile
         }
         
-        let _ = try client.quickInbox(req, callOptions: defaultCallOptions).response.wait()
+        do {
+            let _ = try await client.quickInbox(req, callOptions: defaultCallOptions)
+        } catch let error as GRPCStatusTransformable where error.makeGRPCStatus().code == .cancelled {
+            throw RepositoryError.canceled
+        } catch {
+            throw error
+        }
     }
     
 }

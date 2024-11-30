@@ -10,7 +10,7 @@ import Entities
 
 
 public protocol DocumentClientProtocol {
-    func ListDocuments(filter: DocumentFilter) throws -> [APIDocumentInfo]
-    func GetDocumentDetail(id: DocumentID) throws -> APIDocumentDetail
-    func UpdateDocument(doc: DocumentUpdate) throws
+    func ListDocuments(filter: DocumentFilter) async throws -> [APIDocumentInfo]
+    func GetDocumentDetail(id: DocumentID) async throws -> APIDocumentDetail
+    func UpdateDocument(doc: DocumentUpdate) async throws
 }

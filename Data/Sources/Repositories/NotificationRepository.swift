@@ -19,11 +19,11 @@ public class NotificationRepository: NotificationRepositoryProtocol {
         self.core = core
     }
     
-    public func ListMessage(all: Bool) throws -> [any Entities.NotificationMessage] {
-        return try core.ListMessage(all: all)
+    public func ListMessage(all: Bool) async throws -> [any Entities.NotificationMessage] {
+        return try await core.ListMessage(all: all)
     }
     
-    public func ReadMeesage(id: String) throws {
-        return try core.ReadMeesage(id: id)
+    public func ReadMeesage(id: String) async throws {
+        return try await core.ReadMeesage(id: id)
     }
 }

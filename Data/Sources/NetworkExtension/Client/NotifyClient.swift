@@ -13,17 +13,17 @@ import NetworkCore
 @available(macOS 11.0, *)
 public class NotifyClient: NotifyClientProtocol {
     
-    var client: Api_V1_NotifyClientProtocol
+    var client: Api_V1_NotifyAsyncClientProtocol
     
     public init(clientSet: ClientSet) {
         self.client = clientSet.notify
     }
     
-    public func ListMessage(all: Bool) throws -> [NetworkCore.APINotification] {
+    public func ListMessage(all: Bool) async throws -> [NetworkCore.APINotification] {
         throw RepositoryError.unimplement
     }
     
-    public func ReadMeesage(id: String) throws {
+    public func ReadMeesage(id: String) async throws {
         throw RepositoryError.unimplement
     }
     

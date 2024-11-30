@@ -35,7 +35,7 @@ struct StackContentView: View {
                     .navigationDestination(for: Destination.self) { destination in
                         switch destination {
                         case .groupList(group: let group):
-                            GroupTableView(groupID: group, viewModel: container.c.resolve(TreeViewModel.self)!)
+                            GroupTableView(groupID: group, viewModel: container.c.resolve(GroupTableViewModel.self)!)
                                 .id(group)
                         case .readDocument(document: let document):
                             DocumentReadView(viewModel: container.c.resolve(DocumentReadViewModel.self, argument: document)!).id(document)
@@ -73,7 +73,7 @@ struct SidebarContentView: View {
         case .listDocuments(prespective: let prespective):
             DocumentListView(viewModel: container.c.resolve(DocumentListViewModel.self, name: prespective.Title)!).id(prespective).navigationTitle(prespective.Title)
         case .groupList(group: let group):
-            GroupTableView(groupID: group, viewModel: container.c.resolve(TreeViewModel.self)!).id(group)
+            GroupTableView(groupID: group, viewModel: container.c.resolve(GroupTableViewModel.self)!).id(group)
         default:
             Text("unknown")
         }

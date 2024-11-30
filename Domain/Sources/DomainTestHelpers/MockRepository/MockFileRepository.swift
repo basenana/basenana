@@ -15,11 +15,11 @@ public class MockFileRepository: FileRepositoryProtocol {
     
     init() { }
     
-    public func WriteFile(entry: Int64, off: Int64, len: Int64, input: Stream) throws {
+    public func UploadFile(entry: Int64, file: String) async throws {
         throw RepositoryError.unimplement
     }
     
-    public func ReadFile(entry: Int64, off: Int64, len: Int64) throws -> Stream {
+    public func DownloadFile(entry: Int64, dir: String) async throws -> String {
         throw RepositoryError.unimplement
     }
 }
