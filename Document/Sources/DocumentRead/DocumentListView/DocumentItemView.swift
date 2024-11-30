@@ -48,11 +48,12 @@ struct DocumentItemView: View {
             }
             
             
-            DocumentBannerView(bannerURL: "")
-                .padding(.vertical, 5)
+//            DocumentBannerView(bannerURL: "")
+//                .padding(.vertical, 5)
             
-            Text(doc.info.subContent.trimmingCharacters(in: .whitespaces))
+            Text("\(doc.info.subContent)... ")
                 .font(.body)
+                .lineSpacing(2)
                 .foregroundColor(Color.gray)
                 .multilineTextAlignment(.leading)
             

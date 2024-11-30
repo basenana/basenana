@@ -5,7 +5,7 @@
 //  Created by Hypo on 2024/9/18.
 //
 
-
+import Foundation
 import Entities
 import RepositoryProtocol
 import UseCaseProtocol
@@ -117,8 +117,13 @@ public class EntryUseCase: EntryUseCaseProtocol {
         }
     }
     
-    public func UploadFile(parent: Int64, filePath: String) async throws -> EntryInfo {
-        throw UseCaseError.unimplement
+    public func UploadFile(parent: Int64, file: URL) async throws -> EntryInfo {
+        let option = EntryCreate(parent: parent, name: file.lastPathComponent, kind: "raw")
+        let entry = try await entryRepo.CreateEntry(entry: option)
+        print("create entry \(entry.id) for upload")
+        
+        try await fileRepo.UploadFile(entry: entry.id, file: file.path())
+        return entry
     }
     
     public func DownloadFile(entry: Int64, dirPath: String) async throws -> String {

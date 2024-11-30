@@ -29,6 +29,6 @@ public protocol EntriesClientProtocol {
 
 
 public protocol FileClientProtocol {
-    func WriteFile(entry: Int64, off: Int64, len: Int64, input: Stream) async throws
-    func ReadFile(entry: Int64, off: Int64, len: Int64) async throws -> Stream
+    func UploadFile(entry: Int64, file: String) async throws
+    func DownloadFile(entry: Int64, file: String) async throws
 }

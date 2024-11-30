@@ -93,7 +93,7 @@ public class TreeViewModel {
     
     func moveEntriesToGroup(entryURLs: [URL], newParent: Int64) async -> Bool {
         var entries = [Int64]()
-        var files = [Int64]()
+        var files = [URL]()
         
         for url in entryURLs {
             switch url.scheme {
@@ -108,8 +108,8 @@ public class TreeViewModel {
                 
             case "file":
                 
-                print("[moveEntriesAndUpdateTree] upload file")
-                return false
+                files.append(url)
+                
             default:
                 
                 print("[moveEntriesAndUpdateTree] unknown url schema \(url)")
@@ -119,6 +119,16 @@ public class TreeViewModel {
         
         if !entries.isEmpty {
             return await moveEntriesToGroup(entries: entries, newParent: newParent)
+        }
+        
+        if !files.isEmpty {
+            do {
+                try await uploadFiles(entryUsecase: entryUsecase, store: store, parentID: newParent, files: files)
+            } catch {
+                store.dispatch(.alert(msg: "upload files failed \(error)"))
+                return false
+            }
+            return true
         }
         
         return false

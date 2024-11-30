@@ -22,6 +22,6 @@ public protocol EntryUseCaseProtocol {
     func changeParent(entries: [Int64], newParent: Int64, finisher: @escaping (EntryDetail, EntryDetail) -> Void) async throws
     func createGroups(parent: Int64, option: EntryCreate) async throws -> EntryInfo
     
-    func UploadFile(parent: Int64, filePath: String) async throws -> EntryInfo
+    func UploadFile(parent: Int64, file: URL) async throws -> EntryInfo
     func DownloadFile(entry: Int64, dirPath: String) async throws -> String
 }

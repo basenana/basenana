@@ -9,8 +9,10 @@ import Foundation
 
 
 public enum BizError: Error {
+    case isGroup
     case notGroup
     case invalidArg(String)
+    case openFileError
 }
 
 

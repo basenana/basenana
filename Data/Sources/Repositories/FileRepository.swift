@@ -19,12 +19,30 @@ public class FileRepository: FileRepositoryProtocol {
         self.core = core
     }
     
-    public func WriteFile(entry: Int64, off: Int64, len: Int64, input: Stream) async throws {
-        return try await core.WriteFile(entry: entry, off: off, len: len, input: input)
+    public func UploadFile(entry: Int64, file: String) async throws {
+        return try await core.UploadFile(entry: entry, file: file)
     }
     
-    public func ReadFile(entry: Int64, off: Int64, len: Int64) async throws -> Stream {
-        return try await core.ReadFile(entry: entry, off: off, len: len)
+    public func DownloadFile(entry: Int64, dir: String) async throws -> String {
+        let file = "\(dir)/en-\(entry)"
+        let fileTmp = "\(dir)/en-\(entry).tmp"
+        let fmanager = FileManager.default
+        if fmanager.fileExists(atPath: fileTmp) {
+            try fmanager.removeItem(atPath: fileTmp)
+        }
+        
+        defer {
+            do {
+                try fmanager.removeItem(atPath: fileTmp)
+            } catch {
+                print("clean up tmp file failed \(error)")
+            }
+        }
+        
+        try await core.DownloadFile(entry: entry, file: fileTmp)
+        try fmanager.moveItem(atPath: fileTmp, toPath: file)
+        
+        return file
     }
     
 }
