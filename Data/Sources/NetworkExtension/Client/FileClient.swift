@@ -19,15 +19,7 @@ public class FileClient: FileClientProtocol {
         self.client = clientSet.entries
     }
     
-    public func UploadFile(entry: Int64, file: String) async throws {
-        print("open file \(file)")
-        guard let fileHandle = FileHandle(forReadingAtPath: file) else {
-            throw BizError.openFileError
-        }
-        defer {
-            fileHandle.closeFile()
-        }
-        print("start upload file \(file)")
+    public func UploadFile(entry: Int64, fileHandle: FileHandle) async throws {
         let resp = try await client.writeFile(FileReader(entry: entry, fileHandle: fileHandle))
         print("upload file \(entry), len=\(resp.len)")
     }

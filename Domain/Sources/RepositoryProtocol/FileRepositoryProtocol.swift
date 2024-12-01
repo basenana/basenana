@@ -10,6 +10,6 @@ import Entities
 
 
 public protocol FileRepositoryProtocol {
-    func UploadFile(entry: Int64, file: String) async throws
+    func UploadFile(entry: Int64, fileHandle: FileHandle) async throws
     func DownloadFile(entry: Int64, dir: String) async throws -> String
 }

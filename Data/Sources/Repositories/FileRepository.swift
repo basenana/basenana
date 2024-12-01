@@ -19,8 +19,8 @@ public class FileRepository: FileRepositoryProtocol {
         self.core = core
     }
     
-    public func UploadFile(entry: Int64, file: String) async throws {
-        return try await core.UploadFile(entry: entry, file: file)
+    public func UploadFile(entry: Int64, fileHandle: FileHandle) async throws {
+        return try await core.UploadFile(entry: entry, fileHandle: fileHandle)
     }
     
     public func DownloadFile(entry: Int64, dir: String) async throws -> String {

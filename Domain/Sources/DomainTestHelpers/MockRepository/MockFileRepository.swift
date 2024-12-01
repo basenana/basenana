@@ -6,6 +6,7 @@
 
 import SwiftUI
 import Entities
+import Foundation
 import RepositoryProtocol
 
 
@@ -15,7 +16,7 @@ public class MockFileRepository: FileRepositoryProtocol {
     
     init() { }
     
-    public func UploadFile(entry: Int64, file: String) async throws {
+    public func UploadFile(entry: Int64, file: URL) async throws {
         throw RepositoryError.unimplement
     }
     
