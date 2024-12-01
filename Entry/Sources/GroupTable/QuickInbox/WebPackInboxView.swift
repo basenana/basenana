@@ -1,8 +1,8 @@
 //
-//  InboxView.swift
-//  Inbox
+//  WebPackInboxView.swift
+//  Entry
 //
-//  Created by Hypo on 2024/10/14.
+//  Created by Hypo on 2024/12/1.
 //
 
 import SwiftUI
@@ -12,7 +12,7 @@ import Entities
 import WebPage
 
 
-public struct QuickInboxView: View {
+public struct WebPackInboxView: View {
     private var viewModel: TreeViewModel
     
     @State private var urlInput: String = ""
@@ -79,7 +79,7 @@ public struct QuickInboxView: View {
                         await inbox()
                     }
                 } label: {
-                    Text(isInboxing ? "..." : "Inbox")
+                    Text("Inbox")
                         .font(.body)
                         .padding(6)
                         .foregroundColor(.white)
@@ -122,16 +122,3 @@ public struct QuickInboxView: View {
         }
     }
 }
-
-
-#if DEBUG
-
-import DomainTestHelpers
-
-#Preview {
-    if #available(macOS 14.0, *) {
-        QuickInboxView(viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
-    }
-}
-
-#endif

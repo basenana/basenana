@@ -16,7 +16,7 @@ public class MockFileRepository: FileRepositoryProtocol {
     
     init() { }
     
-    public func UploadFile(entry: Int64, file: URL) async throws {
+    public func UploadFile(entry: Int64, fileHandle: FileHandle) async throws {
         throw RepositoryError.unimplement
     }
     

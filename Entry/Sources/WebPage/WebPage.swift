@@ -53,3 +53,30 @@ public func fetchWebPage(url urlString: String) throws -> WebPage {
     return wp
 }
 
+
+func webarchiveBaseMainResource(url: URL, mainResource: String, fileHandle: FileHandle) throws {
+    var err: Error? = nil
+    let group = DispatchGroup()
+    group.enter()
+    WebArchiver.archiveWithMainResource(url: url, htmlContent: mainResource){ result in
+        if !result.errors.isEmpty{
+            err = result.errors.first
+            return
+        }
+        if let d = result.plistData {
+            do {
+                try fileHandle.write(contentsOf: d)
+            } catch{
+                err = error
+            }
+        }
+        group.leave()
+    }
+    group.wait()
+    
+    if let e = err {
+        throw e
+    }
+    return
+}
+

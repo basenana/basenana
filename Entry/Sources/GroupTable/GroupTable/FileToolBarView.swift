@@ -51,9 +51,11 @@ struct FileToolBarView: View {
                             if let pro = getEntryProperty(keys: [Property.WebPageURL, Property.WebSiteURL]) {
                                 if let u = URL(string: pro.value) {
                                     targetURL = u
+                                    return
                                 }
                             }
                         }
+                        targetURL = nil
                     }
                 }
             }
