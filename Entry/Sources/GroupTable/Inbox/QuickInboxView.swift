@@ -13,7 +13,7 @@ import WebPage
 
 
 public struct QuickInboxView: View {
-    private var viewModel: TreeViewModel
+    private var viewModel: InboxViewModel
     
     @State private var urlInput: String = ""
     @State private var urlTitle: String = ""
@@ -23,7 +23,7 @@ public struct QuickInboxView: View {
     @State private var errorMessage: String = ""
     @State private var isInboxing: Bool = false
     
-    init(viewModel: TreeViewModel) {
+    init(viewModel: InboxViewModel) {
         self.viewModel = viewModel
     }
     
@@ -130,7 +130,7 @@ import DomainTestHelpers
 
 #Preview {
     if #available(macOS 14.0, *) {
-        QuickInboxView(viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
+        QuickInboxView(viewModel: InboxViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
     }
 }
 

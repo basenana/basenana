@@ -11,7 +11,6 @@ import Entities
 import WebPage
 
 
-@available(macOS 14.0, *)
 public struct InboxPreviewView: View {
     var page: WebPage
     

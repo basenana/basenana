@@ -13,17 +13,16 @@ import WebPage
 
 
 public struct WebPackInboxView: View {
-    private var viewModel: TreeViewModel
+    private var viewModel: InboxViewModel
     
     @State private var urlInput: String = ""
     @State private var urlTitle: String = ""
-    @State private var fileTypeOption = "webarchive"
     @State private var showPreview: Bool = false
     @State private var page: WebPage? = nil
     @State private var errorMessage: String = ""
     @State private var isInboxing: Bool = false
     
-    init(viewModel: TreeViewModel) {
+    init(viewModel: InboxViewModel) {
         self.viewModel = viewModel
     }
     
@@ -38,39 +37,17 @@ public struct WebPackInboxView: View {
                     .textFieldStyle(.squareBorder)
                     .padding(.vertical, 5)
                 
-                Picker("Flile Type", selection: $fileTypeOption) {
-                    Text("Webarchive").tag("webarchive")
-                    Text("Html").tag("html")
+                if let safePage = self.page {
+                    InboxPreviewView(page: safePage)
+                        .frame(width: 500, height: 600)
                 }
-                .pickerStyle(.inline)
-                .padding(.vertical, 5)
+                
             }
             HStack {
                 if errorMessage != ""{
                     Text("\(errorMessage)")
                         .foregroundStyle(.red)
                         .padding(.vertical, 5)
-                }
-                
-                // preview
-                if let safePage = self.page {
-                    Button(action: {
-                        self.showPreview = true
-                    }) {
-                        Text("Preview")
-                            .font(.body)
-                            .padding(6)
-                            .foregroundColor(.white)
-                            .background(Color.blue)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                    }
-                    .popover(isPresented: $showPreview) {
-                        VStack {
-                            InboxPreviewView(page: safePage)
-                        }
-                        .frame(width: 500, height: 600)
-                    }
-                    .buttonStyle(PlainButtonStyle())
                 }
                 
                 // inbox
@@ -98,16 +75,17 @@ public struct WebPackInboxView: View {
     
     func inbox() async {
         isInboxing = true
-        if await viewModel.quickInbox(url: urlInput, title: urlTitle, fileType: fileTypeOption, errorMsg: $errorMessage){
+        if await viewModel.packingWebPage(url: urlInput, title: urlTitle, errorMsg: $errorMessage){
             viewModel.showQuickInbox.toggle()
         }
     }
-
+    
     func tryLoadWebPage() {
         let urlStr = urlInput
         guard urlStr != "" else {
             return
         }
+        isInboxing = true
         errorMessage = ""
         if let _ = URL(string: urlStr){
             Task{
@@ -118,7 +96,19 @@ public struct WebPackInboxView: View {
                 }catch {
                     errorMessage = "fetch web page failed \(error)"
                 }
+                isInboxing = false
             }
         }
     }
 }
+
+
+#if DEBUG
+
+import DomainTestHelpers
+
+#Preview {
+    WebPackInboxView(viewModel: InboxViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
+}
+
+#endif

@@ -10,19 +10,6 @@ import WebKit
 import Entities
 
 
-@available(macOS 14.0, *)
-struct HTMLView: View {
-    var document: DocumentDetail
-    
-    init(document: DocumentDetail) {
-        self.document = document
-    }
-    
-    var body: some View {
-        HTMLStringView(htmlContent: document.content)
-    }
-}
-
 
 #if os(iOS)
 struct HTMLStringView: UIViewRepresentable {
@@ -41,12 +28,20 @@ struct HTMLStringView: UIViewRepresentable {
 #if os(macOS)
 struct HTMLStringView: NSViewRepresentable {
     typealias NSViewType = WKWebView
+    
+    let url: URL?
     let htmlContent: String
     
     init(htmlContent: String) {
+        self.url = nil
         self.htmlContent = htmlTemplate.replacingOccurrences(of: "{Content}", with: htmlContent)
     }
     
+    init(url: URL?, htmlContent: String) {
+        self.url = url
+        self.htmlContent = htmlTemplate.replacingOccurrences(of: "{Content}", with: htmlContent)
+    }
+
     func makeNSView(context: Context) -> WKWebView {
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
@@ -54,7 +49,7 @@ struct HTMLStringView: NSViewRepresentable {
     }
     
     func updateNSView(_ nsView: WKWebView, context: Context) {
-        nsView.loadHTMLString(htmlContent, baseURL: nil)
+        nsView.loadHTMLString(htmlContent, baseURL: url)
     }
     
     func makeCoordinator() -> Coordinator {

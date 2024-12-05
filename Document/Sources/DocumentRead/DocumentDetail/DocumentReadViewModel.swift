@@ -11,7 +11,6 @@ import AppState
 import UseCaseProtocol
 
 
-@available(macOS 14.0, *)
 @Observable
 @MainActor
 public class DocumentReadViewModel {
@@ -37,4 +36,28 @@ public class DocumentReadViewModel {
         }
     }
     
+    var targetURL: URL? {
+        get {
+            if let pro = getEntryProperty(keys: [Property.WebPageURL, Property.WebSiteURL]) {
+                if let u = URL(string: pro.value) {
+                    return u
+                }
+            }
+            return nil
+        }
+    }
+    
+    func getEntryProperty(keys: [String]) -> EntryProperty? {
+        guard entry != nil else {
+            return nil
+        }
+        for k in keys {
+            for p in entry!.properties {
+                if p.key == k {
+                    return p
+                }
+            }
+        }
+        return nil
+    }
 }
