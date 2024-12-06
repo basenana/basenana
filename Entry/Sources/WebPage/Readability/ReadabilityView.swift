@@ -11,12 +11,21 @@ import WebKit
 
 
 public class Readability {
+    let page: WebPage
     let webView: WKWebView
     var hasRenderedReadabilityHTML = false
     
-    init(){
+    init(page: WebPage){
+        self.page = page
         webView = WKWebView(frame: CGRect.zero, configuration: WKWebViewConfiguration())
         webView.configuration.suppressesIncrementalRendering = true
+        addReadabilityUserScript()
+    }
+    
+    init(page: WebPage, webView: WKWebView){
+        self.page = page
+        self.webView = webView
+        self.webView.configuration.suppressesIncrementalRendering = true
         addReadabilityUserScript()
     }
     
@@ -30,7 +39,11 @@ public class Readability {
     }
     
     private func renderHTML(readabilityContent: String) -> String {
-        return htmlTemplate.replacingOccurrences(of: "{Content}", with: readabilityContent)
+        var content = htmlTemplate.replacingOccurrences(of: "{TITLE}", with: self.page.title)
+        content = content.replacingOccurrences(of: "{HOST}", with: self.page.url.host() ?? "")
+        content = content.replacingOccurrences(of: "{URL}", with: self.page.url.absoluteString)
+        content = content.replacingOccurrences(of: "{CONTENT}", with: readabilityContent)
+        return content
     }
     
     
@@ -85,7 +98,12 @@ public struct ReadabilityView: NSViewRepresentable {
     
     public init(page: WebPage) {
         self.page = page
-        self.readability = Readability()
+        self.readability = Readability(page: page)
+    }
+    
+    public init(page: WebPage, webView: WKWebView) {
+        self.page = page
+        self.readability = Readability(page: page, webView: webView)
     }
     
     public func makeNSView(context: Context) -> WKWebView {
@@ -122,8 +140,10 @@ public struct ReadabilityView: NSViewRepresentable {
 
 let htmlTemplate = """
 <head>
+<title>{TITLE}</title>
 <meta charset='UTF-8' />
-<meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=yes'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=yes'>
+<meta name='packer' content='webpage-packer, clutter-free=true'>
 <style type='text/css'>body, table { margin: 0 auto; background-color: #FFF; color:#333; font-family: arial, sans-serif; font-weight: 100; font-size: 12pt; margin:2em 2em 2em 2em; }
 p, li { line-height: 150%; }
 a { color: #3366cc; border-bottom: 1px dotted #3366cc; text-decoration: none; }
@@ -162,7 +182,9 @@ iframe { height: auto; width: auto; max-width: 95%; max-height: 100%; }
     }
 }
 </style>
+</head>
 <body>
-{Content}
+<div> <a href="{URL}" target="_blank">{HOST}</a> <h1>{TITLE}</h1> </div>
+{CONTENT}
 </body>
 """

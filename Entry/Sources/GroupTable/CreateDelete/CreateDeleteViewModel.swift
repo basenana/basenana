@@ -59,24 +59,23 @@ public class CreateDeleteViewModel {
         let gt = groupTree
         
         for entry in entries {
-            let job = BackgroundJob(name: "Deleting \(entry.name)", startAt: Date())
-            jobIDs.insert(job.id)
-            s.backgroupJobs.append(job)
-        }
-        
-        DispatchQueue.global().async {
-            Task {
-                try await uc.deleteEntries(entries: entries.map({$0.id}))
-                DispatchQueue.main.sync {
+            store.newBackgroundJob(
+                name: "Deleting \(entry.name)",
+                job: {
+                    Task {
+                        try await uc.deleteEntry(entry: entry.id)
+                    }
+                },
+                complete: {
                     for entry in entries {
                         if entry.isGroup {
                             gt.removeChildGroup(parentID: entry.parentID, childID: entry.id)
                         }
                     }
                     gs.requestReopen()
-                    s.backgroupJobs.removeAll(where: { jobIDs.contains($0.id )})
                 }
-            }
+            )
+            
         }
     }
 }

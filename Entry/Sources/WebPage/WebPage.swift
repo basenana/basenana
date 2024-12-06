@@ -42,40 +42,47 @@ public func fetchWebPage(url urlString: String) throws -> WebPage {
     }
     task.resume()
     group.wait()
-
+    
     if wp.htmlContent == "" {
         throw WebError.BodyIsEmpty
     }
     
     let doc: Document = try! SwiftSoup.parse(wp.htmlContent)
     wp.title = try doc.title()
-
+    
     return wp
 }
 
 
-func webarchiveBaseMainResource(url: URL, mainResource: String, fileHandle: FileHandle) throws {
-    var err: Error? = nil
-    let group = DispatchGroup()
-    group.enter()
-    WebArchiver.archiveWithMainResource(url: url, htmlContent: mainResource){ result in
-        if !result.errors.isEmpty{
-            err = result.errors.first
-            return
-        }
-        if let d = result.plistData {
-            do {
-                try fileHandle.write(contentsOf: d)
-            } catch{
-                err = error
+public func webarchiveBaseMainResource(url: URL, mainResource: String, temporaryFileURL: URL) throws {
+    
+    if FileManager.default.fileExists(atPath: temporaryFileURL.path()){
+        try FileManager.default.removeItem(at: temporaryFileURL)
+    }
+    
+    FileManager.default.createFile(atPath: temporaryFileURL.path, contents: nil)
+    print("create temporary file path: \(temporaryFileURL.path)")
+    let fh = try FileHandle(forWritingTo: temporaryFileURL)
+    
+    
+    DispatchQueue.global(qos: .background).async {
+        WebArchiver.archiveWithMainResource(url: url, htmlContent: mainResource){ result in
+            defer {
+                do { try fh.close() } catch { }
+            }
+            
+            if !result.errors.isEmpty{
+                print("save failed \(result.errors)")
+                return
+            }
+            if let d = result.plistData {
+                do {
+                    try fh.write(contentsOf: d)
+                } catch{
+                    print("save failed \(error)")
+                }
             }
         }
-        group.leave()
-    }
-    group.wait()
-    
-    if let e = err {
-        throw e
     }
     return
 }

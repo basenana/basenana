@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WebKit
 import Foundation
 import AppState
 import Entities
@@ -14,6 +15,7 @@ import WebPage
 
 public struct WebPackInboxView: View {
     private var viewModel: InboxViewModel
+    private var webView: WKWebView
     
     @State private var urlInput: String = ""
     @State private var urlTitle: String = ""
@@ -22,8 +24,11 @@ public struct WebPackInboxView: View {
     @State private var errorMessage: String = ""
     @State private var isInboxing: Bool = false
     
+    @State private var htmlMainResource = ""
+    
     init(viewModel: InboxViewModel) {
         self.viewModel = viewModel
+        self.webView = WKWebView(frame: CGRect.zero, configuration: WKWebViewConfiguration())
     }
     
     public var body: some View {
@@ -38,7 +43,7 @@ public struct WebPackInboxView: View {
                     .padding(.vertical, 5)
                 
                 if let safePage = self.page {
-                    InboxPreviewView(page: safePage)
+                    InboxPreviewView(page: safePage, webView: webView)
                         .frame(width: 500, height: 600)
                 }
                 
@@ -75,9 +80,14 @@ public struct WebPackInboxView: View {
     
     func inbox() async {
         isInboxing = true
-        if await viewModel.packingWebPage(url: urlInput, title: urlTitle, errorMsg: $errorMessage){
+        defer {
+            isInboxing = false
+        }
+        let (errMsg, isSucc) = await viewModel.packingWebPage(url: urlInput, title: urlTitle, webView: webView)
+        if isSucc {
             viewModel.showQuickInbox.toggle()
         }
+        errorMessage = errMsg
     }
     
     func tryLoadWebPage() {

@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-extension Color {
+public extension Color {
     static let UserMsgBackground = Color("userMsgBackground")
     
     static let RobotMsgBackground = Color("robotMsgBackground")

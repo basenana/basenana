@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import WebKit
 import AppState
 import Entities
+import WebPage
 import UseCaseProtocol
 
 
@@ -42,7 +44,46 @@ public class InboxViewModel: BaseViewModel {
         return true
     }
     
-    func packingWebPage(url: String, title: String, errorMsg: Binding<String>) async -> Bool {
-        return false
+    func packingWebPage(url: String, title: String, webView: WKWebView) async -> (String, Bool) {
+        
+        guard let u = URL(string: url) else {
+            return ("invalid url", false)
+        }
+        
+        do {
+            let value = try await webView.evaluateJavaScript("document.documentElement.outerHTML.toString()")
+            if let htmlContent = value as? String{
+                 webarchiveAndUpload(url: u, title: title, content: htmlContent)
+                return ("", true)
+            }else {
+                return ("load html content failed: not a string", false)
+            }
+        }catch {
+            return ("load html content error \(error)", false)
+            
+        }
+    }
+    
+    func webarchiveAndUpload(url: URL, title: String, content: String)  {
+        
+        store.newBackgroundJob(
+            name: "web archiving \(title)",
+            job: {
+                Task {
+                    let temporaryDirectory = FileManager.default.temporaryDirectory
+                    let temporaryFileName = "\(title).webarchive"
+                    let temporaryFileURL = temporaryDirectory.appendingPathComponent(temporaryFileName)
+                    
+                    do {
+                        try webarchiveBaseMainResource(url: url, mainResource: content, temporaryFileURL: temporaryFileURL)
+                    } catch {
+                        print("save error \(error)")
+                    }
+                }
+            },
+            complete: {
+            }
+        )
+        
     }
 }

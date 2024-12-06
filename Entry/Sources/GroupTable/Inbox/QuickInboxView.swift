@@ -19,9 +19,10 @@ public struct QuickInboxView: View {
     @State private var urlTitle: String = ""
     @State private var fileTypeOption = "webarchive"
     @State private var showPreview: Bool = false
-    @State private var page: WebPage? = nil
+    @State private var page: WebPage?
     @State private var errorMessage: String = ""
     @State private var isInboxing: Bool = false
+    
     
     init(viewModel: InboxViewModel) {
         self.viewModel = viewModel

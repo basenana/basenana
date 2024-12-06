@@ -128,37 +128,27 @@ public class BaseViewModel {
     
     // MARK file upload/download
     func uploadFiles(parentID: Int64, files: [URL]) async throws  {
-        var jobIDs = Set<String>()
-        
         for file in files {
-            let job = BackgroundJob(name: "Uploading \(file.lastPathComponent)", startAt: Date())
-            jobIDs.insert(job.id)
-            store.backgroupJobs.append(job)
-        }
-        
-        let staticJob = jobIDs
-        let s = store
-        let uc = entryUsecase
-        DispatchQueue.global().async {
-            Task {
-                for file in files {
-                    if try file.resourceValues(forKeys: [.isDirectoryKey]).isDirectory ?? false {
-                        throw BizError.isGroup
+            store.newBackgroundJob(
+                name: "Uploading \(file.lastPathComponent)",
+                job: {
+                    Task {
+                        if try file.resourceValues(forKeys: [.isDirectoryKey]).isDirectory ?? false {
+                            throw BizError.isGroup
+                        }
+                        
+                        do {
+                            let en = try await self.entryUsecase.UploadFile(parent: parentID, file: file)
+                            print("upload new entry \(en.id)/\(en.name)")
+                        } catch {
+                            self.store.dispatch(.alert(msg: "upload file \(file.lastPathComponent) failed \(error)"))
+                        }
                     }
-                    
-                    do {
-                        let en = try await uc.UploadFile(parent: parentID, file: file)
-                        print("upload new entry \(en.id)/\(en.name)")
-                    } catch {
-                        s.dispatch(.alert(msg: "upload file \(file.lastPathComponent) failed \(error)"))
-                    }
+                },
+                complete: {
+                    GroupState.shared.requestReopen()
                 }
-            }
-            
-            DispatchQueue.main.sync {
-                s.backgroupJobs.removeAll(where: { staticJob.contains($0.id )})
-                GroupState.shared.requestReopen()
-            }
+            )
         }
     }
 }

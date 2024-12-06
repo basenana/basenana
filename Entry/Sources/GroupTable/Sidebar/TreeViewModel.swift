@@ -28,26 +28,5 @@ public class TreeViewModel: BaseViewModel {
         }
     }
     
-    // quick inbox
-    func quickInbox(url: String, title: String, fileType: String, errorMsg: Binding<String>) async -> Bool {
-        var safeFileType: Entities.FileType = .Webarchive
-        switch fileType{
-        case "html":
-            safeFileType = .Html
-        case "webarchive":
-            safeFileType = .Webarchive
-        default:
-            safeFileType = .Webarchive
-        }
-        do {
-            print("quick inbox url=\(url) fileName=\(title) fileType=\(safeFileType)")
-            try await entryUsecase.quickInbox(url: url, fileName: sanitizeFileName(title), fileType: safeFileType)
-        } catch {
-            errorMsg.wrappedValue = "inbox failed: \(error)"
-            return false
-        }
-        
-        groupState.requestReopen()
-        return true
-    }
+    
 }

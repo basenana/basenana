@@ -147,6 +147,7 @@ class GroupTree {
 }
 
 
+@Observable
 class GroupLeaf: Identifiable, Hashable {
     var id: Int64 {
         group.id

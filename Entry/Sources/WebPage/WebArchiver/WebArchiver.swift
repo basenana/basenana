@@ -58,6 +58,7 @@ public class WebArchiver {
                 }
             }
         }catch {
+            print("[archiveWithMainResource] failed \(error)")
         }
     }
         
