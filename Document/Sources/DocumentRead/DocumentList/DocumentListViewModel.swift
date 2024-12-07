@@ -12,7 +12,6 @@ import AppState
 import UseCaseProtocol
 
 
-@available(macOS 14.0, *)
 @Observable
 @MainActor
 public class DocumentListViewModel {
@@ -100,16 +99,22 @@ public class DocumentListViewModel {
     }
     
     // list document
-    
-    func initNextPage() async {
+    func reset() {
         self.page = 1
-        let firstPage = await listNextPage()
-        self.isLoading = true
-        
         print("reinit main documents: current cached \(sectionDocuments.count)")
         sectionDocuments.removeAll()
         cachedDocuments.removeAll()
-        for nextDoc in firstPage {
+        self.hasMore = true
+    }
+
+    func loadNextPage() async {
+        let nextPage = await listNextPage()
+        if self.isLoading {
+            return
+        }
+        
+        self.isLoading = true
+        for nextDoc in nextPage {
             insertToSectionDocuments(doc: DocumentItem(info: nextDoc, readable: prespective == .unread ? true : false))
         }
         self.isLoading = false
@@ -159,44 +164,6 @@ public class DocumentListViewModel {
         let s = DocumentSection(id: sid, documents: [doc])
         sectionDocuments.append(s)
     }
-    
-    func checkAndLoadNextPage<Item: Identifiable>(_ section: String, _ item: Item) async {
-        guard hasMore else {
-            return
-        }
-        
-        if let section = sectionDocuments.filter({$0.id == section}).first {
-            if !sectionDocuments.isLastItem(section) {
-                return
-            }
-            if !section.documents.isLastItem(item) && !section.documents.isEmpty {
-                return
-            }
-        }
-        
-        self.isLoading = true
-        defer {
-            self.isLoading = false
-        }
-        let nextPage = await listNextPage()
-        for nextDoc in nextPage {
-            insertToSectionDocuments(doc: DocumentItem(info: nextDoc, readable: prespective == .unread ? true : false))
-        }
-    }
 }
 
 
-extension RandomAccessCollection where Self.Element: Identifiable {
-    func isLastItem<Item: Identifiable>(_ item: Item) -> Bool {
-        guard !isEmpty else {
-            return false
-        }
-        
-        guard let itemIndex = firstIndex(where: { $0.id.hashValue == item.id.hashValue }) else {
-            return false
-        }
-        
-        let distance = self.distance(from: itemIndex, to: endIndex)
-        return distance == 1
-    }
-}

@@ -28,19 +28,11 @@ struct MasonrySectionView: View {
                 ForEach(section.documents){ document in
                     LazyVStack{
                         Button(action: {
-                            Task {
-                                if document.isUnread {
-                                    document.isUnread = false
-                                    await viewModel.setDocumentReadStatus(section: section.id, document: document.id, isUnread: false)
-                                }
-                            }
-                            viewModel.store.dispatch(.gotoDestination(.readDocument(document: document.id)))
+                            NotificationCenter.default.post(name: .openDocument, object: document)
                         }){
                             MasonryItemView(section: section.id, doc: document, viewModel: viewModel)
+                                .padding(.vertical, 20)
                                 .frame(maxWidth: 350)
-                                .task(priority: .background) {
-                                    await viewModel.checkAndLoadNextPage(section.id, document)
-                                }
                         }
                         .buttonStyle(.link)
                     }

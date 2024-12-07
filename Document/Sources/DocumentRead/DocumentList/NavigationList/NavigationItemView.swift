@@ -1,16 +1,18 @@
 //
-//  MasonryItemView.swift
+//  NavigationItemView.swift
 //  Document
 //
-//  Created by Hypo on 2024/12/4.
+//  Created by Hypo on 2024/12/7.
 //
 
 import SwiftUI
+import Foundation
+import SwiftUIMasonry
+import AppState
 import Entities
-import Styleguide
 
 
-struct MasonryItemView: View {
+struct NavigationItemView: View {
     private var section: String
     @State var doc: DocumentItem
     @State var viewModel: DocumentListViewModel
@@ -27,43 +29,34 @@ struct MasonryItemView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text(docTitle)
-                .font(.title2)
-                .multilineTextAlignment(.leading)
-                .foregroundColor(doc.keepLowProfile ? Color.gray : Color.primary  )
-            
-            Spacer(minLength: 10)
-            
-            HStack(alignment: .top) {
-                Text("\(groupName.prefix(25))")
-                    .font(.caption)
-                    .fontWeight(.light)
-                    .foregroundColor(Color.gray)
-                Spacer()
+            VStack(alignment: .leading){
                 
-                Text(docTime)
-                    .font(.caption)
-                    .fontWeight(.light)
-                    .foregroundColor(Color.gray)
+                HStack(alignment: .top) {
+                    Text("\(self.groupName.prefix(25))")
+                        .foregroundColor(Color.gray)
+                    
+                    Spacer()
+                    
+                    Text(self.docTime)
+                        .font(.caption)
+                        .foregroundColor(doc.keepLowProfile ? Color.gray : Color.primary  )
+                }
+                
+                Text(self.docTitle)
+                    .font(.headline)
+                    .foregroundColor(doc.keepLowProfile ? Color.gray : Color.primary  )
+                
             }
             
-            
-//            DocumentBannerView(bannerURL: "")
-//                .padding(.vertical, 5)
-            
-            Text("\(doc.info.subContent)... ")
+            Text("\(doc.info.subContent.prefix(100))")
                 .font(.body)
-                .lineSpacing(2)
                 .foregroundColor(Color.gray)
-                .multilineTextAlignment(.leading)
+                .frame(minWidth: 0, idealWidth: 200,  maxWidth: .infinity, minHeight: 0, idealHeight: 40, maxHeight: 50, alignment: .leading)
             
-            Text(docURL)
-                .font(.caption2)
-                .fontWeight(.light)
+            Text(self.docURL)
                 .foregroundColor(Color.gray)
-
         }
-        .padding(30)
+        .padding(.vertical, 3)
         .contextMenu {
             if let en = entry {
                 DocumentMenuView(section: section, document: $doc, entry: en, viewModel: viewModel)
@@ -121,47 +114,3 @@ struct MasonryItemView: View {
         return formatter
     }()
 }
-
-
-struct MasonryItemBannerView: View{
-    var bannerURL: String
-    
-    var body: some View {
-        Rectangle()
-            .fill(Color.gray)
-            .frame(alignment: .center)
-        //                .resizable()
-            .scaledToFit()
-    }
-}
-
-
-#if DEBUG
-
-import AppState
-import DomainTestHelpers
-
-struct MasonryItemViewPreview: View {
-    @State private var doc: DocumentInfo? = nil
-    @State private var uc = MockDocumentUseCase()
-    
-    var body: some View {
-        
-        VStack{
-            MasonryItemView(section: "", doc: DocumentItem(info: doc!), viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.empty, usecase: uc))
-        }
-        .task {
-            do {
-                doc = try await uc.listUnreadDocuments(page: 1, pageSize: 1).first!
-            } catch {
-                print("Failed to load entry details: \(error)")
-            }
-        }
-    }
-}
-
-#Preview {
-    MasonryItemViewPreview()
-}
-
-#endif

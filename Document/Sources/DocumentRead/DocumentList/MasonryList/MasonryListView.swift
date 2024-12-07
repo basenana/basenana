@@ -22,18 +22,19 @@ public struct MasonryListView: View {
     public var body: some View {
         VStack {
             ScrollView(.vertical) {
+                ForEach(viewModel.sectionDocuments){ section in
+                    MasonrySectionView(section: section, viewModel: viewModel)
+                }
                 LazyVStack {
-                    ForEach(viewModel.sectionDocuments){ section in
-                        MasonrySectionView(section: section, viewModel: viewModel)
+                    if viewModel.hasMore {
+                        Text("☁️Loading ...")
+                            .padding(.vertical)
+                            .onAppear{
+                                NotificationCenter.default.post(name: .loadMoreDocuments, object: nil)
+                            }
                     }
                 }
             }
-            if viewModel.isLoading {
-                Text("☁️Loading ...").padding(.vertical)
-            }
-        }
-        .task {
-            await viewModel.initNextPage()
         }
         .toolbar(removing: .sidebarToggle)
         .frame(minWidth: 300, idealWidth: 300)
