@@ -48,11 +48,11 @@ public struct DocumentListView: View {
         .onReceive(NotificationCenter.default.publisher(for: .loadMoreDocuments)) { _ in
             Task {
                 await viewModel.loadNextPage()
+                await viewModel.setAllAppearedDocuemntRead()
             }
         }
-        .task {
-            viewModel.reset()
-        }
+        .task { viewModel.reset() }
+        .onDisappear{ viewModel.disableHooks() }
         .toolbar {
             ToolbarItemGroup(placement: .navigation) {
                 if listViewKind == .Masonry {

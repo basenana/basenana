@@ -24,7 +24,8 @@ public class DocumentListViewModel {
     var cachedDocuments: [Int64:Bool] = [:]
     
     // document auto read
-    var unreadDocumentsAppeared: [Int64:Date] = [:]
+    var enableHooks = true
+    var unreadDocumentsAppeared: [Int64:AppearedDocument] = [:]
     
     var isLoading: Bool = false
     var page: Int = 1
@@ -101,23 +102,28 @@ public class DocumentListViewModel {
         }
     }
     
-    // MARK: document hook
-    
-    func onDocumentAppear(document: DocumentItem) {
-        if document.isUnread {
-            unreadDocumentsAppeared[document.id] = Date()
-        }
-    }
-    
-    func onDocumentDisappear(document: DocumentItem) {
-        if let appearAt = unreadDocumentsAppeared.removeValue(forKey: document.id) {
-            if Date().timeIntervalSince(appearAt) > 10 {
-                Task {
-                    await setDocumentReadStatus(section: document.sectionName, document: document.id, isUnread: false)
-                }
+    func setAllAppearedDocuemntRead() async {
+        for kv in unreadDocumentsAppeared {
+            if enableHooks && Date().timeIntervalSince(kv.value.appearedAt) > 10 {
+                await setDocumentReadStatus(section: kv.value.section, document: kv.value.documentID, isUnread: false)
+                unreadDocumentsAppeared.removeValue(forKey: kv.key)
             }
         }
     }
+
+    // MARK: document hook
+    
+    func disableHooks() {
+        self.enableHooks = false
+    }
+
+    func onDocumentAppear(document: DocumentItem) {
+        if document.isUnread {
+            unreadDocumentsAppeared[document.id] = AppearedDocument(document: document)
+        }
+    }
+    
+    func onDocumentDisappear(document: DocumentItem) { }
 
     // MARK: list document
     func reset() {
@@ -126,6 +132,9 @@ public class DocumentListViewModel {
         sectionDocuments.removeAll()
         cachedDocuments.removeAll()
         self.hasMore = true
+        
+        self.enableHooks = true
+        unreadDocumentsAppeared.removeAll()
     }
 
     func loadNextPage() async {
