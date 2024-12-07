@@ -25,7 +25,11 @@ struct DocumentListSectionView: View {
         Section(section.id){
             ForEach(section.documents){ document in
                 NavigationLink(value: document) {
-                    NavigationItemView(section: section.id, doc: document, viewModel: viewModel)
+                    LazyVStack{
+                        NavigationItemView(section: section.id, doc: document, viewModel: viewModel)
+                            .onAppear { viewModel.onDocumentAppear(document: document) }
+                            .onDisappear { viewModel.onDocumentDisappear(document: document) }
+                    }
                 }
             }
         }

@@ -23,6 +23,9 @@ public class DocumentListViewModel {
     var sectionDocuments: [DocumentSection] = []
     var cachedDocuments: [Int64:Bool] = [:]
     
+    // document auto read
+    var unreadDocumentsAppeared: [Int64:Date] = [:]
+    
     var isLoading: Bool = false
     var page: Int = 1
     var pageSize: Int = 40
@@ -58,7 +61,7 @@ public class DocumentListViewModel {
         return nil
     }
     
-    // document mark
+    // MARK: document status
     
     func setDocumentReadStatus(section: String, document: Int64, isUnread: Bool) async {
         if let s = sectionDocuments.filter( {$0.id == section} ).first {
@@ -98,7 +101,25 @@ public class DocumentListViewModel {
         }
     }
     
-    // list document
+    // MARK: document hook
+    
+    func onDocumentAppear(document: DocumentItem) {
+        if document.isUnread {
+            unreadDocumentsAppeared[document.id] = Date()
+        }
+    }
+    
+    func onDocumentDisappear(document: DocumentItem) {
+        if let appearAt = unreadDocumentsAppeared.removeValue(forKey: document.id) {
+            if Date().timeIntervalSince(appearAt) > 10 {
+                Task {
+                    await setDocumentReadStatus(section: document.sectionName, document: document.id, isUnread: false)
+                }
+            }
+        }
+    }
+
+    // MARK: list document
     func reset() {
         self.page = 1
         print("reinit main documents: current cached \(sectionDocuments.count)")

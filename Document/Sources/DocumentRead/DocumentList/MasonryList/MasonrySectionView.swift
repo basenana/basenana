@@ -31,6 +31,8 @@ struct MasonrySectionView: View {
                             NotificationCenter.default.post(name: .openDocument, object: document)
                         }){
                             MasonryItemView(section: section.id, doc: document, viewModel: viewModel)
+                                .onAppear { viewModel.onDocumentAppear(document: document) }
+                                .onDisappear { viewModel.onDocumentDisappear(document: document) }
                                 .padding(.vertical, 20)
                                 .frame(maxWidth: 350)
                         }

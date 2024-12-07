@@ -39,6 +39,11 @@ public struct NavigationListView: View {
             
             if let doc = selection {
                 DocumentReadView(viewModel: DocumentReadViewModel(docID: doc.id, store: viewModel.store, usecase: viewModel.usecase)).id(doc.id)
+                    .task {
+                        if doc.isUnread {
+                            await viewModel.setDocumentReadStatus(section: doc.sectionName, document: doc.id, isUnread: false)
+                        }
+                    }
             }
         }
     }
