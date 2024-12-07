@@ -85,9 +85,11 @@ let htmlTemplate = """
 <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=yes'>
 <style type='text/css'>body, table { margin: 0 auto; background-color: #FFF; color:#333; font-family: arial, sans-serif; font-weight: 100; font-size: 12pt; margin:2em 2em 2em 2em; }
 p, li { line-height: 150%; }
+.content { padding-left: 10%; padding-right: 10%; }
 a { color: #3366cc; border-bottom: 1px dotted #3366cc; text-decoration: none; }
 a:hover { color: #2647a3; border-bottom-color: color: #66ccff; }
 img { max-width: 80%; height: auto; margin: 10px auto; display: block; }
+img:hover { transition: transform 1s ease; transform: scale(1.5); }
 pre {
     border: 1px solid #ddd;
     border-radius: 3px;
@@ -122,6 +124,6 @@ iframe { height: auto; width: auto; max-width: 95%; max-height: 100%; }
 }
 </style>
 <body>
-{Content}
+<div class="content"> {Content} </div>
 </body>
 """

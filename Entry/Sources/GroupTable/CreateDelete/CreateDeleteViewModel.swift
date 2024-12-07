@@ -51,8 +51,6 @@ public class CreateDeleteViewModel {
     }
     
     func deleteEntries(entries: [EntryInfo]) async {
-        var jobIDs = Set<String>()
-        let s = store
         let uc = entryUsecase
         let gt = groupTree
         

@@ -77,8 +77,6 @@ class ArchivingSession {
         }
         
         let result = ArchivingResult(plistData: plistData, errors: errors)
-        DispatchQueue.main.async {
-            self.completion(result)
-        }
+        self.completion(result)
     }
 }

@@ -54,7 +54,7 @@ public func fetchWebPage(url urlString: String) throws -> WebPage {
 }
 
 
-public func webarchiveBaseMainResource(url: URL, mainResource: String, temporaryFileURL: URL) throws {
+public func webarchiveBaseMainResource(url: URL, mainResource: String, temporaryFileURL: URL, upload: @escaping (Error?) -> Void) throws {
     
     if FileManager.default.fileExists(atPath: temporaryFileURL.path()){
         try FileManager.default.removeItem(at: temporaryFileURL)
@@ -65,22 +65,24 @@ public func webarchiveBaseMainResource(url: URL, mainResource: String, temporary
     let fh = try FileHandle(forWritingTo: temporaryFileURL)
     
     
-    DispatchQueue.global(qos: .background).async {
-        WebArchiver.archiveWithMainResource(url: url, htmlContent: mainResource){ result in
-            defer {
-                do { try fh.close() } catch { }
-            }
-            
-            if !result.errors.isEmpty{
-                print("save failed \(result.errors)")
-                return
-            }
-            if let d = result.plistData {
-                do {
-                    try fh.write(contentsOf: d)
-                } catch{
-                    print("save failed \(error)")
-                }
+    WebArchiver.archiveWithMainResource(url: url, htmlContent: mainResource){ result in
+        defer {
+            do {
+                try fh.close()
+            } catch { }
+        }
+        
+        if !result.errors.isEmpty{
+            upload(result.errors.first!)
+            return
+        }
+        
+        if let d = result.plistData {
+            do {
+                try fh.write(contentsOf: d)
+                upload(nil)
+            } catch{
+                upload(error)
             }
         }
     }

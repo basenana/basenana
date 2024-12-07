@@ -17,6 +17,7 @@ import UseCaseProtocol
 @MainActor
 public class InboxViewModel: BaseViewModel {
     
+    
     override public init(store: StateStore, entryUsecase: EntryUseCaseProtocol) {
         super.init(store: store, entryUsecase: entryUsecase)
     }
@@ -32,6 +33,12 @@ public class InboxViewModel: BaseViewModel {
         default:
             safeFileType = .Webarchive
         }
+        
+        guard self.store.fsInfo.inboxID > 0 else {
+            errorMsg.wrappedValue = "unknown inbox \(self.store.fsInfo.inboxID)"
+            return false
+        }
+        
         do {
             print("quick inbox url=\(url) fileName=\(title) fileType=\(safeFileType)")
             try await entryUsecase.quickInbox(url: url, fileName: sanitizeFileName(title), fileType: safeFileType)
@@ -53,7 +60,7 @@ public class InboxViewModel: BaseViewModel {
         do {
             let value = try await webView.evaluateJavaScript("document.documentElement.outerHTML.toString()")
             if let htmlContent = value as? String{
-                 webarchiveAndUpload(url: u, title: title, content: htmlContent)
+                webarchiveAndUpload(url: u, title: title, content: htmlContent)
                 return ("", true)
             }else {
                 return ("load html content failed: not a string", false)
@@ -75,15 +82,39 @@ public class InboxViewModel: BaseViewModel {
                     let temporaryFileURL = temporaryDirectory.appendingPathComponent(temporaryFileName)
                     
                     do {
-                        try webarchiveBaseMainResource(url: url, mainResource: content, temporaryFileURL: temporaryFileURL)
+                        try webarchiveBaseMainResource(url: url, mainResource: content, temporaryFileURL: temporaryFileURL){ error in
+                            if let err = error {
+                                sentAlert("web packing failed \(err)")
+                                return
+                            }
+                            self.uploadWebarchive(url: url, title: title, file: temporaryFileURL)
+                        }
                     } catch {
                         print("save error \(error)")
                     }
                 }
             },
             complete: {
+                NotificationCenter.default.post(name: .reopenGroup, object: [self.store.fsInfo.inboxID])
             }
         )
         
+    }
+    
+    func uploadWebarchive(url: URL, title: String, file: URL)  {
+        Task {
+            let properties: [String:String] = [Property.WebPageURL:url.absoluteString, Property.WebPageTitle: title]
+            do {
+                if try file.resourceValues(forKeys: [.isDirectoryKey]).isDirectory ?? false {
+                    sentAlert("invalid web file")
+                    return
+                }
+                
+                let en = try await self.entryUsecase.UploadFile(parent: self.store.fsInfo.inboxID, file: file, properties: properties)
+                print("upload new entry \(en.id)/\(en.name)")
+            } catch {
+                sentAlert("upload file \(file.lastPathComponent) failed \(error)")
+            }
+        }
     }
 }
