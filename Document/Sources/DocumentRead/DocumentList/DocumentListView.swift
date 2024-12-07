@@ -13,32 +13,73 @@ import Entities
 
 
 public struct DocumentListView: View {
+    @State var listViewKind: ListViewKind
     @State var viewModel: DocumentListViewModel
     
     public init(viewModel: DocumentListViewModel) {
         self.viewModel = viewModel
+        if viewModel.prespective == .marked {
+            self.listViewKind = .Navigation
+        }else {
+            self.listViewKind = .Masonry
+        }
     }
     
     public var body: some View {
         VStack {
-            ScrollView(.vertical) {
-                LazyVStack {
-                    ForEach(viewModel.sectionDocuments){ section in
-                        MasonrySectionView(section: section, viewModel: viewModel)
+            switch listViewKind {
+            case .Masonry:
+                MasonryListView(viewModel: viewModel)
+            case .Navigation:
+                NavigationListView(viewModel: viewModel)
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .openDocument)) { [self] notification in
+            if let document = notification.object as? DocumentItem {
+                Task {
+                    if document.isUnread {
+                        document.isUnread = false
+                        await viewModel.setDocumentReadStatus(section: document.sectionName, document: document.id, isUnread: false)
                     }
                 }
+                viewModel.store.dispatch(.gotoDestination(.readDocument(document: document.id)))
             }
-            if viewModel.isLoading {
-                Text("☁️Loading ...").padding(.vertical)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .loadMoreDocuments)) { _ in
+            Task {
+                await viewModel.loadNextPage()
             }
         }
         .task {
-            await viewModel.initNextPage()
+            viewModel.reset()
         }
-        .toolbar(removing: .sidebarToggle)
+        .toolbar {
+            ToolbarItemGroup(placement: .navigation) {
+                if listViewKind == .Masonry {
+                    Button(action: {
+                        listViewKind = .Navigation
+                    }) {
+                        Image(systemName: "list.bullet")
+                    }
+                }
+                
+                if listViewKind == .Navigation {
+                    Button(action: {
+                        listViewKind = .Masonry
+                    }) {
+                        Image(systemName: "square.grid.2x2")
+                    }
+                }
+            }
+        }
         .frame(minWidth: 300, idealWidth: 300)
         .navigationTitle(viewModel.prespective.Title)
     }
+}
+
+enum ListViewKind {
+    case Masonry
+    case Navigation
 }
 
 

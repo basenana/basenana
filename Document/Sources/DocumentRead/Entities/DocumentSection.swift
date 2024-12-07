@@ -22,7 +22,7 @@ class DocumentSection: Identifiable {
 }
 
 @Observable
-class DocumentItem: Identifiable {
+class DocumentItem: Identifiable, Hashable, Equatable {
     var id: Int64 {
         get {
             return info.id
@@ -55,7 +55,7 @@ class DocumentItem: Identifiable {
         self.isMarked = info.marked
         self.isUnread = info.unread
     }
-
+    
     var sectionName: String {
         if Calendar.current.isDateInToday(info.createdAt){
             return "TODAY"
@@ -74,4 +74,13 @@ class DocumentItem: Identifiable {
         formatter.dateFormat = "yyyy/MM/dd"
         return formatter
     }()
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: DocumentItem, rhs: DocumentItem) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
 }
