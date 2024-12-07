@@ -15,6 +15,8 @@ import UseCaseProtocol
 @MainActor
 public class TreeViewModel: BaseViewModel {
     
+    var selectedGroupId: Int64? = nil
+    
     override public init(store: StateStore, entryUsecase: EntryUseCaseProtocol) {
         super.init(store: store, entryUsecase: entryUsecase)
     }
@@ -24,7 +26,7 @@ public class TreeViewModel: BaseViewModel {
         do {
             self.groupTree.reset(root: try await entryUsecase.getTreeRoot())
         } catch {
-            store.alert.display(msg: "load group tree failed: \(error)")
+            sentAlert("load group tree failed: \(error)")
         }
     }
     

@@ -32,7 +32,7 @@ public class DocumentReadViewModel {
             entry = try await usecase.getDocumentEntry(document: docID)
             document = try await usecase.getDocumentDetails(document: docID)
         } catch {
-            store.alert.display(msg: "load document failed: \(error)")
+            sentAlert("load document failed: \(error)")
         }
     }
     

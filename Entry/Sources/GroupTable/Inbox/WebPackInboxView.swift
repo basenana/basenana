@@ -26,8 +26,11 @@ public struct WebPackInboxView: View {
     
     @State private var htmlMainResource = ""
     
-    init(viewModel: InboxViewModel) {
+    @Binding private var showInboxView: Bool
+    
+    init(viewModel: InboxViewModel, showInboxView: Binding<Bool>) {
         self.viewModel = viewModel
+        self._showInboxView = showInboxView
         self.webView = WKWebView(frame: CGRect.zero, configuration: WKWebViewConfiguration())
     }
     
@@ -85,7 +88,7 @@ public struct WebPackInboxView: View {
         }
         let (errMsg, isSucc) = await viewModel.packingWebPage(url: urlInput, title: urlTitle, webView: webView)
         if isSucc {
-            viewModel.showQuickInbox.toggle()
+            showInboxView.toggle()
         }
         errorMessage = errMsg
     }
@@ -118,7 +121,7 @@ public struct WebPackInboxView: View {
 import DomainTestHelpers
 
 #Preview {
-    WebPackInboxView(viewModel: InboxViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
+    WebPackInboxView(viewModel: InboxViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()), showInboxView: .constant(true))
 }
 
 #endif

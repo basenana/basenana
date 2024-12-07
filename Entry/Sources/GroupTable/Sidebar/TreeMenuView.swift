@@ -30,20 +30,20 @@ struct TreeMenuView: View {
                     Menu("New") {
                         Button("Group", action: {
                             // show create group form
-                            viewModel.createGroupType = .standard
-                            viewModel.createGroupInParent = target
-                            viewModel.showCreateGroup.toggle()
+                            NotificationCenter.default.post(
+                                name: NSNotification.Name.createGroupInTree,
+                                object: NewGroupRequest(parent: target.id, groupType: .standard))
                         })
                         Button("RSS Feed", action: {
                             // show create rss form
-                            viewModel.createGroupType = .feed
-                            viewModel.createGroupInParent = target
-                            viewModel.showCreateGroup.toggle()
+                            NotificationCenter.default.post(
+                                name: NSNotification.Name.createGroupInTree,
+                                object: NewGroupRequest(parent: target.id, groupType: .feed))
                         })
                         Button("Dynamic Group", action: {
-                            viewModel.createGroupType = .dynamic
-                            viewModel.createGroupInParent = target
-                            viewModel.showCreateGroup.toggle()
+                            NotificationCenter.default.post(
+                                name: NSNotification.Name.createGroupInTree,
+                                object: NewGroupRequest(parent: target.id, groupType: .dynamic))
                         })
                     }
                 }
@@ -52,10 +52,15 @@ struct TreeMenuView: View {
             if canBeEdit() {
                 Section{
                     Button("Rename", action: {
-                        viewModel.renameEntry = target.id
-                        viewModel.showRenameEntry.toggle()
+                        NotificationCenter.default.post(
+                            name: NSNotification.Name.renameGroupInTree,
+                            object: target.id)
                     })
-                    Button("Delete", action: {})
+                    Button("Delete", action: {
+                        NotificationCenter.default.post(
+                            name: NSNotification.Name.deleteGroupInTree,
+                            object: [target.id])
+                    })
                 }
                 
                 Section{

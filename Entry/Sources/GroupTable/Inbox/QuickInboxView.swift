@@ -23,11 +23,13 @@ public struct QuickInboxView: View {
     @State private var errorMessage: String = ""
     @State private var isInboxing: Bool = false
     
+    @Binding private var showInboxView: Bool
     
-    init(viewModel: InboxViewModel) {
+    init(viewModel: InboxViewModel, showInboxView: Binding<Bool>) {
         self.viewModel = viewModel
+        self._showInboxView = showInboxView
     }
-    
+
     public var body: some View {
         VStack {
             Form{
@@ -100,7 +102,7 @@ public struct QuickInboxView: View {
     func inbox() async {
         isInboxing = true
         if await viewModel.quickInbox(url: urlInput, title: urlTitle, fileType: fileTypeOption, errorMsg: $errorMessage){
-            viewModel.showQuickInbox.toggle()
+            showInboxView.toggle()
         }
     }
 
@@ -131,7 +133,7 @@ import DomainTestHelpers
 
 #Preview {
     if #available(macOS 14.0, *) {
-        QuickInboxView(viewModel: InboxViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
+        QuickInboxView(viewModel: InboxViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()), showInboxView: .constant(true))
     }
 }
 

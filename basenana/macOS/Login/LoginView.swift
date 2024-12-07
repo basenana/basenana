@@ -28,13 +28,7 @@ struct LoginView: View {
     @State private var errorMessage = ""
     @State private var isLogining = false
     
-    private var state: StateStore
-    @Binding private var environment: Environment
-    
-    init(state: StateStore, environment: Binding<Environment>) {
-        self.state = state
-        self._environment = environment
-    }
+    init() {}
     
     var body: some View {
         VStack {
@@ -94,15 +88,22 @@ struct LoginView: View {
         defer {
             isLogining = false
         }
+        
+        var clientSet: ClientSet? = nil
         do {
-            environment.clientSet = try FSAPI(host: serverHost, port: serverPort, accessTokenKey: accessTokenKey, secretToken: secretToken).login()
+            clientSet = try FSAPI(host: serverHost, port: serverPort, accessTokenKey: accessTokenKey, secretToken: secretToken).login()
+            NotificationCenter.default.post(name: NSNotification.Name("login"), object: clientSet)
         } catch {
             errorMessage = "connect server failed: \(error)"
             return
         }
+        
         do {
-            let fsInfo = try await environment.clientSet!.fsInfo()
-            state.dispatch(.setFsInfo(fsInfo: AppState.FSInfo(namespace: fsInfo.namespace, rootID: fsInfo.rootID, inboxID: fsInfo.inboxID)))
+            if let clientSet = clientSet {
+                let fi = try await clientSet.fsInfo()
+                let info = FSInfo(namespace: fi.namespace, rootID: fi.rootID, inboxID: fi.inboxID)
+                NotificationCenter.default.post(name: NSNotification.Name("setFSInfo"), object: info)
+            }
         } catch {
             errorMessage = "query fs info failed: \(error)"
             return

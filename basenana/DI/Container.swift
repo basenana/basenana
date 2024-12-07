@@ -23,11 +23,10 @@ class DIContainer {
     let c: Container
     
     private var state: StateStore
-    private var environment: Environment
+    private var environment: Environment = Environment.shared
     
-    init(state: StateStore, environment: Environment) {
+    init(state: StateStore) {
         self.state = state
-        self.environment = environment
         self.c = Container()
         
         // ViewModels
@@ -71,16 +70,16 @@ class DIContainer {
         
         // Clients
         self.c.register(EntriesClientProtocol.self) { r in
-            EntriesClient(clientSet: environment.clientSet!)
+            EntriesClient(clientSet: self.environment.clientSet!)
         }.inObjectScope(.container)
         self.c.register(DocumentClientProtocol.self) { r in
-            DocumentClient(clientSet: environment.clientSet!)
+            DocumentClient(clientSet: self.environment.clientSet!)
         }.inObjectScope(.container)
         self.c.register(InboxClientProtocol.self) { r in
-            InboxClient(clientSet: environment.clientSet!)
+            InboxClient(clientSet: self.environment.clientSet!)
         }.inObjectScope(.container)
         self.c.register(FileClientProtocol.self) { r in
-            FileClient(clientSet: environment.clientSet!)
+            FileClient(clientSet: self.environment.clientSet!)
         }.inObjectScope(.container)
     }
 }

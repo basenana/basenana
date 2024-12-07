@@ -40,7 +40,7 @@ public class InboxViewModel: BaseViewModel {
             return false
         }
         
-        groupState.requestReopen()
+        NotificationCenter.default.post(name: .reopenGroup, object: [groupTree.inbox.id])
         return true
     }
     

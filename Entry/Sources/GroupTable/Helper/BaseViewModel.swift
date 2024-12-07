@@ -17,17 +17,6 @@ public class BaseViewModel {
     
     // tree store
     var groupTree = GroupTree.shared
-    var groupState = GroupState.shared
-    
-    var showCreateGroup: Bool = false
-    var createGroupInParent: Entities.Group = UnknownGroup.shared
-    var createGroupType: GroupType = .standard
-    
-    var showQuickInbox: Bool = false
-    var showDeleteConfirm: Bool = false
-    
-    var showRenameEntry: Bool = false
-    var renameEntry: Int64? = nil
     
     var store: StateStore
     var entryUsecase: EntryUseCaseProtocol
@@ -43,7 +32,7 @@ public class BaseViewModel {
         } catch let error as UseCaseError where error == .canceled {
             // do nothing
         } catch {
-            store.alert.display(msg: "describe entry failed: \(error)")
+            sentAlert("describe entry failed: \(error)")
         }
         return nil
     }
@@ -55,7 +44,7 @@ public class BaseViewModel {
         } catch let error as UseCaseError where error == .canceled {
             // do nothing
         } catch {
-            store.alert.display(msg: "get group failed: \(error)")
+            sentAlert("get group failed: \(error)")
         }
         return nil
     }
@@ -70,7 +59,7 @@ public class BaseViewModel {
                 
                 let targetID = parseEntryIDFromURL(url: url)
                 guard targetID != nil && targetID! > 0 else {
-                    store.dispatch(.alert(msg: "\(url) not a valid entry"))
+                    sentAlert("\(url) not a valid entry")
                     return false
                 }
                 entries.append(targetID!)
@@ -94,7 +83,7 @@ public class BaseViewModel {
             do {
                 try await uploadFiles(parentID: newParent, files: files)
             } catch {
-                store.dispatch(.alert(msg: "upload files failed \(error)"))
+                sentAlert("upload files failed \(error)")
                 return false
             }
             return true
@@ -113,9 +102,9 @@ public class BaseViewModel {
                     }
                 }
             }
-            groupState.requestReopen()
+            NotificationCenter.default.post(name: .reopenGroup, object: [newParent])
         } catch {
-            store.alert.display(msg: "move entry failed \(error)")
+            sentAlert("move entry failed \(error)")
             return false
         }
         
@@ -123,7 +112,7 @@ public class BaseViewModel {
     }
     
     func replicateEntryToGroup(entries: [Int64], newParent: Int64) {
-        store.dispatch(.alert(msg: "not support"))
+        sentAlert("not support")
     }
     
     // MARK file upload/download
@@ -141,12 +130,12 @@ public class BaseViewModel {
                             let en = try await self.entryUsecase.UploadFile(parent: parentID, file: file)
                             print("upload new entry \(en.id)/\(en.name)")
                         } catch {
-                            self.store.dispatch(.alert(msg: "upload file \(file.lastPathComponent) failed \(error)"))
+                            sentAlert("upload file \(file.lastPathComponent) failed \(error)")
                         }
                     }
                 },
                 complete: {
-                    GroupState.shared.requestReopen()
+                    NotificationCenter.default.post(name: .reopenGroup, object: [parentID])
                 }
             )
         }

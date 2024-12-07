@@ -33,7 +33,7 @@ struct FileToolBarView: View {
             
             Button(action: {
                 copyToClipBoard(content: "\(u.absoluteString)")
-                viewModel.store.dispatch(.alert(msg: "Link Copied"))
+                sentAlert("Link Copied")
             }, label: {
                 Image(systemName: "link")
             })

@@ -16,7 +16,6 @@ import UseCaseProtocol
 @MainActor
 public class EntryDetailViewModel {
     var groupTree = GroupTree.shared
-    var groupState = GroupState.shared
     
     var store: StateStore
     var entryUsecase: EntryUseCaseProtocol
@@ -34,7 +33,7 @@ public class EntryDetailViewModel {
         } catch let error as UseCaseError where error == .canceled {
             // do nothing
         } catch {
-            store.alert.display(msg: "describe entry failed: \(error)")
+            sentAlert("describe entry failed: \(error)")
         }
         return nil
     }
@@ -61,7 +60,7 @@ public class EntryDetailViewModel {
                 }
             }
             
-            groupState.requestReopen()
+            NotificationCenter.default.post(name: .reopenGroup, object: [entry.parent])
         } catch {
             errorMessage = "rename failed \(error)"
             return false

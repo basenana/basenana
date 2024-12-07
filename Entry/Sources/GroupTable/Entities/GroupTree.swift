@@ -177,3 +177,14 @@ class GroupLeaf: Identifiable, Hashable {
         return lhs.id == rhs.id
     }
 }
+
+
+class TreeUpdate {
+    var oldLeaf: GroupLeaf
+    var newLeaf: GroupLeaf?
+    
+    init(oldLeaf: GroupLeaf, newLeaf: GroupLeaf? = nil) {
+        self.oldLeaf = oldLeaf
+        self.newLeaf = newLeaf
+    }
+}

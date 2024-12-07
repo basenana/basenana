@@ -11,7 +11,6 @@ import AppState
 import SwiftData
 
 
-@available(macOS 14.0, *)
 struct TreeListView: View {
     @State private var groupTree = GroupTree.shared
     @State private var viewModel: TreeViewModel

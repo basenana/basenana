@@ -8,6 +8,7 @@
 import SwiftUI
 import Foundation
 import AppState
+import Entities
 
 
 struct NotificationView: View {
@@ -21,7 +22,7 @@ struct NotificationView: View {
     var body: some View {
         if !state.notifications.isEmpty {
             Button(action: {
-                state.dispatch(.alert(msg: "not support"))
+                sentAlert("not support")
             }, label: {
                 Image(systemName: "bell")
             })

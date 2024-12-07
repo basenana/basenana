@@ -46,7 +46,7 @@ public class GroupTableViewModel: BaseViewModel {
         } catch let error as UseCaseError where error == .canceled {
             // do nothing
         } catch {
-            store.alert.display(msg: "open group failed: \(error)")
+            sentAlert("open group failed: \(error)")
         }
     }
 }

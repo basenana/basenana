@@ -10,18 +10,6 @@
 extension StateStore {
     func reducer(action: AppAction) -> Task<AppAction?, Error>? {
         switch action {
-        case .alert(msg: let msg):
-            if let hasMsg = msg {
-                alert.display(msg: hasMsg)
-            } else {
-                alert.reset()
-            }
-            return nil
-
-        case .setFsInfo(fsInfo: let fsInfo):
-            self.fsInfo = fsInfo
-            return nil
-
         case .gotoDestination(to: let to):
             destinations.append(to)
             return nil

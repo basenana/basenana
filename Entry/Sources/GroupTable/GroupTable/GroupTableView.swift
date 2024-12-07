@@ -15,7 +15,6 @@ public struct GroupTableView: View {
     @State private var groupID: Int64
     @State private var groupName: String? = nil
     
-    @State private var groupState = GroupState.shared
     @State private var viewModel: GroupTableViewModel
     
     public init(groupID: Int64, viewModel: GroupTableViewModel) {
@@ -28,6 +27,30 @@ public struct GroupTableView: View {
         VStack {
             GroupTableWithSheetView(groupID: groupID, viewModel: viewModel)
         }
+        .onAppear{
+            NotificationCenter.default.removeObserver(self, name: .reopenGroup, object: nil)
+            NotificationCenter.default.addObserver(
+                forName: .reopenGroup,
+                object: nil,
+                queue: .main) { [self] notification in
+                    if let parents = notification.object as? [Int64] {
+                        for p in parents {
+                            if p != groupID {
+                                continue
+                            }
+                            Task {
+                                // reopen
+                                await viewModel.openGroup(groupID: groupID)
+                            }
+                            break
+                        }
+                    }
+                }
+            
+        }
+        .onDisappear(){
+            NotificationCenter.default.removeObserver(self)
+        }
         .task {
             await viewModel.openGroup(groupID: groupID)
             
@@ -37,12 +60,6 @@ public struct GroupTableView: View {
                 } else {
                     groupName = opg.name
                 }
-            }
-        }
-        .onChange(of: groupState.groupTableChange ){
-            Task {
-                // reopen
-                await viewModel.openGroup(groupID: groupID)
             }
         }
         .navigationTitle(groupName ?? "")
@@ -58,6 +75,16 @@ private struct GroupTableWithSheetView: View {
     @State private var groupID: Int64
     @State private var viewModel: GroupTableViewModel
     
+    @State private var showCreateGroup: Bool = false
+    @State private var createGroupInParent: Int64 = -1
+    @State private var createGroupType: GroupType = .standard
+    
+    @State private var showDeleteConfirm: Bool = false
+    @State private var needDeletedEnties: [Int64] = []
+    
+    @State private var showRenameEntry: Bool = false
+    @State private var renameEntry: Int64 = -1
+    
     init(groupID: Int64, viewModel: GroupTableViewModel) {
         self.groupID = groupID
         self.viewModel = viewModel
@@ -65,30 +92,51 @@ private struct GroupTableWithSheetView: View {
     
     public var body: some View {
         GroupTableWithDropView(groupID: groupID, viewModel: viewModel)
-            .sheet(isPresented: $viewModel.showCreateGroup){
+            .sheet(isPresented: $showCreateGroup){
                 GroupCreateView(
-                    parent: viewModel.group?.toGroup() ?? UnknownGroup.shared,
-                    groupType: viewModel.createGroupType,
+                    parent: createGroupInParent,
+                    groupType: createGroupType,
                     viewModel: CreateDeleteViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase),
-                    showCreateGroup: $viewModel.showCreateGroup)
+                    showCreateGroup: $showCreateGroup)
             }
-            .sheet(isPresented: $viewModel.showRenameEntry){
-                if let en = viewModel.selectedEntries.first {
-                    EntryRenameView(
-                        entry: en.id,
-                        viewModel: EntryDetailViewModel(
-                            store: viewModel.store,entryUsecase: viewModel.entryUsecase),
-                        showRenameView: $viewModel.showRenameEntry)
+            .onReceive(NotificationCenter.default.publisher(for: .createGroup)) { [self] notification in
+                if let req = notification.object as? NewGroupRequest {
+                    self.createGroupInParent = req.parent
+                    self.createGroupType = req.groupType
+                    self.showCreateGroup.toggle()
                 }
             }
-            .sheet(isPresented: $viewModel.showDeleteConfirm){
-                if !viewModel.selection.isEmpty {
-                    DeleteEntriesView(
-                        entryIDs: viewModel.selectedEntries.map({$0.id}),
-                        viewModel: CreateDeleteViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase),
-                        showDeleteView: $viewModel.showDeleteConfirm)
+            .onChange(of: createGroupInParent){}
+            .onChange(of: createGroupType){}
+        
+            .sheet(isPresented: $showRenameEntry){
+                EntryRenameView(
+                    entry: renameEntry,
+                    viewModel: EntryDetailViewModel(
+                        store: viewModel.store,entryUsecase: viewModel.entryUsecase),
+                    showRenameView: $showRenameEntry)
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .renameEntry)) { [self] notification in
+                if let gid = notification.object as? Int64 {
+                    self.renameEntry = gid
+                    self.showRenameEntry.toggle()
                 }
             }
+            .onChange(of: renameEntry){}
+        
+            .sheet(isPresented: $showDeleteConfirm){
+                DeleteEntriesView(
+                    entryIDs: needDeletedEnties,
+                    viewModel: CreateDeleteViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase),
+                    showDeleteView: $showDeleteConfirm)
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .deleteEntry)) { [self] notification in
+                if let entries = notification.object as? [Int64] {
+                    self.needDeletedEnties = entries
+                    self.showDeleteConfirm.toggle()
+                }
+            }
+            .onChange(of: needDeletedEnties){}
     }
 }
 
