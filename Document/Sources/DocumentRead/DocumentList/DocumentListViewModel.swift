@@ -43,7 +43,7 @@ public class DocumentListViewModel {
         } catch UseCaseError.canceled {
             // do nothing
         } catch {
-            store.alert.display(msg: "get entry failed: \(error)")
+            sentAlert("get entry failed: \(error)")
         }
         return nil
     }
@@ -54,7 +54,7 @@ public class DocumentListViewModel {
         } catch let error as UseCaseError where error == .canceled {
             // do nothing
         } catch {
-            store.alert.display(msg: "get document entry failed: \(error)")
+            sentAlert("get document entry failed: \(error)")
         }
         return nil
     }
@@ -76,7 +76,7 @@ public class DocumentListViewModel {
         do {
             try await usecase.setDocumentReadState(document: document, unread: isUnread)
         } catch {
-            store.alert.display(msg: "set document unread=\(isUnread) failed: \(error)")
+            sentAlert("set document unread=\(isUnread) failed: \(error)")
         }
     }
     
@@ -95,7 +95,7 @@ public class DocumentListViewModel {
         do {
             try await usecase.setDocumentMarkState(document: document, ismark: isMark)
         } catch {
-            store.alert.display(msg: "set document isMark=\(isMark) failed: \(error)")
+            sentAlert("set document isMark=\(isMark) failed: \(error)")
         }
     }
     
@@ -134,7 +134,7 @@ public class DocumentListViewModel {
             // do nothing
             return []
         } catch {
-            store.alert.display(msg: "list document page failed: \(error)")
+            sentAlert("list document page failed: \(error)")
             return []
         }
         

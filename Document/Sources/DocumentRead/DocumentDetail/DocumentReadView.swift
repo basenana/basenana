@@ -10,9 +10,8 @@ import AppState
 import Entities
 
 
-@available(macOS 14.0, *)
 public struct DocumentReadView: View {
-    var viewModel: DocumentReadViewModel
+    @State var viewModel: DocumentReadViewModel
     
     public init(viewModel: DocumentReadViewModel) {
         self.viewModel = viewModel
@@ -21,7 +20,9 @@ public struct DocumentReadView: View {
     public var body: some View {
         VStack {
             if let detailDocument = viewModel.document {
-                HTMLView(document: detailDocument)
+                HTMLStringView(url: viewModel.targetURL, htmlContent: detailDocument.content)
+            }else {
+                EmptyView()
             }
         }
         .navigationTitle(viewModel.document?.name ?? "")

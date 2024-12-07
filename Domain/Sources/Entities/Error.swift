@@ -13,6 +13,8 @@ public enum BizError: Error {
     case notGroup
     case invalidArg(String)
     case openFileError
+    case notReadable
+    case noPerm
 }
 
 

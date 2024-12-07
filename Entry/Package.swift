@@ -17,7 +17,7 @@ let package = Package(
         .package(name: "Styleguide", path: "../Styleguide"),
         .package(url: "https://github.com/nmdias/FeedKit", from: "9.1.2"),
         .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.7.2"),
-        .package(url: "https://github.com/hyponet/WebArchiver", branch: "master"),
+        .package( url: "https://github.com/cezheng/Fuzi", from: "3.1.2"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -37,7 +37,7 @@ let package = Package(
         .target(
             name: "WebPage",
             dependencies: [
-                .product(name: "WebArchiver", package: "WebArchiver"),
+                .product(name: "Fuzi", package: "Fuzi"),
                 .product(name: "SwiftSoup", package: "SwiftSoup"),
             ],
             resources: [

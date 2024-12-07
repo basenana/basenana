@@ -10,17 +10,17 @@ import SwiftUI
 import AppState
 
 
-@available(macOS 14.0, *)
 public struct SidebarView: View {
     
     @State private var viewModel: TreeViewModel
+    @State private var selection: Destination? = nil
     
     public init(viewModel: TreeViewModel) {
         self.viewModel = viewModel
     }
     
     public var body: some View {
-        List(selection: viewModel.store.binding(for: \.sidebarSelection, toAction: { .updateSidebarSelection(select: $0) })){
+        List(selection: $selection){
             NavigationLink(value: Destination.groupList(group: viewModel.store.fsInfo.inboxID)){
                 SidebarIconView(imageName: "tray.full.fill", title: "Inbox", color: .blue)
             }.id("nav_inbox")
@@ -38,17 +38,19 @@ public struct SidebarView: View {
                 TreeListView(viewModel: viewModel)
             }
         }
+        .onChange(of: selection){
+            if let s = selection{
+                NotificationCenter.default.post(name: NSNotification.Name("selectSidebar"), object: s)
+                if case.groupList(let grp) = s {
+                    viewModel.selectedGroupId = grp
+                    print("[SidebarView] selected group \(grp)")
+                }else {
+                    viewModel.selectedGroupId = nil
+                }
+            }
+        }
         .task {
             await viewModel.resetGroupTree()
-        }
-        .sheet(isPresented: $viewModel.showRenameEntry){
-            if let enID = viewModel.renameEntry {
-                EntryRenameView(
-                    entry: enID,
-                    viewModel: EntryDetailViewModel(
-                        store: viewModel.store,entryUsecase: viewModel.entryUsecase),
-                    showRenameView: $viewModel.showRenameEntry)
-            }
         }
         .listStyle(.sidebar)
         .padding(.bottom, 40)

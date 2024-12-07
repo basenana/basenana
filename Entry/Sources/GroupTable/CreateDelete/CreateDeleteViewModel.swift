@@ -14,7 +14,6 @@ import UseCaseProtocol
 @MainActor
 public class CreateDeleteViewModel {
     var groupTree = GroupTree.shared
-    var groupState = GroupState.shared
 
     var store: StateStore
     var entryUsecase: EntryUseCaseProtocol
@@ -30,53 +29,49 @@ public class CreateDeleteViewModel {
         } catch let error as UseCaseError where error == .canceled {
             // do nothing
         } catch {
-            store.alert.display(msg: "describe entry failed: \(error)")
+            sentAlert("describe entry failed: \(error)")
         }
         return nil
     }
     
     func createGroup(parentID: Int64, option: EntryCreate) async {
         guard groupTree.getGroup(groupID: parentID) != nil else {
-            store.alert.display(msg: "creatr group failed: parent \(parentID) not exist")
+            sentAlert("creatr group failed: parent \(parentID) not exist")
             return
         }
         
         do {
             let newGroup = try await entryUsecase.createGroups(parent: parentID, option: option)
             groupTree.addChildGroup(parentID: parentID, child: newGroup.toGroup()!, grandChildren: [])
-            groupState.requestReopen()
+            NotificationCenter.default.post(name: .reopenGroup, object: [parentID])
         } catch {
-            store.alert.display(msg: "creatr group failed: \(error)")
+            sentAlert("creatr group failed: \(error)")
             return
         }
     }
     
     func deleteEntries(entries: [EntryInfo]) async {
-        var jobIDs = Set<String>()
-        let s = store
         let uc = entryUsecase
-        let gs = groupState
         let gt = groupTree
         
         for entry in entries {
-            let job = BackgroundJob(name: "Deleting \(entry.name)", startAt: Date())
-            jobIDs.insert(job.id)
-            s.backgroupJobs.append(job)
-        }
-        
-        DispatchQueue.global().async {
-            Task {
-                try await uc.deleteEntries(entries: entries.map({$0.id}))
-                DispatchQueue.main.sync {
+            store.newBackgroundJob(
+                name: "Deleting \(entry.name)",
+                job: {
+                    Task {
+                        try await uc.deleteEntry(entry: entry.id)
+                    }
+                },
+                complete: {
                     for entry in entries {
                         if entry.isGroup {
                             gt.removeChildGroup(parentID: entry.parentID, childID: entry.id)
                         }
+                        NotificationCenter.default.post(name: .reopenGroup, object: [entry.parentID])
                     }
-                    gs.requestReopen()
-                    s.backgroupJobs.removeAll(where: { jobIDs.contains($0.id )})
                 }
-            }
+            )
+            
         }
     }
 }

@@ -147,6 +147,7 @@ class GroupTree {
 }
 
 
+@Observable
 class GroupLeaf: Identifiable, Hashable {
     var id: Int64 {
         group.id
@@ -174,5 +175,16 @@ class GroupLeaf: Identifiable, Hashable {
     
     static func == (lhs: GroupLeaf, rhs: GroupLeaf) -> Bool {
         return lhs.id == rhs.id
+    }
+}
+
+
+class TreeUpdate {
+    var oldLeaf: GroupLeaf
+    var newLeaf: GroupLeaf?
+    
+    init(oldLeaf: GroupLeaf, newLeaf: GroupLeaf? = nil) {
+        self.oldLeaf = oldLeaf
+        self.newLeaf = newLeaf
     }
 }

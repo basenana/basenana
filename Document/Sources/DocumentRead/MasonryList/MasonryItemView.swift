@@ -1,16 +1,16 @@
 //
-//  DocumentItemView.swift
-//  basenana
+//  MasonryItemView.swift
+//  Document
 //
-//  Created by zww on 2024/4/1.
+//  Created by Hypo on 2024/12/4.
 //
 
 import SwiftUI
 import Entities
+import Styleguide
 
 
-@available(macOS 14.0, *)
-struct DocumentItemView: View {
+struct MasonryItemView: View {
     private var section: String
     @State var doc: DocumentItem
     @State var viewModel: DocumentListViewModel
@@ -123,7 +123,7 @@ struct DocumentItemView: View {
 }
 
 
-struct DocumentBannerView: View{
+struct MasonryItemBannerView: View{
     var bannerURL: String
     
     var body: some View {
@@ -141,14 +141,14 @@ struct DocumentBannerView: View{
 import AppState
 import DomainTestHelpers
 
-struct EntryMenuPreview: View {
+struct MasonryItemViewPreview: View {
     @State private var doc: DocumentInfo? = nil
     @State private var uc = MockDocumentUseCase()
-
+    
     var body: some View {
         
         VStack{
-            DocumentItemView(section: "", doc: DocumentItem(info: doc!), viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.empty, usecase: uc))
+            MasonryItemView(section: "", doc: DocumentItem(info: doc!), viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.empty, usecase: uc))
         }
         .task {
             do {
@@ -161,7 +161,7 @@ struct EntryMenuPreview: View {
 }
 
 #Preview {
-    EntryMenuPreview()
+    MasonryItemViewPreview()
 }
 
 #endif

@@ -1,5 +1,5 @@
 //
-//  InboxView.swift
+//  QuickInboxView.swift
 //  Inbox
 //
 //  Created by Hypo on 2024/10/14.
@@ -13,20 +13,23 @@ import WebPage
 
 
 public struct QuickInboxView: View {
-    private var viewModel: TreeViewModel
+    private var viewModel: InboxViewModel
     
     @State private var urlInput: String = ""
     @State private var urlTitle: String = ""
     @State private var fileTypeOption = "webarchive"
     @State private var showPreview: Bool = false
-    @State private var page: WebPage? = nil
+    @State private var page: WebPage?
     @State private var errorMessage: String = ""
     @State private var isInboxing: Bool = false
     
-    init(viewModel: TreeViewModel) {
-        self.viewModel = viewModel
-    }
+    @Binding private var showInboxView: Bool
     
+    init(viewModel: InboxViewModel, showInboxView: Binding<Bool>) {
+        self.viewModel = viewModel
+        self._showInboxView = showInboxView
+    }
+
     public var body: some View {
         VStack {
             Form{
@@ -79,7 +82,7 @@ public struct QuickInboxView: View {
                         await inbox()
                     }
                 } label: {
-                    Text(isInboxing ? "..." : "Inbox")
+                    Text("Inbox")
                         .font(.body)
                         .padding(6)
                         .foregroundColor(.white)
@@ -99,7 +102,7 @@ public struct QuickInboxView: View {
     func inbox() async {
         isInboxing = true
         if await viewModel.quickInbox(url: urlInput, title: urlTitle, fileType: fileTypeOption, errorMsg: $errorMessage){
-            viewModel.showQuickInbox.toggle()
+            showInboxView.toggle()
         }
     }
 
@@ -130,7 +133,7 @@ import DomainTestHelpers
 
 #Preview {
     if #available(macOS 14.0, *) {
-        QuickInboxView(viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
+        QuickInboxView(viewModel: InboxViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()), showInboxView: .constant(true))
     }
 }
 

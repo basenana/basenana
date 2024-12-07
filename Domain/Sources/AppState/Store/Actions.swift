@@ -8,10 +8,6 @@
 
 public enum AppAction {
     
-    case setFsInfo(fsInfo: FSInfo)
-
-    case alert(msg: String?)
-    
     case setDestination(to: [Destination])
 
     case updateDestination(to: [Destination])

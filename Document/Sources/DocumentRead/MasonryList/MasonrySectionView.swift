@@ -1,9 +1,10 @@
 //
-//  DocumentSectionListView.swift
+//  MasonrySectionView.swift
 //  Document
 //
-//  Created by Hypo on 2024/11/23.
+//  Created by Hypo on 2024/12/4.
 //
+
 
 import SwiftUI
 import Foundation
@@ -12,7 +13,7 @@ import AppState
 import Entities
 
 
-struct DocumentSectionListView: View {
+struct MasonrySectionView: View {
     @State var section: DocumentSection
     @State var viewModel: DocumentListViewModel
     
@@ -22,7 +23,7 @@ struct DocumentSectionListView: View {
     }
     
     var body: some View {
-        Section(header: DocumentSectionTitleView(title: section.id) ){
+        Section(header: MasonrySectionTitleView(title: section.id) ){
             Masonry(.vertical, lines: .adaptive(minSize: 350), content: {
                 ForEach(section.documents){ document in
                     LazyVStack{
@@ -35,7 +36,7 @@ struct DocumentSectionListView: View {
                             }
                             viewModel.store.dispatch(.gotoDestination(.readDocument(document: document.id)))
                         }){
-                            DocumentItemView(section: section.id, doc: document, viewModel: viewModel)
+                            MasonryItemView(section: section.id, doc: document, viewModel: viewModel)
                                 .frame(maxWidth: 350)
                                 .task(priority: .background) {
                                     await viewModel.checkAndLoadNextPage(section.id, document)
@@ -50,7 +51,7 @@ struct DocumentSectionListView: View {
 }
 
 
-struct DocumentSectionTitleView: View {
+struct MasonrySectionTitleView: View {
     @State var title: String
     var body: some View {
         Text(title)

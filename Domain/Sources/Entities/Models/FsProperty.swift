@@ -13,5 +13,7 @@ public struct Property {
     public static let WebPageURL      = "org.basenana.web.url"
     public static let WebPageUpdateAt = "org.basenana.web.updated_at"
     public static let WebPageTitle    = "org.basenana.web.title"
+    
+    public static let LocalFile    = "org.basenana.local.path"
 }
 

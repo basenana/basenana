@@ -33,7 +33,7 @@ struct FileToolBarView: View {
             
             Button(action: {
                 copyToClipBoard(content: "\(u.absoluteString)")
-                viewModel.store.dispatch(.alert(msg: "Link Copied"))
+                sentAlert("Link Copied")
             }, label: {
                 Image(systemName: "link")
             })
@@ -51,9 +51,11 @@ struct FileToolBarView: View {
                             if let pro = getEntryProperty(keys: [Property.WebPageURL, Property.WebSiteURL]) {
                                 if let u = URL(string: pro.value) {
                                     targetURL = u
+                                    return
                                 }
                             }
                         }
+                        targetURL = nil
                     }
                 }
             }

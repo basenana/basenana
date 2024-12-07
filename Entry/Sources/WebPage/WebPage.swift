@@ -42,14 +42,50 @@ public func fetchWebPage(url urlString: String) throws -> WebPage {
     }
     task.resume()
     group.wait()
-
+    
     if wp.htmlContent == "" {
         throw WebError.BodyIsEmpty
     }
     
     let doc: Document = try! SwiftSoup.parse(wp.htmlContent)
     wp.title = try doc.title()
-
+    
     return wp
+}
+
+
+public func webarchiveBaseMainResource(url: URL, mainResource: String, temporaryFileURL: URL, upload: @escaping (Error?) -> Void) throws {
+    
+    if FileManager.default.fileExists(atPath: temporaryFileURL.path()){
+        try FileManager.default.removeItem(at: temporaryFileURL)
+    }
+    
+    FileManager.default.createFile(atPath: temporaryFileURL.path, contents: nil)
+    print("create temporary file path: \(temporaryFileURL.path)")
+    let fh = try FileHandle(forWritingTo: temporaryFileURL)
+    
+    
+    WebArchiver.archiveWithMainResource(url: url, htmlContent: mainResource){ result in
+        defer {
+            do {
+                try fh.close()
+            } catch { }
+        }
+        
+        if !result.errors.isEmpty{
+            upload(result.errors.first!)
+            return
+        }
+        
+        if let d = result.plistData {
+            do {
+                try fh.write(contentsOf: d)
+                upload(nil)
+            } catch{
+                upload(error)
+            }
+        }
+    }
+    return
 }
 

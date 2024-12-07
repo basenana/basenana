@@ -15,11 +15,20 @@ public class StateStore {
     
     public var destinations = [Destination]()
     public var sidebarSelection: Destination = .mainContent
-    public var alert = Alert()
     public var notifications = [String]()
     public var backgroupJobs = [BackgroundJob]()
     public var fsInfo = FSInfo()
     public var config = Config()
+    
+    private init(){
+        NotificationCenter.default.addObserver(
+            forName: NSNotification.Name("setFSInfo"),
+            object: nil, queue: .main, using: { notification in
+                if let info = notification.object as? FSInfo {
+                    self.fsInfo = info
+                }
+            })
+    }
     
     public func dispatch(_ action: AppAction) {
         print("recive new aciton \(action)")
@@ -31,7 +40,6 @@ public class StateStore {
                     }
                 } catch {
                     print("dispatch action \(action) error: \(error)")
-                    dispatch(.alert(msg: "\(error)"))
                 }
             }
         }
@@ -65,21 +73,5 @@ public class FSInfo {
         self.namespace = namespace
         self.rootID = rootID
         self.inboxID = inboxID
-    }
-}
-
-
-@Observable
-public class Alert {
-    public var alertMessage: String = ""
-    public var needAlert: Bool = false
-    
-    public func display(msg: String) {
-        self.alertMessage = msg
-        self.needAlert = true
-    }
-    
-    public func reset(){
-        self.needAlert = false
     }
 }

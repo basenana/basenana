@@ -1,8 +1,8 @@
 //
-//  DocumentListView.swift
-//  Entry
+//  MasonryListView.swift
+//  Document
 //
-//  Created by Hypo on 2024/11/16.
+//  Created by Hypo on 2024/12/4.
 //
 
 import SwiftUI
@@ -12,8 +12,7 @@ import AppState
 import Entities
 
 
-@available(macOS 14.0, *)
-public struct DocumentListView: View {
+public struct MasonryListView: View {
     @State var viewModel: DocumentListViewModel
     
     public init(viewModel: DocumentListViewModel) {
@@ -25,7 +24,7 @@ public struct DocumentListView: View {
             ScrollView(.vertical) {
                 LazyVStack {
                     ForEach(viewModel.sectionDocuments){ section in
-                        DocumentSectionListView(section: section, viewModel: viewModel)
+                        MasonrySectionView(section: section, viewModel: viewModel)
                     }
                 }
             }
@@ -49,7 +48,7 @@ import DomainTestHelpers
 
 #Preview {
     if #available(macOS 14.0, *) {
-        DocumentListView(viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.empty, usecase: MockDocumentUseCase()))
+        MasonryListView(viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.empty, usecase: MockDocumentUseCase()))
     }
 }
 

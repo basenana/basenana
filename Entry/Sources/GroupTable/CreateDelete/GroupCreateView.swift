@@ -11,19 +11,18 @@ import Entities
 
 
 struct GroupCreateView: View {
-    @State private var parent: Entities.Group
+    @State private var parent: Entities.Group? = nil
+    @State private var parentID: Int64
     @State var groupType: GroupType
     @State private var viewModel: CreateDeleteViewModel
     
     @Binding private var showCreateGroup: Bool
 
-    init(parent: Entities.Group, groupType: GroupType, viewModel: CreateDeleteViewModel, showCreateGroup: Binding<Bool>) {
-        self.parent = parent
+    init(parent: Int64, groupType: GroupType, viewModel: CreateDeleteViewModel, showCreateGroup: Binding<Bool>) {
+        self.parentID = parent
         self.groupType = groupType
         self.viewModel = viewModel
         self._showCreateGroup = showCreateGroup
-        
-        self.parentName = parent.groupName
     }
     
     // Common
@@ -63,7 +62,7 @@ struct GroupCreateView: View {
                 }
                 Button {
                     Task {
-                        await viewModel.createGroup(parentID: parent.id, option: buildOption())
+                        await viewModel.createGroup(parentID: parentID, option: buildOption())
                         showCreateGroup.toggle()
                     }
                 } label: {
@@ -79,15 +78,18 @@ struct GroupCreateView: View {
             .frame(maxWidth: .infinity, alignment: .trailing)
             .padding(.top, 10)
         }
-        .onAppear{
-            parentName = parent.groupName
+        .task{
+            if let p = await viewModel.describeEntry(entry: parentID){
+                parent = p.toGroup()
+                parentName = parent?.groupName ?? "Unknown"
+            }
         }
         .padding(50)
         .frame(minWidth: 500)
     }
     
     func buildOption() -> EntryCreate {
-        var opt = EntryCreate(parent: parent.id, name: groupName, kind: "group")
+        var opt = EntryCreate(parent: parentID, name: groupName, kind: "group")
         opt.RSS = RSSConfig(feed: rssFeed, siteName: siteName, siteURL: siteURL, fileType: .Webarchive)
         return opt
     }
@@ -120,7 +122,7 @@ struct GroupCreateViewPreview: View {
     var body: some View {
         List {
             GroupCreateView(
-                parent: UnknownGroup.shared,
+                parent: 1,
                 groupType: .feed,
                 viewModel: CreateDeleteViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()),
                 showCreateGroup: .constant(true))

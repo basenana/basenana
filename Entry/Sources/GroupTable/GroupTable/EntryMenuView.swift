@@ -32,18 +32,13 @@ public struct EntryMenuView: View {
                 Section{
                     Menu("New") {
                         Button("Group", action: {
-                            // show create group form
-                            viewModel.createGroupType = .standard
-                            viewModel.showCreateGroup.toggle()
+                            NotificationCenter.default.post(name: .createGroup, object: NewGroupRequest(parent: viewModel.group?.id ?? -1, groupType: .standard))
                         })
                         Button("RSS Feed", action: {
-                            // show create rss form
-                            viewModel.createGroupType = .feed
-                            viewModel.showCreateGroup.toggle()
+                            NotificationCenter.default.post(name: .createGroup, object: NewGroupRequest(parent: viewModel.group?.id ?? -1, groupType: .feed))
                         })
                         Button("Dynamic Group", action: {
-                            viewModel.createGroupType = .dynamic
-                            viewModel.showCreateGroup.toggle()
+                            NotificationCenter.default.post(name: .createGroup, object: NewGroupRequest(parent: viewModel.group?.id ?? -1, groupType: .dynamic))
                         })
                     }
                 }
@@ -52,9 +47,13 @@ public struct EntryMenuView: View {
             if canBeEdit() {
                 Section{
                     if onlyOneSelected() {
-                        Button("Rename", action: { viewModel.showRenameEntry.toggle() })
+                        Button("Rename", action: {
+                            NotificationCenter.default.post(name: .renameEntry, object: viewModel.selectedEntries.first?.id ?? -1)
+                        })
                     }
-                    Button("Delete", action: { viewModel.showDeleteConfirm.toggle() })
+                    Button("Delete", action: {
+                        NotificationCenter.default.post(name: .deleteEntry, object: viewModel.selectedEntries.map({$0.id}))
+                    })
                 }
                 
                 Section{

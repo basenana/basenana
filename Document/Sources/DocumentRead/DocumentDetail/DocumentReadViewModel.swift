@@ -11,7 +11,6 @@ import AppState
 import UseCaseProtocol
 
 
-@available(macOS 14.0, *)
 @Observable
 @MainActor
 public class DocumentReadViewModel {
@@ -33,8 +32,32 @@ public class DocumentReadViewModel {
             entry = try await usecase.getDocumentEntry(document: docID)
             document = try await usecase.getDocumentDetails(document: docID)
         } catch {
-            store.alert.display(msg: "load document failed: \(error)")
+            sentAlert("load document failed: \(error)")
         }
     }
     
+    var targetURL: URL? {
+        get {
+            if let pro = getEntryProperty(keys: [Property.WebPageURL, Property.WebSiteURL]) {
+                if let u = URL(string: pro.value) {
+                    return u
+                }
+            }
+            return nil
+        }
+    }
+    
+    func getEntryProperty(keys: [String]) -> EntryProperty? {
+        guard entry != nil else {
+            return nil
+        }
+        for k in keys {
+            for p in entry!.properties {
+                if p.key == k {
+                    return p
+                }
+            }
+        }
+        return nil
+    }
 }

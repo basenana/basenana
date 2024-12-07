@@ -15,13 +15,16 @@ import DocumentRead
 struct StackContentView: View {
     
     @State private var state: StateStore
-    @Binding private var environment: Environment
+    
     @State private var container: DIContainer
+    @State private var siderbarSelection: Destination = .mainContent
+    @State private var alertMessage: String = ""
+    @State private var hasAlert: Bool = false
 
-    init(state: StateStore, environment: Binding<Environment>) {
+
+    init(state: StateStore) {
         self.state = state
-        self._environment = environment
-        self.container = DIContainer(state: state, environment: environment.wrappedValue)
+        self.container = DIContainer(state: state)
     }
 
     var body: some View {
@@ -31,7 +34,7 @@ struct StackContentView: View {
         }detail: {
             NavigationStack(path: state.binding(for: \.destinations, toAction: { .setDestination(to: $0)})) {
                 
-                SidebarContentView(landing: state.sidebarSelection, container: $container)
+                SidebarContentView(landing: siderbarSelection, container: $container)
                     .navigationDestination(for: Destination.self) { destination in
                         switch destination {
                         case .groupList(group: let group):
@@ -48,6 +51,31 @@ struct StackContentView: View {
                     }
             }
         }
+        .onAppear{
+            NotificationCenter.default.removeObserver(self, name: NSNotification.Name("selectSidebar"), object: nil)
+            NotificationCenter.default.addObserver(
+                forName: NSNotification.Name("selectSidebar"),
+                object: nil,
+                queue: .main) { [self] notification in
+                    if let s = notification.object as? Destination {
+                        self.siderbarSelection = s
+                    }
+                }
+            
+            NotificationCenter.default.removeObserver(self, name: NSNotification.Name("alert"), object: nil)
+            NotificationCenter.default.addObserver(
+                forName: NSNotification.Name("alert"),
+                object: nil,
+                queue: .main) { [self] notification in
+                    if let msg = notification.object as? String {
+                        alertMessage = msg
+                        hasAlert = true
+                    }
+                }
+        }
+        .onDisappear(){
+            NotificationCenter.default.removeObserver(self)
+        }
         .toolbar{
             ToolbarItemGroup(placement: .principal){
                 BackgroundJobView(state: state)
@@ -55,7 +83,7 @@ struct StackContentView: View {
                 Spacer()
             }
         }
-        .alert(state.alert.alertMessage, isPresented: state.binding(for: \.alert.needAlert, toAction: { _ in .alert(msg: nil) })){
+        .alert(alertMessage, isPresented: $hasAlert){
             Button("OK", role: .cancel) {}
         }
     }
