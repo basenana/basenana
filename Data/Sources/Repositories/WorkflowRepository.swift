@@ -15,7 +15,7 @@ public class WorkflowRepository: WorkflowRepositoryProtocol {
     
     private var core: WorkflowClientProtocol
     
-    init(core: WorkflowClientProtocol) {
+    public init(core: WorkflowClientProtocol) {
         self.core = core
     }
     

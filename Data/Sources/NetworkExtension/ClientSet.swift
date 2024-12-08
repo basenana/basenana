@@ -88,12 +88,18 @@ public class ClientSet {
     private var namespace: String
     
     public init(host: String, port: Int, clientCrt: [UInt8], clientKey: [UInt8], namespace: String) throws {
-        let tlsChannel = ClientConnection
-            .usingTLSBackedByNIOSSL(on: clientEventLoopGroup)
-            .withTLS(certificateChain: [try .init(bytes: clientCrt, format: .pem)])
-            .withTLS(privateKey: try .init(bytes: clientKey, format: .pem))
-            .withTLS(certificateVerification: .none)
-            .connect(host: host, port: port)
+        let transportSecurity = GRPCChannelPool.Configuration.TransportSecurity
+            .tls(.makeClientConfigurationBackedByNIOSSL(
+                certificateChain: [.certificate(try .init(bytes: clientCrt, format: .pem))],
+                privateKey: .privateKey(try .init(bytes: clientKey, format: .pem)),
+                certificateVerification: .none
+            ))
+        
+        let tlsChannel = try! GRPCChannelPool.with(
+            target: ConnectionTarget.hostAndPort(host, port),
+            transportSecurity: transportSecurity,
+            eventLoopGroup: clientEventLoopGroup
+        )
         
         self.inbox = Api_V1_InboxAsyncClient(channel: tlsChannel)
         self.entries = Api_V1_EntriesAsyncClient(channel: tlsChannel)

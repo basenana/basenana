@@ -12,11 +12,22 @@ let package = Package(
             name: "Workflow",
             targets: ["Workflow"]),
     ],
+    dependencies: [
+        .package(name: "Domain", path: "../Domain"),
+        .package(name: "Styleguide", path: "../Styleguide"),
+    ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "Workflow"),
+            name: "Workflow",
+            dependencies: [
+                .product(name: "Entities", package: "Domain"),
+                .product(name: "AppState", package: "Domain"),
+                .product(name: "UseCaseProtocol", package: "Domain"),
+                .product(name: "DomainTestHelpers", package: "Domain"),
+            ]
+        ),
         .testTarget(
             name: "WorkflowTests",
             dependencies: ["Workflow"]),

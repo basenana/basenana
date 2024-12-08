@@ -16,6 +16,7 @@ public enum Destination: Identifiable, Hashable {
     case readDocument(document: Int64)
     case groupList(group: Int64)
     case workflowDashboard
+    case workflowDetail(workflow: String)
     case fridayChat
 
     public var id: String {
@@ -30,6 +31,8 @@ public enum Destination: Identifiable, Hashable {
             return "groupList_\(group)"
         case .workflowDashboard:
             return "workflowDashboard"
+        case .workflowDetail(workflow: let workflow):
+            return "workflowDetail_\(workflow)"
         case .fridayChat:
             return "fridayChat"
         }

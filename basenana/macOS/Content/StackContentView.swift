@@ -10,6 +10,7 @@ import Foundation
 import AppState
 import GroupTable
 import DocumentRead
+import Workflow
 
 
 struct StackContentView: View {
@@ -42,9 +43,8 @@ struct StackContentView: View {
                                 .id(group)
                         case .readDocument(document: let document):
                             DocumentReadView(viewModel: container.c.resolve(DocumentReadViewModel.self, argument: document)!).id(document)
-                        case .workflowDashboard:
-//                            WorkflowView()
-                            Text("workflow")
+                        case .workflowDetail(workflow: let workflow):
+                            WorkflowDetailView(viewModel: container.c.resolve(WorkflowDetailViewModel.self, argument: workflow)!).id(workflow)
                         default:
                             Text("unknown destination")
                         }
@@ -102,6 +102,8 @@ struct SidebarContentView: View {
             DocumentListView(viewModel: container.c.resolve(DocumentListViewModel.self, name: prespective.Title)!).id(prespective).navigationTitle(prespective.Title)
         case .groupList(group: let group):
             GroupTableView(groupID: group, viewModel: container.c.resolve(GroupTableViewModel.self)!).id(group)
+        case .workflowDashboard:
+            WorkflowListView(viewModel: container.c.resolve(WorkflowListViewModel.self)!)
         default:
             Text("unknown")
         }

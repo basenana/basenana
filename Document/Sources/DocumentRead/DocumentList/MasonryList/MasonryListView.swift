@@ -27,11 +27,7 @@ public struct MasonryListView: View {
                 }
                 LazyVStack {
                     if viewModel.hasMore {
-                        Text("☁️Loading ...")
-                            .padding(.vertical)
-                            .onAppear{
-                                NotificationCenter.default.post(name: .loadMoreDocuments, object: nil)
-                            }
+                        LoadingView()
                     }
                 }
             }

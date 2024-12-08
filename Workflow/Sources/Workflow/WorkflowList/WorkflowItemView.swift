@@ -1,46 +1,26 @@
 //
-//  WorkflowView.swift
-//  basenana
+//  WorkflowItemView.swift
+//  Workflow
 //
-//  Created by Hypo on 2024/6/27.
+//  Created by Hypo on 2024/12/8.
 //
-
 import SwiftUI
 import Foundation
 
-@available(macOS 14.0, *)
-struct WorkflowView: View {
-    
-    let columns = [
-        GridItem(.adaptive(minimum: 180)),
-    ]
-    
-    
-    var body: some View {
-        ScrollView{
-            LazyVGrid(
-                columns: columns, alignment: .center, spacing: 40 ){
-                    ForEach(0...100,id:\.self){ id in
-                        WorkflowItemView(workflowID: "wf_\(id)")
-                    }
-                }
-        }
-        .padding(10)
-        .frame(minWidth: 900)
-        .navigationTitle("Workflow")
-    }
-}
 
-@available(macOS 14.0, *)
 struct WorkflowItemView: View {
-    var workflowID: String
-    var workflowName: String = "workflow.name"
+    var workflow: WorkflowItem
+    
+    init(workflow: WorkflowItem) {
+        self.workflow = workflow
+    }
+    
     var body: some View {
         VStack(alignment: .leading) {
             Text(randomWeatherEmoji()).font(.system(size: 20))
             Spacer(minLength: 30)
             HStack {
-                Text(workflowName)
+                Text(workflow.name)
                     .font(.headline)
                     .foregroundColor(.white)
                 Spacer()
@@ -73,7 +53,7 @@ struct WorkflowItemView: View {
         .padding(.top, 10)
         .padding(.bottom, 20)
         .padding(.horizontal, 10)
-        .background(colorFrom(workflowID))
+        .background(colorFrom(workflow.id))
         .cornerRadius(10)
     }
     

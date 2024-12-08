@@ -19,6 +19,15 @@ struct DocumentToolBarView: View {
     }
     
     var body: some View {
+        Button(action: {
+        }, label: {
+            Image(systemName: "circle")
+        })
+        Button(action: {
+        }, label: {
+            Image(systemName: "bookmark")
+        })
+
         // web file
         if let u = viewModel.targetURL {
             Button(action: {
