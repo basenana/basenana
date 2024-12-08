@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Entities
+import AppState
 import Styleguide
 
 struct SidebarButtonView: View {
@@ -55,7 +56,7 @@ struct SidebarButtonView: View {
             Spacer()
             
             Button(action: {
-                NotificationCenter.default.post(name: NSNotification.Name("alert"), object: "workflow not support yet")
+                NotificationCenter.default.post(name: NSNotification.Name("selectSidebar"), object: Destination.workflowDashboard)
             }, label: {
                 Image(systemName: "ellipsis.curlybraces")
             })

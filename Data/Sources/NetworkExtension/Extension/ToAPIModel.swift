@@ -99,3 +99,20 @@ extension Api_V1_RoomInfo {
     }
 }
 
+extension Api_V1_WorkflowInfo {
+    func toWorkflow() -> APIWorkflow {
+        return APIWorkflow(id: self.id, name: self.name, executor: self.executor, queueName: self.queueName, healthScore: Int(self.healthScore), createdAt: self.createdAt.date, updatedAt: self.updatedAt.date, lastTriggeredAt: self.lastTriggeredAt.date)
+    }
+}
+
+
+extension Api_V1_WorkflowJobDetail {
+    func toJob() -> APIWorkflowJob {
+        let target = APIWorkflowJobTarget(entryID: self.target.entryID, parentEntryID: self.target.parentEntryID)
+        var steps = [APIWorkflowJobStep]()
+        for step in self.steps {
+            steps.append(APIWorkflowJobStep(name: step.name, status: step.status, message: step.message))
+        }
+        return APIWorkflowJob(id: self.id, workflow: self.workflow, triggerReason: self.triggerReason, status: self.status, message: self.message, executor: self.executor, queueName: self.executor, jobTarget: target, steps: steps, createdAt: self.createdAt.date, updatedAt: self.updatedAt.date, startAt: self.startAt.date, finishAt: self.finishAt.date)
+    }
+}

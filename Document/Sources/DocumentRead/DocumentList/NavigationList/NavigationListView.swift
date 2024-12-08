@@ -27,11 +27,7 @@ public struct NavigationListView: View {
                     DocumentListSectionView(section: section, viewModel: viewModel)
                 }
                 if viewModel.hasMore {
-                    Text("☁️Loading ...")
-                        .padding(.vertical)
-                        .onAppear{
-                            NotificationCenter.default.post(name: .loadMoreDocuments, object: nil)
-                        }
+                    LoadingView()
                 }
             }
             .frame(minWidth: 300)

@@ -77,6 +77,21 @@ public struct DocumentListView: View {
     }
 }
 
+struct LoadingView: View {
+    var body: some View {
+        HStack(alignment: .center){
+            Spacer()
+            Text("☁️Loading ...")
+                .padding(.vertical)
+                .onAppear{
+                    NotificationCenter.default.post(name: .loadMoreDocuments, object: nil)
+                }
+            Spacer()
+        }
+    }
+}
+
+
 enum ListViewKind {
     case Masonry
     case Navigation
