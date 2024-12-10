@@ -42,7 +42,7 @@ public class CreateDeleteViewModel {
         
         do {
             let newGroup = try await entryUsecase.createGroups(parent: parentID, option: option)
-            groupTree.addChildGroup(parentID: parentID, child: newGroup.toGroup()!, grandChildren: [])
+            groupTree.addChildGroup(parentID: parentID, child: newGroup.toGroup()!, grandChildren: nil)
             NotificationCenter.default.post(name: .reopenGroup, object: [parentID])
         } catch {
             sentAlert("creatr group failed: \(error)")

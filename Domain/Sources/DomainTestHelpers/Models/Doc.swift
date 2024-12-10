@@ -27,11 +27,17 @@ public class MockDocInfo: DocumentInfo {
     
     public var subContent: String
     
+    public var headerImage: String
+
     public var createdAt: Date
     
     public var changedAt: Date
     
-    init(id: Int64, oid: Int64, parentId: Int64, name: String, namespace: String, source: String? = nil, marked: Bool, unread: Bool, subContent: String, createdAt: Date, changedAt: Date) {
+    public var properties: [any Entities.EntryProperty]
+    
+    public var parent: any EntryInfo
+
+    init(id: Int64, oid: Int64, parentId: Int64, name: String, namespace: String, source: String? = nil, marked: Bool, unread: Bool, subContent: String, headerImage: String, createdAt: Date, changedAt: Date, properties: [Entities.EntryProperty], parent: EntryInfo) {
         self.id = id
         self.oid = oid
         self.parentId = parentId
@@ -41,8 +47,11 @@ public class MockDocInfo: DocumentInfo {
         self.marked = marked
         self.unread = unread
         self.subContent = subContent
+        self.headerImage = headerImage
         self.createdAt = createdAt
         self.changedAt = changedAt
+        self.properties = properties
+        self.parent = parent
     }
     
 }
@@ -91,7 +100,8 @@ public class MockDocDetail: DocumentDetail {
     }
     
     func toInfo() -> MockDocInfo {
-        return MockDocInfo(id: id, oid: oid, parentId: parentId, name: name, namespace: namespace, source: source, marked: marked, unread: unread, subContent: content, createdAt: createdAt, changedAt: changedAt)
+        return MockDocInfo(id: id, oid: oid, parentId: parentId, name: name, namespace: namespace, source: source, marked: marked, unread: unread, subContent: content, headerImage: "", createdAt: createdAt, changedAt: changedAt, properties: [],
+                           parent: MockEntryInfo( id: oid, name: name, kind: "file", isGroup: false, size: Int64(1), parentID: parentId, createdAt: createdAt, changedAt: changedAt, modifiedAt: changedAt, accessAt: changedAt))
     }
 }
 

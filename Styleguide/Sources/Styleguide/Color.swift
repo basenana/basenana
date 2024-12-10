@@ -13,7 +13,7 @@ public extension Color {
     
     static let RobotMsgBackground = Color("robotMsgBackground")
     
-    static let DialogueBackground = Color("dialogueBackground")
+    static let CardBackground = Color("cardBackground")
     
     static let DialogBoxBackground = Color("dialogBoxBackground")
     

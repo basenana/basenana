@@ -97,12 +97,13 @@ public class BaseViewModel {
             try await entryUsecase.changeParent(entries: entries, newParent: newParent) { target, parent in
                 if target.isGroup {
                     if let grp = GroupTree.shared.getGroup(groupID: target.id) {
+                        NotificationCenter.default.post(name: .reopenGroup, object: [target.parent])
+                        NotificationCenter.default.post(name: .reopenGroup, object: [parent.id])
                         GroupTree.shared.removeChildGroup(parentID: target.parent, childID: target.id)
                         GroupTree.shared.addChildGroup(parentID: parent.id, child: grp.group, grandChildren: grp.children)
                     }
                 }
             }
-            NotificationCenter.default.post(name: .reopenGroup, object: [newParent])
         } catch {
             sentAlert("move entry failed \(error)")
             return false

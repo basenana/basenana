@@ -16,13 +16,15 @@ struct MasonryItemView: View {
     @State var viewModel: DocumentListViewModel
     
     @State var entry: EntryDetail? = nil
-    @State var parentEntry: EntryDetail? = nil
-    @State var properties: [EntryProperty] = []
+    @State var properties: [EntryProperty]
+    @State var parent: EntryInfo
     
     init(section: String, doc: DocumentItem, viewModel: DocumentListViewModel ) {
         self.section = section
         self.doc = doc
         self.viewModel = viewModel
+        self.properties = doc.properties
+        self.parent = doc.parent
     }
     
     var body: some View {
@@ -40,7 +42,7 @@ struct MasonryItemView: View {
                     .foregroundColor(Color.gray)
             }
             Spacer(minLength: 20)
-
+            
             Text(docTitle)
                 .font(.title2)
                 .multilineTextAlignment(.leading)
@@ -48,11 +50,11 @@ struct MasonryItemView: View {
             
             Spacer(minLength: 10)
             
+            MasonryItemBannerView(bannerURL: self.doc.headerImage)
             
-//            MasonryItemBannerView(bannerURL: "")
-//                .padding(.vertical, 5)
+            Spacer(minLength: 20)
             
-            Text("\(doc.info.subContent)... ")
+            Text("\(subContent)... ")
                 .font(.body)
                 .lineSpacing(2)
                 .foregroundColor(Color.gray)
@@ -63,22 +65,15 @@ struct MasonryItemView: View {
                 .font(.caption2)
                 .fontWeight(.light)
                 .foregroundColor(Color.gray)
-
+            
         }
         .padding(.horizontal, 30)
         .padding(.vertical, 40)
-        .background(Color.background)
+        .background(Color.CardBackground)
         .cornerRadius(5)
         .contextMenu {
             if let en = entry {
                 DocumentMenuView(section: section, document: $doc, entry: en, viewModel: viewModel)
-            }
-        }
-        .task {
-            if let getEntry = await viewModel.getDocumentEntry(entry: doc.info.oid) {
-                entry = getEntry
-                properties = getEntry.properties
-                parentEntry = await viewModel.getDocumentEntry(entry: getEntry.parent)
             }
         }
     }
@@ -107,13 +102,19 @@ struct MasonryItemView: View {
     
     var docURL: String {
         if let urlStr = properties.filter({ ($0.key == Property.WebPageURL || $0.key == Property.WebSiteURL) && !$0.value.isEmpty }).first?.value{
-            return URL(string: urlStr)?.host() ?? parentEntry?.name ?? ""
+            return URL(string: urlStr)?.host() ?? ""
         }
-        return parentEntry?.name ?? ""
+        return ""
     }
     
     var groupName: String {
-        return properties.filter({ $0.key == Property.WebSiteName}).first?.value ?? ""
+        return properties.filter({ $0.key == Property.WebSiteName}).first?.value ?? parent.name
+    }
+    
+    var subContent: String {
+        return doc.info.headerImage != "" ?
+        String(doc.info.subContent.prefix(200)):
+        String(doc.info.subContent)
     }
     
     let rfc3339Formatter = RFC3339Formatter()
@@ -132,11 +133,26 @@ struct MasonryItemBannerView: View{
     var bannerURL: String
     
     var body: some View {
-        Rectangle()
-            .fill(Color.gray)
-            .frame(alignment: .center)
-        //                .resizable()
-            .scaledToFit()
+        if let safeUrl = URL(string: bannerURL) {
+            GeometryReader { geometry in
+                AsyncImage(url: safeUrl) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .padding(.vertical, 5)
+                        .clipped()
+                } placeholder: {
+                    Image(systemName: "photo")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .padding(50)
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .foregroundStyle(.gray)
+                }
+            }
+            .aspectRatio(3/2, contentMode: .fit)
+        }
     }
 }
 

@@ -24,7 +24,7 @@ struct MasonrySectionView: View {
     
     var body: some View {
         Section(header: MasonrySectionTitleView(title: section.id) ){
-            Masonry(.vertical, lines: .adaptive(minSize: 350), content: {
+            Masonry(.vertical, lines: .adaptive(minSize: 360), content: {
                 ForEach(section.documents){ document in
                     LazyVStack{
                         Button(action: {
@@ -33,7 +33,7 @@ struct MasonrySectionView: View {
                             MasonryItemView(section: section.id, doc: document, viewModel: viewModel)
                                 .onAppear { viewModel.onDocumentAppear(document: document) }
                                 .onDisappear { viewModel.onDocumentDisappear(document: document) }
-                                .padding(.vertical, 20)
+                                .padding(.vertical, 15)
                                 .frame(maxWidth: 350)
                         }
                         .buttonStyle(.link)

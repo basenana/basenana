@@ -161,7 +161,7 @@ public class DocumentListViewModel {
                 nextPageList = try await usecase.listMarkedDocuments(page: page, pageSize: pageSize)
             }
             
-            if nextPageList.isEmpty {
+            if nextPageList.isEmpty || pageSize > nextPageList.count {
                 print("no more documents, page=\(page)")
                 hasMore = false
             }

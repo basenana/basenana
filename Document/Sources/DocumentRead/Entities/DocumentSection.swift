@@ -32,6 +32,23 @@ class DocumentItem: Identifiable, Hashable, Equatable {
     // editable
     var isUnread: Bool
     var isMarked: Bool
+    var headerImage: String {
+        get {
+            return info.headerImage
+        }
+    }
+    
+    var properties: [EntryProperty] {
+        get {
+            return info.properties
+        }
+    }
+    
+    var parent: EntryInfo {
+        get {
+            return info.parent
+        }
+    }
     
     var info: DocumentInfo
     var readable: Bool = false

@@ -22,7 +22,8 @@ class ArchivingSession {
     private let cookies: [HTTPCookie]
     private var errors: [Error] = []
     private var pendingTaskCount: Int = 0
-    
+    private var isFinish: Bool = false
+
     init(cachePolicy: URLRequest.CachePolicy, cookies: [HTTPCookie], completion: @escaping (ArchivingResult) -> ()) {
         let sessionQueue = OperationQueue()
         sessionQueue.maxConcurrentOperationCount = 1
@@ -61,12 +62,18 @@ class ArchivingSession {
         task.resume()
     }
     
-    private func finish(with archive: WebArchive?) {
+    public func finish(with archive: WebArchive?) {
         
         guard self.pendingTaskCount == 0 else {
             return
         }
         
+        guard !self.isFinish else {
+            return
+        }
+        
+        self.isFinish = true
+
         var plistData: Data?
         if let archive = archive {
             do {
