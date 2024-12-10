@@ -37,6 +37,10 @@
 		3F7A1E122CEF6A1000C2BDC8 /* SwiftUIMasonry in Frameworks */ = {isa = PBXBuildFile; productRef = 3F7A1E112CEF6A1000C2BDC8 /* SwiftUIMasonry */; };
 		3F84C8CB2C146E29003DC6DA /* WebArchiver in Frameworks */ = {isa = PBXBuildFile; productRef = 3F84C8CA2C146E29003DC6DA /* WebArchiver */; };
 		3F9022B02CEF7B9A0045A1E3 /* AppState in Frameworks */ = {isa = PBXBuildFile; productRef = 3F9022AF2CEF7B9A0045A1E3 /* AppState */; };
+		3F9FAF862D05BBF000C95D51 /* DatabaseSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9FAF852D05BBE900C95D51 /* DatabaseSettingView.swift */; };
+		3F9FAF872D05BBF000C95D51 /* DatabaseSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9FAF852D05BBE900C95D51 /* DatabaseSettingView.swift */; };
+		3F9FAF8D2D05C61200C95D51 /* AppearanceSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9FAF8C2D05C60A00C95D51 /* AppearanceSettingView.swift */; };
+		3F9FAF8E2D05C61200C95D51 /* AppearanceSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F9FAF8C2D05C60A00C95D51 /* AppearanceSettingView.swift */; };
 		3FA180142C157A8A004176EA /* WebArchiver in Frameworks */ = {isa = PBXBuildFile; productRef = 3FA180132C157A8A004176EA /* WebArchiver */; };
 		3FAC06BC2C25BEC40067E7A5 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06BB2C25BEC40067E7A5 /* LoginView.swift */; };
 		3FAC06BD2C25BEC40067E7A5 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAC06BB2C25BEC40067E7A5 /* LoginView.swift */; };
@@ -105,6 +109,8 @@
 		3F7A1DF12CEDB7C600C2BDC8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		3F7A1E032CEDCA5800C2BDC8 /* Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Container.swift; sourceTree = "<group>"; };
 		3F7A1E0A2CEE0EDE00C2BDC8 /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
+		3F9FAF852D05BBE900C95D51 /* DatabaseSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseSettingView.swift; sourceTree = "<group>"; };
+		3F9FAF8C2D05C60A00C95D51 /* AppearanceSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingView.swift; sourceTree = "<group>"; };
 		3FAC06BB2C25BEC40067E7A5 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		3FC54EF22C94870C00803A1D /* Styleguide */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Styleguide; sourceTree = "<group>"; };
 		3FC54EF32C94874400803A1D /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
@@ -287,6 +293,8 @@
 		3F7A1E072CEE09A500C2BDC8 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
+				3F9FAF8C2D05C60A00C95D51 /* AppearanceSettingView.swift */,
+				3F9FAF852D05BBE900C95D51 /* DatabaseSettingView.swift */,
 				3F4A78E02BD299110035F90F /* SettingsView.swift */,
 			);
 			path = Setting;
@@ -524,11 +532,13 @@
 				3F7A1E042CEDCA5800C2BDC8 /* Container.swift in Sources */,
 				3F317C4E2C2476C300F42D37 /* StackContentView.swift in Sources */,
 				3F071BA42C29A2CC00F19C63 /* BackgroundJobView.swift in Sources */,
+				3F9FAF8D2D05C61200C95D51 /* AppearanceSettingView.swift in Sources */,
 				3FAC06BC2C25BEC40067E7A5 /* LoginView.swift in Sources */,
 				3F7A1DF22CEDB7C900C2BDC8 /* ContentView.swift in Sources */,
 				3F7A1E0B2CEE0EDF00C2BDC8 /* Environment.swift in Sources */,
 				3F071BA12C29A27F00F19C63 /* NotificationView.swift in Sources */,
 				3F4A78E12BD299110035F90F /* SettingsView.swift in Sources */,
+				3F9FAF862D05BBF000C95D51 /* DatabaseSettingView.swift in Sources */,
 				3F1BBE1D2B8E147F005D533F /* basenanaApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -554,11 +564,13 @@
 				3FAC06BD2C25BEC40067E7A5 /* LoginView.swift in Sources */,
 				3F7A1E0C2CEE0EDF00C2BDC8 /* Environment.swift in Sources */,
 				3F7A1E052CEDCA5800C2BDC8 /* Container.swift in Sources */,
+				3F9FAF8E2D05C61200C95D51 /* AppearanceSettingView.swift in Sources */,
 				3F071BA52C29A2CC00F19C63 /* BackgroundJobView.swift in Sources */,
 				3F071BA22C29A27F00F19C63 /* NotificationView.swift in Sources */,
 				ED0CBB3C2BF656B90056E6AA /* SettingsView.swift in Sources */,
 				3F317C4F2C2476C300F42D37 /* StackContentView.swift in Sources */,
 				ED0CBB3D2BF656B90056E6AA /* basenanaApp.swift in Sources */,
+				3F9FAF872D05BBF000C95D51 /* DatabaseSettingView.swift in Sources */,
 				3F7A1DF32CEDB7C900C2BDC8 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
