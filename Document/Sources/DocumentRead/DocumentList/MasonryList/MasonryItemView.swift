@@ -42,7 +42,7 @@ struct MasonryItemView: View {
                     .foregroundColor(Color.gray)
             }
             Spacer(minLength: 20)
-
+            
             Text(docTitle)
                 .font(.title2)
                 .multilineTextAlignment(.leading)
@@ -53,8 +53,8 @@ struct MasonryItemView: View {
             MasonryItemBannerView(bannerURL: self.doc.headerImage)
             
             Spacer(minLength: 20)
-
-            Text("\(doc.info.subContent.prefix(200))... ")
+            
+            Text("\(subContent)... ")
                 .font(.body)
                 .lineSpacing(2)
                 .foregroundColor(Color.gray)
@@ -65,7 +65,7 @@ struct MasonryItemView: View {
                 .font(.caption2)
                 .fontWeight(.light)
                 .foregroundColor(Color.gray)
-
+            
         }
         .padding(.horizontal, 30)
         .padding(.vertical, 40)
@@ -102,13 +102,19 @@ struct MasonryItemView: View {
     
     var docURL: String {
         if let urlStr = properties.filter({ ($0.key == Property.WebPageURL || $0.key == Property.WebSiteURL) && !$0.value.isEmpty }).first?.value{
-            return URL(string: urlStr)?.host() ?? parent.name
+            return URL(string: urlStr)?.host() ?? ""
         }
-        return parent.name
+        return ""
     }
     
     var groupName: String {
-        return properties.filter({ $0.key == Property.WebSiteName}).first?.value ?? ""
+        return properties.filter({ $0.key == Property.WebSiteName}).first?.value ?? parent.name
+    }
+    
+    var subContent: String {
+        return doc.info.headerImage != "" ?
+        String(doc.info.subContent.prefix(200)):
+        String(doc.info.subContent)
     }
     
     let rfc3339Formatter = RFC3339Formatter()

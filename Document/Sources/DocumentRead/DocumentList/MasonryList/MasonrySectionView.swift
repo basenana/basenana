@@ -33,7 +33,7 @@ struct MasonrySectionView: View {
                             MasonryItemView(section: section.id, doc: document, viewModel: viewModel)
                                 .onAppear { viewModel.onDocumentAppear(document: document) }
                                 .onDisappear { viewModel.onDocumentDisappear(document: document) }
-                                .padding(.vertical, 10)
+                                .padding(.vertical, 15)
                                 .frame(maxWidth: 350)
                         }
                         .buttonStyle(.link)

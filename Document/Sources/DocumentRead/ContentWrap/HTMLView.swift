@@ -89,7 +89,6 @@ p, li { line-height: 150%; }
 a { color: #3366cc; border-bottom: 1px dotted #3366cc; text-decoration: none; }
 a:hover { color: #2647a3; border-bottom-color: color: #66ccff; }
 img { max-width: 80%; height: auto; margin: 10px auto; display: block; }
-img:hover { transition: transform 1s ease; transform: scale(1.5); }
 pre {
     border: 1px solid #ddd;
     border-radius: 3px;
@@ -107,15 +106,15 @@ iframe { height: auto; width: auto; max-width: 95%; max-height: 100%; }
 @media (prefers-color-scheme: light) {
     h1, h2, h3 { color: #333; }
     pre, code {
-        background-color: #f6f8fa;
-        color: #333;
+        background-color: #F7F6F4;
+        color: #6F6F6E;
     }
 }
 @media (prefers-color-scheme: dark) {
     h1, h2, h3 { color: #fff; }
     body {
-        background-color: #333;
-        color: #fff;
+        background-color: #242423;
+        color: #BEBEBD;
     }
     pre, code {
         background-color: #282a36;

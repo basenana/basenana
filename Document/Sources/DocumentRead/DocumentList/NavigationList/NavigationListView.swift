@@ -34,12 +34,12 @@ public struct NavigationListView: View {
             .toolbar(removing: .sidebarToggle)
             
             if let doc = selection {
-                DocumentReadView(viewModel: DocumentReadViewModel(docID: doc.id, store: viewModel.store, usecase: viewModel.usecase)).id(doc.id)
+                DocumentReadView(viewModel: DocumentReadViewModel(docID: doc.id, store: viewModel.store, usecase: viewModel.usecase))
                     .task {
                         if doc.isUnread {
                             await viewModel.setDocumentReadStatus(section: doc.sectionName, document: doc.id, isUnread: false)
                         }
-                    }
+                    }.id(doc.id)
             }
         }
     }
