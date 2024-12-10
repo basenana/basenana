@@ -31,6 +31,7 @@ public struct MasonryListView: View {
                     }
                 }
             }
+            .padding(.horizontal, 20)
         }
         .toolbar(removing: .sidebarToggle)
         .frame(minWidth: 300, idealWidth: 300)

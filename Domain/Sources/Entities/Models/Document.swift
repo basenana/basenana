@@ -17,7 +17,10 @@ public protocol DocumentInfo {
     var marked: Bool { get }
     var unread: Bool { get }
     var subContent: String { get }
-    
+    var headerImage: String { get }
+    var properties: [EntryProperty] { get }
+    var parent: EntryInfo { get }
+
     var createdAt: Date { get }
     var changedAt: Date { get }
 }

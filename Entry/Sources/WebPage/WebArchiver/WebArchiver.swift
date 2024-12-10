@@ -57,6 +57,7 @@ public class WebArchiver {
                     return archive
                 }
             }
+            session.finish(with: archive)
         }catch {
             print("[archiveWithMainResource] failed \(error)")
         }

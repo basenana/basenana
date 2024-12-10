@@ -18,7 +18,6 @@
 		3F1BBE272B8E1480005D533F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F1BBE262B8E1480005D533F /* Preview Assets.xcassets */; };
 		3F317C4E2C2476C300F42D37 /* StackContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F317C4D2C2476C300F42D37 /* StackContentView.swift */; };
 		3F317C4F2C2476C300F42D37 /* StackContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F317C4D2C2476C300F42D37 /* StackContentView.swift */; };
-		3F3711DF2CA01BFA00098460 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB192BF656B90056E6AA /* GRDB */; };
 		3F4A78DB2BCF7FFB0035F90F /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4A78DA2BCF7FFB0035F90F /* SwiftyBeaver */; };
 		3F4A78E12BD299110035F90F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78E02BD299110035F90F /* SettingsView.swift */; };
 		3F7444B72BE3D1B000CC9C1E /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 3F7444B62BE3D1B000CC9C1E /* SwiftSoup */; };
@@ -54,12 +53,23 @@
 		ED0CBB432BF656B90056E6AA /* protoc-gen-grpc-swift in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB182BF656B90056E6AA /* protoc-gen-grpc-swift */; };
 		ED0CBB442BF656B90056E6AA /* GRPCReflectionService in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB162BF656B90056E6AA /* GRPCReflectionService */; };
 		ED0CBB452BF656B90056E6AA /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB1B2BF656B90056E6AA /* SwiftyBeaver */; };
-		ED0CBB462BF656B90056E6AA /* _GRPCCore in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB172BF656B90056E6AA /* _GRPCCore */; };
 		ED0CBB482BF656B90056E6AA /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB1D2BF656B90056E6AA /* SwiftSoup */; };
 		ED0CBB492BF656B90056E6AA /* GRPC in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB152BF656B90056E6AA /* GRPC */; };
 		ED0CBB4A2BF656B90056E6AA /* CGRPCZlib in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB132BF656B90056E6AA /* CGRPCZlib */; };
 		ED0CBB4C2BF656B90056E6AA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F1BBE262B8E1480005D533F /* Preview Assets.xcassets */; };
 		ED0CBB4D2BF656B90056E6AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F1BBE222B8E1480005D533F /* Assets.xcassets */; };
+		EDB98C622D05E21700077661 /* NetworkCore in Frameworks */ = {isa = PBXBuildFile; productRef = EDB98C612D05E21700077661 /* NetworkCore */; };
+		EDB98C642D05E21700077661 /* NetworkExtension in Frameworks */ = {isa = PBXBuildFile; productRef = EDB98C632D05E21700077661 /* NetworkExtension */; };
+		EDB98C662D05E21700077661 /* Repositories in Frameworks */ = {isa = PBXBuildFile; productRef = EDB98C652D05E21700077661 /* Repositories */; };
+		EDB98C682D05E21700077661 /* DocumentRead in Frameworks */ = {isa = PBXBuildFile; productRef = EDB98C672D05E21700077661 /* DocumentRead */; };
+		EDB98C6A2D05E21800077661 /* AppState in Frameworks */ = {isa = PBXBuildFile; productRef = EDB98C692D05E21800077661 /* AppState */; };
+		EDB98C6C2D05E21800077661 /* Entities in Frameworks */ = {isa = PBXBuildFile; productRef = EDB98C6B2D05E21800077661 /* Entities */; };
+		EDB98C6E2D05E21800077661 /* RepositoryProtocol in Frameworks */ = {isa = PBXBuildFile; productRef = EDB98C6D2D05E21800077661 /* RepositoryProtocol */; };
+		EDB98C702D05E21800077661 /* UseCase in Frameworks */ = {isa = PBXBuildFile; productRef = EDB98C6F2D05E21800077661 /* UseCase */; };
+		EDB98C722D05E21800077661 /* UseCaseProtocol in Frameworks */ = {isa = PBXBuildFile; productRef = EDB98C712D05E21800077661 /* UseCaseProtocol */; };
+		EDB98C742D05E21800077661 /* GroupTable in Frameworks */ = {isa = PBXBuildFile; productRef = EDB98C732D05E21800077661 /* GroupTable */; };
+		EDB98C762D05E21800077661 /* Workflow in Frameworks */ = {isa = PBXBuildFile; productRef = EDB98C752D05E21800077661 /* Workflow */; };
+		EDB98C782D05E2E800077661 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = EDB98C772D05E2E800077661 /* Swinject */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -153,17 +163,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3F3711DF2CA01BFA00098460 /* GRDB in Frameworks */,
+				EDB98C662D05E21700077661 /* Repositories in Frameworks */,
+				EDB98C762D05E21800077661 /* Workflow in Frameworks */,
+				EDB98C782D05E2E800077661 /* Swinject in Frameworks */,
 				ED0CBB432BF656B90056E6AA /* protoc-gen-grpc-swift in Frameworks */,
 				ED0CBB442BF656B90056E6AA /* GRPCReflectionService in Frameworks */,
+				EDB98C702D05E21800077661 /* UseCase in Frameworks */,
 				ED0CBB452BF656B90056E6AA /* SwiftyBeaver in Frameworks */,
 				3F19E2092C14086700B84293 /* Reeeed in Frameworks */,
-				ED0CBB462BF656B90056E6AA /* _GRPCCore in Frameworks */,
 				ED0CBB482BF656B90056E6AA /* SwiftSoup in Frameworks */,
 				ED0CBB492BF656B90056E6AA /* GRPC in Frameworks */,
+				EDB98C722D05E21800077661 /* UseCaseProtocol in Frameworks */,
+				EDB98C682D05E21700077661 /* DocumentRead in Frameworks */,
+				EDB98C742D05E21800077661 /* GroupTable in Frameworks */,
+				EDB98C6A2D05E21800077661 /* AppState in Frameworks */,
 				3FCEC3CE2C314D41002D8662 /* FeedKit in Frameworks */,
 				ED0CBB4A2BF656B90056E6AA /* CGRPCZlib in Frameworks */,
+				EDB98C622D05E21700077661 /* NetworkCore in Frameworks */,
+				EDB98C6E2D05E21800077661 /* RepositoryProtocol in Frameworks */,
 				3F84C8CB2C146E29003DC6DA /* WebArchiver in Frameworks */,
+				EDB98C6C2D05E21800077661 /* Entities in Frameworks */,
+				EDB98C642D05E21700077661 /* NetworkExtension in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -384,14 +404,24 @@
 				ED0CBB132BF656B90056E6AA /* CGRPCZlib */,
 				ED0CBB152BF656B90056E6AA /* GRPC */,
 				ED0CBB162BF656B90056E6AA /* GRPCReflectionService */,
-				ED0CBB172BF656B90056E6AA /* _GRPCCore */,
 				ED0CBB182BF656B90056E6AA /* protoc-gen-grpc-swift */,
-				ED0CBB192BF656B90056E6AA /* GRDB */,
 				ED0CBB1B2BF656B90056E6AA /* SwiftyBeaver */,
 				ED0CBB1D2BF656B90056E6AA /* SwiftSoup */,
 				3F19E2082C14086700B84293 /* Reeeed */,
 				3F84C8CA2C146E29003DC6DA /* WebArchiver */,
 				3FCEC3CD2C314D41002D8662 /* FeedKit */,
+				EDB98C612D05E21700077661 /* NetworkCore */,
+				EDB98C632D05E21700077661 /* NetworkExtension */,
+				EDB98C652D05E21700077661 /* Repositories */,
+				EDB98C672D05E21700077661 /* DocumentRead */,
+				EDB98C692D05E21800077661 /* AppState */,
+				EDB98C6B2D05E21800077661 /* Entities */,
+				EDB98C6D2D05E21800077661 /* RepositoryProtocol */,
+				EDB98C6F2D05E21800077661 /* UseCase */,
+				EDB98C712D05E21800077661 /* UseCaseProtocol */,
+				EDB98C732D05E21800077661 /* GroupTable */,
+				EDB98C752D05E21800077661 /* Workflow */,
+				EDB98C772D05E2E800077661 /* Swinject */,
 			);
 			productName = basenana;
 			productReference = ED0CBB522BF656B90056E6AA /* basenana dev.app */;
@@ -1048,14 +1078,6 @@
 				minimumVersion = 1.22.0;
 			};
 		};
-		ED0CBB1A2BF656B90056E6AA /* XCRemoteSwiftPackageReference "GRDB.swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/groue/GRDB.swift.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.0.0;
-			};
-		};
 		ED0CBB1C2BF656B90056E6AA /* XCRemoteSwiftPackageReference "SwiftyBeaver" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SwiftyBeaver/SwiftyBeaver.git";
@@ -1193,20 +1215,10 @@
 			package = ED0CBB142BF656B90056E6AA /* XCRemoteSwiftPackageReference "grpc-swift" */;
 			productName = GRPCReflectionService;
 		};
-		ED0CBB172BF656B90056E6AA /* _GRPCCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = ED0CBB142BF656B90056E6AA /* XCRemoteSwiftPackageReference "grpc-swift" */;
-			productName = _GRPCCore;
-		};
 		ED0CBB182BF656B90056E6AA /* protoc-gen-grpc-swift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = ED0CBB142BF656B90056E6AA /* XCRemoteSwiftPackageReference "grpc-swift" */;
 			productName = "protoc-gen-grpc-swift";
-		};
-		ED0CBB192BF656B90056E6AA /* GRDB */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = ED0CBB1A2BF656B90056E6AA /* XCRemoteSwiftPackageReference "GRDB.swift" */;
-			productName = GRDB;
 		};
 		ED0CBB1B2BF656B90056E6AA /* SwiftyBeaver */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1217,6 +1229,55 @@
 			isa = XCSwiftPackageProductDependency;
 			package = ED0CBB1E2BF656B90056E6AA /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
+		};
+		EDB98C612D05E21700077661 /* NetworkCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NetworkCore;
+		};
+		EDB98C632D05E21700077661 /* NetworkExtension */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NetworkExtension;
+		};
+		EDB98C652D05E21700077661 /* Repositories */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Repositories;
+		};
+		EDB98C672D05E21700077661 /* DocumentRead */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DocumentRead;
+		};
+		EDB98C692D05E21800077661 /* AppState */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppState;
+		};
+		EDB98C6B2D05E21800077661 /* Entities */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Entities;
+		};
+		EDB98C6D2D05E21800077661 /* RepositoryProtocol */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RepositoryProtocol;
+		};
+		EDB98C6F2D05E21800077661 /* UseCase */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UseCase;
+		};
+		EDB98C712D05E21800077661 /* UseCaseProtocol */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UseCaseProtocol;
+		};
+		EDB98C732D05E21800077661 /* GroupTable */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GroupTable;
+		};
+		EDB98C752D05E21800077661 /* Workflow */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Workflow;
+		};
+		EDB98C772D05E2E800077661 /* Swinject */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F7A1DFD2CEDC16D00C2BDC8 /* XCRemoteSwiftPackageReference "Swinject" */;
+			productName = Swinject;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

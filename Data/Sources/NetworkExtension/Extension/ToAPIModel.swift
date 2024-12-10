@@ -58,10 +58,14 @@ extension Api_V1_Property {
 
 extension Api_V1_DocumentInfo {
     func toDocuement() -> APIDocumentInfo{
+        var enProperties: [APIEntryProperty]=[]
+        for property in self.properties {
+            enProperties.append(APIEntryProperty(key: property.key, value: property.value, encoded: property.encoded))
+        }
         return APIDocumentInfo(
             id: self.id, oid: self.entryID, parentId: self.parentEntryID, name: self.name, namespace: self.namespace, source: self.source,
-            marked: self.marked, unread: self.unread, subContent: self.subContent,
-            createdAt: self.createdAt.date, changedAt: self.changedAt.date)
+            marked: self.marked, unread: self.unread, subContent: self.subContent, headerImage: self.headerImage,
+            createdAt: self.createdAt.date, changedAt: self.changedAt.date, properties: enProperties, parent: self.parent.toEntry())
     }
 }
 
