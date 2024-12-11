@@ -95,14 +95,14 @@ public class BaseViewModel {
     func moveEntriesToGroup(entries: [Int64], newParent: Int64) async -> Bool {
         do {
             try await entryUsecase.changeParent(entries: entries, newParent: newParent) { target, parent in
+                assert(Thread.isMainThread)
                 if target.isGroup {
                     if let grp = GroupTree.shared.getGroup(groupID: target.id) {
-                        NotificationCenter.default.post(name: .reopenGroup, object: [target.parent])
-                        NotificationCenter.default.post(name: .reopenGroup, object: [parent.id])
                         GroupTree.shared.removeChildGroup(parentID: target.parent, childID: target.id)
                         GroupTree.shared.addChildGroup(parentID: parent.id, child: grp.group, grandChildren: grp.children)
                     }
                 }
+                NotificationCenter.default.post(name: .reopenGroup, object: [target.parent, parent.id])
             }
         } catch {
             sentAlert("move entry failed \(error)")
@@ -122,18 +122,16 @@ public class BaseViewModel {
             store.newBackgroundJob(
                 name: "Uploading \(file.lastPathComponent)",
                 job: {
-                    Task {
+                    let properties: [String:String] = [Property.LocalFile:file.path()]
+                    do {
                         if try file.resourceValues(forKeys: [.isDirectoryKey]).isDirectory ?? false {
                             throw BizError.isGroup
                         }
                         
-                        var properties: [String:String] = [Property.LocalFile:file.path()]
-                        do {
-                            let en = try await self.entryUsecase.UploadFile(parent: parentID, file: file, properties: properties)
-                            print("upload new entry \(en.id)/\(en.name)")
-                        } catch {
-                            sentAlert("upload file \(file.lastPathComponent) failed \(error)")
-                        }
+                        let en = try await self.entryUsecase.UploadFile(parent: parentID, file: file, properties: properties)
+                        print("upload new entry \(en.id)/\(en.name)")
+                    } catch {
+                        sentAlert("upload file \(file.lastPathComponent) failed \(error)")
                     }
                 },
                 complete: {

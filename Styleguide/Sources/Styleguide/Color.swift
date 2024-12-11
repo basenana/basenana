@@ -15,6 +15,8 @@ public extension Color {
     
     static let CardBackground = Color("cardBackground")
     
+    static let CardFrontground = Color("cardFrontground")
+
     static let DialogBoxBackground = Color("dialogBoxBackground")
     
     static let DateColor = Color("dateColor")

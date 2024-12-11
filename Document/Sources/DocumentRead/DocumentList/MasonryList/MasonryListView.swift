@@ -24,6 +24,7 @@ public struct MasonryListView: View {
             ScrollView(.vertical) {
                 ForEach(viewModel.sectionDocuments){ section in
                     MasonrySectionView(section: section, viewModel: viewModel)
+                        .padding(.horizontal, 20)
                 }
                 LazyVStack {
                     if viewModel.hasMore {
@@ -31,7 +32,6 @@ public struct MasonryListView: View {
                     }
                 }
             }
-            .padding(.horizontal, 20)
         }
         .toolbar(removing: .sidebarToggle)
         .frame(minWidth: 300, idealWidth: 300)

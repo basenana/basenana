@@ -12,13 +12,13 @@ import Entities
 struct DocumentMenuView: View {
     private var section: String = ""
     @Binding var document: DocumentItem
-    @State var entry: EntryDetail
+    @State var parent: EntryInfo
     @State var viewModel: DocumentListViewModel
     
-    init(section: String, document: Binding<DocumentItem>, entry: EntryDetail, viewModel: DocumentListViewModel) {
+    init(section: String, document: Binding<DocumentItem>, parent: EntryInfo, viewModel: DocumentListViewModel) {
         self.section = section
         self._document = document
-        self.entry = entry
+        self.parent = parent
         self.viewModel = viewModel
     }
     
@@ -45,7 +45,7 @@ struct DocumentMenuView: View {
             
             Section{
                 Button("Go To Group", action: {
-                    viewModel.store.dispatch(.gotoDestination(.groupList(group: entry.parent)))
+                    viewModel.store.dispatch(.gotoDestination(.groupList(group: parent.id)))
                 })
             }
             
@@ -59,7 +59,7 @@ struct DocumentMenuView: View {
     
     func getEntryProperty(keys: [String]) -> EntryProperty?{
         for k in keys {
-            for p in entry.properties {
+            for p in document.properties {
                 if p.key == k {
                     return p
                 }

@@ -112,7 +112,6 @@
 		3FC54F022C948CF500803A1D /* Document */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Document; sourceTree = "<group>"; };
 		3FC54F032C948E4C00803A1D /* Data */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Data; sourceTree = "<group>"; };
 		3FC54F062C948FB900803A1D /* Entry */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Entry; sourceTree = "<group>"; };
-		3FC54F072C948FDB00803A1D /* Search */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Search; sourceTree = "<group>"; };
 		3FC54F082C948FF000803A1D /* Notify */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Notify; sourceTree = "<group>"; };
 		ED0CBB522BF656B90056E6AA /* basenana dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "basenana dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED0CBB532BF656BA0056E6AA /* Info-dev.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-dev.plist"; sourceTree = SOURCE_ROOT; };
@@ -204,7 +203,6 @@
 			children = (
 				3FC54F062C948FB900803A1D /* Entry */,
 				3FC54F022C948CF500803A1D /* Document */,
-				3FC54F072C948FDB00803A1D /* Search */,
 				3FC54F002C948C9200803A1D /* Workflow */,
 				3FC54F082C948FF000803A1D /* Notify */,
 				3FC54EF32C94874400803A1D /* Domain */,

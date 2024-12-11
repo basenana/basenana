@@ -57,7 +57,7 @@ struct MasonryItemView: View {
             Text("\(subContent)... ")
                 .font(.body)
                 .lineSpacing(2)
-                .foregroundColor(Color.gray)
+                .foregroundColor(Color.CardFrontground)
                 .multilineTextAlignment(.leading)
             
             Spacer(minLength: 10)
@@ -72,9 +72,7 @@ struct MasonryItemView: View {
         .background(Color.CardBackground)
         .cornerRadius(5)
         .contextMenu {
-            if let en = entry {
-                DocumentMenuView(section: section, document: $doc, entry: en, viewModel: viewModel)
-            }
+            DocumentMenuView(section: section, document: $doc, parent: parent, viewModel: viewModel)
         }
     }
     
@@ -108,7 +106,7 @@ struct MasonryItemView: View {
     }
     
     var groupName: String {
-        return properties.filter({ $0.key == Property.WebSiteName}).first?.value ?? parent.name
+        return properties.filter({ $0.key == Property.WebSiteName}).first?.value ?? entryTitleName(en: parent)
     }
     
     var subContent: String {

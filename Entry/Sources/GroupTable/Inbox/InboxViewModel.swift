@@ -74,47 +74,54 @@ public class InboxViewModel: BaseViewModel {
     func webarchiveAndUpload(url: URL, title: String, content: String)  {
         
         store.newBackgroundJob(
-            name: "web archiving \(title)",
+            name: "Packing Web Page \(title)",
             job: {
-                Task {
-                    let temporaryDirectory = FileManager.default.temporaryDirectory
-                    let temporaryFileName = "\(title).webarchive"
-                    let temporaryFileURL = temporaryDirectory.appendingPathComponent(temporaryFileName)
-                    
-                    do {
-                        try webarchiveBaseMainResource(url: url, mainResource: content, temporaryFileURL: temporaryFileURL){ error in
-                            if let err = error {
-                                sentAlert("web packing failed \(err)")
-                                return
-                            }
+                let temporaryDirectory = FileManager.default.temporaryDirectory
+                let temporaryFileName = "\(title).webarchive"
+                let temporaryFileURL = temporaryDirectory.appendingPathComponent(temporaryFileName)
+                
+                do {
+                    try webarchiveBaseMainResource(url: url, mainResource: content, temporaryFileURL: temporaryFileURL){ error in
+                        if let err = error {
+                            sentAlert("web packing failed \(err)")
+                            return
+                        }
+                        DispatchQueue.main.async {
                             self.uploadWebarchive(url: url, title: title, file: temporaryFileURL)
                         }
-                    } catch {
-                        print("save error \(error)")
                     }
+                } catch {
+                    print("save error \(error)")
                 }
             },
             complete: {
-                NotificationCenter.default.post(name: .reopenGroup, object: [self.store.fsInfo.inboxID])
             }
         )
         
     }
     
     func uploadWebarchive(url: URL, title: String, file: URL)  {
-        Task {
-            let properties: [String:String] = [Property.WebPageURL:url.absoluteString, Property.WebPageTitle: title]
-            do {
-                if try file.resourceValues(forKeys: [.isDirectoryKey]).isDirectory ?? false {
-                    sentAlert("invalid web file")
-                    return
+        assert(Thread.isMainThread)
+        
+        store.newBackgroundJob(
+            name: "Uploading Web Archive \(file.lastPathComponent)",
+            job: {
+                let properties: [String:String] = [Property.WebPageURL:url.absoluteString, Property.WebPageTitle: title]
+                do {
+                    if try file.resourceValues(forKeys: [.isDirectoryKey]).isDirectory ?? false {
+                        sentAlert("invalid web file")
+                        return
+                    }
+                    
+                    let en = try await self.entryUsecase.UploadFile(parent: self.store.fsInfo.inboxID, file: file, properties: properties)
+                    print("upload new entry \(en.id)/\(en.name)")
+                } catch {
+                    sentAlert("upload file \(file.lastPathComponent) failed \(error)")
                 }
-                
-                let en = try await self.entryUsecase.UploadFile(parent: self.store.fsInfo.inboxID, file: file, properties: properties)
-                print("upload new entry \(en.id)/\(en.name)")
-            } catch {
-                sentAlert("upload file \(file.lastPathComponent) failed \(error)")
+            },
+            complete: {
+                NotificationCenter.default.post(name: .reopenGroup, object: [self.store.fsInfo.inboxID])
             }
-        }
+        )
     }
 }

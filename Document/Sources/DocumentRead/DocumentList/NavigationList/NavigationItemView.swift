@@ -15,15 +15,16 @@ import Entities
 struct NavigationItemView: View {
     private var section: String
     @State var doc: DocumentItem
+    @State var parent: EntryInfo
     @State var viewModel: DocumentListViewModel
     
-    @State var entry: EntryDetail? = nil
     @State var parentEntry: EntryDetail? = nil
     @State var properties: [EntryProperty] = []
     
     init(section: String, doc: DocumentItem, viewModel: DocumentListViewModel ) {
         self.section = section
         self.doc = doc
+        self.parent = doc.parent
         self.viewModel = viewModel
     }
     
@@ -58,16 +59,7 @@ struct NavigationItemView: View {
         }
         .padding(.vertical, 3)
         .contextMenu {
-            if let en = entry {
-                DocumentMenuView(section: section, document: $doc, entry: en, viewModel: viewModel)
-            }
-        }
-        .task {
-            if let getEntry = await viewModel.getDocumentEntry(entry: doc.info.oid) {
-                entry = getEntry
-                properties = getEntry.properties
-                parentEntry = await viewModel.getDocumentEntry(entry: getEntry.parent)
-            }
+            DocumentMenuView(section: section, document: $doc, parent: parent, viewModel: viewModel)
         }
     }
     
@@ -95,13 +87,13 @@ struct NavigationItemView: View {
     
     var docURL: String {
         if let urlStr = properties.filter({ ($0.key == Property.WebPageURL || $0.key == Property.WebSiteURL) && !$0.value.isEmpty }).first?.value{
-            return URL(string: urlStr)?.host() ?? parentEntry?.name ?? ""
+            return URL(string: urlStr)?.host() ?? ""
         }
-        return parentEntry?.name ?? ""
+        return ""
     }
     
     var groupName: String {
-        return properties.filter({ $0.key == Property.WebSiteName}).first?.value ?? ""
+        return properties.filter({ $0.key == Property.WebSiteName}).first?.value ?? entryTitleName(en: parent)
     }
     
     let rfc3339Formatter = RFC3339Formatter()

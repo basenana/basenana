@@ -27,29 +27,24 @@ public struct GroupTableView: View {
         VStack {
             GroupTableWithSheetView(groupID: groupID, viewModel: viewModel)
         }
-        .onAppear{
-            NotificationCenter.default.removeObserver(self, name: .reopenGroup, object: nil)
-            NotificationCenter.default.addObserver(
-                forName: .reopenGroup,
-                object: nil,
-                queue: .main) { [self] notification in
-                    if let parents = notification.object as? [Int64] {
-                        for p in parents {
-                            if p != groupID {
-                                continue
-                            }
-                            Task {
-                                // reopen
-                                await viewModel.openGroup(groupID: groupID)
-                            }
-                            break
-                        }
+        .onReceive(NotificationCenter.default.publisher(for: .reopenGroup)) { [self] notification in
+            if let parents = notification.object as? [Int64] {
+                var needReopen = false
+                for p in parents {
+                    if p != groupID {
+                        continue
+                    }
+                    needReopen = true
+                    break
+                }
+                
+                if needReopen {
+                    Task {
+                        // reopen
+                        await viewModel.openGroup(groupID: groupID)
                     }
                 }
-            
-        }
-        .onDisappear(){
-            NotificationCenter.default.removeObserver(self)
+            }
         }
         .task {
             await viewModel.openGroup(groupID: groupID)
