@@ -8,8 +8,6 @@
 import Foundation
 import Entities
 
-let backgroundQueue = DispatchQueue(label: "bg.jobs", qos: .background)
-
 public final class BackgroundJob: Identifiable {
     public var id: String
     public var name: String
@@ -25,16 +23,14 @@ public final class BackgroundJob: Identifiable {
 
 extension StateStore {
     
-    public func newBackgroundJob(name: String, job: @escaping () -> Void, complete: @escaping () -> Void) {
-        // Create a background queue
+    public func newBackgroundJob(name: String, job: @escaping () async -> Void, complete: @escaping () -> Void) {
         assert(Thread.isMainThread)
         
         let j = BackgroundJob(name: name, startAt: Date())
         self.backgroupJobs.append(j)
         
-        // Execute the job in the background
-        backgroundQueue.async {
-            job() // Perform the job
+        Task(priority: .background) {
+            await job()
             
             // Once the job is done, call the completion handler on the main queue
             DispatchQueue.main.async {

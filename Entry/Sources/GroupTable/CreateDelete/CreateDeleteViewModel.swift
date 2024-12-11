@@ -14,7 +14,7 @@ import UseCaseProtocol
 @MainActor
 public class CreateDeleteViewModel {
     var groupTree = GroupTree.shared
-
+    
     var store: StateStore
     var entryUsecase: EntryUseCaseProtocol
     
@@ -58,8 +58,11 @@ public class CreateDeleteViewModel {
             store.newBackgroundJob(
                 name: "Deleting \(entry.name)",
                 job: {
-                    Task {
+                    do {
                         try await uc.deleteEntry(entry: entry.id)
+                    } catch {
+                        sentAlert("delete entry \(entry.name) failed \(error)")
+                        return
                     }
                 },
                 complete: {

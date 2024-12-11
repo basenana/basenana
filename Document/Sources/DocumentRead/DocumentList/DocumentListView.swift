@@ -51,7 +51,7 @@ public struct DocumentListView: View {
                 await viewModel.setAllAppearedDocuemntRead()
             }
         }
-        .task { viewModel.reset() }
+        .onAppear { viewModel.reset() }
         .onDisappear{ viewModel.disableHooks() }
         .toolbar {
             ToolbarItemGroup(placement: .navigation) {

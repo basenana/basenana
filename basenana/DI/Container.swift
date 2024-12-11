@@ -39,10 +39,10 @@ class DIContainer {
         }
         self.c.register(DocumentListViewModel.self, name: DocumentPrespective.marked.Title){ r in
             DocumentListViewModel(prespective: .marked, store: state, usecase: r.resolve(DocumentUseCaseProtocol.self)!)
-        }.inObjectScope(.container)
+        }//.inObjectScope(.container)
         self.c.register(DocumentListViewModel.self, name: DocumentPrespective.unread.Title){ r in
             DocumentListViewModel(prespective: .unread, store: state, usecase: r.resolve(DocumentUseCaseProtocol.self)!)
-        }.inObjectScope(.container)
+        }//.inObjectScope(.container)
         self.c.register(DocumentReadViewModel.self) { r, docID in
             DocumentReadViewModel(docID: docID, store: state, usecase: r.resolve(DocumentUseCaseProtocol.self)!)
         }

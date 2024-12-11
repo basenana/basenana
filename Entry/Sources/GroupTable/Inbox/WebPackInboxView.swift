@@ -47,7 +47,7 @@ public struct WebPackInboxView: View {
                 
                 if let safePage = self.page {
                     InboxPreviewView(page: safePage, webView: webView)
-                        .frame(width: 500, height: 600)
+                        .frame(width: 500, height: 300)
                 }
                 
             }

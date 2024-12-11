@@ -105,9 +105,13 @@ figure figcaption { display: none; }
 iframe { height: auto; width: auto; max-width: 95%; max-height: 100%; }
 @media (prefers-color-scheme: light) {
     h1, h2, h3 { color: #333; }
-    pre, code {
+    body {
         background-color: #F7F6F4;
         color: #6F6F6E;
+    }
+    pre, code {
+        background-color: #f6f8fa;
+        color: #333;
     }
 }
 @media (prefers-color-scheme: dark) {

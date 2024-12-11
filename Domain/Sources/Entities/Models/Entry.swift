@@ -52,6 +52,13 @@ public protocol EntryDetail {
 }
 
 
+public func entryTitleName(en: EntryInfo) -> String {
+    if !isVisitable(en: en){
+        return ""
+    }
+    return en.name.uppercased()
+}
+
 public func isVisitable(en: EntryInfo) -> Bool{
     return !en.name.starts(with: ".")
 }

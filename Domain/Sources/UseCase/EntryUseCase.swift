@@ -97,7 +97,9 @@ public class EntryUseCase: EntryUseCaseProtocol {
             for eid in entries {
                 let entry = try await getEntryDetails(entry: eid)
                 try await entryRepo.ChangeParent(entry: eid, newParent: newParent, option: ChangeParentOption())
-                finisher(entry, parent)
+                DispatchQueue.main.async {
+                    finisher(entry, parent)
+                }
             }
             
         } catch RepositoryError.canceled {

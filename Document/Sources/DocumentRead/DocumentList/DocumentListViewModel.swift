@@ -143,6 +143,7 @@ public class DocumentListViewModel {
             return
         }
         
+        print("list docuemnt len \(nextPage.count)")
         self.isLoading = true
         for nextDoc in nextPage {
             insertToSectionDocuments(doc: DocumentItem(info: nextDoc, readable: prespective == .unread ? true : false))
