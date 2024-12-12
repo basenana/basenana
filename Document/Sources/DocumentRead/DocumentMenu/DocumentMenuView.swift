@@ -8,6 +8,7 @@
 import SwiftUI
 import Foundation
 import Entities
+import Styleguide
 
 struct DocumentMenuView: View {
     private var section: String = ""
@@ -68,7 +69,7 @@ struct DocumentMenuView: View {
         return nil
     }
 }
-    
+
 
 struct DocumentMarkMenuView: View {
     private var section: String
@@ -85,12 +86,10 @@ struct DocumentMarkMenuView: View {
         Button {
             withAnimation(.easeInOut) {
                 document.isUnread.toggle()
-                Task {
-                    await viewModel.setDocumentReadStatus(section: section, document: document.id, isUnread: document.isUnread)
-                }
+                NotificationCenter.default.post(name: .updateDocumentMark, object: UpdateDocumentMark(doc: document, isUnread: document.isUnread))
             }
         } label: {
-            Image(systemName: document.isUnread ? "circle.slash" : "circle.fill")
+            Image(systemName: document.isUnread ? "circle" : "circle.inset.filled")
                 .resizable()
                 .frame(width: 5, height: 5)
             Text(document.isUnread ? "Read" : "Unread")
@@ -98,12 +97,10 @@ struct DocumentMarkMenuView: View {
         Button {
             withAnimation(.easeInOut) {
                 document.isMarked.toggle()
-                Task {
-                    await viewModel.setDocumentMarkStatus(section: section, document: document.id, isMark: document.isMarked)
-                }
+                NotificationCenter.default.post(name: .updateDocumentMark, object: UpdateDocumentMark(doc: document, isMarked: document.isMarked))
             }
         } label: {
-            Image(systemName: document.isMarked ? "bookmark.slash": "bookmark.fill")
+            Image(systemName: document.isMarked ? "bookmark": "bookmark.fill")
                 .resizable()
                 .frame(width: 5, height: 5)
             Text(document.isMarked ? "Unmark": "Mark")

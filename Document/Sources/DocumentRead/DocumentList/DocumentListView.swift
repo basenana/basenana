@@ -45,6 +45,18 @@ public struct DocumentListView: View {
                 viewModel.store.dispatch(.gotoDestination(.readDocument(document: document.id)))
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: .updateDocumentMark)) { [self] notification in
+            if let update = notification.object as? UpdateDocumentMark {
+                Task {
+                    if update.updateRead {
+                        await viewModel.setDocumentReadStatus(section: update.doc.sectionName, document: update.doc.id, isUnread: update.isUnread)
+                    }
+                    if update.updateMark {
+                        await viewModel.setDocumentMarkStatus(section: update.doc.sectionName, document: update.doc.id, isMark: update.isMarked)
+                    }
+                }
+            }
+        }
         .onReceive(NotificationCenter.default.publisher(for: .loadMoreDocuments)) { _ in
             Task {
                 await viewModel.loadNextPage()

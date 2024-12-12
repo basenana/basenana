@@ -18,7 +18,7 @@ public class StateStore {
     public var notifications = [String]()
     public var backgroupJobs = [BackgroundJob]()
     public var fsInfo = FSInfo()
-    public var config = Config()
+    public var setting = Setting.global
     
     private init(){
         NotificationCenter.default.addObserver(

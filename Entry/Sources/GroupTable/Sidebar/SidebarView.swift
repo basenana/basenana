@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import AppState
+import Styleguide
 
 
 public struct SidebarView: View {
@@ -22,15 +23,15 @@ public struct SidebarView: View {
     public var body: some View {
         List(selection: $selection){
             NavigationLink(value: Destination.groupList(group: viewModel.store.fsInfo.inboxID)){
-                SidebarIconView(imageName: "tray.full.fill", title: "Inbox", color: .blue)
+                SidebarIconView(imageName: "tray.full.fill", title: "Inbox", color: .InboxColor)
             }.id("nav_inbox")
             
             NavigationLink(value: Destination.listDocuments(prespective: .unread)){
-                SidebarIconView(imageName: "circle.inset.filled", title: "Unread", color: .brown)
+                SidebarIconView(imageName: "circle.inset.filled", title: "Unread", color: .UnreadColor)
             }.id("nav_unread")
             
             NavigationLink(value: Destination.listDocuments(prespective: .marked)){
-                SidebarIconView(imageName: "bookmark.fill", title: "Marked", color: .yellow)
+                SidebarIconView(imageName: "bookmark.fill", title: "Marked", color: .MarkedColor)
             }.id("nav_marked")
             
             

@@ -1,5 +1,5 @@
 //
-//  Config.swift
+//  DatabaseSetting.swift
 //  Domain
 //
 //  Created by Hypo on 2024/11/20.
@@ -7,8 +7,7 @@
 
 import SwiftUI
 
-@available(macOS 11.0, *)
-public class Config {
+class DatabaseSetting {
     @AppStorage("org.basenana.nanafs.host", store: UserDefaults.standard)
     var apiHost: String = ""
     
@@ -24,5 +23,5 @@ public class Config {
     @AppStorage("org.basenana.nanafs.namespace", store: UserDefaults.standard)
     var apiNamespace: String = ""
     
-    public init() { }
+    init() { }
 }

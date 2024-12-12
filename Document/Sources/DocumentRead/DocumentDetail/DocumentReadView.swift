@@ -25,6 +25,19 @@ public struct DocumentReadView: View {
                 EmptyView()
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: .updateDocumentMark)) { [self] notification in
+            if let update = notification.object as? UpdateDocumentMark {
+                if update.doc.id != viewModel.docID {
+                    return
+                }
+                Task {
+                    if update.updateRead {
+                    }
+                    if update.updateMark {
+                    }
+                }
+            }
+        }
         .navigationTitle(viewModel.document?.name ?? "")
         .frame(minWidth: 200, minHeight: 100)
         .toolbar{

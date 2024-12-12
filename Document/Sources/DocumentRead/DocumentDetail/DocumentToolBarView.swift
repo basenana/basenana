@@ -19,29 +19,33 @@ struct DocumentToolBarView: View {
     }
     
     var body: some View {
-        Button(action: {
-        }, label: {
-            Image(systemName: "circle")
-        })
-        Button(action: {
-        }, label: {
-            Image(systemName: "bookmark")
-        })
-
-        // web file
-        if let u = viewModel.targetURL {
+        if let document = viewModel.document {
             Button(action: {
-                openUrlInBrowser(url: u)
             }, label: {
-                Image(systemName: "safari")
+                Image(systemName: document.unread ? "circle.inset.filled" : "circle")
+                    .foregroundColor(.UnreadColor)
+            })
+            Button(action: {
+            }, label: {
+                Image(systemName: document.marked ? "bookmark.fill": "bookmark")
+                    .foregroundColor(.MarkedColor)
             })
             
-            Button(action: {
-                copyToClipBoard(content: "\(u.absoluteString)")
-                sentAlert("Link Copied")
-            }, label: {
-                Image(systemName: "link")
-            })
+            // web file
+            if let u = viewModel.targetURL {
+                Button(action: {
+                    openUrlInBrowser(url: u)
+                }, label: {
+                    Image(systemName: "safari")
+                })
+                
+                Button(action: {
+                    copyToClipBoard(content: "\(u.absoluteString)")
+                    sentAlert("Link Copied")
+                }, label: {
+                    Image(systemName: "link")
+                })
+            }
         }
     }
 }

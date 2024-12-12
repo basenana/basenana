@@ -9,6 +9,10 @@
 import Foundation
 import SwiftUI
 
+class AppearanceSetting {
+    init() {}
+}
+
 public enum ColorSchemeSetting: Int, CaseIterable, Identifiable {
     case dark
     case light
