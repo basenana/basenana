@@ -6,7 +6,6 @@
 //
 
 
-@available(macOS 14.0, *)
 extension StateStore {
     func reducer(action: AppAction) -> Task<AppAction?, Error>? {
         switch action {
@@ -15,9 +14,6 @@ extension StateStore {
             return nil
 
         case .setDestination(to: let to):
-            if destinations == to {
-                return nil
-            }
             if destinations.isEmpty {
                 destinations = to
                 return nil

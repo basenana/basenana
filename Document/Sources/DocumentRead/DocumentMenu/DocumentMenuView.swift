@@ -32,8 +32,8 @@ struct DocumentMenuView: View {
                     Button("Launch URL", action: {
                         Task {
                             if document.isUnread {
-                                document.isUnread = false
-                                await viewModel.setDocumentReadStatus(section: section, document: document.id, isUnread: false)
+                                document.isUnread.toggle()
+                                NotificationCenter.default.post(name: .updateDocumentMark, object: UpdateDocumentMark(doc: document.id, isUnread: false))
                             }
                         }
                         openUrlInBrowser(url: u)
@@ -86,7 +86,7 @@ struct DocumentMarkMenuView: View {
         Button {
             withAnimation(.easeInOut) {
                 document.isUnread.toggle()
-                NotificationCenter.default.post(name: .updateDocumentMark, object: UpdateDocumentMark(doc: document, isUnread: document.isUnread))
+                NotificationCenter.default.post(name: .updateDocumentMark, object: UpdateDocumentMark(doc: document.id, isUnread: document.isUnread))
             }
         } label: {
             Image(systemName: document.isUnread ? "circle" : "circle.inset.filled")
@@ -97,7 +97,7 @@ struct DocumentMarkMenuView: View {
         Button {
             withAnimation(.easeInOut) {
                 document.isMarked.toggle()
-                NotificationCenter.default.post(name: .updateDocumentMark, object: UpdateDocumentMark(doc: document, isMarked: document.isMarked))
+                NotificationCenter.default.post(name: .updateDocumentMark, object: UpdateDocumentMark(doc: document.id, isMarked: document.isMarked))
             }
         } label: {
             Image(systemName: document.isMarked ? "bookmark": "bookmark.fill")

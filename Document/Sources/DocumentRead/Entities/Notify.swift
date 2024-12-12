@@ -22,9 +22,9 @@ class UpdateDocumentMark {
     var updateMark: Bool
     var isMarked: Bool
     
-    var doc: DocumentItem
+    var doc: Int64
     
-    init(doc: DocumentItem, isUnread: Bool) {
+    init(doc: Int64, isUnread: Bool) {
         self.doc = doc
         self.updateRead = true
         self.isUnread = isUnread
@@ -33,7 +33,7 @@ class UpdateDocumentMark {
         self.isMarked = false
     }
     
-    init(doc: DocumentItem,  isMarked: Bool) {
+    init(doc: Int64,  isMarked: Bool) {
         self.doc = doc
         self.updateRead = false
         self.isUnread = false

@@ -39,7 +39,7 @@ public struct DocumentListView: View {
                 Task {
                     if document.isUnread {
                         document.isUnread = false
-                        await viewModel.setDocumentReadStatus(section: document.sectionName, document: document.id, isUnread: false)
+                        await viewModel.setDocumentReadStatus(document: document.id, isUnread: false)
                     }
                 }
                 viewModel.store.dispatch(.gotoDestination(.readDocument(document: document.id)))
@@ -49,10 +49,10 @@ public struct DocumentListView: View {
             if let update = notification.object as? UpdateDocumentMark {
                 Task {
                     if update.updateRead {
-                        await viewModel.setDocumentReadStatus(section: update.doc.sectionName, document: update.doc.id, isUnread: update.isUnread)
+                        await viewModel.setDocumentReadStatus(document: update.doc, isUnread: update.isUnread)
                     }
                     if update.updateMark {
-                        await viewModel.setDocumentMarkStatus(section: update.doc.sectionName, document: update.doc.id, isMark: update.isMarked)
+                        await viewModel.setDocumentMarkStatus(document: update.doc, isMark: update.isMarked)
                     }
                 }
             }

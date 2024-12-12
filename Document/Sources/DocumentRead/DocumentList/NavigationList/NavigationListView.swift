@@ -37,7 +37,8 @@ public struct NavigationListView: View {
                 DocumentReadView(viewModel: DocumentReadViewModel(docID: doc.id, store: viewModel.store, usecase: viewModel.usecase))
                     .task {
                         if doc.isUnread {
-                            await viewModel.setDocumentReadStatus(section: doc.sectionName, document: doc.id, isUnread: false)
+                            doc.isUnread.toggle()
+                            NotificationCenter.default.post(name: .updateDocumentMark, object: UpdateDocumentMark(doc: doc.id, isUnread: false))
                         }
                     }.id(doc.id)
             }
