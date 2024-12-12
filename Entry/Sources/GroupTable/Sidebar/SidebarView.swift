@@ -41,7 +41,7 @@ public struct SidebarView: View {
         }
         .onChange(of: selection){
             if let s = selection{
-                NotificationCenter.default.post(name: NSNotification.Name("selectSidebar"), object: s)
+                resetDestination(s)
                 if case.groupList(let grp) = s {
                     viewModel.selectedGroupId = grp
                     print("[SidebarView] selected group \(grp)")

@@ -9,7 +9,27 @@
 import Foundation
 import SwiftUI
 
-class AppearanceSetting {
+public class AppearanceSetting {
+    @AppStorage("org.basenana.appearance.appearance", store: UserDefaults.standard)
+    public var appearance: String = "auto" // light/dark/auto
+    
+    @AppStorage("org.basenana.appearance.language", store: UserDefaults.standard)
+    public var language: String = "english"
+    
+    @AppStorage("org.basenana.appearance.appFont", store: UserDefaults.standard)
+    public var appFont: String = ""
+    @AppStorage("org.basenana.appearance.appFontSize", store: UserDefaults.standard)
+    public var appFontSize: Int = 0
+    
+    @AppStorage("org.basenana.appearance.document.unreadReadModel", store: UserDefaults.standard)
+    public var unreadReadModel: String = "masonry"
+    @AppStorage("org.basenana.appearance.document.markedReadModel", store: UserDefaults.standard)
+    public var markedReadModel: String = "navigation"
+    @AppStorage("org.basenana.appearance.document.imagePreview", store: UserDefaults.standard)
+    public var imagePreview: String = "large"
+    @AppStorage("org.basenana.appearance.document.contentPreview", store: UserDefaults.standard)
+    public var contentPreview: Bool = true
+
     init() {}
 }
 

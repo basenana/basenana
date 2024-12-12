@@ -29,6 +29,8 @@ public struct MasonryListView: View {
                 LazyVStack {
                     if viewModel.hasMore {
                         LoadingView()
+                    } else {
+                        MasonryListReadAllView(viewModel: viewModel)
                     }
                 }
             }
@@ -39,15 +41,49 @@ public struct MasonryListView: View {
     }
 }
 
+struct MasonryListReadAllView: View {
+    @State var viewModel: DocumentListViewModel
+    @State var hasUnread: Bool = false
+    
+    public init(viewModel: DocumentListViewModel) {
+        self.viewModel = viewModel
+    }
+    
+    var body: some View {
+        HStack(alignment: .center){
+            Spacer()
+            if hasUnread {
+                Button(action: {
+                    Task {
+                        await viewModel.setAllAppearedDocuemntRead(before: 0)
+                        hasUnread = false
+                    }
+                }, label: {
+                    Label("Make All as Read", systemImage: "checkmark.rectangle.stack")
+                })
+                .padding(.vertical)
+                Spacer()
+            }
+        }
+        .task {
+            for sectionDocument in viewModel.sectionDocuments.reversed() {
+                for document in sectionDocument.documents {
+                    if document.isUnread {
+                        hasUnread = true
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 #if DEBUG
 
 import DomainTestHelpers
 
 #Preview {
-    if #available(macOS 14.0, *) {
-        MasonryListView(viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.empty, usecase: MockDocumentUseCase()))
-    }
+    MasonryListView(viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.empty, usecase: MockDocumentUseCase()))
 }
 
 #endif

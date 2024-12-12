@@ -9,5 +9,11 @@
 public class Setting {
     static var global = Setting()
     
+    public var general = GeneralSetting()
+    public var appearance = AppearanceSetting()
+    public var reading = ReadingSetting()
+    public var document = DocumentSetting()
+    public var database = DatabaseSetting()
+
     private init(){ }
 }

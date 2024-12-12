@@ -112,7 +112,7 @@ public class BaseViewModel {
         return false
     }
     
-    func replicateEntryToGroup(entries: [Int64], newParent: Int64) {
+    func replicateEntryToGroup(entries: [Int64], newParent: Int64) async {
         sentAlert("not support")
     }
     

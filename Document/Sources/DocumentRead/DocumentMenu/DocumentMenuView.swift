@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Foundation
+import AppState
 import Entities
 import Styleguide
 
@@ -45,9 +46,7 @@ struct DocumentMenuView: View {
             }
             
             Section{
-                Button("Go To Group", action: {
-                    viewModel.store.dispatch(.gotoDestination(.groupList(group: parent.id)))
-                })
+                Button("Go To Group", action: { gotoDestination(.groupList(group: parent.id)) })
             }
             
             Section{

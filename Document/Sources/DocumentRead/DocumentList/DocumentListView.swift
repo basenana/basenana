@@ -42,7 +42,7 @@ public struct DocumentListView: View {
                         await viewModel.setDocumentReadStatus(document: document.id, isUnread: false)
                     }
                 }
-                viewModel.store.dispatch(.gotoDestination(.readDocument(document: document.id)))
+                gotoDestination(.readDocument(document: document.id))
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: .updateDocumentMark)) { [self] notification in

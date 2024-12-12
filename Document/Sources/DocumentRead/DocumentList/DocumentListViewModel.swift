@@ -31,7 +31,7 @@ public class DocumentListViewModel {
     var page: Int = 1
     var pageSize: Int = 40
     var hasMore = true
-    
+
     public init(prespective: DocumentPrespective, store: StateStore, usecase: DocumentUseCaseProtocol) {
         self.prespective = prespective
         self.store = store
@@ -110,9 +110,9 @@ public class DocumentListViewModel {
         }
     }
     
-    func setAllAppearedDocuemntRead() async {
+    func setAllAppearedDocuemntRead(before: Int = 30) async {
         for kv in unreadDocumentsAppeared {
-            if enableHooks && Date().timeIntervalSince(kv.value.appearedAt) > 10 {
+            if enableHooks && Date().timeIntervalSince(kv.value.appearedAt) > Double(before) {
                 await setDocumentReadStatus(document: kv.value.documentID, isUnread: false)
                 unreadDocumentsAppeared.removeValue(forKey: kv.key)
             }

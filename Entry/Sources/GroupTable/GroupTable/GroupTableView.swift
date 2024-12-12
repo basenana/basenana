@@ -175,7 +175,7 @@ private struct GroupTableWithMenuView: View {
             } primaryAction: { items in
                 if  items.count == 1 {
                     if let grp = viewModel.children.filter({$0.id == items.first! && $0.isGroup}).first{
-                        viewModel.store.dispatch(.gotoDestination(.groupList(group: grp.id)))
+                        gotoDestination(.groupList(group: grp.id))
                     }
                 }
             }

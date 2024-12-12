@@ -24,7 +24,7 @@ public struct EntryMenuView: View {
         VStack {
             if canBeOpen() {
                 Section{
-                    Button("Open", action: { viewModel.store.dispatch(.gotoDestination(.groupList(group: targets.first!.id))) })
+                    Button("Open", action: { gotoDestination(.groupList(group: targets.first!.id)) })
                 }
             }
             
