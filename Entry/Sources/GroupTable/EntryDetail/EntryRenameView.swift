@@ -85,7 +85,7 @@ struct EntryRenameViewPreview: View {
         List {
             EntryRenameView(
                 entry: 1010,
-                viewModel: EntryDetailViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()),
+                viewModel: EntryDetailViewModel(store: StateStore.shared, entryUsecase: MockEntryUseCase()),
                 showRenameView: .constant(true))
         }
     }

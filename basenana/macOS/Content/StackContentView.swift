@@ -21,13 +21,13 @@ struct StackContentView: View {
     @State private var destinations = [Destination]()
     @State private var alertMessage: String = ""
     @State private var hasAlert: Bool = false
-
-
+    
+    
     init(state: StateStore) {
         self.state = state
         self.container = DIContainer(state: state)
     }
-
+    
     var body: some View {
         NavigationSplitView {
             SidebarView(viewModel: container.c.resolve(TreeViewModel.self)!)
@@ -41,12 +41,12 @@ struct StackContentView: View {
                         case .groupList(group: let group):
                             GroupTableView(groupID: group, viewModel: container.c.resolve(GroupTableViewModel.self)!)
                                 .id(group)
-                        
+                            
                         case .listDocuments(prespective: let prespective):
                             DocumentListView(viewModel: container.c.resolve(DocumentListViewModel.self, name: prespective.Title)!).id(prespective).navigationTitle(prespective.Title)
                         case .readDocument(document: let document):
                             DocumentReadView(viewModel: container.c.resolve(DocumentReadViewModel.self, argument: document)!).id(document)
-                        
+                            
                         case .workflowDashboard:
                             WorkflowListView(viewModel: container.c.resolve(WorkflowListViewModel.self)!)
                         case .workflowDetail(workflow: let workflow):
@@ -71,11 +71,9 @@ struct StackContentView: View {
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("alert"))) { [self] notification in
-            if let dest = notification.object as? Destination {
-                if let msg = notification.object as? String {
-                    alertMessage = msg
-                    hasAlert = true
-                }
+            if let msg = notification.object as? String {
+                alertMessage = msg
+                hasAlert = true
             }
         }
         .toolbar{

@@ -269,7 +269,7 @@ import DomainTestHelpers
 
 #Preview {
     if #available(macOS 14.0, *) {
-        GroupTableView(groupID: 1010, viewModel: GroupTableViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
+        GroupTableView(groupID: 1010, viewModel: GroupTableViewModel(store: StateStore.shared, entryUsecase: MockEntryUseCase()))
     }
 }
 

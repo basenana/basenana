@@ -38,6 +38,39 @@ public class DocumentListViewModel {
         self.usecase = usecase
     }
     
+    
+    // list display
+    
+    func getListViewKind() -> ListViewKind{
+        var kindConfig: String = ""
+        if prespective == .marked {
+            kindConfig = store.setting.appearance.markedReadModel
+        }else {
+            kindConfig = store.setting.appearance.unreadReadModel
+        }
+        
+        switch kindConfig {
+        case "masonry":
+            return .Masonry
+        case "navigation":
+            return .Navigation
+        default:
+            if prespective == .marked {
+                return .Navigation
+            }else {
+                return .Masonry
+            }
+        }
+    }
+    
+    var showImagePreview: Bool {
+        return store.setting.appearance.imagePreview == "none"
+    }
+    
+    var showTextPreview: Bool {
+        return store.setting.appearance.contentPreview
+    }
+
     // entry
     
     func getDocumentEntry(entry: Int64) async -> EntryDetail? {
@@ -110,7 +143,10 @@ public class DocumentListViewModel {
         }
     }
     
-    func setAllAppearedDocuemntRead(before: Int = 30) async {
+    func setAllAppearedDocuemntRead(before: Int = 30, isAuto: Bool = true) async {
+        if isAuto && !store.setting.document.autoRead {
+            return
+        }
         for kv in unreadDocumentsAppeared {
             if enableHooks && Date().timeIntervalSince(kv.value.appearedAt) > Double(before) {
                 await setDocumentReadStatus(document: kv.value.documentID, isUnread: false)

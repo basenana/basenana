@@ -67,7 +67,7 @@ public struct DocumentReadView: View {
 import DomainTestHelpers
 
 #Preview {
-    DocumentReadView(viewModel: DocumentReadViewModel(docID: 1001, store: StateStore.empty, usecase: MockDocumentUseCase()))
+    DocumentReadView(viewModel: DocumentReadViewModel(docID: 1001, store: StateStore.shared, usecase: MockDocumentUseCase()))
 }
 
 #endif

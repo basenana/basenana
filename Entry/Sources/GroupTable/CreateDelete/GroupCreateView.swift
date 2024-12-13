@@ -124,7 +124,7 @@ struct GroupCreateViewPreview: View {
             GroupCreateView(
                 parent: 1,
                 groupType: .feed,
-                viewModel: CreateDeleteViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()),
+                viewModel: CreateDeleteViewModel(store: StateStore.shared, entryUsecase: MockEntryUseCase()),
                 showCreateGroup: .constant(true))
         }
     }

@@ -91,7 +91,7 @@ import DomainTestHelpers
 #Preview {
     DeleteEntriesView(
         entryIDs: [1011, 1012],
-        viewModel: CreateDeleteViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()),
+        viewModel: CreateDeleteViewModel(store: StateStore.shared, entryUsecase: MockEntryUseCase()),
         showDeleteView: .constant(true))
 }
 

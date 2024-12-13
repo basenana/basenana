@@ -16,6 +16,12 @@
 		3F1BBE1D2B8E147F005D533F /* basenanaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F1BBE1C2B8E147F005D533F /* basenanaApp.swift */; };
 		3F1BBE232B8E1480005D533F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F1BBE222B8E1480005D533F /* Assets.xcassets */; };
 		3F1BBE272B8E1480005D533F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F1BBE262B8E1480005D533F /* Preview Assets.xcassets */; };
+		3F2A5BB42D0C66F200772007 /* GeneralSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2A5BB32D0C66EC00772007 /* GeneralSettingView.swift */; };
+		3F2A5BB52D0C66F200772007 /* GeneralSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2A5BB32D0C66EC00772007 /* GeneralSettingView.swift */; };
+		3F2A5BB72D0C671B00772007 /* ReadingSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2A5BB62D0C671B00772007 /* ReadingSettingView.swift */; };
+		3F2A5BB82D0C671B00772007 /* ReadingSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2A5BB62D0C671B00772007 /* ReadingSettingView.swift */; };
+		3F2A5BBA2D0C673300772007 /* DocumentSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2A5BB92D0C673300772007 /* DocumentSettingView.swift */; };
+		3F2A5BBB2D0C673300772007 /* DocumentSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F2A5BB92D0C673300772007 /* DocumentSettingView.swift */; };
 		3F317C4E2C2476C300F42D37 /* StackContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F317C4D2C2476C300F42D37 /* StackContentView.swift */; };
 		3F317C4F2C2476C300F42D37 /* StackContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F317C4D2C2476C300F42D37 /* StackContentView.swift */; };
 		3F4A78DB2BCF7FFB0035F90F /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 3F4A78DA2BCF7FFB0035F90F /* SwiftyBeaver */; };
@@ -103,6 +109,9 @@
 		3F1BBE262B8E1480005D533F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		3F1BBE2C2B8E1480005D533F /* basenanaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = basenanaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F1BBE362B8E1480005D533F /* basenanaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = basenanaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F2A5BB32D0C66EC00772007 /* GeneralSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingView.swift; sourceTree = "<group>"; };
+		3F2A5BB62D0C671B00772007 /* ReadingSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingSettingView.swift; sourceTree = "<group>"; };
+		3F2A5BB92D0C673300772007 /* DocumentSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentSettingView.swift; sourceTree = "<group>"; };
 		3F317C4D2C2476C300F42D37 /* StackContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackContentView.swift; sourceTree = "<group>"; };
 		3F4A78E02BD299110035F90F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		3F7444B82BE50DE900CC9C1E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = basenana/Info.plist; sourceTree = SOURCE_ROOT; };
@@ -293,6 +302,9 @@
 		3F7A1E072CEE09A500C2BDC8 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
+				3F2A5BB32D0C66EC00772007 /* GeneralSettingView.swift */,
+				3F2A5BB62D0C671B00772007 /* ReadingSettingView.swift */,
+				3F2A5BB92D0C673300772007 /* DocumentSettingView.swift */,
 				3F9FAF8C2D05C60A00C95D51 /* AppearanceSettingView.swift */,
 				3F9FAF852D05BBE900C95D51 /* DatabaseSettingView.swift */,
 				3F4A78E02BD299110035F90F /* SettingsView.swift */,
@@ -533,12 +545,15 @@
 				3F317C4E2C2476C300F42D37 /* StackContentView.swift in Sources */,
 				3F071BA42C29A2CC00F19C63 /* BackgroundJobView.swift in Sources */,
 				3F9FAF8D2D05C61200C95D51 /* AppearanceSettingView.swift in Sources */,
+				3F2A5BBA2D0C673300772007 /* DocumentSettingView.swift in Sources */,
+				3F2A5BB72D0C671B00772007 /* ReadingSettingView.swift in Sources */,
 				3FAC06BC2C25BEC40067E7A5 /* LoginView.swift in Sources */,
 				3F7A1DF22CEDB7C900C2BDC8 /* ContentView.swift in Sources */,
 				3F7A1E0B2CEE0EDF00C2BDC8 /* Environment.swift in Sources */,
 				3F071BA12C29A27F00F19C63 /* NotificationView.swift in Sources */,
 				3F4A78E12BD299110035F90F /* SettingsView.swift in Sources */,
 				3F9FAF862D05BBF000C95D51 /* DatabaseSettingView.swift in Sources */,
+				3F2A5BB42D0C66F200772007 /* GeneralSettingView.swift in Sources */,
 				3F1BBE1D2B8E147F005D533F /* basenanaApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -565,12 +580,15 @@
 				3F7A1E0C2CEE0EDF00C2BDC8 /* Environment.swift in Sources */,
 				3F7A1E052CEDCA5800C2BDC8 /* Container.swift in Sources */,
 				3F9FAF8E2D05C61200C95D51 /* AppearanceSettingView.swift in Sources */,
+				3F2A5BBB2D0C673300772007 /* DocumentSettingView.swift in Sources */,
+				3F2A5BB82D0C671B00772007 /* ReadingSettingView.swift in Sources */,
 				3F071BA52C29A2CC00F19C63 /* BackgroundJobView.swift in Sources */,
 				3F071BA22C29A27F00F19C63 /* NotificationView.swift in Sources */,
 				ED0CBB3C2BF656B90056E6AA /* SettingsView.swift in Sources */,
 				3F317C4F2C2476C300F42D37 /* StackContentView.swift in Sources */,
 				ED0CBB3D2BF656B90056E6AA /* basenanaApp.swift in Sources */,
 				3F9FAF872D05BBF000C95D51 /* DatabaseSettingView.swift in Sources */,
+				3F2A5BB52D0C66F200772007 /* GeneralSettingView.swift in Sources */,
 				3F7A1DF32CEDB7C900C2BDC8 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

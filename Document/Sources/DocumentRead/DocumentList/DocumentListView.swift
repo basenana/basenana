@@ -18,11 +18,7 @@ public struct DocumentListView: View {
     
     public init(viewModel: DocumentListViewModel) {
         self.viewModel = viewModel
-        if viewModel.prespective == .marked {
-            self.listViewKind = .Navigation
-        }else {
-            self.listViewKind = .Masonry
-        }
+        self.listViewKind = viewModel.getListViewKind()
     }
     
     public var body: some View {
@@ -116,7 +112,7 @@ import DomainTestHelpers
 
 #Preview {
     if #available(macOS 14.0, *) {
-        DocumentListView(viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.empty, usecase: MockDocumentUseCase()))
+        DocumentListView(viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.shared, usecase: MockDocumentUseCase()))
     }
 }
 

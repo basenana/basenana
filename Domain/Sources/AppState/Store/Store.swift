@@ -10,8 +10,8 @@ import Entities
 
 @Observable
 public class StateStore {
-    public static var empty = StateStore()
-    
+    public static var shared = StateStore()
+
     public var notifications = [String]()
     public var backgroupJobs = [BackgroundJob]()
     public var fsInfo = FSInfo()

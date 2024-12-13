@@ -55,7 +55,7 @@ struct MasonryListReadAllView: View {
             if hasUnread {
                 Button(action: {
                     Task {
-                        await viewModel.setAllAppearedDocuemntRead(before: 0)
+                        await viewModel.setAllAppearedDocuemntRead(before: 0, isAuto: false)
                         hasUnread = false
                     }
                 }, label: {
@@ -83,7 +83,7 @@ struct MasonryListReadAllView: View {
 import DomainTestHelpers
 
 #Preview {
-    MasonryListView(viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.empty, usecase: MockDocumentUseCase()))
+    MasonryListView(viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.shared, usecase: MockDocumentUseCase()))
 }
 
 #endif

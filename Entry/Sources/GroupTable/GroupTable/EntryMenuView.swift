@@ -191,7 +191,7 @@ struct EntryMenuPreview: View {
     
     var body: some View {
         List {
-            EntryMenuView(viewModel: GroupTableViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
+            EntryMenuView(viewModel: GroupTableViewModel(store: StateStore.shared, entryUsecase: MockEntryUseCase()))
         }
     }
 }

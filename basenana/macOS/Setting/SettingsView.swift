@@ -10,33 +10,53 @@ import AppState
 
 
 struct SettingsView: View {
+    @State private var state = StateStore.shared
     @State private var visibility: NavigationSplitViewVisibility = .doubleColumn
+    @State var currentCategory: SettingCategory = .general
     var body: some View {
         NavigationSplitView(columnVisibility: $visibility) {
-            SettingSideBarView()
-                .toolbar(removing: .sidebarToggle)
-                .navigationDestination(for: SettingCategory.self) { category in
-                    Group {
-                        switch category {
-                        case .general:
-                            SettingDetailView()
-                        case .appearance:
-                            AppearanceSettingView()
-                        case .reading:
-                            SettingDetailView()
-                        case .document:
-                            SettingDetailView()
-                        case .database:
-                            DatabaseSettingView()
-                        }
-                    }
-                    .frame(minWidth: 400)
+            List(selection: $currentCategory) {
+                NavigationLink(value: SettingCategory.general) {
+                    SettingSideBaLabelView(category: .general, image: "switch.2")
                 }
+                
+                NavigationLink(value: SettingCategory.appearance) {
+                    SettingSideBaLabelView(category: .appearance, image: "paintbrush")
+                }
+                
+                NavigationLink(value: SettingCategory.reading) {
+                    SettingSideBaLabelView(category: .reading, image: "eyeglasses")
+                }
+                
+                NavigationLink(value: SettingCategory.document) {
+                    SettingSideBaLabelView(category: .document, image: "doc.richtext")
+                }
+                
+                NavigationLink(value: SettingCategory.database) {
+                    SettingSideBaLabelView(category: .database, image: "tray.2")
+                }
+            }
+            .toolbar(removing: .sidebarToggle)
         } detail: {
-            SettingDetailView()
-                .frame(minWidth: 400)
-                .navigationTitle("Setting")
+            VStack {
+                switch currentCategory {
+                case .general:
+                    GeneralSettingView()
+                case .appearance:
+                    AppearanceSettingView()
+                case .reading:
+                    ReadingSettingView()
+                case .document:
+                    DocumentSettingView()
+                case .database:
+                    DatabaseSettingView()
+                }
+            }
+            .padding(.vertical, 10)
+            .frame(minWidth: 400)
+            .navigationTitle("Setting")
         }
+        .preferredColorScheme(state.setting.appearance.overColorScheme)
         .toolbarBackground(.hidden)
         .frame(width: 600, height: 450)
         .task {
@@ -49,33 +69,6 @@ struct SettingsView: View {
     }
 }
 
-struct SettingSideBarView: View {
-    @State var currentCategory: SettingCategory = .appearance
-       var body: some View {
-           List {
-               NavigationLink(value: SettingCategory.general) {
-                   SettingSideBaLabelView(category: .general, image: "switch.2")
-               }
-               
-               NavigationLink(value: SettingCategory.appearance) {
-                   SettingSideBaLabelView(category: .appearance, image: "paintbrush")
-               }
-
-               NavigationLink(value: SettingCategory.reading) {
-                   SettingSideBaLabelView(category: .reading, image: "eyeglasses")
-               }
-
-               NavigationLink(value: SettingCategory.document) {
-                   SettingSideBaLabelView(category: .document, image: "doc.richtext")
-               }
-               
-               NavigationLink(value: SettingCategory.database) {
-                   SettingSideBaLabelView(category: .database, image: "tray.2")
-               }
-           }
-           .navigationTitle("Setting_Title")
-       }
-}
 
 struct SettingSideBaLabelView: View {
     @State private var category: SettingCategory

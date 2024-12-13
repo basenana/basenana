@@ -10,68 +10,60 @@ import AppState
 
 
 struct DatabaseSettingView: View {
-    @AppStorage("org.basenana.nanafs.host", store: UserDefaults.standard)
-    private var serverHost:String = ""
+    @State private var state = StateStore.shared
     
-    @AppStorage("org.basenana.nanafs.port", store: UserDefaults.standard)
-    private var serverPort:Int = 0
+    @State private var serverHost:String = ""
     @State private var serverPortStr: String = ""
-    
-    @AppStorage("org.basenana.nanafs.auth.accessToken", store: UserDefaults.standard)
-    private var accessTokenKey:String = ""
-    
-    @AppStorage("org.basenana.nanafs.auth.secretToken", store: UserDefaults.standard)
-    private var secretToken:String = ""
-    
-    @AppStorage("org.basenana.nanafs.clientCrt", store: UserDefaults.standard)
-    private var encodedClientCrt: String = ""
-    
-    @AppStorage("org.basenana.sync.sequence", store: UserDefaults.standard)
-    private var syncedSeqNum: String = "0"
-    
+    @State private var accessTokenKey:String = ""
+    @State private var secretToken:String = ""
     @State private var errorMessage = ""
     
     var body: some View {
-        Form {
-            VStack {
-                TextField("Host", text: $serverHost)
-                TextField("Port", text: $serverPortStr, onCommit: {
-                    if let validNumber = Int(serverPortStr) {
-                        self.serverPort = validNumber
+        VStack{
+            Form {
+                VStack {
+                    TextField("Host", text: $serverHost)
+                    TextField("Port", text: $serverPortStr)
+                    TextField("AccessTokenKey", text: $accessTokenKey)
+                    TextField("SecretToken", text: $secretToken)
+                }
+                
+                HStack{
+                    Spacer()
+                    Button {
+                        submit()
+                    } label: {
+                        Text("Verify and Update")
                     }
-                }).onAppear{
-                    serverPortStr = "\(self.serverPort)"
+                    .buttonStyle(.link)
                 }
-                TextField("AccessTokenKey", text: $accessTokenKey)
-                TextField("SecretToken", text: $secretToken)
+                
             }
-            
-            HStack {
-                if errorMessage != ""{
-                    Text("\(errorMessage)")
-                        .foregroundStyle(.red)
-                        .padding(.vertical, 5)
-                }
-                Button {
-                    errorMessage = "not support"
-                } label: {
-                    Text("Disconnect")
-                }
-                Button {
-                    errorMessage = "not check"
-                } label: {
-                    Text("Verify")
-                }
+            .formStyle(.grouped)
+
+            if errorMessage != ""{
+                Text("\(errorMessage)")
+                    .foregroundStyle(.red)
+                    .padding(.vertical, 5)
             }
-            .frame(maxWidth: .infinity, alignment: .trailing)
         }
-        .formStyle(.grouped)
+        .navigationTitle(SettingCategory.database.display)
+        .onAppear{
+            serverHost = state.setting.database.apiHost
+            serverPortStr = String(state.setting.database.apiPort)
+            accessTokenKey = state.setting.database.apiaccessTokenKey
+            secretToken = state.setting.database.apiSecretToken
+        }
+    }
+    
+    func submit(){
+        errorMessage = "not check"
     }
 }
 
+#if DEVELOPMENT
 public extension UserDefaults {
-    #if DEVELOPMENT
     static let standard = UserDefaults(suiteName: "org.basenana-dev")!
-    #endif
 }
+#endif
 
