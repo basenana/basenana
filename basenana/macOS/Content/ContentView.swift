@@ -12,16 +12,19 @@ import AppState
 
 @MainActor
 struct ContentView: View {
-    @State private var state = StateStore.empty
+    @State private var state = StateStore.shared
     @State private var environment = Environment.shared
-
+    
     var body: some View {
-        if !state.fsInfo.fsApiReady || environment.clientSet == nil {
-            LoginView()
-                .frame(minWidth: 400, maxWidth: 400, minHeight: 500, maxHeight: 500)
-        } else {
-            StackContentView(state: state)
+        VStack{
+            if !state.fsInfo.fsApiReady || environment.clientSet == nil {
+                LoginView()
+                    .frame(minWidth: 400, maxWidth: 400, minHeight: 500, maxHeight: 500)
+            } else {
+                StackContentView(state: state)
+            }
         }
+        .preferredColorScheme(state.setting.appearance.overColorScheme)
     }
 }
 

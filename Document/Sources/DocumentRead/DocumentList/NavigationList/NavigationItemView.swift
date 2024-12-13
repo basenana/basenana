@@ -49,11 +49,19 @@ struct NavigationItemView: View {
                 
             }
             
-            Text("\(doc.info.subContent.prefix(100))")
-                .font(.body)
-                .foregroundColor(Color.gray)
-                .frame(minWidth: 0, idealWidth: 200,  maxWidth: .infinity, minHeight: 0, idealHeight: 40, maxHeight: 50, alignment: .leading)
-            
+            HStack{
+                if viewModel.showTextPreview {
+                    Text("\(doc.info.subContent.prefix(100))")
+                        .font(.body)
+                        .foregroundColor(Color.gray)
+                        .frame(idealWidth: 200,  maxWidth: .infinity, idealHeight: 40, maxHeight: 50, alignment: .leading)
+                }
+                
+                if viewModel.showImagePreview {
+                    NavigationItemBannerView(bannerURL: doc.headerImage)
+                        .frame(width: 50, height: 50)
+                }
+            }
             Text(self.docURL)
                 .foregroundColor(Color.gray)
         }
@@ -105,4 +113,32 @@ struct NavigationItemView: View {
         formatter.timeZone = .current
         return formatter
     }()
+}
+
+
+struct NavigationItemBannerView: View{
+    var bannerURL: String
+    
+    var body: some View {
+        if let safeUrl = URL(string: bannerURL) {
+            GeometryReader { geometry in
+                AsyncImage(url: safeUrl) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .padding(.vertical, 5)
+                        .clipped()
+                } placeholder: {
+                    Image(systemName: "photo")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .padding(10)
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .foregroundStyle(.gray)
+                }
+            }
+            .aspectRatio(1, contentMode: .fit)
+        }
+    }
 }

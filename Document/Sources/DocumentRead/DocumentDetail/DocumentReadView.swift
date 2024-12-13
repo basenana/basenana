@@ -11,7 +11,11 @@ import Entities
 
 
 public struct DocumentReadView: View {
+    @State var document: DocumentDetail? = nil
     @State var viewModel: DocumentReadViewModel
+    @State var isUnread: Bool = false
+    @State var isMarked: Bool = false
+
     
     public init(viewModel: DocumentReadViewModel) {
         self.viewModel = viewModel
@@ -19,21 +23,40 @@ public struct DocumentReadView: View {
     
     public var body: some View {
         VStack {
-            if let detailDocument = viewModel.document {
+            if let detailDocument = document {
                 HTMLStringView(url: viewModel.targetURL, htmlContent: detailDocument.content)
             }else {
                 EmptyView()
             }
         }
-        .navigationTitle(viewModel.document?.name ?? "")
+        .onReceive(NotificationCenter.default.publisher(for: .updateDocumentMark)) { [self] notification in
+            if let update = notification.object as? UpdateDocumentMark {
+                if update.doc != viewModel.docID {
+                    return
+                }
+                if update.updateRead {
+                    isUnread = update.isUnread
+                }
+                if update.updateMark {
+                    isMarked = update.isMarked
+                }
+            }
+        }
+        .navigationTitle(document?.name ?? "")
         .frame(minWidth: 200, minHeight: 100)
         .toolbar{
-            ToolbarItemGroup(placement: .primaryAction){
-                DocumentToolBarView(viewModel: viewModel)
+            if document != nil {
+                ToolbarItemGroup(placement: .primaryAction){
+                    DocumentToolBarView(viewModel: viewModel, isUnread: $isUnread, isMarked: $isMarked)
+                }
             }
         }
         .task {
-            await viewModel.loadDocument()
+            document = await viewModel.loadDocument()
+            if let document = document {
+                isUnread = document.unread
+                isMarked = document.marked
+            }
         }
     }
 }
@@ -44,9 +67,7 @@ public struct DocumentReadView: View {
 import DomainTestHelpers
 
 #Preview {
-    if #available(macOS 14.0, *) {
-        DocumentReadView(viewModel: DocumentReadViewModel(docID: 1001, store: StateStore.empty, usecase: MockDocumentUseCase()))
-    }
+    DocumentReadView(viewModel: DocumentReadViewModel(docID: 1001, store: StateStore.shared, usecase: MockDocumentUseCase()))
 }
 
 #endif

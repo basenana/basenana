@@ -18,11 +18,7 @@ public struct DocumentListView: View {
     
     public init(viewModel: DocumentListViewModel) {
         self.viewModel = viewModel
-        if viewModel.prespective == .marked {
-            self.listViewKind = .Navigation
-        }else {
-            self.listViewKind = .Masonry
-        }
+        self.listViewKind = viewModel.getListViewKind()
     }
     
     public var body: some View {
@@ -39,10 +35,22 @@ public struct DocumentListView: View {
                 Task {
                     if document.isUnread {
                         document.isUnread = false
-                        await viewModel.setDocumentReadStatus(section: document.sectionName, document: document.id, isUnread: false)
+                        await viewModel.setDocumentReadStatus(document: document.id, isUnread: false)
                     }
                 }
-                viewModel.store.dispatch(.gotoDestination(.readDocument(document: document.id)))
+                gotoDestination(.readDocument(document: document.id))
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .updateDocumentMark)) { [self] notification in
+            if let update = notification.object as? UpdateDocumentMark {
+                Task {
+                    if update.updateRead {
+                        await viewModel.setDocumentReadStatus(document: update.doc, isUnread: update.isUnread)
+                    }
+                    if update.updateMark {
+                        await viewModel.setDocumentMarkStatus(document: update.doc, isMark: update.isMarked)
+                    }
+                }
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: .loadMoreDocuments)) { _ in
@@ -104,7 +112,7 @@ import DomainTestHelpers
 
 #Preview {
     if #available(macOS 14.0, *) {
-        DocumentListView(viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.empty, usecase: MockDocumentUseCase()))
+        DocumentListView(viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.shared, usecase: MockDocumentUseCase()))
     }
 }
 

@@ -53,7 +53,7 @@ import DomainTestHelpers
 #Preview {
     if #available(macOS 14.0, *) {
         List{
-            TreeListView(viewModel: TreeViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
+            TreeListView(viewModel: TreeViewModel(store: StateStore.shared, entryUsecase: MockEntryUseCase()))
         }
     }
 }

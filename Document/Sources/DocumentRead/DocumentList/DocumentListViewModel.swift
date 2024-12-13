@@ -21,7 +21,7 @@ public class DocumentListViewModel {
     
     // docunents need to display
     var sectionDocuments: [DocumentSection] = []
-    var cachedDocuments: [Int64:Bool] = [:]
+    var documentsSectionMap: [Int64:String] = [:]
     
     // document auto read
     var enableHooks = true
@@ -36,6 +36,39 @@ public class DocumentListViewModel {
         self.prespective = prespective
         self.store = store
         self.usecase = usecase
+    }
+    
+    
+    // list display
+    
+    func getListViewKind() -> ListViewKind{
+        var kindConfig: String = ""
+        if prespective == .marked {
+            kindConfig = store.setting.appearance.markedReadModel
+        }else {
+            kindConfig = store.setting.appearance.unreadReadModel
+        }
+        
+        switch kindConfig {
+        case "masonry":
+            return .Masonry
+        case "navigation":
+            return .Navigation
+        default:
+            if prespective == .marked {
+                return .Navigation
+            }else {
+                return .Masonry
+            }
+        }
+    }
+    
+    var showImagePreview: Bool {
+        return store.setting.appearance.imagePreview != "none"
+    }
+    
+    var showTextPreview: Bool {
+        return store.setting.appearance.contentPreview
     }
     
     // entry
@@ -64,7 +97,11 @@ public class DocumentListViewModel {
     
     // MARK: document status
     
-    func setDocumentReadStatus(section: String, document: Int64, isUnread: Bool) async {
+    func setDocumentReadStatus(document: Int64, isUnread: Bool) async {
+        guard let section = documentsSectionMap[document] else {
+            return
+        }
+        
         if let s = sectionDocuments.filter( {$0.id == section} ).first {
             for i in s.documents.indices {
                 if s.documents[i].id != document {
@@ -83,7 +120,11 @@ public class DocumentListViewModel {
         }
     }
     
-    func setDocumentMarkStatus(section: String, document: Int64, isMark: Bool) async {
+    func setDocumentMarkStatus(document: Int64, isMark: Bool) async {
+        guard let section = documentsSectionMap[document] else {
+            return
+        }
+        
         if let s = sectionDocuments.filter( {$0.id == section} ).first {
             for i in s.documents.indices {
                 if s.documents[i].id != document {
@@ -102,21 +143,31 @@ public class DocumentListViewModel {
         }
     }
     
-    func setAllAppearedDocuemntRead() async {
+    func setAllAppearedDocuemntRead(before: Int = 30, isAuto: Bool = true) async {
+        if unreadDocumentsAppeared.isEmpty {
+            return
+        }
+        
+        if isAuto {
+            if !store.setting.document.autoRead {
+                return
+            }
+            print("auto set all appeared docuemnt read")
+        }
         for kv in unreadDocumentsAppeared {
-            if enableHooks && Date().timeIntervalSince(kv.value.appearedAt) > 10 {
-                await setDocumentReadStatus(section: kv.value.section, document: kv.value.documentID, isUnread: false)
+            if enableHooks && Date().timeIntervalSince(kv.value.appearedAt) > Double(before) {
+                await setDocumentReadStatus(document: kv.value.documentID, isUnread: false)
                 unreadDocumentsAppeared.removeValue(forKey: kv.key)
             }
         }
     }
-
+    
     // MARK: document hook
     
     func disableHooks() {
         self.enableHooks = false
     }
-
+    
     func onDocumentAppear(document: DocumentItem) {
         if document.isUnread {
             unreadDocumentsAppeared[document.id] = AppearedDocument(document: document)
@@ -124,19 +175,19 @@ public class DocumentListViewModel {
     }
     
     func onDocumentDisappear(document: DocumentItem) { }
-
+    
     // MARK: list document
     func reset() {
         self.page = 1
         print("reinit main documents: current cached \(sectionDocuments.count)")
         sectionDocuments.removeAll()
-        cachedDocuments.removeAll()
+        documentsSectionMap.removeAll()
         self.hasMore = true
         
         self.enableHooks = true
         unreadDocumentsAppeared.removeAll()
     }
-
+    
     func loadNextPage() async {
         let nextPage = await listNextPage()
         if self.isLoading {
@@ -179,12 +230,12 @@ public class DocumentListViewModel {
     }
     
     func insertToSectionDocuments(doc: DocumentItem) {
-        guard cachedDocuments[doc.id] == nil else {
+        guard documentsSectionMap[doc.id] == nil else {
             return
         }
         
-        cachedDocuments[doc.id] = true
         let sid = doc.sectionName
+        documentsSectionMap[doc.id] = sid
         for i in sectionDocuments.indices {
             if sectionDocuments[i].id == sid {
                 sectionDocuments[i].documents.append(doc)

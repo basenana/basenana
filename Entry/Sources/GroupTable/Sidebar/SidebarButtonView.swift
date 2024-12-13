@@ -56,7 +56,7 @@ struct SidebarButtonView: View {
             Spacer()
             
             Button(action: {
-                NotificationCenter.default.post(name: NSNotification.Name("selectSidebar"), object: Destination.workflowDashboard)
+                gotoDestination(Destination.workflowDashboard)
             }, label: {
                 Image(systemName: "ellipsis.curlybraces")
             })

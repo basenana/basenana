@@ -133,7 +133,7 @@ import DomainTestHelpers
 
 #Preview {
     if #available(macOS 14.0, *) {
-        QuickInboxView(viewModel: InboxViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()), showInboxView: .constant(true))
+        QuickInboxView(viewModel: InboxViewModel(store: StateStore.shared, entryUsecase: MockEntryUseCase()), showInboxView: .constant(true))
     }
 }
 

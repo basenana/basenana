@@ -50,15 +50,18 @@ struct MasonryItemView: View {
             
             Spacer(minLength: 10)
             
-            MasonryItemBannerView(bannerURL: self.doc.headerImage)
-            
-            Spacer(minLength: 20)
-            
-            Text("\(subContent)... ")
-                .font(.body)
-                .lineSpacing(2)
-                .foregroundColor(Color.CardFrontground)
-                .multilineTextAlignment(.leading)
+            if viewModel.showImagePreview {
+                MasonryItemBannerView(bannerURL: self.doc.headerImage)
+                Spacer(minLength: 20)
+            }
+
+            if viewModel.showTextPreview {
+                Text("\(subContent)... ")
+                    .font(.body)
+                    .lineSpacing(2)
+                    .foregroundColor(Color.CardFrontground)
+                    .multilineTextAlignment(.leading)
+            }
             
             Spacer(minLength: 10)
             Text(docURL)
@@ -110,9 +113,10 @@ struct MasonryItemView: View {
     }
     
     var subContent: String {
-        return doc.info.headerImage != "" ?
-        String(doc.info.subContent.prefix(200)):
-        String(doc.info.subContent)
+        if viewModel.showImagePreview && doc.info.headerImage != "" {
+            return String(doc.info.subContent.prefix(200))
+        }
+        return String(doc.info.subContent)
     }
     
     let rfc3339Formatter = RFC3339Formatter()
@@ -167,7 +171,7 @@ struct MasonryItemViewPreview: View {
     var body: some View {
         
         VStack{
-            MasonryItemView(section: "", doc: DocumentItem(info: doc!), viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.empty, usecase: uc))
+            MasonryItemView(section: "", doc: DocumentItem(info: doc!), viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.shared, usecase: uc))
         }
         .task {
             do {

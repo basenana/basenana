@@ -24,7 +24,7 @@ public struct EntryMenuView: View {
         VStack {
             if canBeOpen() {
                 Section{
-                    Button("Open", action: { viewModel.store.dispatch(.gotoDestination(.groupList(group: targets.first!.id))) })
+                    Button("Open", action: { gotoDestination(.groupList(group: targets.first!.id)) })
                 }
             }
             
@@ -191,7 +191,7 @@ struct EntryMenuPreview: View {
     
     var body: some View {
         List {
-            EntryMenuView(viewModel: GroupTableViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()))
+            EntryMenuView(viewModel: GroupTableViewModel(store: StateStore.shared, entryUsecase: MockEntryUseCase()))
         }
     }
 }

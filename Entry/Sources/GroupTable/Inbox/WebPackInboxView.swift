@@ -121,7 +121,7 @@ public struct WebPackInboxView: View {
 import DomainTestHelpers
 
 #Preview {
-    WebPackInboxView(viewModel: InboxViewModel(store: StateStore.empty, entryUsecase: MockEntryUseCase()), showInboxView: .constant(true))
+    WebPackInboxView(viewModel: InboxViewModel(store: StateStore.shared, entryUsecase: MockEntryUseCase()), showInboxView: .constant(true))
 }
 
 #endif

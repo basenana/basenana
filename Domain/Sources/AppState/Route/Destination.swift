@@ -11,7 +11,6 @@ import Entities
 
 public enum Destination: Identifiable, Hashable {
     
-    case mainContent
     case listDocuments(prespective: DocumentPrespective)
     case readDocument(document: Int64)
     case groupList(group: Int64)
@@ -21,8 +20,6 @@ public enum Destination: Identifiable, Hashable {
 
     public var id: String {
         switch self {
-        case .mainContent:
-            return "mainContent"
         case .listDocuments(prespective: let prespective):
             return "listDocument_\(prespective)"
         case .readDocument(document: let document):

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AppState
 import Foundation
 
 
@@ -27,9 +28,7 @@ public struct WorkflowListView: View {
                 columns: columns, alignment: .center, spacing: 40 ){
                     ForEach(viewModel.workflows){ workflow in
                         
-                        Button(action: {
-                            viewModel.store.dispatch(.gotoDestination(.workflowDetail(workflow: workflow.id)))
-                        }){
+                        Button(action: { gotoDestination(.workflowDetail(workflow: workflow.id)) }){
                             WorkflowItemView(workflow: workflow)
                         }
                         .buttonStyle(.link)

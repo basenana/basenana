@@ -20,6 +20,10 @@ public extension Color {
     static let DialogBoxBackground = Color("dialogBoxBackground")
     
     static let DateColor = Color("dateColor")
+    
+    static let InboxColor = Color(.blue)
+    static let UnreadColor = Color(.brown)
+    static let MarkedColor = Color(.yellow)
 
 #if os(macOS)
     static let background = Color(NSColor.windowBackgroundColor)
