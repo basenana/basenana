@@ -54,11 +54,12 @@ struct NavigationItemView: View {
                     Text("\(doc.info.subContent.prefix(100))")
                         .font(.body)
                         .foregroundColor(Color.gray)
-                        .frame(minWidth: 0, idealWidth: 200,  maxWidth: .infinity, minHeight: 0, idealHeight: 40, maxHeight: 50, alignment: .leading)
+                        .frame(idealWidth: 200,  maxWidth: .infinity, idealHeight: 40, maxHeight: 50, alignment: .leading)
                 }
                 
                 if viewModel.showImagePreview {
                     NavigationItemBannerView(bannerURL: doc.headerImage)
+                        .frame(width: 50, height: 50)
                 }
             }
             Text(self.docURL)
@@ -132,7 +133,7 @@ struct NavigationItemBannerView: View{
                     Image(systemName: "photo")
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .padding(20)
+                        .padding(10)
                         .frame(width: geometry.size.width, height: geometry.size.height)
                         .foregroundStyle(.gray)
                 }

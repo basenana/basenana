@@ -33,7 +33,7 @@ struct SettingsView: View {
                 }
                 
                 NavigationLink(value: SettingCategory.database) {
-                    SettingSideBaLabelView(category: .database, image: "tray.2")
+                    SettingSideBaLabelView(category: .database, image: "externaldrive.badge.icloud")
                 }
             }
             .toolbar(removing: .sidebarToggle)

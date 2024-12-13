@@ -50,9 +50,10 @@ struct MasonryListReadAllView: View {
     }
     
     var body: some View {
+        Divider()
         HStack(alignment: .center){
-            Spacer()
             if hasUnread {
+                Spacer()
                 Button(action: {
                     Task {
                         await viewModel.setAllAppearedDocuemntRead(before: 0, isAuto: false)
@@ -61,6 +62,7 @@ struct MasonryListReadAllView: View {
                 }, label: {
                     Label("Make All as Read", systemImage: "checkmark.rectangle.stack")
                 })
+                .buttonStyle(.borderless)
                 .padding(.vertical)
                 Spacer()
             }

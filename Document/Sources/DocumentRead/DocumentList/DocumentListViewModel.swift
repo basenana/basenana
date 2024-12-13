@@ -31,7 +31,7 @@ public class DocumentListViewModel {
     var page: Int = 1
     var pageSize: Int = 40
     var hasMore = true
-
+    
     public init(prespective: DocumentPrespective, store: StateStore, usecase: DocumentUseCaseProtocol) {
         self.prespective = prespective
         self.store = store
@@ -64,13 +64,13 @@ public class DocumentListViewModel {
     }
     
     var showImagePreview: Bool {
-        return store.setting.appearance.imagePreview == "none"
+        return store.setting.appearance.imagePreview != "none"
     }
     
     var showTextPreview: Bool {
         return store.setting.appearance.contentPreview
     }
-
+    
     // entry
     
     func getDocumentEntry(entry: Int64) async -> EntryDetail? {
@@ -144,8 +144,15 @@ public class DocumentListViewModel {
     }
     
     func setAllAppearedDocuemntRead(before: Int = 30, isAuto: Bool = true) async {
-        if isAuto && !store.setting.document.autoRead {
+        if unreadDocumentsAppeared.isEmpty {
             return
+        }
+        
+        if isAuto {
+            if !store.setting.document.autoRead {
+                return
+            }
+            print("auto set all appeared docuemnt read")
         }
         for kv in unreadDocumentsAppeared {
             if enableHooks && Date().timeIntervalSince(kv.value.appearedAt) > Double(before) {
@@ -154,13 +161,13 @@ public class DocumentListViewModel {
             }
         }
     }
-
+    
     // MARK: document hook
     
     func disableHooks() {
         self.enableHooks = false
     }
-
+    
     func onDocumentAppear(document: DocumentItem) {
         if document.isUnread {
             unreadDocumentsAppeared[document.id] = AppearedDocument(document: document)
@@ -168,7 +175,7 @@ public class DocumentListViewModel {
     }
     
     func onDocumentDisappear(document: DocumentItem) { }
-
+    
     // MARK: list document
     func reset() {
         self.page = 1
@@ -180,7 +187,7 @@ public class DocumentListViewModel {
         self.enableHooks = true
         unreadDocumentsAppeared.removeAll()
     }
-
+    
     func loadNextPage() async {
         let nextPage = await listNextPage()
         if self.isLoading {
