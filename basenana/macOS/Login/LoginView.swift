@@ -12,102 +12,97 @@ import NetworkExtension
 
 
 struct LoginView: View {
-    @AppStorage("org.basenana.nanafs.host", store: UserDefaults.standard)
-    private var serverHost:String = ""
+    @State private var store = StateStore.shared
+    @State private var environment = Environment.shared
     
-    @AppStorage("org.basenana.nanafs.port", store: UserDefaults.standard)
-    private var serverPort:Int = 0
-    @State private var serverPortStr: String = ""
-    
-    @AppStorage("org.basenana.nanafs.auth.accessToken", store: UserDefaults.standard)
-    private var accessTokenKey:String = ""
-    
-    @AppStorage("org.basenana.nanafs.auth.secretToken", store: UserDefaults.standard)
-    private var secretToken:String = ""
-    
+    @State private var isLogining: Bool = false
     @State private var errorMessage = ""
-    @State private var isLogining = false
     
     init() {}
     
     var body: some View {
-        VStack {
-            Text("Connect to NanaFS🍌")
-                .font(.largeTitle)
-                .padding(30)
-            Form {
-                
-                TextField("Server", text: $serverHost)
-                    .textFieldStyle(.roundedBorder)
-                    .padding()
-                
-                TextField("Port", text: $serverPortStr, onCommit: {
-                    if let validNumber = Int(serverPortStr) {
-                        self.serverPort = validNumber
-                    }
-                }).onAppear{
-                    serverPortStr = "\(self.serverPort)"
-                }
-                .padding()
-                .textFieldStyle(.roundedBorder)
-                
-                TextField("AccessToken", text: $accessTokenKey)
-                    .padding()
-                    .textFieldStyle(.roundedBorder)
-                SecureField("SecretToken", text: $secretToken)
-                    .padding()
-                    .textFieldStyle(.roundedBorder)
-            }
+        VStack(alignment: .center) {
+            
+            NanaFSLoginView(isLogining: $isLogining)
             
             Text("\(errorMessage)")
                 .foregroundStyle(.red)
-            
-            Button(action: {
-                Task {
-                    await doLogin()
-                }
-            }) {
-                Text(isLogining ? "Connecting" : "Connect" )
-                    .font(.body)
-                    .padding(10)
-                    .frame(width: 220, height: 40)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .tryLogin)) { [self] notification in
+            if let req = notification.object as? LoginRequest {
+                self.doLogin(req: req)
             }
-            .padding(.vertical, 30)
         }
         .padding(50)
         .frame(minWidth: 700, minHeight: 500)
-        .task {
-            if serverHost != "" && accessTokenKey != "" {
-                await doLogin()
-            }
+    }
+    
+    func doLogin(req: LoginRequest) {
+        Task {
+            await handleLogin(serverHost: req.serverHost, serverPort: req.serverPort, accessTokenKey: req.accessTokenKey, secretToken: req.secretToken)
         }
     }
     
-    func doLogin() async {
-        isLogining = true
-        defer {
-            isLogining = false
-        }
-        
+    func handleLogin(serverHost: String, serverPort: Int, accessTokenKey: String, secretToken: String) async {
         var clientSet: ClientSet? = nil
+        var fsInfo: FSInfo? = nil
+        defer { isLogining = false }
         do {
             clientSet = try FSAPI(host: serverHost, port: serverPort, accessTokenKey: accessTokenKey, secretToken: secretToken).login()
-            NotificationCenter.default.post(name: NSNotification.Name("login"), object: clientSet)
         } catch {
             errorMessage = "connect server failed: \(error)"
             return
         }
         
+        guard clientSet != nil else {
+            errorMessage = "init client failed"
+            return
+        }
+        
         do {
-            if let clientSet = clientSet {
-                let fi = try await clientSet.fsInfo()
-                let info = FSInfo(namespace: fi.namespace, rootID: fi.rootID, inboxID: fi.inboxID)
-                NotificationCenter.default.post(name: NSNotification.Name("setFSInfo"), object: info)
-            }
+            let fi = try await clientSet!.fsInfo()
+            fsInfo = FSInfo(namespace: fi.namespace, rootID: fi.rootID, inboxID: fi.inboxID)
         } catch {
             errorMessage = "query fs info failed: \(error)"
             return
         }
+        
+        guard fsInfo != nil else {
+            errorMessage = "init fsinfo failed"
+            return
+        }
+        
+        complateLogin(clientSet: clientSet!, fsInfo: fsInfo!)
+        store.setting.database.apiHost = serverHost
+        store.setting.database.apiPort = serverPort
+        store.setting.database.apiaccessTokenKey = accessTokenKey
+        store.setting.database.apiSecretToken = secretToken
+    }
+    
+    @MainActor
+    func complateLogin(clientSet: ClientSet, fsInfo: FSInfo) {
+        assert(Thread.isMainThread)
+        environment.clientSet = clientSet
+        store.fsInfo = fsInfo
     }
 }
 
+
+public extension Notification.Name {
+    static let tryLogin = Notification.Name(rawValue: "tryLogin")
+}
+
+
+class LoginRequest {
+    var serverHost: String
+    var serverPort: Int
+    var accessTokenKey: String
+    var secretToken: String
+    
+    init(serverHost: String, serverPort: Int, accessTokenKey: String, secretToken: String) {
+        self.serverHost = serverHost
+        self.serverPort = serverPort
+        self.accessTokenKey = accessTokenKey
+        self.secretToken = secretToken
+    }
+}

@@ -14,13 +14,5 @@ class Environment {
     
     var clientSet: ClientSet? = nil
     
-    private init(){
-        NotificationCenter.default.addObserver(
-            forName: NSNotification.Name("login"),
-            object: nil, queue: .main, using: { notification in
-                if let cs = notification.object as? ClientSet? {
-                    self.clientSet = cs
-                }
-            })
-    }
+    private init(){}
 }

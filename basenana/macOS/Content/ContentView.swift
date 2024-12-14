@@ -17,7 +17,7 @@ struct ContentView: View {
     
     var body: some View {
         VStack{
-            if !state.fsInfo.fsApiReady || environment.clientSet == nil {
+            if !state.fsInfo.fsApiReady {
                 LoginView()
                     .frame(minWidth: 400, maxWidth: 400, minHeight: 500, maxHeight: 500)
             } else {

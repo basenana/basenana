@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AppState
 import Entities
 import SwiftUI
 import GRPC
@@ -113,14 +114,14 @@ public class ClientSet {
     }
     
     public func fsInfo() async throws -> FSInfo {
-        let result = FSInfo()
-        result.namespace = namespace
-        
+        var rootID: Int64 = 0
+        var inboxID: Int64 = 0
+
         do {
             var req = Api_V1_FindEntryDetailRequest()
             req.root = true
             let resp = try await entries.findEntryDetail(req, callOptions: defaultCallOptions)
-            result.rootID = resp.entry.id
+            rootID = resp.entry.id
         } catch {
             print("refush fs info error, get root entry failed \(error)")
             throw error
@@ -128,21 +129,15 @@ public class ClientSet {
         
         do {
             var req = Api_V1_FindEntryDetailRequest()
-            req.parentID = result.rootID
+            req.parentID = rootID
             req.name = ".inbox"
             let resp = try await entries.findEntryDetail(req, callOptions: defaultCallOptions)
-            result.inboxID = resp.entry.id
+            inboxID = resp.entry.id
         } catch {
             print("refush fs info error, get inbox entry failed \(error)")
             throw error
         }
         
-        return result
+        return FSInfo(namespace: namespace, rootID: rootID, inboxID: inboxID)
     }
-}
-
-public class FSInfo {
-    public var namespace = ""
-    public var rootID: Int64 = 0
-    public var inboxID: Int64 = 0
 }

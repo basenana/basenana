@@ -38,6 +38,7 @@ let package = Package(
             name: "NetworkExtension",
             dependencies: [
                 "NetworkCore",
+                .product(name: "AppState", package: "Domain"),
                 .product(name: "Entities", package: "Domain"),
             ]
         ),
