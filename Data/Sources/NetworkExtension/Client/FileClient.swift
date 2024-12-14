@@ -5,6 +5,7 @@
 //  Created by Hypo on 2024/9/17.
 //
 
+import os
 import GRPC
 import Entities
 import NetworkCore
@@ -15,13 +16,18 @@ public class FileClient: FileClientProtocol {
     
     var client: Api_V1_EntriesAsyncClientProtocol
     
+    private static let logger = Logger(
+            subsystem: Bundle.main.bundleIdentifier!,
+            category: String(describing: FileClient.self)
+        )
+    
     public init(clientSet: ClientSet) {
         self.client = clientSet.entries
     }
     
     public func UploadFile(entry: Int64, fileHandle: FileHandle) async throws {
         let resp = try await client.writeFile(FileReader(entry: entry, fileHandle: fileHandle))
-        print("upload file \(entry), len=\(resp.len)")
+        Self.logger.notice("upload file \(entry), len=\(resp.len)")
     }
     
     public func DownloadFile(entry: Int64, file: String) async throws {

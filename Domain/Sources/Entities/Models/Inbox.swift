@@ -32,6 +32,17 @@ public enum FileType {
     case Bookmark
     case Html
     case Webarchive
+    
+    public func option() -> String {
+        switch self {
+        case .Bookmark:
+            return "bookmark"
+        case .Html:
+            return "html"
+        case .Webarchive:
+            return "webarchive"
+        }
+    }
 }
 
 public enum SourceType {

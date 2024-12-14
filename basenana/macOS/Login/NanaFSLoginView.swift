@@ -102,9 +102,6 @@ struct NanaFSLoginView: View {
         }
         
         isLogining = true
-        defer {
-            isLogining = false
-        }
         
         tryConnect()
     }

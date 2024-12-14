@@ -6,6 +6,7 @@
 //  Copyright © 2018 Ernesto Elsäßer. All rights reserved.
 //
 
+import os
 import Foundation
 import Fuzi
 
@@ -34,6 +35,11 @@ public enum ArchivingError: LocalizedError {
 
 public class WebArchiver {
     
+    private static let logger = Logger(
+            subsystem: Bundle.main.bundleIdentifier!,
+            category: String(describing: WebArchiver.self)
+        )
+    
     public static func archiveWithMainResource(url: URL, htmlContent: String, includeJavascript: Bool = true, skipCache: Bool = false, completion: @escaping (ArchivingResult) -> ()) {
         
         let session = ArchivingSession(cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, cookies: [], completion: completion)
@@ -59,7 +65,7 @@ public class WebArchiver {
             }
             session.finish(with: archive)
         }catch {
-            print("[archiveWithMainResource] failed \(error)")
+            Self.logger.error("[archiveWithMainResource] failed \(error)")
         }
     }
         

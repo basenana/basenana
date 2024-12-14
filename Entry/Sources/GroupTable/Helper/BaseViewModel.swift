@@ -5,6 +5,7 @@
 //  Created by Hypo on 2024/11/30.
 //
 
+import os
 import SwiftUI
 import AppState
 import Entities
@@ -20,6 +21,11 @@ public class BaseViewModel {
     
     var store: StateStore
     var entryUsecase: EntryUseCaseProtocol
+    
+    private static let logger = Logger(
+            subsystem: Bundle.main.bundleIdentifier!,
+            category: String(describing: "Entry")
+        )
     
     init(store: StateStore, entryUsecase: EntryUseCaseProtocol) {
         self.store = store
@@ -70,7 +76,7 @@ public class BaseViewModel {
                 
             default:
                 
-                print("[moveEntriesAndUpdateTree] unknown url schema \(url)")
+                Self.logger.notice("[moveEntriesAndUpdateTree] unknown url schema \(url)")
                 return false
             }
         }
@@ -129,7 +135,7 @@ public class BaseViewModel {
                         }
                         
                         let en = try await self.entryUsecase.UploadFile(parent: parentID, file: file, properties: properties)
-                        print("upload new entry \(en.id)/\(en.name)")
+                        Self.logger.notice("upload new entry \(en.id)/\(en.name)")
                     } catch {
                         sentAlert("upload file \(file.lastPathComponent) failed \(error)")
                     }

@@ -5,6 +5,7 @@
 //  Created by Hypo on 2024/11/27.
 //
 
+import os
 import SwiftUI
 import AppState
 import Entities

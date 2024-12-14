@@ -5,6 +5,7 @@
 //  Created by Hypo on 2024/10/14.
 //
 
+import os
 import SwiftUI
 import Foundation
 import AppState
@@ -16,6 +17,11 @@ public struct GroupTableView: View {
     @State private var groupName: String? = nil
     
     @State private var viewModel: GroupTableViewModel
+    
+    private static let logger = Logger(
+            subsystem: Bundle.main.bundleIdentifier!,
+            category: String(describing: GroupTableView.self)
+        )
     
     public init(groupID: Int64, viewModel: GroupTableViewModel) {
         self.groupID = groupID
@@ -47,6 +53,7 @@ public struct GroupTableView: View {
             }
         }
         .task {
+            Self.logger.notice("open group \(groupID)")
             await viewModel.openGroup(groupID: groupID)
             
             if let opg = viewModel.group {

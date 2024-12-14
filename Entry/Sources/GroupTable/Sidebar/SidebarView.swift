@@ -5,6 +5,7 @@
 //  Created by Hypo on 2024/2/29.
 //
 
+import os
 import Foundation
 import SwiftUI
 import AppState
@@ -15,6 +16,11 @@ public struct SidebarView: View {
     
     @State private var viewModel: TreeViewModel
     @State private var selection: Destination? = nil
+    
+    private static let logger = Logger(
+            subsystem: Bundle.main.bundleIdentifier!,
+            category: String(describing: SidebarView.self)
+        )
     
     public init(viewModel: TreeViewModel) {
         self.viewModel = viewModel
@@ -44,7 +50,7 @@ public struct SidebarView: View {
                 resetDestination(s)
                 if case.groupList(let grp) = s {
                     viewModel.selectedGroupId = grp
-                    print("[SidebarView] selected group \(grp)")
+                    Self.logger.notice("[SidebarView] selected group \(grp)")
                 }else {
                     viewModel.selectedGroupId = nil
                 }

@@ -4,6 +4,8 @@
 //
 //  Created by Hypo on 2024/11/28.
 //
+
+import os
 import SwiftUI
 import AppState
 import Entities
@@ -17,6 +19,11 @@ public class CreateDeleteViewModel {
     
     var store: StateStore
     var entryUsecase: EntryUseCaseProtocol
+    
+    private static let logger = Logger(
+            subsystem: Bundle.main.bundleIdentifier!,
+            category: String(describing: CreateDeleteViewModel.self)
+        )
     
     public init(store: StateStore, entryUsecase: EntryUseCaseProtocol) {
         self.store = store

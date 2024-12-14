@@ -5,6 +5,7 @@
 //  Created by Hypo on 2024/9/18.
 //
 
+import os
 import Foundation
 import Entities
 import RepositoryProtocol
@@ -15,6 +16,11 @@ public class EntryUseCase: EntryUseCaseProtocol {
     private var inboxRepo: InboxRepositoryProtocol
     private var entryRepo: EntryRepositoryProtocol
     private var fileRepo: FileRepositoryProtocol
+    
+    private static let logger = Logger(
+            subsystem: Bundle.main.bundleIdentifier!,
+            category: String(describing: EntryUseCase.self)
+        )
     
     public init(inboxRepo: InboxRepositoryProtocol, entryRepo: EntryRepositoryProtocol, fileRepo: FileRepositoryProtocol) {
         self.inboxRepo = inboxRepo
@@ -127,7 +133,7 @@ public class EntryUseCase: EntryUseCaseProtocol {
         
         let option = EntryCreate(parent: parent, name: file.lastPathComponent, kind: "raw")
         let entry = try await entryRepo.CreateEntry(entry: option)
-        print("create entry \(entry.id) for upload")
+        Self.logger.info("create entry \(entry.id) for upload")
         
         for kv in properties {
             try await entryRepo.AddProperty(entry: entry.id, key: kv.key, val: kv.value)
