@@ -5,6 +5,7 @@
 //  Created by Hypo on 2024/12/2.
 //
 
+import os
 import SwiftUI
 import WebKit
 import AppState
@@ -17,6 +18,10 @@ import UseCaseProtocol
 @MainActor
 public class InboxViewModel: BaseViewModel {
     
+    private static let logger = Logger(
+            subsystem: Bundle.main.bundleIdentifier!,
+            category: String(describing: InboxViewModel.self)
+        )
     
     override public init(store: StateStore, entryUsecase: EntryUseCaseProtocol) {
         super.init(store: store, entryUsecase: entryUsecase)
@@ -40,7 +45,7 @@ public class InboxViewModel: BaseViewModel {
         }
         
         do {
-            print("quick inbox url=\(url) fileName=\(title) fileType=\(safeFileType)")
+            Self.logger.info("quick inbox url=\(url) fileName=\(title) fileType=\(safeFileType.option())")
             try await entryUsecase.quickInbox(url: url, fileName: sanitizeFileName(title), fileType: safeFileType)
         } catch {
             errorMsg.wrappedValue = "inbox failed: \(error)"
@@ -91,7 +96,7 @@ public class InboxViewModel: BaseViewModel {
                         }
                     }
                 } catch {
-                    print("save error \(error)")
+                    Self.logger.info("save error \(error)")
                 }
             },
             complete: {
@@ -114,7 +119,7 @@ public class InboxViewModel: BaseViewModel {
                     }
                     
                     let en = try await self.entryUsecase.UploadFile(parent: self.store.fsInfo.inboxID, file: file, properties: properties)
-                    print("upload new entry \(en.id)/\(en.name)")
+                    Self.logger.info("upload new entry \(en.id)/\(en.name)")
                 } catch {
                     sentAlert("upload file \(file.lastPathComponent) failed \(error)")
                 }

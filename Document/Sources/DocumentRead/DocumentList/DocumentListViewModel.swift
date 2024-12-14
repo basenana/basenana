@@ -5,6 +5,7 @@
 //  Created by Hypo on 2024/11/16.
 //
 
+import os
 import SwiftUI
 import Foundation
 import Entities
@@ -31,6 +32,11 @@ public class DocumentListViewModel {
     var page: Int = 1
     var pageSize: Int = 40
     var hasMore = true
+    
+    private static let logger = Logger(
+            subsystem: Bundle.main.bundleIdentifier!,
+            category: String(describing: DocumentListViewModel.self)
+        )
     
     public init(prespective: DocumentPrespective, store: StateStore, usecase: DocumentUseCaseProtocol) {
         self.prespective = prespective
@@ -152,7 +158,7 @@ public class DocumentListViewModel {
             if !store.setting.document.autoRead {
                 return
             }
-            print("auto set all appeared docuemnt read")
+            Self.logger.info("auto set all appeared docuemnt read")
         }
         for kv in unreadDocumentsAppeared {
             if enableHooks && Date().timeIntervalSince(kv.value.appearedAt) > Double(before) {
@@ -179,7 +185,7 @@ public class DocumentListViewModel {
     // MARK: list document
     func reset() {
         self.page = 1
-        print("reinit main documents: current cached \(sectionDocuments.count)")
+        Self.logger.info("reinit main documents: current cached \(self.sectionDocuments.count)")
         sectionDocuments.removeAll()
         documentsSectionMap.removeAll()
         self.hasMore = true
@@ -194,7 +200,7 @@ public class DocumentListViewModel {
             return
         }
         
-        print("list docuemnt len \(nextPage.count)")
+        Self.logger.info("list docuemnt len \(nextPage.count)")
         self.isLoading = true
         for nextDoc in nextPage {
             insertToSectionDocuments(doc: DocumentItem(info: nextDoc, readable: prespective == .unread ? true : false))
@@ -203,7 +209,7 @@ public class DocumentListViewModel {
     }
     
     func listNextPage() async -> [DocumentInfo] {
-        print("ready to list next page document, page=\(page)")
+        Self.logger.info("ready to list next page document, page=\(self.page)")
         var nextPageList: [DocumentInfo] = []
         do {
             switch prespective {
@@ -214,7 +220,7 @@ public class DocumentListViewModel {
             }
             
             if nextPageList.isEmpty || pageSize > nextPageList.count {
-                print("no more documents, page=\(page)")
+                Self.logger.info("no more documents, page=\(self.page)")
                 hasMore = false
             }
         } catch let error as UseCaseError where error == .canceled {

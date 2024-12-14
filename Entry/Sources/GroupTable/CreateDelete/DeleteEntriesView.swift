@@ -5,7 +5,7 @@
 //  Created by Hypo on 2024/11/29.
 //
 
-
+import os
 import SwiftUI
 import FeedKit
 import Entities
@@ -18,6 +18,11 @@ struct DeleteEntriesView: View {
 
     @State private var entries: [EntryRow] = []
     @State private var errorMsg: String = ""
+    
+    private static let logger = Logger(
+            subsystem: Bundle.main.bundleIdentifier!,
+            category: String(describing: DeleteEntriesView.self)
+        )
 
     init(entryIDs: [Int64], viewModel: CreateDeleteViewModel, showDeleteView: Binding<Bool>) {
         self.entryIDs = entryIDs
@@ -66,7 +71,7 @@ struct DeleteEntriesView: View {
             .padding(.top, 10)
         }
         .task{
-            print("try to delete entries \(entryIDs)")
+            Self.logger.info("try to delete entries \(self.entryIDs)")
             for entryId in entryIDs {
                 if let detail = await viewModel.describeEntry(entry: entryId) {
                     entries.append(EntryRow(info: detail.toInfo()!))

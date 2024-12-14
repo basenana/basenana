@@ -5,6 +5,7 @@
 //  Created by Hypo on 2024/12/7.
 //
 
+import os
 import SwiftUI
 import Foundation
 import SwiftUIMasonry
@@ -20,6 +21,11 @@ struct NavigationItemView: View {
     
     @State var parentEntry: EntryDetail? = nil
     @State var properties: [EntryProperty] = []
+    
+    private static let logger = Logger(
+            subsystem: Bundle.main.bundleIdentifier!,
+            category: String(describing: NavigationItemView.self)
+        )
     
     init(section: String, doc: DocumentItem, viewModel: DocumentListViewModel ) {
         self.section = section
@@ -87,7 +93,7 @@ struct NavigationItemView: View {
         if let paresedDate = rfc3339Formatter.date(from: updateAt) {
             datetime = paresedDate
         }else {
-            print("parse web page update at failed, got \(updateAt)")
+            Self.logger.error("parse web page update at failed, got \(updateAt)")
         }
         
         return dateFormatter.string(from: datetime)

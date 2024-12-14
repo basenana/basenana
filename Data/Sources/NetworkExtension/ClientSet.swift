@@ -5,6 +5,7 @@
 //  Created by Hypo on 2024/9/15.
 //
 
+import os
 import Foundation
 import AppState
 import Entities
@@ -15,7 +16,6 @@ import NIOSSL
 
 let clientEventLoopGroup = PlatformSupport.makeEventLoopGroup(loopCount: System.coreCount/2+1)
 
-@available(macOS 11.0, *)
 public class FSAPI {
     private var host: String
     private var port: Int
@@ -33,6 +33,11 @@ public class FSAPI {
     var clientCrt: [UInt8] = []
     var clientKey: [UInt8] = []
     var namespace: String = ""
+    
+    private static let logger = Logger(
+            subsystem: Bundle.main.bundleIdentifier!,
+            category: String(describing: FSAPI.self)
+        )
     
     public func login() throws -> ClientSet {
         if self.host == ""{
@@ -69,13 +74,12 @@ public class FSAPI {
         }
         
         self.isLogined = true
-        print("login succeed")
+        Self.logger.info("login succeed")
         return try ClientSet(host: host, port: port, clientCrt: clientCrt, clientKey: clientKey, namespace: namespace)
     }
 }
 
 
-@available(macOS 11.0, *)
 public class ClientSet {
     
     var inbox: Api_V1_InboxAsyncClientProtocol
@@ -87,6 +91,11 @@ public class ClientSet {
     var notify: Api_V1_NotifyAsyncClientProtocol
     
     private var namespace: String
+    
+    private static let logger = Logger(
+            subsystem: Bundle.main.bundleIdentifier!,
+            category: String(describing: ClientSet.self)
+        )
     
     public init(host: String, port: Int, clientCrt: [UInt8], clientKey: [UInt8], namespace: String) throws {
         let transportSecurity = GRPCChannelPool.Configuration.TransportSecurity
@@ -123,7 +132,7 @@ public class ClientSet {
             let resp = try await entries.findEntryDetail(req, callOptions: defaultCallOptions)
             rootID = resp.entry.id
         } catch {
-            print("refush fs info error, get root entry failed \(error)")
+            Self.logger.error("refush fs info error, get root entry failed \(error)")
             throw error
         }
         
@@ -134,7 +143,7 @@ public class ClientSet {
             let resp = try await entries.findEntryDetail(req, callOptions: defaultCallOptions)
             inboxID = resp.entry.id
         } catch {
-            print("refush fs info error, get inbox entry failed \(error)")
+            Self.logger.error("refush fs info error, get inbox entry failed \(error)")
             throw error
         }
         

@@ -5,6 +5,7 @@
 //  Created by Hypo on 2024/9/15.
 //
 
+import os
 import Foundation
 import Entities
 import NetworkCore
@@ -14,6 +15,11 @@ import RepositoryProtocol
 public class FileRepository: FileRepositoryProtocol {
     
     private var core: FileClientProtocol
+    
+    private static let logger = Logger(
+            subsystem: Bundle.main.bundleIdentifier!,
+            category: String(describing: FileRepository.self)
+        )
     
     public init(core: FileClientProtocol) {
         self.core = core
@@ -35,7 +41,7 @@ public class FileRepository: FileRepositoryProtocol {
             do {
                 try fmanager.removeItem(atPath: fileTmp)
             } catch {
-                print("clean up tmp file failed \(error)")
+                Self.logger.error("clean up tmp file \(fileTmp) failed \(error)")
             }
         }
         

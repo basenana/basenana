@@ -5,6 +5,7 @@
 //  Created by Hypo on 2024/12/8.
 //
 
+import os
 import SwiftUI
 import AppState
 import Entities
@@ -22,6 +23,11 @@ public class WorkflowDetailViewModel {
     var store: StateStore
     var usecase: WorkflowUseCaseProtocol
     
+    private static let logger = Logger(
+            subsystem: Bundle.main.bundleIdentifier!,
+            category: String(describing: WorkflowDetailViewModel.self)
+        )
+    
     public init(workflow: String, store: StateStore, usecase: WorkflowUseCaseProtocol) {
         self.workflowID = workflow
         self.store = store
@@ -33,7 +39,7 @@ public class WorkflowDetailViewModel {
         
         do {
             let jobList = try await usecase.listWorkflowJobs(workflow: workflowID)
-            print("load workflow \(workflowID) jobs, got \(jobList.count)")
+            Self.logger.notice("load workflow \(self.workflowID) jobs, got \(jobList.count)")
             for job in jobList {
                 jobs.append(JobItem(job: job))
             }

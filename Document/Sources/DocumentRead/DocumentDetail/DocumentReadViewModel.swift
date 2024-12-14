@@ -4,6 +4,8 @@
 //
 //  Created by Hypo on 2024/11/18.
 //
+
+import os
 import SwiftUI
 import Foundation
 import Entities
@@ -18,6 +20,11 @@ public class DocumentReadViewModel {
     var store: StateStore
     var usecase: DocumentUseCaseProtocol
     var entry: EntryDetail? = nil
+    
+    private static let logger = Logger(
+            subsystem: Bundle.main.bundleIdentifier!,
+            category: String(describing: DocumentReadViewModel.self)
+        )
 
     public init(docID:Int64, store: StateStore, usecase: DocumentUseCaseProtocol) {
         self.docID = docID

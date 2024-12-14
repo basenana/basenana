@@ -5,6 +5,7 @@
 //  Created by Hypo on 2024/12/4.
 //
 
+import os
 import SwiftUI
 import Entities
 import Styleguide
@@ -18,6 +19,11 @@ struct MasonryItemView: View {
     @State var entry: EntryDetail? = nil
     @State var properties: [EntryProperty]
     @State var parent: EntryInfo
+    
+    private static let logger = Logger(
+            subsystem: Bundle.main.bundleIdentifier!,
+            category: String(describing: MasonryItemView.self)
+        )
     
     init(section: String, doc: DocumentItem, viewModel: DocumentListViewModel ) {
         self.section = section
@@ -95,7 +101,7 @@ struct MasonryItemView: View {
         if let paresedDate = rfc3339Formatter.date(from: updateAt) {
             datetime = paresedDate
         }else {
-            print("parse web page update at failed, got \(updateAt)")
+            Self.logger.error("parse web page update at failed, got \(updateAt)")
         }
         
         return dateFormatter.string(from: datetime)

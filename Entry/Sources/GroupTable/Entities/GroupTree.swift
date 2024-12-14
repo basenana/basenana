@@ -5,6 +5,7 @@
 //  Created by Hypo on 2024/9/21.
 //
 
+import os
 import SwiftUI
 import Entities
 
@@ -18,6 +19,11 @@ class GroupTree {
     
     var root: Entities.Group = UnknownGroup.shared
     var inbox: Entities.Group = UnknownGroup.shared
+    
+    private static let logger = Logger(
+            subsystem: Bundle.main.bundleIdentifier!,
+            category: String(describing: InboxViewModel.self)
+        )
 
     private init() {}
 
@@ -35,7 +41,7 @@ class GroupTree {
             children!.append(paresGroupTreeChild(group: grp))
         }
         
-        print("reset group tree root=\(root.id)")
+        Self.logger.info("reset group tree root=\(root.id)")
     }
     
     func paresGroupTreeChild(group: Entities.Group) -> GroupLeaf {
@@ -116,13 +122,13 @@ class GroupTree {
     
     func removeChildGroup(parentID: Int64, childID: Int64){
         guard let _ = self.allGroups[childID] else {
-            print("[removeChildGroup] delete \(parentID)/\(childID) but child not found")
+            Self.logger.info("[removeChildGroup] delete \(parentID)/\(childID) but child not found")
             return
         }
         
         if let parent = self.allGroups[parentID]{
             if parent.children == nil{
-                print("[removeChildGroup] delete \(parentID)/\(childID) parent has not child")
+                Self.logger.info("[removeChildGroup] delete \(parentID)/\(childID) parent has not child")
                 return
             }
             

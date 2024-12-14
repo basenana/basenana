@@ -5,7 +5,7 @@
 //  Created by Hypo on 2024/11/28.
 //
 
-
+import os
 import SwiftUI
 import AppState
 import Entities
@@ -21,6 +21,11 @@ public class EntryDetailViewModel {
     var entryUsecase: EntryUseCaseProtocol
     
     var errorMessage: String = ""
+    
+    private static let logger = Logger(
+            subsystem: Bundle.main.bundleIdentifier!,
+            category: String(describing: EntryDetailViewModel.self)
+        )
     
     public init(store: StateStore, entryUsecase: EntryUseCaseProtocol) {
         self.store = store
@@ -39,7 +44,7 @@ public class EntryDetailViewModel {
     }
     
     func renameEntry(entry: EntryDetail, newName: String) async -> Bool {
-        print("rename entry \(entry.name) = > \(newName)")
+        Self.logger.notice("rename entry \(entry.name) = > \(newName)")
         if entry.name == newName {
             return true
         }
