@@ -56,6 +56,8 @@
 		3FB782452BC1A82700327191 /* GRPCReflectionService in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782442BC1A82700327191 /* GRPCReflectionService */; };
 		3FB782492BC1A82700327191 /* protoc-gen-grpc-swift in Frameworks */ = {isa = PBXBuildFile; productRef = 3FB782482BC1A82700327191 /* protoc-gen-grpc-swift */; };
 		3FC54F052C948E4C00803A1D /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 3FC54F032C948E4C00803A1D /* Data */; };
+		3FC7FD152D0D545F004F43E9 /* NanaFSLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC7FD142D0D545B004F43E9 /* NanaFSLoginView.swift */; };
+		3FC7FD162D0D545F004F43E9 /* NanaFSLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC7FD142D0D545B004F43E9 /* NanaFSLoginView.swift */; };
 		3FCEC3CE2C314D41002D8662 /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3FCEC3CD2C314D41002D8662 /* FeedKit */; };
 		3FCF70EA2D05943F00571DF9 /* Workflow in Frameworks */ = {isa = PBXBuildFile; productRef = 3FCF70E92D05943F00571DF9 /* Workflow */; };
 		ED0CBB3C2BF656B90056E6AA /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4A78E02BD299110035F90F /* SettingsView.swift */; };
@@ -128,6 +130,7 @@
 		3FC54F032C948E4C00803A1D /* Data */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Data; sourceTree = "<group>"; };
 		3FC54F062C948FB900803A1D /* Entry */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Entry; sourceTree = "<group>"; };
 		3FC54F082C948FF000803A1D /* Notify */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Notify; sourceTree = "<group>"; };
+		3FC7FD142D0D545B004F43E9 /* NanaFSLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NanaFSLoginView.swift; sourceTree = "<group>"; };
 		ED0CBB522BF656B90056E6AA /* basenana dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "basenana dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED0CBB532BF656BA0056E6AA /* Info-dev.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-dev.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -294,6 +297,7 @@
 		3F7A1E062CEE099D00C2BDC8 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				3FC7FD142D0D545B004F43E9 /* NanaFSLoginView.swift */,
 				3FAC06BB2C25BEC40067E7A5 /* LoginView.swift */,
 			);
 			path = Login;
@@ -542,6 +546,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3F7A1E042CEDCA5800C2BDC8 /* Container.swift in Sources */,
+				3FC7FD162D0D545F004F43E9 /* NanaFSLoginView.swift in Sources */,
 				3F317C4E2C2476C300F42D37 /* StackContentView.swift in Sources */,
 				3F071BA42C29A2CC00F19C63 /* BackgroundJobView.swift in Sources */,
 				3F9FAF8D2D05C61200C95D51 /* AppearanceSettingView.swift in Sources */,
@@ -577,6 +582,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3FAC06BD2C25BEC40067E7A5 /* LoginView.swift in Sources */,
+				3FC7FD152D0D545F004F43E9 /* NanaFSLoginView.swift in Sources */,
 				3F7A1E0C2CEE0EDF00C2BDC8 /* Environment.swift in Sources */,
 				3F7A1E052CEDCA5800C2BDC8 /* Container.swift in Sources */,
 				3F9FAF8E2D05C61200C95D51 /* AppearanceSettingView.swift in Sources */,

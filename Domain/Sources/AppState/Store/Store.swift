@@ -17,15 +17,7 @@ public class StateStore {
     public var fsInfo = FSInfo()
     public var setting = Setting.global
     
-    private init(){
-        NotificationCenter.default.addObserver(
-            forName: NSNotification.Name("setFSInfo"),
-            object: nil, queue: .main, using: { notification in
-                if let info = notification.object as? FSInfo {
-                    self.fsInfo = info
-                }
-            })
-    }
+    private init(){ }
 }
 
 

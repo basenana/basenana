@@ -29,14 +29,17 @@ extension StateStore {
         let j = BackgroundJob(name: name, startAt: Date())
         self.backgroupJobs.append(j)
         
+        let jid = j.id
         Task(priority: .background) {
             await job()
-            
-            // Once the job is done, call the completion handler on the main queue
-            DispatchQueue.main.async {
-                complete()
-                self.backgroupJobs.removeAll(where: { $0.id == j.id })
-            }
+            await complateBackgroundJob(jid: jid, complete: complete)
         }
+    }
+    
+    @MainActor
+    private func complateBackgroundJob(jid: String, complete: @escaping () -> Void) {
+        assert(Thread.isMainThread)
+        complete()
+        self.backgroupJobs.removeAll(where: { $0.id == jid })
     }
 }
