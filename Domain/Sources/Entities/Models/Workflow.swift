@@ -39,7 +39,7 @@ public protocol WorkflowJob {
 }
 
 public protocol WorkflowJobTarget {
-    var entryID: Int64 { get }
+    var entries: [Int64] { get }
     var parentEntryID: Int64 { get }
 }
 

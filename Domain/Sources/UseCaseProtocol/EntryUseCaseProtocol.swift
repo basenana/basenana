@@ -10,8 +10,6 @@ import Entities
 
 
 public protocol EntryUseCaseProtocol {
-    func quickInbox(url: String, fileName: String, fileType: FileType) async throws
-    
     func getEntryDetails(entry: Int64) async throws -> EntryDetail
     func renameEntry(entry: Int64, newName: String) async throws
     func deleteEntry(entry: Int64) async throws

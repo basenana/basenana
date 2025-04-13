@@ -27,35 +27,6 @@ public class InboxViewModel: BaseViewModel {
         super.init(store: store, entryUsecase: entryUsecase)
     }
     
-    // quick inbox
-    func quickInbox(url: String, title: String, fileType: String, errorMsg: Binding<String>) async -> Bool {
-        var safeFileType: Entities.FileType = .Webarchive
-        switch fileType{
-        case "html":
-            safeFileType = .Html
-        case "webarchive":
-            safeFileType = .Webarchive
-        default:
-            safeFileType = .Webarchive
-        }
-        
-        guard self.store.fsInfo.inboxID > 0 else {
-            errorMsg.wrappedValue = "unknown inbox \(self.store.fsInfo.inboxID)"
-            return false
-        }
-        
-        do {
-            Self.logger.info("quick inbox url=\(url) fileName=\(title) fileType=\(safeFileType.option())")
-            try await entryUsecase.quickInbox(url: url, fileName: sanitizeFileName(title), fileType: safeFileType)
-        } catch {
-            errorMsg.wrappedValue = "inbox failed: \(error)"
-            return false
-        }
-        
-        NotificationCenter.default.post(name: .reopenGroup, object: [groupTree.inbox.id])
-        return true
-    }
-    
     func packingWebPage(url: String, title: String, webView: WKWebView) async -> (String, Bool) {
         
         guard let u = URL(string: url) else {

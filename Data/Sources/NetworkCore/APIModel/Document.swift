@@ -28,6 +28,8 @@ public struct APIDocumentInfo: DocumentInfo {
     
     public var subContent: String
     
+    public var searchContent: [String]
+    
     public var headerImage: String
 
     public var createdAt: Date
@@ -38,7 +40,7 @@ public struct APIDocumentInfo: DocumentInfo {
     
     public var parent: EntryInfo
     
-    public init(id: Int64, oid: Int64, parentId: Int64, name: String, namespace: String, source: String? = nil, marked: Bool, unread: Bool, subContent: String, headerImage: String, createdAt: Date, changedAt: Date, properties: [APIEntryProperty], parent: APIEntryInfo) {
+    public init(id: Int64, oid: Int64, parentId: Int64, name: String, namespace: String, source: String? = nil, marked: Bool, unread: Bool, subContent: String, searchContent: [String], headerImage: String, createdAt: Date, changedAt: Date, properties: [APIEntryProperty], parent: APIEntryInfo) {
         self.id = id
         self.oid = oid
         self.parentId = parentId
@@ -48,6 +50,7 @@ public struct APIDocumentInfo: DocumentInfo {
         self.marked = marked
         self.unread = unread
         self.subContent = subContent
+        self.searchContent = searchContent
         self.headerImage = headerImage
         self.createdAt = createdAt
         self.changedAt = changedAt

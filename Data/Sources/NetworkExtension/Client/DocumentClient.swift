@@ -43,6 +43,10 @@ public class DocumentClient: DocumentClientProtocol {
             req.filter.unread = filter.unread!
         }
         
+        if filter.search != nil {
+            req.filter.search = filter.search!
+        }
+        
         if filter.page != nil {
             var p = Api_V1_Pagination()
             p.page = filter.page!.page

@@ -11,6 +11,7 @@ import AppState
 import GroupTable
 import DocumentRead
 import Workflow
+import Search
 
 
 struct StackContentView: View {
@@ -21,6 +22,8 @@ struct StackContentView: View {
     @State private var destinations = [Destination]()
     @State private var alertMessage: String = ""
     @State private var hasAlert: Bool = false
+    @State private var searchContent: String = ""
+    @State private var isSearchActive = false
     
     
     init(state: StateStore) {
@@ -51,6 +54,8 @@ struct StackContentView: View {
                             WorkflowListView(viewModel: container.c.resolve(WorkflowListViewModel.self)!)
                         case .workflowDetail(workflow: let workflow):
                             WorkflowDetailView(viewModel: container.c.resolve(WorkflowDetailViewModel.self, argument: workflow)!).id(workflow)
+                        case .searchDocuments:
+                            SearchView(search: searchContent, viewModel: container.c.resolve(SearchViewModel.self)!)
                         default:
                             Text("unknown destination")
                         }
@@ -82,6 +87,12 @@ struct StackContentView: View {
                 NotificationView(state: state)
                 Spacer()
             }
+            
+        }
+        .searchable(text: $searchContent)
+        .onSubmit(of: .search) {
+            isSearchActive = true
+            destinations.append(.searchDocuments)
         }
         .alert(alertMessage, isPresented: $hasAlert){
             Button("OK", role: .cancel) {}

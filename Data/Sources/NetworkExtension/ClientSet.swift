@@ -82,7 +82,6 @@ public class FSAPI {
 
 public class ClientSet {
     
-    var inbox: Api_V1_InboxAsyncClientProtocol
     var entries: Api_V1_EntriesAsyncClientProtocol
     var properties: Api_V1_PropertiesAsyncClientProtocol
     var document: Api_V1_DocumentAsyncClientProtocol
@@ -111,7 +110,6 @@ public class ClientSet {
             eventLoopGroup: clientEventLoopGroup
         )
         
-        self.inbox = Api_V1_InboxAsyncClient(channel: tlsChannel)
         self.entries = Api_V1_EntriesAsyncClient(channel: tlsChannel)
         self.properties = Api_V1_PropertiesAsyncClient(channel: tlsChannel)
         self.document = Api_V1_DocumentAsyncClient(channel: tlsChannel)

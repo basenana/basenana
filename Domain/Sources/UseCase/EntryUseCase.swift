@@ -13,7 +13,6 @@ import UseCaseProtocol
 
 public class EntryUseCase: EntryUseCaseProtocol {
     
-    private var inboxRepo: InboxRepositoryProtocol
     private var entryRepo: EntryRepositoryProtocol
     private var fileRepo: FileRepositoryProtocol
     
@@ -22,20 +21,9 @@ public class EntryUseCase: EntryUseCaseProtocol {
             category: String(describing: EntryUseCase.self)
         )
     
-    public init(inboxRepo: InboxRepositoryProtocol, entryRepo: EntryRepositoryProtocol, fileRepo: FileRepositoryProtocol) {
-        self.inboxRepo = inboxRepo
+    public init(entryRepo: EntryRepositoryProtocol, fileRepo: FileRepositoryProtocol) {
         self.entryRepo = entryRepo
         self.fileRepo = fileRepo
-    }
-    
-    public func quickInbox(url: String, fileName: String, fileType: Entities.FileType) async throws {
-        var opt = QuickInbox(sourceType: .Url, fileType: fileType, filename: fileName)
-        opt.url = url
-        do {
-            try await self.inboxRepo.QuickInbox(opt)
-        } catch RepositoryError.canceled {
-            return
-        }
     }
     
     public func getEntryDetails(entry: Int64) async throws -> any Entities.EntryDetail {

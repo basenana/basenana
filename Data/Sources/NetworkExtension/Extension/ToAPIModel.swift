@@ -64,7 +64,7 @@ extension Api_V1_DocumentInfo {
         }
         return APIDocumentInfo(
             id: self.id, oid: self.entryID, parentId: self.parentEntryID, name: self.name, namespace: self.namespace, source: self.source,
-            marked: self.marked, unread: self.unread, subContent: self.subContent, headerImage: self.headerImage,
+            marked: self.marked, unread: self.unread, subContent: self.subContent, searchContent: self.searchContent, headerImage: self.headerImage,
             createdAt: self.createdAt.date, changedAt: self.changedAt.date, properties: enProperties, parent: self.parent.toEntry())
     }
 }
@@ -112,7 +112,7 @@ extension Api_V1_WorkflowInfo {
 
 extension Api_V1_WorkflowJobDetail {
     func toJob() -> APIWorkflowJob {
-        let target = APIWorkflowJobTarget(entryID: self.target.entryID, parentEntryID: self.target.parentEntryID)
+        let target = APIWorkflowJobTarget(entries: self.target.entries, parentEntryID: self.target.parentEntryID)
         var steps = [APIWorkflowJobStep]()
         for step in self.steps {
             steps.append(APIWorkflowJobStep(name: step.name, status: step.status, message: step.message))

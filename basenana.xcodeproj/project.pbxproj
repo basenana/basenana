@@ -70,6 +70,8 @@
 		ED0CBB4A2BF656B90056E6AA /* CGRPCZlib in Frameworks */ = {isa = PBXBuildFile; productRef = ED0CBB132BF656B90056E6AA /* CGRPCZlib */; };
 		ED0CBB4C2BF656B90056E6AA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F1BBE262B8E1480005D533F /* Preview Assets.xcassets */; };
 		ED0CBB4D2BF656B90056E6AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3F1BBE222B8E1480005D533F /* Assets.xcassets */; };
+		EDA5C01B2D20FA8300C70BF1 /* Search in Frameworks */ = {isa = PBXBuildFile; productRef = EDA5C01A2D20FA8300C70BF1 /* Search */; };
+		EDA5C01D2D20FA8E00C70BF1 /* Search in Frameworks */ = {isa = PBXBuildFile; productRef = EDA5C01C2D20FA8E00C70BF1 /* Search */; };
 		EDB98C622D05E21700077661 /* NetworkCore in Frameworks */ = {isa = PBXBuildFile; productRef = EDB98C612D05E21700077661 /* NetworkCore */; };
 		EDB98C642D05E21700077661 /* NetworkExtension in Frameworks */ = {isa = PBXBuildFile; productRef = EDB98C632D05E21700077661 /* NetworkExtension */; };
 		EDB98C662D05E21700077661 /* Repositories in Frameworks */ = {isa = PBXBuildFile; productRef = EDB98C652D05E21700077661 /* Repositories */; };
@@ -140,6 +142,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EDA5C01B2D20FA8300C70BF1 /* Search in Frameworks */,
 				3FB782492BC1A82700327191 /* protoc-gen-grpc-swift in Frameworks */,
 				3F7A1DEB2CECCFB000C2BDC8 /* DocumentRead in Frameworks */,
 				3F7A1DF82CEDBC4400C2BDC8 /* NetworkCore in Frameworks */,
@@ -180,6 +183,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EDA5C01D2D20FA8E00C70BF1 /* Search in Frameworks */,
 				EDB98C662D05E21700077661 /* Repositories in Frameworks */,
 				EDB98C762D05E21800077661 /* Workflow in Frameworks */,
 				EDB98C782D05E2E800077661 /* Swinject in Frameworks */,
@@ -368,6 +372,7 @@
 				3F7A1E112CEF6A1000C2BDC8 /* SwiftUIMasonry */,
 				3F9022AF2CEF7B9A0045A1E3 /* AppState */,
 				3FCF70E92D05943F00571DF9 /* Workflow */,
+				EDA5C01A2D20FA8300C70BF1 /* Search */,
 			);
 			productName = basenana;
 			productReference = 3F1BBE192B8E147F005D533F /* Basenana.app */;
@@ -444,6 +449,7 @@
 				EDB98C732D05E21800077661 /* GroupTable */,
 				EDB98C752D05E21800077661 /* Workflow */,
 				EDB98C772D05E2E800077661 /* Swinject */,
+				EDA5C01C2D20FA8E00C70BF1 /* Search */,
 			);
 			productName = basenana;
 			productReference = ED0CBB522BF656B90056E6AA /* basenana dev.app */;
@@ -1263,6 +1269,14 @@
 			isa = XCSwiftPackageProductDependency;
 			package = ED0CBB1E2BF656B90056E6AA /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
+		};
+		EDA5C01A2D20FA8300C70BF1 /* Search */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Search;
+		};
+		EDA5C01C2D20FA8E00C70BF1 /* Search */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Search;
 		};
 		EDB98C612D05E21700077661 /* NetworkCore */ = {
 			isa = XCSwiftPackageProductDependency;
