@@ -17,6 +17,7 @@ import UseCase
 import GroupTable
 import DocumentRead
 import Workflow
+import Search
 
 
 @MainActor
@@ -52,10 +53,13 @@ class DIContainer {
         self.c.register(WorkflowDetailViewModel.self) { r, wfID in
             WorkflowDetailViewModel(workflow: wfID, store: state, usecase: r.resolve(WorkflowUseCaseProtocol.self)!)
         }
+        self.c.register(SearchViewModel.self) { r in
+            SearchViewModel(store: state, usecase: r.resolve(DocumentUseCaseProtocol.self)!)
+        }
 
         // UseCases
         self.c.register(EntryUseCaseProtocol.self) { r in
-            EntryUseCase(inboxRepo: r.resolve(InboxRepositoryProtocol.self)!, entryRepo: r.resolve(EntryRepositoryProtocol.self)!, fileRepo: r.resolve(FileRepositoryProtocol.self)!)
+            EntryUseCase(entryRepo: r.resolve(EntryRepositoryProtocol.self)!, fileRepo: r.resolve(FileRepositoryProtocol.self)!)
         }.inObjectScope(.container)
         self.c.register(DocumentUseCaseProtocol.self) { r in
             DocumentUseCase(docRepo: r.resolve(DocumentRepositoryProtocol.self)!, entryRepo: r.resolve(EntryRepositoryProtocol.self)!)
@@ -71,9 +75,6 @@ class DIContainer {
         self.c.register(DocumentRepositoryProtocol.self) { r in
             DocumentRepository(core: r.resolve(DocumentClientProtocol.self)!)
         }.inObjectScope(.container)
-        self.c.register(InboxRepositoryProtocol.self) { r in
-            InboxRepository(core: r.resolve(InboxClientProtocol.self)!)
-        }.inObjectScope(.container)
         self.c.register(FileRepositoryProtocol.self) { r in
             FileRepository(core: r.resolve(FileClientProtocol.self)!)
         }.inObjectScope(.container)
@@ -87,9 +88,6 @@ class DIContainer {
         }.inObjectScope(.container)
         self.c.register(DocumentClientProtocol.self) { r in
             DocumentClient(clientSet: self.environment.clientSet!)
-        }.inObjectScope(.container)
-        self.c.register(InboxClientProtocol.self) { r in
-            InboxClient(clientSet: self.environment.clientSet!)
         }.inObjectScope(.container)
         self.c.register(FileClientProtocol.self) { r in
             FileClient(clientSet: self.environment.clientSet!)

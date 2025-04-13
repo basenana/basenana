@@ -10,7 +10,9 @@ import Entities
 import RepositoryProtocol
 
 var documentsForTest: [MockDocDetail] = [
-    .init(id: 1001, oid: 1013, parentId: 1010, name: "file1.3", namespace: "default", marked: true, unread: true, content: "<b>Hello</b> World!", createdAt: Date(), changedAt: Date())
+    .init(id: 1001, oid: 1013, parentId: 1010, name: "file1.3", namespace: "default", marked: true, unread: true, content: "<b>Hello</b> World!", createdAt: Date(), changedAt: Date()),
+    .init(id: 1002, oid: 1014, parentId: 1010, name: "file1.4", namespace: "default", marked: true, unread: true, content: "<b>Hello</b> World World World World World World World World World World World World World World World World World World World World! \nHappy to see you", createdAt: Date(), changedAt: Date()),
+    .init(id: 1003, oid: 1015, parentId: 1010, name: "hello1.1", namespace: "default", marked: true, unread: true, content: "<b>Hello</b> World World World World World World World World World World World World World World World World World World World World! \nHappy to see you again!", createdAt: Date(), changedAt: Date())
 ]
 
 
@@ -53,6 +55,9 @@ public class MockDocRepository: DocumentRepositoryProtocol {
                 result.append(kv.value.toInfo())
             }
             if filter.unread ?? false && kv.value.unread  {
+                result.append(kv.value.toInfo())
+            }
+            if filter.unread == nil && filter.marked == nil {
                 result.append(kv.value.toInfo())
             }
         }

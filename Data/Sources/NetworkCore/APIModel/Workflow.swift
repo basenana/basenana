@@ -66,11 +66,11 @@ public struct APIWorkflowJob: WorkflowJob {
 }
 
 public struct APIWorkflowJobTarget: WorkflowJobTarget {
-    public var entryID: Int64
+    public var entries: [Int64]
     public var parentEntryID: Int64
     
-    public init(entryID: Int64, parentEntryID: Int64) {
-        self.entryID = entryID
+    public init(entries: [Int64], parentEntryID: Int64) {
+        self.entries = entries
         self.parentEntryID = parentEntryID
     }
 }

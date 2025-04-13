@@ -10,7 +10,7 @@ import UseCaseProtocol
 
 
 public func MockEntryUseCase() -> EntryUseCaseProtocol {
-    return EntryUseCase(inboxRepo: MockInboxRepository.shared, entryRepo: MockEntryRepository.shared, fileRepo: MockFileRepository.shared)
+    return EntryUseCase(entryRepo: MockEntryRepository.shared, fileRepo: MockFileRepository.shared)
 }
 
 public func MockDocumentUseCase() -> DocumentUseCaseProtocol {

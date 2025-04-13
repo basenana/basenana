@@ -49,6 +49,21 @@ public class DocumentUseCase: DocumentUseCaseProtocol {
         }
     }
     
+    public func searchDocuments(search: String, page: Int, pageSize: Int) async throws -> [any Entities.DocumentInfo] {
+        var filter = DocumentFilter()
+        filter.page = Pagination()
+        filter.page!.page = Int64(page)
+        filter.page!.pageSize = Int64(pageSize)
+        filter.search = search
+        filter.order = .createdAt
+        filter.orderDesc = true
+        do {
+            return try await docRepo.ListDocuments(filter: filter)
+        } catch RepositoryError.canceled {
+            throw UseCaseError.canceled
+        }
+    }
+    
     public func getDocumentDetails(entry: Int64) async throws -> any Entities.DocumentDetail {
         do {
             return try await docRepo.GetDocumentDetail(id: DocumentID(entryID: entry))

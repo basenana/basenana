@@ -17,6 +17,7 @@ public enum Destination: Identifiable, Hashable {
     case workflowDashboard
     case workflowDetail(workflow: String)
     case fridayChat
+    case searchDocuments
 
     public var id: String {
         switch self {
@@ -32,6 +33,8 @@ public enum Destination: Identifiable, Hashable {
             return "workflowDetail_\(workflow)"
         case .fridayChat:
             return "fridayChat"
+        case .searchDocuments:
+            return "searchDocument"
         }
     }
     

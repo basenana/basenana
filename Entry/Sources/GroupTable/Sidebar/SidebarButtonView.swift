@@ -106,7 +106,6 @@ struct SidebarButtonView: View {
         }
         .onChange(of: self.renameEntry){}
         .sheet(isPresented: $showQuickInbox){
-            //            QuickInboxView(viewModel: InboxViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase))
             WebPackInboxView(viewModel: InboxViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase), showInboxView: $showQuickInbox)
         }
         .padding(5)

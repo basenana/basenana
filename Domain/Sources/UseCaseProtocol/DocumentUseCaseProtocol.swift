@@ -12,6 +12,7 @@ import Entities
 public protocol DocumentUseCaseProtocol {
     func listUnreadDocuments(page: Int, pageSize: Int) async throws -> [DocumentInfo]
     func listMarkedDocuments(page: Int, pageSize: Int) async throws -> [DocumentInfo]
+    func searchDocuments(search: String,page: Int, pageSize: Int) async throws -> [DocumentInfo]
     
     func getDocumentDetails(entry: Int64) async throws -> DocumentDetail
     func getDocumentDetails(document: Int64) async throws -> DocumentDetail

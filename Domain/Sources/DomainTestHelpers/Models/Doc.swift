@@ -27,6 +27,8 @@ public class MockDocInfo: DocumentInfo {
     
     public var subContent: String
     
+    public var searchContent: [String]
+    
     public var headerImage: String
 
     public var createdAt: Date
@@ -37,7 +39,7 @@ public class MockDocInfo: DocumentInfo {
     
     public var parent: any EntryInfo
 
-    init(id: Int64, oid: Int64, parentId: Int64, name: String, namespace: String, source: String? = nil, marked: Bool, unread: Bool, subContent: String, headerImage: String, createdAt: Date, changedAt: Date, properties: [Entities.EntryProperty], parent: EntryInfo) {
+    init(id: Int64, oid: Int64, parentId: Int64, name: String, namespace: String, source: String? = nil, marked: Bool, unread: Bool, subContent: String, searchContent: [String], headerImage: String, createdAt: Date, changedAt: Date, properties: [Entities.EntryProperty], parent: EntryInfo) {
         self.id = id
         self.oid = oid
         self.parentId = parentId
@@ -47,6 +49,7 @@ public class MockDocInfo: DocumentInfo {
         self.marked = marked
         self.unread = unread
         self.subContent = subContent
+        self.searchContent = searchContent
         self.headerImage = headerImage
         self.createdAt = createdAt
         self.changedAt = changedAt
@@ -100,7 +103,7 @@ public class MockDocDetail: DocumentDetail {
     }
     
     func toInfo() -> MockDocInfo {
-        return MockDocInfo(id: id, oid: oid, parentId: parentId, name: name, namespace: namespace, source: source, marked: marked, unread: unread, subContent: content, headerImage: "", createdAt: createdAt, changedAt: changedAt, properties: [],
+        return MockDocInfo(id: id, oid: oid, parentId: parentId, name: name, namespace: namespace, source: source, marked: marked, unread: unread, subContent: content, searchContent: [], headerImage: "", createdAt: createdAt, changedAt: changedAt, properties: [],
                            parent: MockEntryInfo( id: oid, name: name, kind: "file", isGroup: false, size: Int64(1), parentID: parentId, createdAt: createdAt, changedAt: changedAt, modifiedAt: changedAt, accessAt: changedAt))
     }
 }

@@ -17,6 +17,7 @@ public protocol DocumentInfo {
     var marked: Bool { get }
     var unread: Bool { get }
     var subContent: String { get }
+    var searchContent: [String] { get }
     var headerImage: String { get }
     var properties: [EntryProperty] { get }
     var parent: EntryInfo { get }
@@ -61,6 +62,7 @@ public struct DocumentFilter {
     public var source: String? = nil
     public var marked: Bool? = nil
     public var unread: Bool? = nil
+    public var search: String? = nil
     public var page: Pagination? = nil
     public var order: DocumentOrder? = nil
     public var orderDesc: Bool? = nil
@@ -101,6 +103,23 @@ public enum DocumentPrespective {
             return "Unread"
         case .marked:
             return "Marked"
+        }
+    }
+}
+
+public enum FileType {
+    case Bookmark
+    case Html
+    case Webarchive
+    
+    public func option() -> String {
+        switch self {
+        case .Bookmark:
+            return "bookmark"
+        case .Html:
+            return "html"
+        case .Webarchive:
+            return "webarchive"
         }
     }
 }
