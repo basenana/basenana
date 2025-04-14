@@ -15,52 +15,49 @@ struct SearchItemView: View {
     
     @State var properties: [EntryProperty]
     @State var parent: EntryInfo
+    @Binding var isHovering: Bool
     
     private static let logger = Logger(
             subsystem: Bundle.main.bundleIdentifier!,
             category: String(describing: SearchItemView.self)
         )
     
-    init(doc: DocumentSearchItem, searchModel: SearchViewModel) {
+    init(doc: DocumentSearchItem, searchModel: SearchViewModel, isHovering: Binding<Bool>) {
         self.doc = doc
         self.searchModel = searchModel
         self.properties = doc.properties
         self.parent = doc.parent
+        self._isHovering = isHovering
     }
     
     var body: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .top){
                 Image(systemName: "text.document")
-                    .padding(.top, 2)
+                    .padding(.top, 1)
                 
                 VStack(alignment: .leading) {
                             
                     HStack(){
-                        HighlightedTitle(title: self.docTitle, key: self.searchModel.search)
+                        HighlightedTitle(title: self.docTitle, key: self.searchModel.search, isHovering: self.isHovering)
                         Spacer()
                         Text(self.docTime)
                             .font(.caption)
                             .foregroundColor(Color.gray)
                     }
-                    HStack {
-                        Text("\(self.groupName.prefix(25))")
-                            .foregroundColor(Color.gray)
-                            .font(.footnote)
-                        Text(self.docURL)
-                            .foregroundColor(Color.gray)
-                            .font(.footnote)
-                    }
+                    Text(self.footnote)
+                        .foregroundColor(Color.gray)
+                        .font(.footnote)
 
                     HStack{
-        //                if searchModel.showImagePreview {
-        //                    SearchItemBannerView(bannerURL: doc.headerImage)
-        //                        .frame(width: 50, height: 50)
-        //                }
+                        if searchModel.showImagePreview {
+                            SearchItemBannerView(bannerURL: doc.headerImage)
+                                .frame(width: 50, height: 40)
+                        }
                         HighlightedText(content: self.searchContent)
                             .font(.body)
-
                     }
+                    .frame(height: 50)
                 }
                 .padding(.vertical, 3)
             }
@@ -71,6 +68,17 @@ struct SearchItemView: View {
         .toolbar(removing: .sidebarToggle)
     }
     
+    var footnote: String {
+        var groupName = "\(self.groupName.prefix(25))"
+        if groupName.count == 0 {
+            return self.docURL
+        }
+        if self.docURL.count == 0 {
+            return groupName
+        }
+        return "\(groupName) / \(self.docURL)"
+    }
+    
     var docTitle: String {
         return properties.filter({ $0.key == Property.WebPageTitle}).first?.value ?? doc.info.name
     }
@@ -79,6 +87,11 @@ struct SearchItemView: View {
         var searchContent: String = self.doc.info.subContent
         if self.doc.info.searchContent.count > 0 {
             searchContent = self.doc.info.searchContent[0]
+        }
+        self.doc.info.searchContent.forEach { sc in
+            if searchContent.count < 400 {
+                searchContent += sc
+            }
         }
         return searchContent
     }
@@ -126,24 +139,22 @@ struct SearchItemView: View {
 struct HighlightedTitle: View {
     let title: String
     let key: String
+    let isHovering: Bool
     
     var body: some View {
-        buildAttributedString(from: title, bolding: key)
-    }
-    
-    func buildAttributedString(from string: String, bolding substring: String) -> Text {
-        // Create a mutable result Text
+        if isHovering {
+            return Text(title).font(.headline)
+        }
         var result: Text = Text("")
-        var currentIndex = string.startIndex
+        var currentIndex = title.startIndex
 
-        // Use a loop to find and process each occurrence of the substring
-        while let range = string.range(of: substring, options: .caseInsensitive, range: currentIndex..<string.endIndex) {
+        while let range = title.range(of: key, options: .caseInsensitive, range: currentIndex..<title.endIndex) {
             // Add the text before the match
-            let beforeMatch = string[currentIndex..<range.lowerBound]
+            let beforeMatch = title[currentIndex..<range.lowerBound]
             result = result + Text(beforeMatch).font(.body).foregroundColor(.gray)
             
             // Add the matched substring in bold
-            let matchedSubstring = string[range]
+            let matchedSubstring = title[range]
             result = result + Text(matchedSubstring).font(.headline)
             
             // Move the current index to after the matched substring
@@ -151,7 +162,7 @@ struct HighlightedTitle: View {
         }
         
         // Add any remaining text after the last match
-        let remainingText = string[currentIndex..<string.endIndex]
+        let remainingText = title[currentIndex..<title.endIndex]
         result = result + Text(remainingText).font(.body).foregroundColor(.gray)
 
         return result

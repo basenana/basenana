@@ -19,12 +19,11 @@ public class SearchViewModel {
     var store: StateStore
     var search: String = ""
     
-    var sectionDocuments: [DocumentSection] = []
-    var documentsSectionMap: [Int64:String] = [:]
+    var documents: [DocumentSearchItem] = []
 
     var isLoading: Bool = false
     var page: Int = 1
-    var pageSize: Int = 40
+    var pageSize: Int = 10
     var hasMore = true
     
     private static let logger = Logger(
@@ -49,6 +48,20 @@ public class SearchViewModel {
         return store.setting.appearance.contentPreview
     }
 
+    func loadNextPage() async {
+        let nextPage = await listNextPage()
+        if self.isLoading {
+            return
+        }
+        
+        Self.logger.info("search docuemnts len \(nextPage.count)")
+        self.isLoading = true
+        for nextDoc in nextPage {
+            documents.append(nextDoc)
+        }
+        self.isLoading = false
+    }
+    
     func listNextPage() async -> [DocumentSearchItem] {
         Self.logger.info("ready to list next page document, page=\(self.page)")
         var nextPageList: [DocumentSearchItem] = []

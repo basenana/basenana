@@ -12,8 +12,9 @@ import SwiftUIMasonry
 public struct SearchView: View{
     @State var search: String
     @State var viewModel: SearchViewModel
-    @State var documents = [DocumentSearchItem]()
-    
+    @State var selection: DocumentSearchItem?
+    @State var isHovering: [DocumentSearchItem: Bool] = [:]
+
     public init(search: String, viewModel: SearchViewModel) {
         self.search = search
         self.viewModel = viewModel
@@ -21,20 +22,30 @@ public struct SearchView: View{
     
     public var body: some View {
         VStack{
-//            TextField("Search...", text: $search
-//                      onEditingChanged: { isEditing in
-//                               isSearching = true
-//                               updateSearchResults()
-//                           }
-//            )
-//                           .textFieldStyle(RoundedBorderTextFieldStyle())
-//                           .padding()
-                           
-            List() {
-                ForEach(documents){ document in
+            List(selection: $selection) {
+                if self.viewModel.documents.isEmpty && !viewModel.hasMore{
+                    NoRecordView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+                    
+                ForEach(self.viewModel.documents){ document in
                     NavigationLink(value: document) {
                         VStack{
-                            SearchItemView(doc: document, searchModel: self.viewModel)
+                            SearchItemView(
+                                doc: document,
+                                searchModel: self.viewModel,
+                                isHovering: Binding(
+                                    get: { self.isHovering[document, default: false] },
+                                    set: { value in self.isHovering[document] = value }
+                                )
+                            )
+                        }
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(isHovering[document] ?? false ? Color.gray.opacity(0.2) : Color.clear)
+                        )
+                        .onHover { hovering in
+                            isHovering[document] = hovering
                         }
                     }
                 }
@@ -47,7 +58,7 @@ public struct SearchView: View{
         }
         .onReceive(NotificationCenter.default.publisher(for: .loadMoreDocuments)) { _ in
             Task {
-                documents = await viewModel.listNextPage()
+                await viewModel.loadNextPage()
             }
         }
         .task({
@@ -60,11 +71,23 @@ struct LoadingView: View {
     var body: some View {
         HStack(alignment: .center){
             Spacer()
-            Text("☁️Loading ...")
+            Text("☁️ Loading...")
                 .padding(.vertical)
                 .onAppear{
                     NotificationCenter.default.post(name: .loadMoreDocuments, object: nil)
                 }
+            Spacer()
+        }
+    }
+}
+
+struct NoRecordView: View {
+    var body: some View {
+        VStackLayout(alignment: .leading) {
+            Spacer()
+            Text("😯 No Results Found.")
+                .font(.system(size: 14, weight: .thin, design: .monospaced))
+                .padding(.vertical)
             Spacer()
         }
     }
