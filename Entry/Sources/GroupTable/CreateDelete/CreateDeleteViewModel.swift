@@ -9,23 +9,23 @@ import os
 import SwiftUI
 import AppState
 import Entities
-import UseCaseProtocol
+import UseCases
 
 
 @Observable
 @MainActor
 public class CreateDeleteViewModel {
     var groupTree = GroupTree.shared
-    
+
     var store: StateStore
-    var entryUsecase: EntryUseCaseProtocol
-    
+    var entryUsecase: any EntryUseCaseProtocol
+
     private static let logger = Logger(
             subsystem: Bundle.main.bundleIdentifier!,
             category: String(describing: CreateDeleteViewModel.self)
         )
-    
-    public init(store: StateStore, entryUsecase: EntryUseCaseProtocol) {
+
+    public init(store: StateStore, entryUsecase: any EntryUseCaseProtocol) {
         self.store = store
         self.entryUsecase = entryUsecase
     }

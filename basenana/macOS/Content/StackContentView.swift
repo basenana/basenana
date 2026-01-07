@@ -11,7 +11,6 @@ import AppState
 import GroupTable
 import DocumentRead
 import Workflow
-import Search
 
 
 struct StackContentView: View {

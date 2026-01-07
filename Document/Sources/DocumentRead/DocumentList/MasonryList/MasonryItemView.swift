@@ -163,34 +163,3 @@ struct MasonryItemBannerView: View{
         }
     }
 }
-
-
-#if DEBUG
-
-import AppState
-import DomainTestHelpers
-
-struct MasonryItemViewPreview: View {
-    @State private var doc: DocumentInfo? = nil
-    @State private var uc = MockDocumentUseCase()
-    
-    var body: some View {
-        
-        VStack{
-            MasonryItemView(section: "", doc: DocumentItem(info: doc!), viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.shared, usecase: uc))
-        }
-        .task {
-            do {
-                doc = try await uc.listUnreadDocuments(page: 1, pageSize: 1).first!
-            } catch {
-                print("Failed to load entry details: \(error)")
-            }
-        }
-    }
-}
-
-#Preview {
-    MasonryItemViewPreview()
-}
-
-#endif

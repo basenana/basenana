@@ -104,16 +104,3 @@ enum ListViewKind {
     case Masonry
     case Navigation
 }
-
-
-#if DEBUG
-
-import DomainTestHelpers
-
-#Preview {
-    if #available(macOS 14.0, *) {
-        DocumentListView(viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.shared, usecase: MockDocumentUseCase()))
-    }
-}
-
-#endif

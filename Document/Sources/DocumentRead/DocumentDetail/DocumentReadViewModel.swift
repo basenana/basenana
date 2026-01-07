@@ -10,7 +10,7 @@ import SwiftUI
 import Foundation
 import Entities
 import AppState
-import UseCaseProtocol
+import UseCases
 
 
 @Observable
@@ -18,15 +18,15 @@ import UseCaseProtocol
 public class DocumentReadViewModel {
     var docID: Int64
     var store: StateStore
-    var usecase: DocumentUseCaseProtocol
+    var usecase: any DocumentUseCaseProtocol
     var entry: EntryDetail? = nil
-    
+
     private static let logger = Logger(
             subsystem: Bundle.main.bundleIdentifier!,
             category: String(describing: DocumentReadViewModel.self)
         )
 
-    public init(docID:Int64, store: StateStore, usecase: DocumentUseCaseProtocol) {
+    public init(docID:Int64, store: StateStore, usecase: any DocumentUseCaseProtocol) {
         self.docID = docID
         self.store = store
         self.usecase = usecase

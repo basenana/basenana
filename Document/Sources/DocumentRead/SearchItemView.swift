@@ -238,33 +238,3 @@ struct SearchItemBannerView: View{
     }
 }
 
-
-#if DEBUG
-
-import AppState
-import DomainTestHelpers
-
-struct SearchViewItemPreview: View {
-    @State private var doc: DocumentInfo? = nil
-    @State private var uc = MockDocumentUseCase()
-    
-    var body: some View {
-        VStack{
-            SearchView(search: "hello", viewModel: SearchViewModel(store: StateStore.shared, usecase: uc) )
-        }
-        .task {
-            do {
-                let docs = try await uc.searchDocuments(search: "hello", page: 1, pageSize: 1).first!
-            } catch {
-                print("Failed to load entry details: \(error)")
-            }
-        }
-    }
-}
-
-#Preview{
-    SearchViewPreview()
-}
-
-#endif
-

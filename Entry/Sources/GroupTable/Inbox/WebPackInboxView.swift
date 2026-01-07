@@ -20,7 +20,7 @@ public struct WebPackInboxView: View {
     @State private var urlInput: String = ""
     @State private var urlTitle: String = ""
     @State private var showPreview: Bool = false
-    @State private var page: WebPage? = nil
+    @State private var page: WebPageInfo? = nil
     @State private var errorMessage: String = ""
     @State private var isInboxing: Bool = false
     
@@ -114,14 +114,3 @@ public struct WebPackInboxView: View {
         }
     }
 }
-
-
-#if DEBUG
-
-import DomainTestHelpers
-
-#Preview {
-    WebPackInboxView(viewModel: InboxViewModel(store: StateStore.shared, entryUsecase: MockEntryUseCase()), showInboxView: .constant(true))
-}
-
-#endif

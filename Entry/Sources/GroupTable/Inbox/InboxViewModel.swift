@@ -11,7 +11,7 @@ import WebKit
 import AppState
 import Entities
 import WebPage
-import UseCaseProtocol
+import UseCases
 
 
 @Observable

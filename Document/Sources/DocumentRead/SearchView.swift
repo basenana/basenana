@@ -39,7 +39,7 @@ public struct SearchView: View{
                     }
                 }
                 if viewModel.hasMore {
-                    LoadingView()
+                    SearchLoadingView()
                 }
             }
             .frame(minWidth: 300)
@@ -56,7 +56,7 @@ public struct SearchView: View{
     }
 }
 
-struct LoadingView: View {
+struct SearchLoadingView: View {
     var body: some View {
         HStack(alignment: .center){
             Spacer()
@@ -69,34 +69,4 @@ struct LoadingView: View {
         }
     }
 }
-
-
-#if DEBUG
-
-import AppState
-import DomainTestHelpers
-
-struct SearchViewPreview: View {
-    @State private var doc: DocumentInfo? = nil
-    @State private var uc = MockDocumentUseCase()
-    
-    var body: some View {
-        VStack{
-            SearchView(search: "hello", viewModel: SearchViewModel(store: StateStore.shared, usecase: uc) )
-        }
-        .task {
-            do {
-                let docs = try await uc.searchDocuments(search: "a", page: 1, pageSize: 1).first!
-            } catch {
-                print("Failed to load entry details: \(error)")
-            }
-        }
-    }
-}
-
-#Preview{
-    SearchViewPreview()
-}
-
-#endif
 

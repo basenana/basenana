@@ -9,20 +9,20 @@ import os
 import SwiftUI
 import AppState
 import Entities
-import UseCaseProtocol
+import UseCases
 
 
 @Observable
 @MainActor
 public class GroupTableViewModel: BaseViewModel {
-    
+
     var group: EntryDetail? = nil
     var children: [EntryRow] = []
-    
+
     var selection: Set<EntryRow.ID> = []
     var selectedDocument: DocumentDetail? = nil
-    
-    override public init(store: StateStore, entryUsecase: EntryUseCaseProtocol) {
+
+    override public init(store: StateStore, entryUsecase: any EntryUseCaseProtocol) {
         super.init(store: store, entryUsecase: entryUsecase)
     }
     

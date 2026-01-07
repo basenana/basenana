@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import Entities
 import AppState
-import UseCaseProtocol
+import UseCases
 
 
 struct TreeMenuView: View {

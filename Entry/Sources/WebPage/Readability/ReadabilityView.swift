@@ -11,18 +11,18 @@ import WebKit
 
 
 public class Readability {
-    let page: WebPage
+    let page: WebPageInfo
     let webView: WKWebView
     var hasRenderedReadabilityHTML = false
-    
-    init(page: WebPage){
+
+    init(page: WebPageInfo){
         self.page = page
         webView = WKWebView(frame: CGRect.zero, configuration: WKWebViewConfiguration())
         webView.configuration.suppressesIncrementalRendering = true
         addReadabilityUserScript()
     }
-    
-    init(page: WebPage, webView: WKWebView){
+
+    init(page: WebPageInfo, webView: WKWebView){
         self.page = page
         self.webView = webView
         self.webView.configuration.suppressesIncrementalRendering = true
@@ -92,16 +92,16 @@ func loadReadabilityVenderFile(name: String, type: String) throws -> String {
 
 public struct ReadabilityView: NSViewRepresentable {
     public typealias NSViewType = WKWebView
-    
-    var page: WebPage
+
+    var page: WebPageInfo
     var readability: Readability
-    
-    public init(page: WebPage) {
+
+    public init(page: WebPageInfo) {
         self.page = page
         self.readability = Readability(page: page)
     }
-    
-    public init(page: WebPage, webView: WKWebView) {
+
+    public init(page: WebPageInfo, webView: WKWebView) {
         self.page = page
         self.readability = Readability(page: page, webView: webView)
     }

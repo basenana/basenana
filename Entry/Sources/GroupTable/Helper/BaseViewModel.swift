@@ -9,25 +9,25 @@ import os
 import SwiftUI
 import AppState
 import Entities
-import UseCaseProtocol
+import UseCases
 
 
 @Observable
 @MainActor
 public class BaseViewModel {
-    
+
     // tree store
     var groupTree = GroupTree.shared
-    
+
     var store: StateStore
-    var entryUsecase: EntryUseCaseProtocol
-    
+    var entryUsecase: any EntryUseCaseProtocol
+
     private static let logger = Logger(
             subsystem: Bundle.main.bundleIdentifier!,
             category: String(describing: "Entry")
         )
-    
-    init(store: StateStore, entryUsecase: EntryUseCaseProtocol) {
+
+    init(store: StateStore, entryUsecase: any EntryUseCaseProtocol) {
         self.store = store
         self.entryUsecase = entryUsecase
     }

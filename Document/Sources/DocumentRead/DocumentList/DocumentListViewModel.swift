@@ -10,7 +10,7 @@ import SwiftUI
 import Foundation
 import Entities
 import AppState
-import UseCaseProtocol
+import UseCases
 
 
 @Observable
@@ -18,27 +18,27 @@ import UseCaseProtocol
 public class DocumentListViewModel {
     var prespective: DocumentPrespective
     var store: StateStore
-    var usecase: DocumentUseCaseProtocol
-    
+    var usecase: any DocumentUseCaseProtocol
+
     // docunents need to display
     var sectionDocuments: [DocumentSection] = []
     var documentsSectionMap: [Int64:String] = [:]
-    
+
     // document auto read
     var enableHooks = true
     var unreadDocumentsAppeared: [Int64:AppearedDocument] = [:]
-    
+
     var isLoading: Bool = false
     var page: Int = 1
     var pageSize: Int = 40
     var hasMore = true
-    
+
     private static let logger = Logger(
             subsystem: Bundle.main.bundleIdentifier!,
             category: String(describing: DocumentListViewModel.self)
         )
-    
-    public init(prespective: DocumentPrespective, store: StateStore, usecase: DocumentUseCaseProtocol) {
+
+    public init(prespective: DocumentPrespective, store: StateStore, usecase: any DocumentUseCaseProtocol) {
         self.prespective = prespective
         self.store = store
         self.usecase = usecase

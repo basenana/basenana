@@ -72,28 +72,3 @@ struct EntryRenameView: View {
         }
     }
 }
-
-
-#if DEBUG
-
-import AppState
-import DomainTestHelpers
-
-struct EntryRenameViewPreview: View {
-    
-    var body: some View {
-        List {
-            EntryRenameView(
-                entry: 1010,
-                viewModel: EntryDetailViewModel(store: StateStore.shared, entryUsecase: MockEntryUseCase()),
-                showRenameView: .constant(true))
-        }
-    }
-}
-
-
-#Preview {
-    EntryRenameViewPreview()
-}
-
-#endif

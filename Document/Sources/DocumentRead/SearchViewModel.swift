@@ -10,15 +10,15 @@ import SwiftUI
 import Foundation
 import Entities
 import AppState
-import UseCaseProtocol
+import UseCases
 
 @Observable
 @MainActor
 public class SearchViewModel {
-    var usecase: DocumentUseCaseProtocol
+    var usecase: any DocumentUseCaseProtocol
     var store: StateStore
     var search: String = ""
-    
+
     var sectionDocuments: [DocumentSection] = []
     var documentsSectionMap: [Int64:String] = [:]
 
@@ -26,13 +26,13 @@ public class SearchViewModel {
     var page: Int = 1
     var pageSize: Int = 40
     var hasMore = true
-    
+
     private static let logger = Logger(
             subsystem: Bundle.main.bundleIdentifier!,
             category: String(describing: SearchViewModel.self)
         )
 
-    public init(store: StateStore, usecase: DocumentUseCaseProtocol) {
+    public init(store: StateStore, usecase: any DocumentUseCaseProtocol) {
         self.store = store
         self.usecase = usecase
     }

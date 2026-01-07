@@ -99,5 +99,50 @@ class DocumentItem: Identifiable, Hashable, Equatable {
     static func == (lhs: DocumentItem, rhs: DocumentItem) -> Bool {
         return lhs.id == rhs.id
     }
-    
+
+}
+
+struct DocumentSearchItem: Identifiable, Hashable, Equatable {
+    var id: Int64 {
+        get {
+            info.id
+        }
+    }
+
+    var searchContent: [String] {
+        get {
+            info.searchContent
+        }
+    }
+
+    var properties: [EntryProperty] {
+        get {
+            return info.properties
+        }
+    }
+
+    var parent: EntryInfo {
+        get {
+            return info.parent
+        }
+    }
+    var headerImage: String {
+        get {
+            return info.headerImage
+        }
+    }
+
+    var info: DocumentInfo
+
+    init(info: DocumentInfo) {
+        self.info = info
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(info.id)
+    }
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.id == rhs.id
+    }
 }

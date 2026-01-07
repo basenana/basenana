@@ -17,19 +17,19 @@ public enum WebError: Error {
 }
 
 
-public struct WebPage {
+public struct WebPageInfo {
     public var url: URL
     public var title: String = ""
     public var htmlContent: String = ""
 }
 
 
-public func fetchWebPage(url urlString: String) throws -> WebPage {
+public func fetchWebPage(url urlString: String) throws -> WebPageInfo {
     guard let url = URL(string: urlString) else {
         throw WebError.InvalidUrl(urlString)
     }
     
-    var wp = WebPage(url: url)
+    var wp = WebPageInfo(url: url)
     let group = DispatchGroup()
     group.enter()
     let task = URLSession.shared.dataTask(with: url) { (data, response, error) in

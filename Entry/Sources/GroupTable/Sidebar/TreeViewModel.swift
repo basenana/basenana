@@ -9,21 +9,21 @@ import os
 import SwiftUI
 import AppState
 import Entities
-import UseCaseProtocol
+import UseCases
 
 
 @Observable
 @MainActor
 public class TreeViewModel: BaseViewModel {
-    
+
     var selectedGroupId: Int64? = nil
-    
+
     private static let logger = Logger(
             subsystem: Bundle.main.bundleIdentifier!,
             category: String(describing: TreeViewModel.self)
         )
-    
-    override public init(store: StateStore, entryUsecase: EntryUseCaseProtocol) {
+
+    override public init(store: StateStore, entryUsecase: any EntryUseCaseProtocol) {
         super.init(store: store, entryUsecase: entryUsecase)
     }
     

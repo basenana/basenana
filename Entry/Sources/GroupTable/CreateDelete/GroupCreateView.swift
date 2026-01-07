@@ -110,29 +110,3 @@ struct GroupCreateView: View {
         }
     }
 }
-
-
-#if DEBUG
-
-import AppState
-import DomainTestHelpers
-
-struct GroupCreateViewPreview: View {
-    
-    var body: some View {
-        List {
-            GroupCreateView(
-                parent: 1,
-                groupType: .feed,
-                viewModel: CreateDeleteViewModel(store: StateStore.shared, entryUsecase: MockEntryUseCase()),
-                showCreateGroup: .constant(true))
-        }
-    }
-}
-
-
-#Preview {
-    GroupCreateViewPreview()
-}
-
-#endif

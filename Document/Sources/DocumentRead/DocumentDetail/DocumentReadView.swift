@@ -60,14 +60,3 @@ public struct DocumentReadView: View {
         }
     }
 }
-
-
-#if DEBUG
-
-import DomainTestHelpers
-
-#Preview {
-    DocumentReadView(viewModel: DocumentReadViewModel(docID: 1001, store: StateStore.shared, usecase: MockDocumentUseCase()))
-}
-
-#endif

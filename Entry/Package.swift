@@ -28,8 +28,7 @@ let package = Package(
                 "WebPage",
                 .product(name: "Entities", package: "Domain"),
                 .product(name: "AppState", package: "Domain"),
-                .product(name: "UseCaseProtocol", package: "Domain"),
-                .product(name: "DomainTestHelpers", package: "Domain"),
+                .product(name: "UseCases", package: "Domain"),
                 .product(name: "Styleguide", package: "Styleguide"),
                 .product(name: "FeedKit", package: "FeedKit"),
             ]

@@ -86,19 +86,3 @@ struct DeleteEntriesView: View {
     }
 }
 
-
-#if DEBUG
-
-import AppState
-import DomainTestHelpers
-
-
-#Preview {
-    DeleteEntriesView(
-        entryIDs: [1011, 1012],
-        viewModel: CreateDeleteViewModel(store: StateStore.shared, entryUsecase: MockEntryUseCase()),
-        showDeleteView: .constant(true))
-}
-
-#endif
-

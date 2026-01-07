@@ -8,19 +8,19 @@
 import SwiftUI
 import AppState
 import Entities
-import UseCaseProtocol
+import UseCases
 
 
 @Observable
 @MainActor
 public class WorkflowListViewModel {
-    
+
     var workflows = [WorkflowItem]()
-    
+
     var store: StateStore
-    var usecase: WorkflowUseCaseProtocol
-    
-    public init(store: StateStore, usecase: WorkflowUseCaseProtocol) {
+    var usecase: any WorkflowUseCaseProtocol
+
+    public init(store: StateStore, usecase: any WorkflowUseCaseProtocol) {
         self.store = store
         self.usecase = usecase
     }

@@ -18,14 +18,8 @@ let package = Package(
             name: "RepositoryProtocol",
             targets: ["RepositoryProtocol"]),
         .library(
-            name: "UseCaseProtocol",
-            targets: ["UseCaseProtocol"]),
-        .library(
-            name: "UseCase",
-            targets: ["UseCase"]),
-        .library(
-            name: "DomainTestHelpers",
-            targets: ["DomainTestHelpers"]),
+            name: "UseCases",
+            targets: ["UseCases"]),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -43,19 +37,11 @@ let package = Package(
             dependencies: ["Entities"]
         ),
         .target(
-            name: "UseCaseProtocol",
-            dependencies: ["Entities"]
-        ),
-        .target(
-            name: "UseCase",
-            dependencies: ["RepositoryProtocol", "UseCaseProtocol"]
-        ),
-        .target(
-            name: "DomainTestHelpers",
-            dependencies: ["Entities", "RepositoryProtocol", "UseCase"]
+            name: "UseCases",
+            dependencies: ["RepositoryProtocol"]
         ),
         .testTarget(
             name: "DomainTests",
-            dependencies: ["Entities", "RepositoryProtocol", "UseCase"]),
+            dependencies: ["Entities", "RepositoryProtocol", "UseCases"]),
     ]
 )

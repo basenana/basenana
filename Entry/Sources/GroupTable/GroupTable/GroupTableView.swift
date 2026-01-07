@@ -268,16 +268,3 @@ func bytesToHumanReadableString(bytes: Int64) -> String {
         return String(format: "%.2f TB", Double(bytes) / Double(terabyte))
     }
 }
-
-
-#if DEBUG
-
-import DomainTestHelpers
-
-#Preview {
-    if #available(macOS 14.0, *) {
-        GroupTableView(groupID: 1010, viewModel: GroupTableViewModel(store: StateStore.shared, entryUsecase: MockEntryUseCase()))
-    }
-}
-
-#endif

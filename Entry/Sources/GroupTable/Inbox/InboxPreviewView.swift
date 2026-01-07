@@ -13,16 +13,16 @@ import WebPage
 
 
 public struct InboxPreviewView: View {
-    @State var page: WebPage
-    
+    @State var page: WebPageInfo
+
     var webView: WKWebView? = nil
-    
-    init(page: WebPage) {
+
+    init(page: WebPageInfo) {
         self.page = page
         self.webView = WKWebView(frame: CGRect.zero, configuration: WKWebViewConfiguration())
     }
-    
-    init(page: WebPage, webView: WKWebView) {
+
+    init(page: WebPageInfo, webView: WKWebView) {
         self.page = page
         self.webView = webView
     }

@@ -7,7 +7,6 @@
 
 import Entities
 import RepositoryProtocol
-import UseCaseProtocol
 
 
 public class WorkflowUseCase: WorkflowUseCaseProtocol {

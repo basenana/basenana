@@ -183,23 +183,3 @@ struct GroupDestinationView: View {
     }
 }
 
-
-#if DEBUG
-
-import DomainTestHelpers
-struct EntryMenuPreview: View {
-    
-    var body: some View {
-        List {
-            EntryMenuView(viewModel: GroupTableViewModel(store: StateStore.shared, entryUsecase: MockEntryUseCase()))
-        }
-    }
-}
-
-
-
-#Preview {
-    EntryMenuPreview()
-}
-
-#endif

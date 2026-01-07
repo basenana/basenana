@@ -44,18 +44,3 @@ struct TreeListView: View {
     }
 }
 
-
-
-#if DEBUG
-
-import DomainTestHelpers
-
-#Preview {
-    if #available(macOS 14.0, *) {
-        List{
-            TreeListView(viewModel: TreeViewModel(store: StateStore.shared, entryUsecase: MockEntryUseCase()))
-        }
-    }
-}
-
-#endif

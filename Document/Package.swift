@@ -11,9 +11,6 @@ let package = Package(
         .library(
             name: "DocumentRead",
             targets: ["DocumentRead"]),
-        .library(
-            name: "Search",
-            targets: ["Search"]),
     ],
     dependencies: [
         .package(name: "Domain", path: "../Domain"),
@@ -28,18 +25,7 @@ let package = Package(
             dependencies: [
                 .product(name: "Entities", package: "Domain"),
                 .product(name: "AppState", package: "Domain"),
-                .product(name: "UseCaseProtocol", package: "Domain"),
-                .product(name: "DomainTestHelpers", package: "Domain"),
-                "SwiftUIMasonry",
-            ]
-        ),
-        .target(
-            name: "Search",
-            dependencies: [
-                .product(name: "Entities", package: "Domain"),
-                .product(name: "AppState", package: "Domain"),
-                .product(name: "UseCaseProtocol", package: "Domain"),
-                .product(name: "DomainTestHelpers", package: "Domain"),
+                .product(name: "UseCases", package: "Domain"),
             ]
         ),
         .testTarget(

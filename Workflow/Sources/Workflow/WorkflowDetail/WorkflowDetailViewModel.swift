@@ -9,26 +9,26 @@ import os
 import SwiftUI
 import AppState
 import Entities
-import UseCaseProtocol
+import UseCases
 
 
 @Observable
 @MainActor
 public class WorkflowDetailViewModel {
     var workflowID: String
-    
+
     var workflow: WorkflowItem? = nil
     var jobs = [JobItem]()
 
     var store: StateStore
-    var usecase: WorkflowUseCaseProtocol
-    
+    var usecase: any WorkflowUseCaseProtocol
+
     private static let logger = Logger(
             subsystem: Bundle.main.bundleIdentifier!,
             category: String(describing: WorkflowDetailViewModel.self)
         )
-    
-    public init(workflow: String, store: StateStore, usecase: WorkflowUseCaseProtocol) {
+
+    public init(workflow: String, store: StateStore, usecase: any WorkflowUseCaseProtocol) {
         self.workflowID = workflow
         self.store = store
         self.usecase = usecase

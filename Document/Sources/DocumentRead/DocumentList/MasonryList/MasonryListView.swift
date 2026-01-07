@@ -78,14 +78,3 @@ struct MasonryListReadAllView: View {
         }
     }
 }
-
-
-#if DEBUG
-
-import DomainTestHelpers
-
-#Preview {
-    MasonryListView(viewModel: DocumentListViewModel(prespective: .unread, store: StateStore.shared, usecase: MockDocumentUseCase()))
-}
-
-#endif
