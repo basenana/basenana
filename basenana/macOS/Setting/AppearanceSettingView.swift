@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import AppState
+import Domain
 
 
 struct AppearanceSettingView: View {
@@ -18,7 +18,7 @@ struct AppearanceSettingView: View {
     @State private var state = StateStore.shared
     @State private var appFontSize: Double = 1
     
-    var body: some View {
+    public var body: some View {
         Form {
             Picker("Color Scheme", selection: $state.setting.appearance.appearance) {
                 Text("System").tag("auto")

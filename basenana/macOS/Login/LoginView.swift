@@ -7,8 +7,8 @@
 
 import SwiftUI
 import Foundation
-import AppState
-import NetworkExtension
+import Domain
+import Data
 
 
 struct LoginView: View {
@@ -23,7 +23,7 @@ struct LoginView: View {
 
     init() {}
 
-    var body: some View {
+    public var body: some View {
         VStack(alignment: .center) {
 
             NanaFSLoginView(isLogining: $isLogining)

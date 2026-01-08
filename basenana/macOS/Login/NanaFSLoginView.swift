@@ -7,8 +7,8 @@
 
 import SwiftUI
 import Foundation
-import AppState
-import NetworkExtension
+import Domain
+import Data
 
 
 struct NanaFSLoginView: View {
@@ -25,7 +25,7 @@ struct NanaFSLoginView: View {
         self._isLogining = isLogining
     }
     
-    var body: some View {
+    public var body: some View {
         VStack {
             Text("Connect to NanaFS🍌")
                 .font(.largeTitle)

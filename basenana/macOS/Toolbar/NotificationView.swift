@@ -7,8 +7,8 @@
 
 import SwiftUI
 import Foundation
-import AppState
-import Entities
+import Domain
+import Domain
 
 
 struct NotificationView: View {
@@ -19,7 +19,7 @@ struct NotificationView: View {
         self.state = state
     }
     
-    var body: some View {
+    public var body: some View {
         if !state.notifications.isEmpty {
             Button(action: {
                 sentAlert("not support")

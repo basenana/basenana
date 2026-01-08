@@ -6,14 +6,17 @@
 //
 
 import SwiftUI
-import AppState
+import Domain
 
 
-struct SettingsView: View {
+public struct SettingsView: View {
     @State private var state = StateStore.shared
     @State private var visibility: NavigationSplitViewVisibility = .doubleColumn
     @State var currentCategory: SettingCategory = .general
-    var body: some View {
+
+    public init() {}
+
+    public var body: some View {
         NavigationSplitView(columnVisibility: $visibility) {
             List(selection: $currentCategory) {
                 NavigationLink(value: SettingCategory.general) {
@@ -78,7 +81,7 @@ struct SettingSideBaLabelView: View {
         self.category = category
         self.image = image
     }
-    var body: some View {
+    public var body: some View {
         Label(category.display, systemImage: image)
             .padding(.vertical, 10)
     }
@@ -86,7 +89,7 @@ struct SettingSideBaLabelView: View {
 
 
 struct SettingDetailView: View {
-    var body: some View {
+    public var body: some View {
         Text("Setting")
     }
 }

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import AppState
+import Domain
 
 
 struct DatabaseSettingView: View {
@@ -18,7 +18,7 @@ struct DatabaseSettingView: View {
     @State private var secretToken:String = ""
     @State private var errorMessage = ""
     
-    var body: some View {
+    public var body: some View {
         VStack{
             Form {
                 VStack {

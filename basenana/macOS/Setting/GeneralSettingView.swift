@@ -7,13 +7,13 @@
 
 import Foundation
 import SwiftUI
-import AppState
+import Domain
 
 
 struct GeneralSettingView: View {
     @State private var state = StateStore.shared
 
-    var body: some View {
+    public var body: some View {
         Form {
             Section("Inbox"){
                 Picker("File Type", selection: $state.setting.general.inboxFileType) {

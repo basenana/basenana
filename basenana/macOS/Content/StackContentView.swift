@@ -7,10 +7,8 @@
 
 import SwiftUI
 import Foundation
-import AppState
-import GroupTable
-import DocumentRead
-import Workflow
+import Domain
+import Feature
 
 
 struct StackContentView: View {
@@ -30,7 +28,7 @@ struct StackContentView: View {
         self.container = DIContainer(state: state)
     }
     
-    var body: some View {
+    public var body: some View {
         NavigationSplitView {
             SidebarView(viewModel: container.c.resolve(TreeViewModel.self)!)
                 .frame(minWidth: 180,idealWidth: 200)
@@ -100,7 +98,7 @@ struct StackContentView: View {
 }
 
 struct StackBannerView: View {
-    var body: some View {
+    public var body: some View {
         VStackLayout(alignment: .leading){
             Text(" _")
             Text("//\\")

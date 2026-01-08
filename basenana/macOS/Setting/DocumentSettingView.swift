@@ -7,13 +7,13 @@
 
 import Foundation
 import SwiftUI
-import AppState
+import Domain
 
 
 struct DocumentSettingView: View {
     @State private var state = StateStore.shared
 
-    var body: some View {
+    public var body: some View {
         Form {
             Section("Unread List"){
                 Picker("Unread List Sort", selection: $state.setting.document.sortUnread) {

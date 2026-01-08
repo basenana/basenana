@@ -7,8 +7,8 @@
 
 import SwiftUI
 import Foundation
-import Entities
-import AppState
+import Domain
+import Domain
 
 
 struct BackgroundJobView: View {
@@ -20,7 +20,7 @@ struct BackgroundJobView: View {
         self.state = state
     }
     
-    var body: some View {
+    public var body: some View {
         if !state.backgroupJobs.isEmpty {
             Button(action: {
                 showList.toggle()

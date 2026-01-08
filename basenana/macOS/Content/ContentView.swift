@@ -7,15 +7,17 @@
 
 import SwiftUI
 import Swinject
-import AppState
+import Domain
 
 
 @MainActor
-struct ContentView: View {
+public struct ContentView: View {
     @State private var state = StateStore.shared
     @State private var environment = Environment.shared
-    
-    var body: some View {
+
+    public init() {}
+
+    public var body: some View {
         VStack{
             if !state.fsInfo.fsApiReady {
                 LoginView()

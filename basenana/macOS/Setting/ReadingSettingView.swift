@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import AppState
+import Domain
 
 
 struct ReadingSettingView: View {
@@ -17,7 +17,7 @@ struct ReadingSettingView: View {
     @State private var documentMaxWidth: Double = 1
     @State private var documentTitleFontSize: Double = 2
     
-    var body: some View {
+    public var body: some View {
         Form {
             Section("Document Content"){
                 Picker("Font", selection: $state.setting.reading.documentFont) {

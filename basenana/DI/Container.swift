@@ -6,16 +6,14 @@
 //
 
 import Swinject
-import AppState
-import Entities
-import NetworkCore
-import NetworkExtension
-import RepositoryProtocol
-import UseCases
-import Repositories
-import GroupTable
-import DocumentRead
-import Workflow
+import Domain
+import Domain
+import Data
+import Data
+import Domain
+import Domain
+import Data
+import Feature
 
 
 @MainActor

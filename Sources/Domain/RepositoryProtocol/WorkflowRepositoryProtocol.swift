@@ -1,0 +1,18 @@
+//
+//  WorkflowRepositoryProtocol.swift
+//
+//
+//  Created by Hypo on 2024/9/13.
+//
+
+import Foundation
+
+
+
+public protocol WorkflowRepositoryProtocol {
+    func ListWorkflows() async throws -> [Workflow]
+    func ListWorkflowJobs(workflow: String) async throws -> [WorkflowJob]
+    func TriggerWorkflow(workflow: String, option: WorkflowJobOption) async throws -> WorkflowJob
+}
+
+
