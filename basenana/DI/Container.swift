@@ -82,16 +82,16 @@ class DIContainer {
 
         // Clients
         self.c.register(EntriesClientProtocol.self) { r in
-            EntriesClient(clientSet: self.environment.clientSet!)
+            EntriesClient(apiClient: self.environment.restAPIClient!.apiClient)
         }.inObjectScope(.container)
         self.c.register(DocumentClientProtocol.self) { r in
-            DocumentClient(clientSet: self.environment.clientSet!)
+            DocumentClient(apiClient: self.environment.restAPIClient!.apiClient)
         }.inObjectScope(.container)
         self.c.register(FileClientProtocol.self) { r in
-            FileClient(clientSet: self.environment.clientSet!)
+            FileClient(apiClient: self.environment.restAPIClient!.apiClient)
         }.inObjectScope(.container)
         self.c.register(WorkflowClientProtocol.self) { r in
-            WorkflowClient(clientSet: self.environment.clientSet!)
+            WorkflowClient(apiClient: self.environment.restAPIClient!.apiClient)
         }.inObjectScope(.container)
     }
 }

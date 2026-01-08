@@ -2,7 +2,7 @@
 //  LoginView.swift
 //  basenana
 //
-//  Created by Hypo on 2024/6/21.
+//  REST API login implementation
 //
 
 import SwiftUI
@@ -14,17 +14,20 @@ import NetworkExtension
 struct LoginView: View {
     @State private var store = StateStore.shared
     @State private var environment = Environment.shared
-    
+
     @State private var isLogining: Bool = false
     @State private var errorMessage = ""
-    
+
+    /// Login timeout in seconds
+    private let loginTimeout: TimeInterval = 5
+
     init() {}
-    
+
     var body: some View {
         VStack(alignment: .center) {
-            
+
             NanaFSLoginView(isLogining: $isLogining)
-            
+
             Text("\(errorMessage)")
                 .foregroundStyle(.red)
         }
@@ -36,53 +39,101 @@ struct LoginView: View {
         .padding(50)
         .frame(minWidth: 700, minHeight: 500)
     }
-    
+
     func doLogin(req: LoginRequest) {
         Task {
             await handleLogin(serverHost: req.serverHost, serverPort: req.serverPort, accessTokenKey: req.accessTokenKey, secretToken: req.secretToken)
         }
     }
-    
+
     func handleLogin(serverHost: String, serverPort: Int, accessTokenKey: String, secretToken: String) async {
-        var clientSet: ClientSet? = nil
+        isLogining = true
+        errorMessage = ""
+
+        var restAPIClient: RestAPIClient? = nil
         var fsInfo: FSInfo? = nil
-        defer { isLogining = false }
+
         do {
-            clientSet = try FSAPI(host: serverHost, port: serverPort, accessTokenKey: accessTokenKey, secretToken: secretToken).login()
+            // Create REST API client with short timeout for login check
+            restAPIClient = RestAPIClient(
+                host: serverHost,
+                port: serverPort,
+                username: accessTokenKey,
+                password: secretToken,
+                namespace: ""
+            )
+
+            // Adjust timeout for login
+            restAPIClient!.apiClient.requestTimeout = loginTimeout
+
+            // Verify connection by calling health check with timeout
+            _ = try await withThrowingTaskGroup(of: Data.self) { group in
+                group.addTask {
+                    try await restAPIClient!.apiClient.requestData(.healthCheck)
+                }
+                group.addTask {
+                    try await Task.sleep(nanoseconds: UInt64(loginTimeout * 1_000_000_000))
+                    throw APIError.timeout
+                }
+                let result = try await group.next()!
+                group.cancelAll()
+                return result
+            }
+
+            // Reset timeout for full entry request
+            restAPIClient!.apiClient.requestTimeout = 30
+
+            // Get fsInfo by querying root entry
+            let rootResponse: RootEntryResponse = try await restAPIClient!.apiClient.request(
+                .entriesDetails(uri: "/", id: nil),
+                responseType: RootEntryResponse.self
+            )
+
+            fsInfo = FSInfo(namespace: rootResponse.entry.namespace, rootID: rootResponse.entry.entry, inboxID: 0)
+
+        } catch let error as APIError {
+            isLogining = false
+            switch error {
+            case .timeout:
+                errorMessage = "Connection timed out. Please check the server address and try again."
+            case .unauthorized:
+                errorMessage = "Invalid credentials. Please check your username and password."
+            case .networkError:
+                errorMessage = "Unable to connect to server. Please check the server address."
+            case .httpError(let statusCode, _):
+                if statusCode == 401 || statusCode == 403 {
+                    errorMessage = "Invalid credentials. Please check your username and password."
+                } else {
+                    errorMessage = "Server error (\(statusCode)). Please try again."
+                }
+            default:
+                errorMessage = "Connection failed: \(error.localizedDescription)"
+            }
+            return
         } catch {
-            errorMessage = "connect server failed: \(error)"
+            isLogining = false
+            errorMessage = "Connection failed: \(error.localizedDescription)"
             return
         }
-        
-        guard clientSet != nil else {
-            errorMessage = "init client failed"
+
+        guard let client = restAPIClient, let info = fsInfo else {
+            isLogining = false
+            errorMessage = "Initialization failed. Please try again."
             return
         }
-        
-        do {
-            let fi = try await clientSet!.fsInfo()
-            fsInfo = FSInfo(namespace: fi.namespace, rootID: fi.rootID, inboxID: fi.inboxID)
-        } catch {
-            errorMessage = "query fs info failed: \(error)"
-            return
-        }
-        
-        guard fsInfo != nil else {
-            errorMessage = "init fsinfo failed"
-            return
-        }
-        
-        complateLogin(clientSet: clientSet!, fsInfo: fsInfo!)
+
+        complateLogin(restAPIClient: client, fsInfo: info)
         store.setting.database.apiHost = serverHost
         store.setting.database.apiPort = serverPort
         store.setting.database.apiaccessTokenKey = accessTokenKey
         store.setting.database.apiSecretToken = secretToken
+        isLogining = false
     }
-    
+
     @MainActor
-    func complateLogin(clientSet: ClientSet, fsInfo: FSInfo) {
+    func complateLogin(restAPIClient: RestAPIClient, fsInfo: FSInfo) {
         assert(Thread.isMainThread)
-        environment.clientSet = clientSet
+        environment.restAPIClient = restAPIClient
         store.fsInfo = fsInfo
     }
 }
@@ -98,11 +149,33 @@ class LoginRequest {
     var serverPort: Int
     var accessTokenKey: String
     var secretToken: String
-    
+
     init(serverHost: String, serverPort: Int, accessTokenKey: String, secretToken: String) {
         self.serverHost = serverHost
         self.serverPort = serverPort
         self.accessTokenKey = accessTokenKey
         self.secretToken = secretToken
     }
+}
+
+// MARK: - Response Types for Login
+
+struct RootEntryResponse: Decodable {
+    let entry: RootEntry
+}
+
+struct RootEntry: Decodable {
+    let uri: String
+    let entry: Int64
+    let name: String
+    let kind: String
+    let is_group: Bool
+    let size: Int64
+    let version: Int64
+    let namespace: String
+    let storage: String
+    let created_at: Date
+    let changed_at: Date
+    let modified_at: Date
+    let access_at: Date
 }

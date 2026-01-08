@@ -14,7 +14,6 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "Domain", path: "../Domain"),
-        .package(url: "https://github.com/grpc/grpc-swift", from: "1.23.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -31,7 +30,6 @@ let package = Package(
         .target(
             name: "NetworkCore",
             dependencies: [
-                .product(name: "GRPC", package: "grpc-swift"),
             ]
         ),
         .target(
