@@ -29,26 +29,26 @@ public protocol EntryDetail {
     var id: Int64 { get }
     var uri: String { get }
     var name: String { get }
-    var aliases: String { get }
+    var aliases: String? { get }
     var parent: Int64 { get }
     var kind: String { get }
     var isGroup: Bool { get }
     var size: Int64 { get }
-    var version: Int64 { get }
-    var namespace: String { get }
-    var storage: String { get }
-    
-    var uid: Int64 { get }
-    var gid: Int64 { get }
-    var permissions: [String] { get }
-    
+    var version: Int64? { get }
+    var namespace: String? { get }
+    var storage: String? { get }
+
+    var uid: Int64? { get }
+    var gid: Int64? { get }
+    var permissions: [String]? { get }
+
     var createdAt: Date { get }
     var changedAt: Date { get }
     var modifiedAt: Date { get }
     var accessAt: Date { get }
-    
+
     var properties: [EntryProperty] { get }
-    
+
     func toInfo() -> EntryInfo?
     func toGroup() -> EntryGroup?
 }

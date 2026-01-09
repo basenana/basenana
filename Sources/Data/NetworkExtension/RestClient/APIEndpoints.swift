@@ -88,7 +88,7 @@ public enum APIEndpoint {
         case .entriesUpdate, .entriesParent, .entriesProperty, .entriesDocument:
             return .put
         case .entriesDelete, .entriesBatchDelete:
-            return .delete
+            return .post
         }
     }
 

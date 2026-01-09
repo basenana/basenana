@@ -13,13 +13,13 @@ struct EntryDetailDTO: Decodable {
     let uri: String
     let entry: Int64
     let name: String
-    let aliases: String
+    let aliases: String?
     let kind: String
     let is_group: Bool
     let size: Int64
-    let version: Int64
-    let namespace: String
-    let storage: String
+    let version: Int64?
+    let namespace: String?
+    let storage: String?
     let parent: Int64?
     let access: AccessDTO?
     let property: PropertyWrapperDTO?
@@ -240,3 +240,7 @@ struct SetConfigRequest: Encodable {
 struct FileUploadResponse: Decodable {
     let len: Int64
 }
+
+// MARK: - Empty Response
+
+struct VoidResponse: Decodable { }

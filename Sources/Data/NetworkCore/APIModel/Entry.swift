@@ -43,6 +43,32 @@ public struct DocumentInfo {
     }
 }
 
+extension DocumentInfo: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case title, author, year, source, abstract, keywords, notes
+        case unread, marked
+        case publishAt = "publish_at"
+        case url
+        case headerImage = "header_image"
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.title = try container.decodeIfPresent(String.self, forKey: .title)
+        self.author = try container.decodeIfPresent(String.self, forKey: .author)
+        self.year = try container.decodeIfPresent(String.self, forKey: .year)
+        self.source = try container.decodeIfPresent(String.self, forKey: .source)
+        self.abstract = try container.decodeIfPresent(String.self, forKey: .abstract)
+        self.keywords = try container.decodeIfPresent([String].self, forKey: .keywords)
+        self.notes = try container.decodeIfPresent(String.self, forKey: .notes)
+        self.unread = try container.decodeIfPresent(Bool.self, forKey: .unread)
+        self.marked = try container.decodeIfPresent(Bool.self, forKey: .marked)
+        self.publishAt = try container.decodeIfPresent(Date.self, forKey: .publishAt)
+        self.url = try container.decodeIfPresent(String.self, forKey: .url)
+        self.headerImage = try container.decodeIfPresent(String.self, forKey: .headerImage)
+    }
+}
+
 public struct APIEntryInfo: EntryInfo {
     public var id: Int64
     public var uri: String
@@ -93,7 +119,7 @@ public struct APIEntryDetail: EntryDetail {
 
     public var name: String
 
-    public var aliases: String
+    public var aliases: String?
 
     public var parent: Int64
 
@@ -103,17 +129,17 @@ public struct APIEntryDetail: EntryDetail {
 
     public var size: Int64
 
-    public var version: Int64
+    public var version: Int64?
 
-    public var namespace: String
+    public var namespace: String?
 
-    public var storage: String
+    public var storage: String?
 
-    public var uid: Int64
+    public var uid: Int64?
 
-    public var gid: Int64
+    public var gid: Int64?
 
-    public var permissions: [String]
+    public var permissions: [String]?
 
     public var createdAt: Date
 
@@ -127,7 +153,7 @@ public struct APIEntryDetail: EntryDetail {
 
     public var document: DocumentInfo?
 
-    public init(id: Int64, uri: String, name: String, aliases: String, parent: Int64, kind: String, isGroup: Bool, size: Int64, version: Int64, namespace: String, storage: String, uid: Int64, gid: Int64, permissions: [String], createdAt: Date, changedAt: Date, modifiedAt: Date, accessAt: Date, properties: [any EntryProperty], document: DocumentInfo? = nil) {
+    public init(id: Int64, uri: String, name: String, aliases: String?, parent: Int64, kind: String, isGroup: Bool, size: Int64, version: Int64?, namespace: String?, storage: String?, uid: Int64?, gid: Int64?, permissions: [String]?, createdAt: Date, changedAt: Date, modifiedAt: Date, accessAt: Date, properties: [any EntryProperty], document: DocumentInfo? = nil) {
         self.id = id
         self.uri = uri
         self.name = name
@@ -141,7 +167,7 @@ public struct APIEntryDetail: EntryDetail {
         self.storage = storage
         self.uid = uid
         self.gid = gid
-        self.permissions = permissions
+        self.permissions = permissions ?? []
         self.createdAt = createdAt
         self.changedAt = changedAt
         self.modifiedAt = modifiedAt
@@ -163,7 +189,43 @@ public struct APIEntryDetail: EntryDetail {
     }
 }
 
-public struct APIEntryProperty: EntryProperty {
+extension APIEntryDetail: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case id, uri, name, aliases, parent, kind, isGroup, size, version
+        case namespace, storage, uid, gid, permissions
+        case createdAt = "created_at"
+        case changedAt = "changed_at"
+        case modifiedAt = "modified_at"
+        case accessAt = "access_at"
+        case properties, document
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(Int64.self, forKey: .id)
+        self.uri = try container.decode(String.self, forKey: .uri)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.aliases = try container.decodeIfPresent(String.self, forKey: .aliases)
+        self.parent = try container.decode(Int64.self, forKey: .parent)
+        self.kind = try container.decode(String.self, forKey: .kind)
+        self.isGroup = try container.decode(Bool.self, forKey: .isGroup)
+        self.size = try container.decode(Int64.self, forKey: .size)
+        self.version = try container.decodeIfPresent(Int64.self, forKey: .version)
+        self.namespace = try container.decodeIfPresent(String.self, forKey: .namespace)
+        self.storage = try container.decodeIfPresent(String.self, forKey: .storage)
+        self.uid = try container.decodeIfPresent(Int64.self, forKey: .uid)
+        self.gid = try container.decodeIfPresent(Int64.self, forKey: .gid)
+        self.permissions = try container.decodeIfPresent([String].self, forKey: .permissions)
+        self.createdAt = try container.decode(Date.self, forKey: .createdAt)
+        self.changedAt = try container.decode(Date.self, forKey: .changedAt)
+        self.modifiedAt = try container.decode(Date.self, forKey: .modifiedAt)
+        self.accessAt = try container.decode(Date.self, forKey: .accessAt)
+        self.properties = try container.decodeIfPresent([APIEntryProperty].self, forKey: .properties) ?? []
+        self.document = try container.decodeIfPresent(DocumentInfo.self, forKey: .document)
+    }
+}
+
+public struct APIEntryProperty: EntryProperty, Decodable {
     public var key: String
 
     public var value: String

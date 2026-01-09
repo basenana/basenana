@@ -80,7 +80,13 @@ public class EntriesClient: EntriesClientProtocol {
     }
 
     public func DeleteEntries(uris: [String]) async throws {
-        throw RepositoryError.unimplement
+        let encodedUris = uris.map { $0.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? $0 }
+        let request = BatchDeleteRequest(uri_list: encodedUris)
+        _ = try await apiClient.request(
+            .entriesBatchDelete,
+            body: request,
+            responseType: VoidResponse.self
+        )
     }
 
     public func ListGroupChildren(parentUri: String) async throws -> [any EntryInfo] {
