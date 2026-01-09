@@ -16,7 +16,7 @@ import Domain
 @MainActor
 public class TreeViewModel: BaseViewModel {
 
-    var selectedGroupId: Int64? = nil
+    var selectedGroupUri: String? = nil
 
     private static let logger = Logger(
             subsystem: Bundle.main.bundleIdentifier!,
@@ -26,7 +26,7 @@ public class TreeViewModel: BaseViewModel {
     override public init(store: StateStore, entryUsecase: any EntryUseCaseProtocol) {
         super.init(store: store, entryUsecase: entryUsecase)
     }
-    
+
     func resetGroupTree() async {
         Self.logger.info("[resetGroupTree] load and reset group root")
         do {
@@ -35,6 +35,6 @@ public class TreeViewModel: BaseViewModel {
             sentAlert("load group tree failed: \(error)")
         }
     }
-    
-    
+
+
 }

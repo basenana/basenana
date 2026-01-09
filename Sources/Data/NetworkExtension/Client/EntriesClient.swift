@@ -30,8 +30,8 @@ public class EntriesClient: EntriesClientProtocol {
         return response.entry.toAPIEntryDetail()
     }
 
-    public func FindEntry(parent: Int64, name: String) async throws -> APIEntryDetail {
-        let uri = "/\(parent)/\(name)"
+    public func FindEntry(parentUri: String, name: String) async throws -> APIEntryDetail {
+        let uri = "\(parentUri)/\(name)"
         let response: EntryDetailResponse = try await apiClient.request(
             .entriesDetails(uri: uri, id: nil),
             responseType: EntryDetailResponse.self
@@ -39,9 +39,9 @@ public class EntriesClient: EntriesClientProtocol {
         return response.entry.toAPIEntryDetail()
     }
 
-    public func GetEntryDetail(entry: Int64) async throws -> APIEntryDetail {
+    public func GetEntryDetail(uri: String) async throws -> APIEntryDetail {
         let response: EntryDetailResponse = try await apiClient.request(
-            .entriesDetails(uri: nil, id: entry),
+            .entriesDetails(uri: uri, id: nil),
             responseType: EntryDetailResponse.self
         )
         return response.entry.toAPIEntryDetail()
@@ -49,7 +49,7 @@ public class EntriesClient: EntriesClientProtocol {
 
     public func CreateEntry(entry: EntryCreate) async throws -> APIEntryInfo {
         let request = CreateEntryRequest(
-            uri: "/\(entry.parent)/\(entry.name)",
+            uri: "\(entry.parentUri)/\(entry.name)",
             kind: entry.kind,
             rss: entry.RSS.map { RSSConfigRequest(
                 feed: $0.feed,
@@ -68,44 +68,30 @@ public class EntriesClient: EntriesClientProtocol {
         return response.entry.toAPIEntryInfo()
     }
 
-    public func UpdateEntry(entry: EntryUpdate) async throws -> APIEntryDetail {
-        let request = UpdateEntryRequest(name: entry.name, aliases: nil)
+    public func UpdateEntry(uri: String, name: String?) async throws -> APIEntryDetail {
+        let request = UpdateEntryRequest(name: name, aliases: nil)
 
         let response: EntryDetailResponse = try await apiClient.request(
-            .entriesUpdate(uri: nil, id: entry.id),
+            .entriesUpdate(uri: uri, id: nil),
             body: request,
             responseType: EntryDetailResponse.self
         )
         return response.entry.toAPIEntryDetail()
     }
 
-    public func DeleteEntries(entrys: [Int64]) async throws {
+    public func DeleteEntries(uris: [String]) async throws {
         throw RepositoryError.unimplement
     }
 
-    public func ListGroupChildren(filter: EntryFilter) async throws -> [APIEntryInfo] {
-        let orderStr: String?
-        switch filter.order {
-        case .name: orderStr = "name"
-        case .kind: orderStr = "kind"
-        case .isGroup: orderStr = "is_group"
-        case .size: orderStr = "size"
-        case .createdAt: orderStr = "created_at"
-        case .modifiedAt: orderStr = "modified_at"
-        case .none: orderStr = nil
-        }
-
-        let offset: Int? = filter.page.map { Int($0.page * $0.pageSize) }
-        let limit: Int? = filter.page.map { Int($0.pageSize) }
-
+    public func ListGroupChildren(parentUri: String) async throws -> [APIEntryInfo] {
         let response: EntriesResponse = try await apiClient.request(
             .groupsChildren(
-                uri: nil,
-                id: filter.parent,
-                offset: offset,
-                limit: limit,
-                order: orderStr,
-                desc: filter.orderDesc
+                uri: parentUri,
+                id: nil,
+                offset: nil,
+                limit: nil,
+                order: nil,
+                desc: nil
             ),
             responseType: EntriesResponse.self
         )
@@ -113,16 +99,15 @@ public class EntriesClient: EntriesClientProtocol {
         return response.entries.map { $0.toAPIEntryInfo() }
     }
 
-    public func ChangeParent(entry: Int64, newParent: Int64, option: ChangeParentOption) async throws {
-        let newUri = "/\(newParent)"
+    public func ChangeParent(uri: String, newParentUri: String, option: ChangeParentOption) async throws {
         let request = ChangeParentRequest(
-            new_entry_uri: newUri,
+            new_entry_uri: newParentUri,
             replace: false,
             exchange: false
         )
 
         _ = try await apiClient.request(
-            .entriesParent(uri: nil, id: entry, newUri: newUri),
+            .entriesParent(uri: uri, id: nil, newUri: newParentUri),
             body: request,
             responseType: EntryDetailResponse.self
         )
@@ -158,6 +143,7 @@ public class EntriesClient: EntriesClientProtocol {
         let children = node.children?.map { parseGroupTree(node: $0) }
         return APIGroup(
             id: 0,
+            uri: node.uri,
             groupName: node.name,
             parentID: 0,
             children: children
@@ -171,6 +157,7 @@ extension EntryDetailDTO {
     func toAPIEntryDetail() -> APIEntryDetail {
         APIEntryDetail(
             id: self.entry,
+            uri: self.uri,
             name: self.name,
             aliases: self.aliases,
             parent: 0,
@@ -194,6 +181,7 @@ extension EntryDetailDTO {
     func toAPIEntryInfo() -> APIEntryInfo {
         APIEntryInfo(
             id: self.entry,
+            uri: self.uri,
             name: self.name,
             kind: self.kind,
             isGroup: self.is_group,
@@ -211,6 +199,7 @@ extension EntryInfoDTO {
     func toAPIEntryInfo() -> APIEntryInfo {
         APIEntryInfo(
             id: self.entry,
+            uri: self.uri,
             name: self.name,
             kind: self.kind,
             isGroup: self.is_group,

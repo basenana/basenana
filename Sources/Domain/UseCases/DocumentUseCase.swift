@@ -79,18 +79,18 @@ public class DocumentUseCase: DocumentUseCaseProtocol {
         }
     }
     
-    public func getDocumentEntry(entry: Int64) async throws ->  EntryDetail? {
+    public func getDocumentEntry(uri: String) async throws ->  EntryDetail? {
         do {
-            return try await entryRepo.GetEntryDetail(entry: entry)
+            return try await entryRepo.GetEntryDetail(uri: uri)
         } catch RepositoryError.canceled {
             return nil
         }
     }
-    
+
     public func getDocumentEntry(document: Int64) async throws ->  EntryDetail? {
         do {
             let doc = try await getDocumentDetails(document: document)
-            return try await getDocumentEntry(entry: doc.oid)
+            return try await getDocumentEntry(uri: "/\(doc.oid)")
         } catch RepositoryError.canceled {
             return nil
         }

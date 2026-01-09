@@ -25,42 +25,42 @@ public class EntryUseCase: EntryUseCaseProtocol {
         self.fileRepo = fileRepo
     }
     
-    public func getEntryDetails(entry: Int64) async throws -> any  EntryDetail {
+    public func getEntryDetails(uri: String) async throws -> any  EntryDetail {
         do {
-            return try await entryRepo.GetEntryDetail(entry: entry)
+            return try await entryRepo.GetEntryDetail(uri: uri)
         } catch RepositoryError.canceled {
             throw UseCaseError.canceled
         }
     }
-    
-    public func renameEntry(entry: Int64, newName: String) async throws {
+
+    public func renameEntry(uri: String, newName: String) async throws {
         do {
-            let en = try await getEntryDetails(entry: entry)
+            let en = try await getEntryDetails(uri: uri)
             var opt = ChangeParentOption()
             opt.newName = newName
-            return try await entryRepo.ChangeParent(entry: en.id, newParent: en.parent, option: opt)
+            return try await entryRepo.ChangeParent(uri: uri, newParentUri: en.uri, option: opt)
         } catch RepositoryError.canceled {
             return
         }
     }
-    
-    public func deleteEntry(entry: Int64) async throws {
-        let entryDetail = try await entryRepo.GetEntryDetail(entry: entry)
+
+    public func deleteEntry(uri: String) async throws {
+        let entryDetail = try await entryRepo.GetEntryDetail(uri: uri)
         if !entryDetail.isGroup{
-            return try await entryRepo.DeleteEntries(entrys: [entry])
+            return try await entryRepo.DeleteEntries(uris: [uri])
         }
-        
-        let children = try await listChildren(entry: entry)
+
+        let children = try await listChildren(uri: uri)
         for child in children {
-            try await deleteEntry(entry: child.id)
+            try await deleteEntry(uri: child.uri)
         }
-        
-        return try await entryRepo.DeleteEntries(entrys: [entry])
+
+        return try await entryRepo.DeleteEntries(uris: [uri])
     }
-    
-    public func deleteEntries(entries: [Int64]) async throws {
-        for entry in entries {
-            try await deleteEntry(entry: entry)
+
+    public func deleteEntries(uris: [String]) async throws {
+        for uri in uris {
+            try await deleteEntry(uri: uri)
         }
     }
     
@@ -72,36 +72,36 @@ public class EntryUseCase: EntryUseCaseProtocol {
         }
     }
     
-    public func listChildren(entry: Int64) async throws -> [any  EntryInfo] {
+    public func listChildren(uri: String) async throws -> [any  EntryInfo] {
         do {
-            return try await entryRepo.ListGroupChildren(filter: EntryFilter(parent: entry))
+            return try await entryRepo.ListGroupChildren(parentUri: uri)
         } catch RepositoryError.canceled {
             return []
         }
     }
-    
-    public func changeParent(entries: [Int64], newParent: Int64, finisher: @escaping (EntryDetail, EntryDetail) -> Void) async throws {
+
+    public func changeParent(uris: [String], newParentUri: String, finisher: @escaping (EntryDetail, EntryDetail) -> Void) async throws {
         do {
-            let parent = try await getEntryDetails(entry: newParent)
+            let parent = try await getEntryDetails(uri: newParentUri)
             if !parent.isGroup {
                 throw BizError.notGroup
             }
-            
-            for eid in entries {
-                let entry = try await getEntryDetails(entry: eid)
-                try await entryRepo.ChangeParent(entry: eid, newParent: newParent, option: ChangeParentOption())
+
+            for uri in uris {
+                let entry = try await getEntryDetails(uri: uri)
+                try await entryRepo.ChangeParent(uri: uri, newParentUri: newParentUri, option: ChangeParentOption())
                 DispatchQueue.main.async {
                     finisher(entry, parent)
                 }
             }
-            
+
         } catch RepositoryError.canceled {
             return
         }
     }
-    
-    public func createGroups(parent: Int64, option:  EntryCreate) async throws -> EntryInfo{
-        var entry = EntryCreate(parent: parent, name: option.name, kind: option.kind)
+
+    public func createGroups(parentUri: String, option:  EntryCreate) async throws -> EntryInfo{
+        var entry = EntryCreate(parentUri: parentUri, name: option.name, kind: option.kind)
         if let rssCfg = option.RSS{
             entry.RSS = rssCfg
         }
@@ -111,21 +111,21 @@ public class EntryUseCase: EntryUseCaseProtocol {
             throw UseCaseError.canceled
         }
     }
-    
+
     public func UploadFile(parent: Int64, file: URL, properties: [String:String] = [:]) async throws -> EntryInfo {
         let fileHandle = try FileHandle(forReadingFrom: file)
         defer {
             fileHandle.closeFile()
         }
-        
-        let option = EntryCreate(parent: parent, name: file.lastPathComponent, kind: "raw")
+
+        let option = EntryCreate(parentUri: "/\(parent)", name: file.lastPathComponent, kind: "raw")
         let entry = try await entryRepo.CreateEntry(entry: option)
         Self.logger.info("create entry \(entry.id) for upload")
-        
+
         for kv in properties {
             try await entryRepo.AddProperty(entry: entry.id, key: kv.key, val: kv.value)
         }
-        
+
         try await fileRepo.UploadFile(entry: entry.id, fileHandle: fileHandle)
         return entry
     }

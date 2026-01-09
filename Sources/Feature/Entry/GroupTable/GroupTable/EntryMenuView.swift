@@ -15,54 +15,54 @@ import Styleguide
 public struct EntryMenuView: View {
     @State private var groupTree = GroupTree.shared
     @State private var viewModel: GroupTableViewModel
-    
+
     public init(viewModel: GroupTableViewModel) {
         self.viewModel = viewModel
     }
-    
+
     public var body: some View {
         VStack {
             if canBeOpen() {
                 Section{
-                    Button("Open", action: { gotoDestination(.groupList(group: targets.first!.id)) })
+                    Button("Open", action: { gotoDestination(.groupList(groupUri: targets.first!.uri)) })
                 }
             }
-            
+
             if canCreateGroup(){
                 Section{
                     Menu("New") {
                         Button("EntryGroup", action: {
-                            NotificationCenter.default.post(name: .createGroup, object: NewGroupRequest(parent: viewModel.group?.id ?? -1, groupType: .standard))
+                            NotificationCenter.default.post(name: .createGroup, object: NewGroupRequest(parentUri: viewModel.group?.uri ?? "", groupType: .standard))
                         })
                         Button("RSS Feed", action: {
-                            NotificationCenter.default.post(name: .createGroup, object: NewGroupRequest(parent: viewModel.group?.id ?? -1, groupType: .feed))
+                            NotificationCenter.default.post(name: .createGroup, object: NewGroupRequest(parentUri: viewModel.group?.uri ?? "", groupType: .feed))
                         })
                         Button("Dynamic EntryGroup", action: {
-                            NotificationCenter.default.post(name: .createGroup, object: NewGroupRequest(parent: viewModel.group?.id ?? -1, groupType: .dynamic))
+                            NotificationCenter.default.post(name: .createGroup, object: NewGroupRequest(parentUri: viewModel.group?.uri ?? "", groupType: .dynamic))
                         })
                     }
                 }
             }
-            
+
             if canBeEdit() {
                 Section{
                     if onlyOneSelected() {
                         Button("Rename", action: {
-                            NotificationCenter.default.post(name: .renameEntry, object: viewModel.selectedEntries.first?.id ?? -1)
+                            NotificationCenter.default.post(name: .renameEntry, object: viewModel.selectedEntries.first?.uri ?? "")
                         })
                     }
                     Button("Delete", action: {
-                        NotificationCenter.default.post(name: .deleteEntry, object: viewModel.selectedEntries.map({$0.id}))
+                        NotificationCenter.default.post(name: .deleteEntry, object: viewModel.selectedEntries.map({$0.uri}))
                     })
                 }
-                
+
                 Section{
                     Menu("Move To") {
                         ForEach(groupTree.children ?? []){ childGroup in
                             GroupDestinationView(
                                 group: childGroup,
                                 childKeyPath: \.children,
-                                action: { moveEntriesToGroup(newParent: $0.id ) }
+                                action: { moveEntriesToGroup(newParentUri: $0.uri ) }
                             )
                         }
                     }
@@ -71,13 +71,13 @@ public struct EntryMenuView: View {
                             GroupDestinationView(
                                 group: childGroup,
                                 childKeyPath: \.children,
-                                action: { replicateEntryToGroup(newParent: $0.id) }
+                                action: { replicateEntryToGroup(newParentUri: $0.uri) }
                             )
                         }
                     }
                 }
             }
-            
+
             if isFileTarget() {
                 Section{
                     Menu("Mark") {
@@ -88,7 +88,7 @@ public struct EntryMenuView: View {
             }
         }
     }
-    
+
     var targets: [EntryInfo] {
         get {
             viewModel.selectedEntries
@@ -98,22 +98,22 @@ public struct EntryMenuView: View {
     func hasSelected() -> Bool {
         return targets.count > 0
     }
-    
+
     func onlyOneSelected() -> Bool {
         return targets.count == 1
     }
-    
+
     func isFileTarget() -> Bool {
         guard !onlyOneSelected() else {
             return false
         }
-        
+
         if let target = targets.first {
             return !target.isGroup
         }
         return false
     }
-    
+
     func canBeOpen() -> Bool {
         guard onlyOneSelected() else {
             return false
@@ -123,14 +123,14 @@ public struct EntryMenuView: View {
         }
         return false
     }
-    
+
     func canCreateGroup() -> Bool {
         if let grp = viewModel.group {
             return !isInternalFile(grp.toInfo()!)
         }
         return false
     }
-    
+
     func canBeEdit() -> Bool {
         guard !targets.isEmpty else {
             return false
@@ -142,16 +142,16 @@ public struct EntryMenuView: View {
         }
         return true
     }
-    
-    func moveEntriesToGroup(newParent: Int64) {
+
+    func moveEntriesToGroup(newParentUri: String) {
         Task {
-            let _ = await viewModel.moveEntriesToGroup(entries: targets.map({$0.id}), newParent: newParent)
+            let _ = await viewModel.moveEntriesToGroup(entryUris: targets.map({$0.uri}), newParentUri: newParentUri)
         }
     }
-    
-    func replicateEntryToGroup(newParent: Int64) {
+
+    func replicateEntryToGroup(newParentUri: String) {
         Task {
-            await viewModel.replicateEntryToGroup(entries: targets.map({$0.id}), newParent: newParent)
+            await viewModel.replicateEntryToGroup(entryUris: targets.map({$0.uri}), newParentUri: newParentUri)
         }
     }
 }

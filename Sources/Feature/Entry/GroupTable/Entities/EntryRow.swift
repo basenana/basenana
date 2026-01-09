@@ -10,21 +10,23 @@ import Domain
 
 struct EntryRow: Hashable, Identifiable {
     var id: Int64
+    var uri: String
     var name: String
     var kind: String
     var isGroup: Bool
     var size: Int64
     var parentID: Int64
-    
+
     var createdAt: Date
     var changedAt: Date
     var modifiedAt: Date
     var accessAt: Date
-    
+
     var info: EntryInfo
-    
+
     init(info: EntryInfo){
         self.id = info.id
+        self.uri = info.uri
         self.name = info.name
         self.kind = info.kind
         self.isGroup = info.isGroup

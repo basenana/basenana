@@ -10,10 +10,10 @@ import Foundation
 
 
 public enum Destination: Identifiable, Hashable {
-    
+
     case listDocuments(prespective: DocumentPrespective)
     case readDocument(document: Int64)
-    case groupList(group: Int64)
+    case groupList(groupUri: String)
     case workflowDashboard
     case workflowDetail(workflow: String)
     case fridayChat
@@ -25,8 +25,8 @@ public enum Destination: Identifiable, Hashable {
             return "listDocument_\(prespective)"
         case .readDocument(document: let document):
             return "readDocument_\(document)"
-        case .groupList(group: let group):
-            return "groupList_\(group)"
+        case .groupList(groupUri: let groupUri):
+            return "groupList_\(groupUri)"
         case .workflowDashboard:
             return "workflowDashboard"
         case .workflowDetail(workflow: let workflow):
@@ -37,11 +37,11 @@ public enum Destination: Identifiable, Hashable {
             return "searchDocument"
         }
     }
-    
+
     public static func == (lhs: Destination, rhs: Destination) -> Bool {
         return lhs.id == rhs.id
     }
-    
+
 }
 
 
@@ -53,6 +53,6 @@ extension DocumentPrespective {
 
 extension EntryGroup {
     var destination: Destination {
-        return .groupList(group: self.id)
+        return .groupList(groupUri: self.uri)
     }
 }

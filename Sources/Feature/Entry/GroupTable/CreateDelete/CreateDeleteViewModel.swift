@@ -30,9 +30,9 @@ public class CreateDeleteViewModel {
         self.entryUsecase = entryUsecase
     }
     
-    func describeEntry(entry: Int64) async -> EntryDetail? {
+    func describeEntry(uri: String) async -> EntryDetail? {
         do {
-            return try await entryUsecase.getEntryDetails(entry: entry)
+            return try await entryUsecase.getEntryDetails(uri: uri)
         } catch let error as UseCaseError where error == .canceled {
             // do nothing
         } catch {
@@ -40,33 +40,33 @@ public class CreateDeleteViewModel {
         }
         return nil
     }
-    
-    func createGroup(parentID: Int64, option: EntryCreate) async {
-        guard groupTree.getGroup(groupID: parentID) != nil else {
-            sentAlert("creatr group failed: parent \(parentID) not exist")
+
+    func createGroup(parentUri: String, option: EntryCreate) async {
+        guard groupTree.getGroup(uri: parentUri) != nil else {
+            sentAlert("creatr group failed: parent \(parentUri) not exist")
             return
         }
-        
+
         do {
-            let newGroup = try await entryUsecase.createGroups(parent: parentID, option: option)
-            groupTree.addChildGroup(parentID: parentID, child: newGroup.toGroup()!, grandChildren: nil)
-            NotificationCenter.default.post(name: .reopenGroup, object: [parentID])
+            let newGroup = try await entryUsecase.createGroups(parentUri: parentUri, option: option)
+            groupTree.addChildGroup(parentUri: parentUri, child: newGroup.toGroup()!, grandChildren: nil)
+            NotificationCenter.default.post(name: .reopenGroup, object: [parentUri])
         } catch {
             sentAlert("creatr group failed: \(error)")
             return
         }
     }
-    
+
     func deleteEntries(entries: [EntryInfo]) async {
         let uc = entryUsecase
         let gt = groupTree
-        
+
         for entry in entries {
             store.newBackgroundJob(
                 name: "Deleting \(entry.name)",
                 job: {
                     do {
-                        try await uc.deleteEntry(entry: entry.id)
+                        try await uc.deleteEntry(uri: entry.uri)
                     } catch {
                         sentAlert("delete entry \(entry.name) failed \(error)")
                         return
@@ -75,13 +75,13 @@ public class CreateDeleteViewModel {
                 complete: {
                     for entry in entries {
                         if entry.isGroup {
-                            gt.removeChildGroup(parentID: entry.parentID, childID: entry.id)
+                            gt.removeChildGroup(parentUri: entry.uri, childUri: entry.uri)
                         }
-                        NotificationCenter.default.post(name: .reopenGroup, object: [entry.parentID])
+                        NotificationCenter.default.post(name: .reopenGroup, object: [entry.uri])
                     }
                 }
             )
-            
+
         }
     }
 }

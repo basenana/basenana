@@ -29,10 +29,10 @@ public class BaseViewModel {
         self.store = store
         self.entryUsecase = entryUsecase
     }
-    
-    func describeEntry(entry: Int64) async -> EntryDetail? {
+
+    func describeEntry(uri: String) async -> EntryDetail? {
         do {
-            return try await entryUsecase.getEntryDetails(entry: entry)
+            return try await entryUsecase.getEntryDetails(uri: uri)
         } catch let error as UseCaseError where error == .canceled {
             // do nothing
         } catch {
@@ -40,10 +40,10 @@ public class BaseViewModel {
         }
         return nil
     }
-    
-    func getGroup(groupID: Int64) async -> EntryGroup? {
+
+    func getGroup(uri: String) async -> EntryGroup? {
         do {
-            let groupEntry = try await entryUsecase.getEntryDetails(entry: groupID)
+            let groupEntry = try await entryUsecase.getEntryDetails(uri: uri)
             return groupEntry.toGroup()
         } catch let error as UseCaseError where error == .canceled {
             // do nothing
@@ -52,76 +52,76 @@ public class BaseViewModel {
         }
         return nil
     }
-    
-    func moveEntriesToGroup(entryURLs: [URL], newParent: Int64) async -> Bool {
-        var entries = [Int64]()
+
+    func moveEntriesToGroup(entryURLs: [URL], newParentUri: String) async -> Bool {
+        var entryUris: [String] = []
         var files = [URL]()
-        
+
         for url in entryURLs {
             switch url.scheme {
             case "basenana":
-                
+
                 let targetID = parseEntryIDFromURL(url: url)
                 guard targetID != nil && targetID! > 0 else {
                     sentAlert("\(url) not a valid entry")
                     return false
                 }
-                entries.append(targetID!)
-                
+                entryUris.append("/\(targetID!)")
+
             case "file":
-                
+
                 files.append(url)
-                
+
             default:
-                
+
                 Self.logger.notice("[moveEntriesAndUpdateTree] unknown url schema \(url)")
                 return false
             }
         }
-        
-        if !entries.isEmpty {
-            return await moveEntriesToGroup(entries: entries, newParent: newParent)
+
+        if !entryUris.isEmpty {
+            return await moveEntriesToGroup(entryUris: entryUris, newParentUri: newParentUri)
         }
-        
+
         if !files.isEmpty {
             do {
-                try await uploadFiles(parentID: newParent, files: files)
+                try await uploadFiles(parentUri: newParentUri, files: files)
             } catch {
                 sentAlert("upload files failed \(error)")
                 return false
             }
             return true
         }
-        
+
         return false
     }
-    
-    func moveEntriesToGroup(entries: [Int64], newParent: Int64) async -> Bool {
+
+    func moveEntriesToGroup(entryUris: [String], newParentUri: String) async -> Bool {
         do {
-            try await entryUsecase.changeParent(entries: entries, newParent: newParent) { target, parent in
+            try await entryUsecase.changeParent(uris: entryUris, newParentUri: newParentUri) { target, parent in
                 assert(Thread.isMainThread)
                 if target.isGroup {
-                    if let grp = GroupTree.shared.getGroup(groupID: target.id) {
-                        GroupTree.shared.removeChildGroup(parentID: target.parent, childID: target.id)
-                        GroupTree.shared.addChildGroup(parentID: parent.id, child: grp.group, grandChildren: grp.children)
+                    if let grp = GroupTree.shared.getGroup(uri: target.uri) {
+                        GroupTree.shared.removeChildGroup(parentUri: "/\(target.parent)", childUri: target.uri)
+                        GroupTree.shared.addChildGroup(parentUri: parent.uri, child: grp.group, grandChildren: grp.children)
                     }
                 }
-                NotificationCenter.default.post(name: .reopenGroup, object: [target.parent, parent.id])
+                NotificationCenter.default.post(name: .reopenGroup, object: [target.uri, parent.uri])
             }
         } catch {
             sentAlert("move entry failed \(error)")
             return false
         }
-        
+
         return false
     }
-    
-    func replicateEntryToGroup(entries: [Int64], newParent: Int64) async {
+
+    func replicateEntryToGroup(entryUris: [String], newParentUri: String) async {
         sentAlert("not support")
     }
-    
+
     // MARK file upload/download
-    func uploadFiles(parentID: Int64, files: [URL]) async throws  {
+    func uploadFiles(parentUri: String, files: [URL]) async throws  {
         for file in files {
             store.newBackgroundJob(
                 name: "Uploading \(file.lastPathComponent)",
@@ -131,15 +131,15 @@ public class BaseViewModel {
                         if try file.resourceValues(forKeys: [.isDirectoryKey]).isDirectory ?? false {
                             throw BizError.isGroup
                         }
-                        
-                        let en = try await self.entryUsecase.UploadFile(parent: parentID, file: file, properties: properties)
+
+                        let en = try await self.entryUsecase.UploadFile(parent: 0, file: file, properties: properties)
                         Self.logger.notice("upload new entry \(en.id)/\(en.name)")
                     } catch {
                         sentAlert("upload file \(file.lastPathComponent) failed \(error)")
                     }
                 },
                 complete: {
-                    NotificationCenter.default.post(name: .reopenGroup, object: [parentID])
+                    NotificationCenter.default.post(name: .reopenGroup, object: [parentUri])
                 }
             )
         }

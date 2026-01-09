@@ -32,15 +32,15 @@ public class GroupTableViewModel: BaseViewModel {
         }
     }
     
-    func openGroup(groupID: Int64) async {
+    func openGroup(uri: String) async {
         do {
-            group = try await entryUsecase.getEntryDetails(entry: groupID)
+            group = try await entryUsecase.getEntryDetails(uri: uri)
             if group == nil || !group!.isGroup {
                 throw BizError.notGroup
             }
-            
+
             self.children = []
-            let newChildren = try await entryUsecase.listChildren(entry: groupID)
+            let newChildren = try await entryUsecase.listChildren(uri: uri)
             for child in newChildren {
                 self.children.append(EntryRow(info: child))
             }

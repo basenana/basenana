@@ -13,49 +13,49 @@ import Domain
 
 
 public struct GroupTableView: View {
-    @State private var groupID: Int64
+    @State private var groupUri: String
     @State private var groupName: String? = nil
-    
+
     @State private var viewModel: GroupTableViewModel
-    
+
     private static let logger = Logger(
             subsystem: Bundle.main.bundleIdentifier!,
             category: String(describing: GroupTableView.self)
         )
-    
-    public init(groupID: Int64, viewModel: GroupTableViewModel) {
-        self.groupID = groupID
+
+    public init(groupUri: String, viewModel: GroupTableViewModel) {
+        self.groupUri = groupUri
         self.groupName = ""
         self.viewModel = viewModel
     }
-    
+
     public var body: some View {
         VStack {
-            GroupTableWithSheetView(groupID: groupID, viewModel: viewModel)
+            GroupTableWithSheetView(groupUri: groupUri, viewModel: viewModel)
         }
         .onReceive(NotificationCenter.default.publisher(for: .reopenGroup)) { [self] notification in
-            if let parents = notification.object as? [Int64] {
+            if let uris = notification.object as? [String] {
                 var needReopen = false
-                for p in parents {
-                    if p != groupID {
+                for u in uris {
+                    if u != groupUri {
                         continue
                     }
                     needReopen = true
                     break
                 }
-                
+
                 if needReopen {
                     Task {
                         // reopen
-                        await viewModel.openGroup(groupID: groupID)
+                        await viewModel.openGroup(uri: groupUri)
                     }
                 }
             }
         }
         .task {
-            Self.logger.notice("open group \(groupID)")
-            await viewModel.openGroup(groupID: groupID)
-            
+            Self.logger.notice("open group \(groupUri)")
+            await viewModel.openGroup(uri: groupUri)
+
             if let opg = viewModel.group {
                 if opg.name == ".inbox" {
                     groupName = "Inbox"
@@ -74,67 +74,67 @@ public struct GroupTableView: View {
 }
 
 private struct GroupTableWithSheetView: View {
-    @State private var groupID: Int64
+    @State private var groupUri: String
     @State private var viewModel: GroupTableViewModel
-    
+
     @State private var showCreateGroup: Bool = false
-    @State private var createGroupInParent: Int64 = -1
+    @State private var createGroupInParentUri: String = ""
     @State private var createGroupType: GroupType = .standard
-    
+
     @State private var showDeleteConfirm: Bool = false
-    @State private var needDeletedEnties: [Int64] = []
-    
+    @State private var needDeletedEnties: [String] = []
+
     @State private var showRenameEntry: Bool = false
-    @State private var renameEntry: Int64 = -1
-    
-    init(groupID: Int64, viewModel: GroupTableViewModel) {
-        self.groupID = groupID
+    @State private var renameEntryUri: String = ""
+
+    init(groupUri: String, viewModel: GroupTableViewModel) {
+        self.groupUri = groupUri
         self.viewModel = viewModel
     }
-    
+
     public var body: some View {
-        GroupTableWithDropView(groupID: groupID, viewModel: viewModel)
+        GroupTableWithDropView(groupUri: groupUri, viewModel: viewModel)
             .sheet(isPresented: $showCreateGroup){
                 GroupCreateView(
-                    parent: createGroupInParent,
+                    parentUri: createGroupInParentUri,
                     groupType: createGroupType,
                     viewModel: CreateDeleteViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase),
                     showCreateGroup: $showCreateGroup)
             }
             .onReceive(NotificationCenter.default.publisher(for: .createGroup)) { [self] notification in
                 if let req = notification.object as? NewGroupRequest {
-                    self.createGroupInParent = req.parent
+                    self.createGroupInParentUri = req.parentUri
                     self.createGroupType = req.groupType
                     self.showCreateGroup.toggle()
                 }
             }
-            .onChange(of: createGroupInParent){}
+            .onChange(of: createGroupInParentUri){}
             .onChange(of: createGroupType){}
-        
+
             .sheet(isPresented: $showRenameEntry){
                 EntryRenameView(
-                    entry: renameEntry,
+                    entryUri: renameEntryUri,
                     viewModel: EntryDetailViewModel(
                         store: viewModel.store,entryUsecase: viewModel.entryUsecase),
                     showRenameView: $showRenameEntry)
             }
             .onReceive(NotificationCenter.default.publisher(for: .renameEntry)) { [self] notification in
-                if let gid = notification.object as? Int64 {
-                    self.renameEntry = gid
+                if let uri = notification.object as? String {
+                    self.renameEntryUri = uri
                     self.showRenameEntry.toggle()
                 }
             }
-            .onChange(of: renameEntry){}
-        
+            .onChange(of: renameEntryUri){}
+
             .sheet(isPresented: $showDeleteConfirm){
                 DeleteEntriesView(
-                    entryIDs: needDeletedEnties,
+                    entryUris: needDeletedEnties,
                     viewModel: CreateDeleteViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase),
                     showDeleteView: $showDeleteConfirm)
             }
             .onReceive(NotificationCenter.default.publisher(for: .deleteEntry)) { [self] notification in
-                if let entries = notification.object as? [Int64] {
-                    self.needDeletedEnties = entries
+                if let uris = notification.object as? [String] {
+                    self.needDeletedEnties = uris
                     self.showDeleteConfirm.toggle()
                 }
             }
@@ -144,19 +144,19 @@ private struct GroupTableWithSheetView: View {
 
 
 private struct GroupTableWithDropView: View {
-    @State private var groupID: Int64
+    @State private var groupUri: String
     @State private var viewModel: GroupTableViewModel
-    
-    init(groupID: Int64, viewModel: GroupTableViewModel) {
-        self.groupID = groupID
+
+    init(groupUri: String, viewModel: GroupTableViewModel) {
+        self.groupUri = groupUri
         self.viewModel = viewModel
     }
-    
+
     public var body: some View {
-        GroupTableWithMenuView(groupID: groupID, viewModel: viewModel)
+        GroupTableWithMenuView(groupUri: groupUri, viewModel: viewModel)
             .dropDestination(for: URL.self){ urls, _  in
                 Task {
-                    await viewModel.moveEntriesToGroup(entryURLs: urls, newParent: groupID)
+                    await viewModel.moveEntriesToGroup(entryURLs: urls, newParentUri: groupUri)
                 }
                 return true
             }
@@ -164,16 +164,16 @@ private struct GroupTableWithDropView: View {
 }
 
 private struct GroupTableWithMenuView: View {
-    @State private var groupID: Int64
+    @State private var groupUri: String
     @State private var viewModel: GroupTableViewModel
-    
-    init(groupID: Int64, viewModel: GroupTableViewModel) {
-        self.groupID = groupID
+
+    init(groupUri: String, viewModel: GroupTableViewModel) {
+        self.groupUri = groupUri
         self.viewModel = viewModel
     }
-    
+
     public var body: some View {
-        GroupTableContentView(groupID: groupID, viewModel: viewModel)
+        GroupTableContentView(groupUri: groupUri, viewModel: viewModel)
             .contextMenu{
                 EntryMenuView(viewModel: viewModel)
             }
@@ -182,7 +182,7 @@ private struct GroupTableWithMenuView: View {
             } primaryAction: { items in
                 if  items.count == 1 {
                     if let grp = viewModel.children.filter({$0.id == items.first! && $0.isGroup}).first{
-                        gotoDestination(.groupList(group: grp.id))
+                        gotoDestination(.groupList(groupUri: grp.uri))
                     }
                 }
             }
@@ -190,15 +190,15 @@ private struct GroupTableWithMenuView: View {
 }
 
 private struct GroupTableContentView: View {
-    @State private var groupID: Int64
+    @State private var groupUri: String
     @State private var viewModel: GroupTableViewModel
     @State private var order: [KeyPathComparator<EntryRow>] = [.init(\.name, order: .forward)]
-    
-    init(groupID: Int64, viewModel: GroupTableViewModel) {
-        self.groupID = groupID
+
+    init(groupUri: String, viewModel: GroupTableViewModel) {
+        self.groupUri = groupUri
         self.viewModel = viewModel
     }
-    
+
     public var body: some View {
         Table(of: EntryRow.self, selection: $viewModel.selection, sortOrder: $order) {
             TableColumn("Name", value: \.name) { entry in
@@ -224,16 +224,16 @@ private struct GroupTableContentView: View {
         } rows: {
             ForEach(viewModel.children, id: \.id) { child in
                 if child.isGroup{
-                    
+
                     TableRow(child)
                         .draggable(EntryUrl(entryID: child.id))
                         .dropDestination(for: URL.self){ urls in
                             Task {
-                                let _ = await viewModel.moveEntriesToGroup(entryURLs: urls, newParent: child.id)
+                                let _ = await viewModel.moveEntriesToGroup(entryURLs: urls, newParentUri: child.uri)
                             }
                         }
                 } else {
-                    
+
                     TableRow(child)
                         .draggable(EntryUrl(entryID: child.id))
                 }

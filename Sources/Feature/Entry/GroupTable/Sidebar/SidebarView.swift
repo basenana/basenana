@@ -13,34 +13,34 @@ import Styleguide
 
 
 public struct SidebarView: View {
-    
+
     @State private var viewModel: TreeViewModel
     @State private var selection: Destination? = nil
-    
+
     private static let logger = Logger(
             subsystem: Bundle.main.bundleIdentifier!,
             category: String(describing: SidebarView.self)
         )
-    
+
     public init(viewModel: TreeViewModel) {
         self.viewModel = viewModel
     }
-    
+
     public var body: some View {
         List(selection: $selection){
-            NavigationLink(value: Destination.groupList(group: viewModel.store.fsInfo.inboxID)){
+            NavigationLink(value: Destination.groupList(groupUri: EntryURI.inbox)){
                 SidebarIconView(imageName: "tray.full.fill", title: "Inbox", color: .InboxColor)
             }.id("nav_inbox")
-            
+
             NavigationLink(value: Destination.listDocuments(prespective: .unread)){
                 SidebarIconView(imageName: "circle.inset.filled", title: "Unread", color: .UnreadColor)
             }.id("nav_unread")
-            
+
             NavigationLink(value: Destination.listDocuments(prespective: .marked)){
                 SidebarIconView(imageName: "bookmark.fill", title: "Marked", color: .MarkedColor)
             }.id("nav_marked")
-            
-            
+
+
             Section("GROUPS"){
                 TreeListView(viewModel: viewModel)
             }
@@ -48,11 +48,11 @@ public struct SidebarView: View {
         .onChange(of: selection){
             if let s = selection{
                 resetDestination(s)
-                if case.groupList(let grp) = s {
-                    viewModel.selectedGroupId = grp
-                    Self.logger.notice("[SidebarView] selected group \(grp)")
+                if case.groupList(let groupUri) = s {
+                    viewModel.selectedGroupUri = groupUri
+                    Self.logger.notice("[SidebarView] selected group \(groupUri)")
                 }else {
-                    viewModel.selectedGroupId = nil
+                    viewModel.selectedGroupUri = nil
                 }
             }
         }

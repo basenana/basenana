@@ -21,7 +21,7 @@ struct TreeListView: View {
     
     public var body: some View {
         OutlineGroup(groupTree.children ?? [], children: \.children){ child in
-            NavigationLink(value: Destination.groupList(group: child.id), label: {
+            NavigationLink(value: Destination.groupList(groupUri: child.uri), label: {
                 HStack{
                     Image(systemName: "folder")
                     Text("\(child.groupName)")
@@ -35,11 +35,11 @@ struct TreeListView: View {
             .id(child.id)
             .dropDestination(for: URL.self){ urls, _ in
                 Task {
-                    let _ = await viewModel.moveEntriesToGroup(entryURLs: urls, newParent: child.id)
+                    let _ = await viewModel.moveEntriesToGroup(entryURLs: urls, newParentUri: child.uri)
                 }
                 return true
             }
-            .draggable(EntryUrl(entryID: child.id))
+            .draggable(EntryUrl(entryID: child.group.id))
         }
     }
 }

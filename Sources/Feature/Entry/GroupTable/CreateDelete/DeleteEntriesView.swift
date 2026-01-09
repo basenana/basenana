@@ -12,27 +12,27 @@ import Domain
 
 
 struct DeleteEntriesView: View {
-    @State private var entryIDs: [Int64]
+    @State private var entryUris: [String]
     @State private var viewModel: CreateDeleteViewModel
     @Binding private var showDeleteView: Bool
 
     @State private var entries: [EntryRow] = []
     @State private var errorMsg: String = ""
-    
+
     private static let logger = Logger(
             subsystem: Bundle.main.bundleIdentifier!,
             category: String(describing: DeleteEntriesView.self)
         )
 
-    init(entryIDs: [Int64], viewModel: CreateDeleteViewModel, showDeleteView: Binding<Bool>) {
-        self.entryIDs = entryIDs
+    init(entryUris: [String], viewModel: CreateDeleteViewModel, showDeleteView: Binding<Bool>) {
+        self.entryUris = entryUris
         self.viewModel = viewModel
         self._showDeleteView = showDeleteView
     }
-    
+
     var body: some View{
         Form{
-            
+
             VStack(alignment: .leading) {
                 Text("You are deleting the following entries:")
                     .bold()
@@ -44,7 +44,7 @@ struct DeleteEntriesView: View {
                         .padding(.vertical, 1)
                 }
             }
-            
+
             HStack {
                 if errorMsg != ""{
                     Text("\(errorMsg)")
@@ -71,9 +71,9 @@ struct DeleteEntriesView: View {
             .padding(.top, 10)
         }
         .task{
-            Self.logger.info("try to delete entries \(self.entryIDs)")
-            for entryId in entryIDs {
-                if let detail = await viewModel.describeEntry(entry: entryId) {
+            Self.logger.info("try to delete entries \(self.entryUris)")
+            for entryUri in entryUris {
+                if let detail = await viewModel.describeEntry(uri: entryUri) {
                     entries.append(EntryRow(info: detail.toInfo()!))
                 }else{
                     errorMsg = "entry not found"

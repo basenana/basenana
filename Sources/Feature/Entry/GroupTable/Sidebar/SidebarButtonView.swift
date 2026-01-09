@@ -13,22 +13,22 @@ import Styleguide
 struct SidebarButtonView: View {
     @State private var viewModel: TreeViewModel
     @State private var groupTree = GroupTree.shared
-    
+
     @State private var showCreateGroup: Bool = false
-    @State private var createGroupInParent: Int64 = -1
+    @State private var createGroupInParentUri: String = ""
     @State private var createGroupType: GroupType = .standard
-    
+
     @State private var showQuickInbox: Bool = false
     @State private var showDeleteConfirm: Bool = false
-    @State private var needDeletedEnties: [Int64] = []
-    
+    @State private var needDeletedEnties: [String] = []
+
     @State private var showRenameEntry: Bool = false
-    @State private var renameEntry: Int64 = -1
-    
+    @State private var renameEntryUri: String = ""
+
     init(viewModel: TreeViewModel) {
         self.viewModel = viewModel
     }
-    
+
     var body: some View {
         HStack(content: {
             Button(action: {
@@ -37,24 +37,24 @@ struct SidebarButtonView: View {
                 Image(systemName: "tray.and.arrow.down")
             })
             .buttonStyle(.accessoryBar)
-            
+
             Button(action: {
-                if let s = viewModel.selectedGroupId {
+                if let uri = viewModel.selectedGroupUri {
                     NotificationCenter.default.post(
                         name: NSNotification.Name.createGroupInTree,
-                        object: NewGroupRequest(parent: s, groupType: .standard))
+                        object: NewGroupRequest(parentUri: uri, groupType: .standard))
                 } else {
                     NotificationCenter.default.post(
                         name: NSNotification.Name.createGroupInTree,
-                        object: NewGroupRequest(parent: groupTree.root.id, groupType: .standard))
+                        object: NewGroupRequest(parentUri: groupTree.root.uri, groupType: .standard))
                 }
             }, label: {
                 Image(systemName: "folder.badge.plus")
             })
             .buttonStyle(.accessoryBar)
-            
+
             Spacer()
-            
+
             Button(action: {
                 gotoDestination(Destination.workflowDashboard)
             }, label: {
@@ -64,47 +64,47 @@ struct SidebarButtonView: View {
         })
         .sheet(isPresented: $showCreateGroup){
             GroupCreateView(
-                parent: self.createGroupInParent,
+                parentUri: self.createGroupInParentUri,
                 groupType: createGroupType,
                 viewModel: CreateDeleteViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase),
                 showCreateGroup: $showCreateGroup)
         }
         .onReceive(NotificationCenter.default.publisher(for: .createGroupInTree)) { [self] notification in
             if let req = notification.object as? NewGroupRequest {
-                self.createGroupInParent = req.parent
+                self.createGroupInParentUri = req.parentUri
                 self.createGroupType = req.groupType
                 self.showCreateGroup.toggle()
             }
         }
-        .onChange(of: self.createGroupInParent){}
+        .onChange(of: self.createGroupInParentUri){}
         .onChange(of: self.createGroupType){}
         .sheet(isPresented: $showDeleteConfirm){
             DeleteEntriesView(
-                entryIDs: self.needDeletedEnties,
+                entryUris: self.needDeletedEnties,
                 viewModel: CreateDeleteViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase),
                 showDeleteView: $showDeleteConfirm)
         }
         .onReceive(NotificationCenter.default.publisher(for: .deleteGroupInTree)) { [self] notification in
-            if let entries = notification.object as? [Int64] {
-                self.needDeletedEnties = entries
+            if let uris = notification.object as? [String] {
+                self.needDeletedEnties = uris
                 self.showDeleteConfirm.toggle()
             }
         }
         .onChange(of: self.needDeletedEnties){}
         .sheet(isPresented: $showRenameEntry){
             EntryRenameView(
-                entry: renameEntry,
+                entryUri: renameEntryUri,
                 viewModel: EntryDetailViewModel(
                     store: viewModel.store,entryUsecase: viewModel.entryUsecase),
                 showRenameView: $showRenameEntry)
         }
         .onReceive(NotificationCenter.default.publisher(for: .renameGroupInTree)) { [self] notification in
-            if let gid = notification.object as? Int64 {
-                self.renameEntry = gid
+            if let uri = notification.object as? String {
+                self.renameEntryUri = uri
                 self.showRenameEntry.toggle()
             }
         }
-        .onChange(of: self.renameEntry){}
+        .onChange(of: self.renameEntryUri){}
         .sheet(isPresented: $showQuickInbox){
             WebPackInboxView(viewModel: InboxViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase), showInboxView: $showQuickInbox)
         }

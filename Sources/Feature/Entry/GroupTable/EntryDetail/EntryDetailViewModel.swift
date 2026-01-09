@@ -32,9 +32,9 @@ public class EntryDetailViewModel {
         self.entryUsecase = entryUsecase
     }
     
-    func describeEntry(entry: Int64) async -> EntryDetail? {
+    func describeEntry(uri: String) async -> EntryDetail? {
         do {
-            return try await entryUsecase.getEntryDetails(entry: entry)
+            return try await entryUsecase.getEntryDetails(uri: uri)
         } catch let error as UseCaseError where error == .canceled {
             // do nothing
         } catch {
@@ -42,35 +42,35 @@ public class EntryDetailViewModel {
         }
         return nil
     }
-    
+
     func renameEntry(entry: EntryDetail, newName: String) async -> Bool {
         Self.logger.notice("rename entry \(entry.name) = > \(newName)")
         if entry.name == newName {
             return true
         }
-        
+
         let validName = sanitizeFileName(newName)
         if validName != newName {
             errorMessage = "\(newName) is invalid"
             return false
         }
-        
+
         do {
-            try await entryUsecase.renameEntry(entry: entry.id, newName: validName)
+            try await entryUsecase.renameEntry(uri: entry.uri, newName: validName)
             if entry.isGroup {
-                let entryDetail = try await entryUsecase.getEntryDetails(entry: entry.id)
-                if let grp = groupTree.getGroup(groupID: entry.id){
-                    groupTree.removeChildGroup(parentID: grp.parentID, childID: entry.id)
-                    groupTree.addChildGroup(parentID: grp.parentID, child: entryDetail.toGroup()!, grandChildren: grp.children)
+                let entryDetail = try await entryUsecase.getEntryDetails(uri: entry.uri)
+                if let grp = groupTree.getGroup(uri: entry.uri){
+                    groupTree.removeChildGroup(parentUri: grp.parentUri, childUri: entry.uri)
+                    groupTree.addChildGroup(parentUri: grp.parentUri, child: entryDetail.toGroup()!, grandChildren: grp.children)
                 }
             }
-            
-            NotificationCenter.default.post(name: .reopenGroup, object: [entry.parent])
+
+            NotificationCenter.default.post(name: .reopenGroup, object: ["/\(entry.parent)"])
         } catch {
             errorMessage = "rename failed \(error)"
             return false
         }
-        
+
         return true
     }
 }

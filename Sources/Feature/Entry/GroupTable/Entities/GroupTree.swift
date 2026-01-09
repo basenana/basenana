@@ -13,13 +13,13 @@ import Domain
 @Observable
 class GroupTree {
     static var shared = GroupTree()
-    
+
     var children: [GroupLeaf]? = []
-    var allGroups: [Int64: GroupLeaf] = [:]
-    
+    var allGroups: [String: GroupLeaf] = [:]
+
     var root: EntryGroup = UnknownGroup.shared
     var inbox: EntryGroup = UnknownGroup.shared
-    
+
     private static let logger = Logger(
             subsystem: Bundle.main.bundleIdentifier!,
             category: String(describing: InboxViewModel.self)
@@ -29,124 +29,124 @@ class GroupTree {
 
     func reset(root: EntryGroup) {
         self.root = root
-        
+
         children = []
         allGroups = [:]
-        
+
         guard root.children != nil else {
             return
         }
-        
-        for grp in root.children! {
+
+        for grp in root.children! where !grp.groupName.hasPrefix(".") {
             children!.append(paresGroupTreeChild(group: grp))
         }
-        
+
         Self.logger.info("reset group tree root=\(root.id)")
     }
-    
+
     func paresGroupTreeChild(group: EntryGroup) -> GroupLeaf {
         let gvl = GroupLeaf(group: group)
-        allGroups[gvl.id] = gvl
-        
-        
+        allGroups[gvl.uri] = gvl
+
+
         guard let children = group.children else {
             return gvl
         }
-        
+
         if !children.isEmpty {
             gvl.children = []
-            for grp in children {
+            for grp in children where !grp.groupName.hasPrefix(".") {
                 gvl.children?.append(paresGroupTreeChild(group: grp))
             }
         }
         return gvl
     }
-    
-    func getGroup(groupID: Int64) -> GroupLeaf? {
-        return allGroups[groupID]
+
+    func getGroup(uri: String) -> GroupLeaf? {
+        return allGroups[uri]
     }
 
-    func changeParent(groupID: Int64, newParentID: Int64) {
-        if let leaf = self.allGroups[groupID] {
-            if leaf.parentID == newParentID {
+    func changeParent(uri: String, newParentUri: String) {
+        if let leaf = self.allGroups[uri] {
+            if leaf.parentUri == newParentUri {
                 return
             }
-            if let newParent = self.allGroups[newParentID]{
+            if let newParent = self.allGroups[newParentUri]{
                 for exist in newParent.children ?? [] {
                     if exist.groupName == leaf.groupName {
                         return
                     }
                 }
             }
-            if isInLoop(groupID: groupID, newParentID: newParentID) {
+            if isInLoop(uri: uri, newParentUri: newParentUri) {
                 return
             }
-            self.removeChildGroup(parentID: leaf.parentID, childID: leaf.id)
-            self.addChildGroup(parentID: newParentID, child: leaf.group, grandChildren: leaf.children)
+            self.removeChildGroup(parentUri: leaf.parentUri, childUri: leaf.uri)
+            self.addChildGroup(parentUri: newParentUri, child: leaf.group, grandChildren: leaf.children)
             return
         }
         return
     }
-    
-    func addChildGroup(parentID: Int64, child: EntryGroup, grandChildren: [GroupLeaf]?){
+
+    func addChildGroup(parentUri: String, child: EntryGroup, grandChildren: [GroupLeaf]?){
         let newGroup = GroupLeaf(group: child)
         if grandChildren != nil{
             newGroup.children = grandChildren
         }
-        
-        if let parent = self.allGroups[parentID]{
+
+        if let parent = self.allGroups[parentUri]{
             if parent.children == nil{
                 parent.children = [newGroup]
                 return
             }
-            
+
             for ch in parent.children! {
-                if ch.id == child.id {
+                if ch.groupName == child.groupName {
                     ch.group = child
                     ch.children = grandChildren
                     return
                 }
             }
-            
+
             parent.children!.append(newGroup)
-            self.allGroups[child.id] = newGroup
+            self.allGroups[child.uri] = newGroup
         }else {
             if children == nil {
                 children = []
             }
-            allGroups[newGroup.id] = newGroup
+            allGroups[newGroup.uri] = newGroup
             children?.append(newGroup)
         }
-        
+
     }
-    
-    func removeChildGroup(parentID: Int64, childID: Int64){
-        guard let _ = self.allGroups[childID] else {
-            Self.logger.info("[removeChildGroup] delete \(parentID)/\(childID) but child not found")
+
+    func removeChildGroup(parentUri: String, childUri: String){
+        guard let _ = self.allGroups[childUri] else {
+            Self.logger.info("[removeChildGroup] delete \(parentUri)/\(childUri) but child not found")
             return
         }
-        
-        if let parent = self.allGroups[parentID]{
+
+        if let parent = self.allGroups[parentUri]{
             if parent.children == nil{
-                Self.logger.info("[removeChildGroup] delete \(parentID)/\(childID) parent has not child")
+                Self.logger.info("[removeChildGroup] delete \(parentUri)/\(childUri) parent has not child")
                 return
             }
-            
-            parent.children = parent.children!.filter { $0.id != childID }
+
+            parent.children = parent.children!.filter { $0.uri != childUri }
             if parent.children?.isEmpty ?? false {
                 parent.children = nil
             }
-            self.allGroups[childID] = nil
+            self.allGroups[childUri] = nil
         }
     }
-    
-    func isInLoop(groupID: Int64, newParentID: Int64) -> Bool {
-        var nextParentID: Int64 = newParentID
-        while let parent = allGroups[nextParentID] {
-            if parent.id == groupID {
+
+    func isInLoop(uri: String, newParentUri: String) -> Bool {
+        var nextUri: String = newParentUri
+        while let parent = allGroups[nextUri] {
+            if parent.uri == uri {
                 return true
             }
-            nextParentID = parent.parentID
+            nextUri = parent.parentUri
         }
         return false
     }
@@ -155,8 +155,11 @@ class GroupTree {
 
 @Observable
 class GroupLeaf: Identifiable, Hashable {
-    var id: Int64 {
-        group.id
+    var id: String {
+        uri
+    }
+    var uri: String {
+        group.uri
     }
     var groupName: String {
         group.groupName
@@ -164,8 +167,15 @@ class GroupLeaf: Identifiable, Hashable {
     var parentID: Int64 {
         group.parentID
     }
-    
-    
+    var parentUri: String {
+        let components = uri.split(separator: "/")
+        if components.count > 1 {
+            return "/" + components.dropLast().joined(separator: "/")
+        }
+        return ""
+    }
+
+
     var group: EntryGroup
     var children: [GroupLeaf]?
 
@@ -178,7 +188,7 @@ class GroupLeaf: Identifiable, Hashable {
         hasher.combine(id)
         hasher.combine(groupName)
     }
-    
+
     static func == (lhs: GroupLeaf, rhs: GroupLeaf) -> Bool {
         return lhs.id == rhs.id
     }

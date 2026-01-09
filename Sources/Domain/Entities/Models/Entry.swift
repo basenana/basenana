@@ -9,6 +9,7 @@ import Foundation
 
 public protocol EntryInfo {
     var id: Int64 { get }
+    var uri: String { get }
     var name: String { get }
     var kind: String { get }
     var isGroup: Bool { get }
@@ -26,6 +27,7 @@ public protocol EntryInfo {
 
 public protocol EntryDetail {
     var id: Int64 { get }
+    var uri: String { get }
     var name: String { get }
     var aliases: String { get }
     var parent: Int64 { get }
@@ -75,14 +77,14 @@ public protocol EntryProperty {
 
 
 public struct EntryCreate {
-    public var parent: Int64
+    public var parentUri: String
     public var name: String
     public var kind: String
-    
+
     public var RSS: RSSConfig?
 
-    public init(parent: Int64, name: String, kind: String) {
-        self.parent = parent
+    public init(parentUri: String, name: String, kind: String) {
+        self.parentUri = parentUri
         self.name = name
         self.kind = kind
         self.RSS = nil
@@ -114,16 +116,16 @@ public struct ChangeParentOption{
 }
 
 public struct EntryFilter {
-    public var parent: Int64
+    public var parentUri: String
     public var kind: String? = nil
     public var groupOnly: Bool? = nil
     public var fileOnly: Bool? = nil
     public var page: Pagination? = nil
     public var order: EntryOrder? = nil
     public var orderDesc: Bool? = nil
-    
-    public init(parent: Int64) {
-        self.parent = parent
+
+    public init(parentUri: String) {
+        self.parentUri = parentUri
     }
 }
 

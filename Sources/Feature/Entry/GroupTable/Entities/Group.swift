@@ -9,8 +9,9 @@ import Domain
 
 struct UnknownGroup: EntryGroup {
     static public var shared = UnknownGroup()
-    
+
     var id: Int64 = -1
+    var uri: String = ""
     var groupName: String = "Unknown"
     var parentID: Int64 = -1
     var children: [any EntryGroup]? = nil
@@ -46,11 +47,11 @@ enum GroupType: Identifiable {
 
 
 class NewGroupRequest {
-    var parent: Int64
+    var parentUri: String
     var groupType: GroupType
-    
-    init(parent: Int64, groupType: GroupType) {
-        self.parent = parent
+
+    init(parentUri: String, groupType: GroupType) {
+        self.parentUri = parentUri
         self.groupType = groupType
     }
 }

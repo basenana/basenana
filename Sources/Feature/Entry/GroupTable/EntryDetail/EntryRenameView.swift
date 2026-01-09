@@ -10,29 +10,29 @@ import Domain
 
 
 struct EntryRenameView: View {
-    @State private var entryID: Int64
+    @State private var entryUri: String
     @State private var entry: EntryDetail?
     @State private var viewModel: EntryDetailViewModel
-    
+
     @Binding private var showRenameView: Bool
-    
-    init(entry: Int64, viewModel: EntryDetailViewModel, showRenameView: Binding<Bool>) {
-        self.entryID = entry
+
+    init(entryUri: String, viewModel: EntryDetailViewModel, showRenameView: Binding<Bool>) {
+        self.entryUri = entryUri
         self.viewModel = viewModel
         self._showRenameView = showRenameView
     }
-    
+
     // Common
     @State private var parentName: String = ""
     @State private var entryName: String = ""
-    
+
     var body: some View{
         Form{
             TextField("Name", text: $entryName)
                 .textFieldStyle(.roundedBorder)
                 .padding(.vertical, 5)
-            
-            
+
+
             HStack {
                 if viewModel.errorMessage != ""{
                     Text("\(viewModel.errorMessage)")
@@ -65,7 +65,7 @@ struct EntryRenameView: View {
         .frame(minWidth: 500)
         .task{
             viewModel.errorMessage = ""
-            entry = await viewModel.describeEntry(entry: entryID)
+            entry = await viewModel.describeEntry(uri: entryUri)
             if let en = entry {
                 entryName = en.name
             }

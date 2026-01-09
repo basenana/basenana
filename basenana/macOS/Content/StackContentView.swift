@@ -38,10 +38,10 @@ struct StackContentView: View {
                 StackBannerView()
                     .navigationDestination(for: Destination.self) { destination in
                         switch destination {
-                        case .groupList(group: let group):
-                            GroupTableView(groupID: group, viewModel: container.c.resolve(GroupTableViewModel.self)!)
-                                .id(group)
-                            
+                        case .groupList(groupUri: let groupUri):
+                            GroupTableView(groupUri: groupUri, viewModel: container.c.resolve(GroupTableViewModel.self)!)
+                                .id(groupUri)
+
                         case .listDocuments(prespective: let prespective):
                             DocumentListView(viewModel: container.c.resolve(DocumentListViewModel.self, name: prespective.Title)!).id(prespective).navigationTitle(prespective.Title)
                         case .readDocument(document: let document):

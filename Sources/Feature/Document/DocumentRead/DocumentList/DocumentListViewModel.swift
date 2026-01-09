@@ -81,7 +81,7 @@ public class DocumentListViewModel {
     
     func getDocumentEntry(entry: Int64) async -> EntryDetail? {
         do {
-            return try await usecase.getDocumentEntry(entry: entry)
+            return try await usecase.getDocumentEntry(document: entry)
         } catch UseCaseError.canceled {
             // do nothing
         } catch {
