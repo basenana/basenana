@@ -19,7 +19,6 @@
 		085E3689048BCD4263CED2BE /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41E9F34DF48D1C9D4442801 /* Group.swift */; };
 		0973C68C2B00CFCB2A65AA15 /* DatabaseSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CC3FA6365FD805DDC3ABE2 /* DatabaseSetting.swift */; };
 		09D185ABD17277AC4527FD55 /* DialogueRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B67F6855A573B540E58DB50 /* DialogueRepository.swift */; };
-		0A115D898C3BF943A56A94ED /* BasenanaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCDBD3D34B9410DB154BAA83 /* BasenanaApp.swift */; };
 		0A20622D7595BA8A68ED977E /* Styleguide.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72723282C662EEDA42C4AD5E /* Styleguide.framework */; };
 		0C0FA4B9C2D040B52526545E /* Data.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F15865D42BC03D76D6F2E26B /* Data.framework */; };
 		1014F7C6F4C1EC267DD6A5E0 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26225BE00F26954CC8061BE1 /* Search.swift */; };
@@ -31,27 +30,29 @@
 		1862FB7EB340BAF37C49E756 /* FsProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C2E8B30F87CF1407AA3C2 /* FsProperty.swift */; };
 		1B46D364DDC55F5158236998 /* SysHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86B516CAC64BB000E0F74AA /* SysHelper.swift */; };
 		1C4F24CD061C4C0B76A4342E /* DocumentRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF15A71878499AB2EAC948B5 /* DocumentRepositoryProtocol.swift */; };
+		1D2E828C6EF98DEF50DCE822 /* Styleguide.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 72723282C662EEDA42C4AD5E /* Styleguide.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		20E572DC62660C0030552B42 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA6FB97F8CD1AB40782C5FD /* NotificationView.swift */; };
 		2149A99C62D76BB395282FA5 /* GeneralSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A5B51964F931C72C6A500D /* GeneralSettingView.swift */; };
 		22B44767C9B0F334AEAD63AF /* EntryUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC65650A6CABC8FD330EAFA0 /* EntryUseCaseProtocol.swift */; };
 		23672A4A3C0EE2274738E545 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D35C810B16252D4498AE049F /* Color.swift */; };
+		2420919D3909B9D0B2575C13 /* basenanaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410B8D1A38CD0B9BB9EB4156 /* basenanaApp.swift */; };
 		25D4A1BE844B3D61FB8D13AF /* NotificationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4251BCE56D4FAABEDCF55DB6 /* NotificationRepository.swift */; };
 		27C36FF822AA08BB44125176 /* StyleguideTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B7A2B6048E22DE113428C7 /* StyleguideTests.swift */; };
 		27CDABEA6CDC448B827B2BE2 /* Notify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363A937A2C2C7A0D6FEDBD9B /* Notify.swift */; };
 		2847E35C8A9AB24654F99AC8 /* Readability.js in Resources */ = {isa = PBXBuildFile; fileRef = BDF07E3D881B358359FBDFC1 /* Readability.js */; };
 		2DE1C43AD25A4FB362735644 /* EntryRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33AD384F08E8BE192821742E /* EntryRepositoryProtocol.swift */; };
 		31512ED9945E9A68798C956B /* NavigationItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F120F753825B0FA1F3AF9A8 /* NavigationItemView.swift */; };
+		31594ACDA28566CA18A4F8A9 /* Data.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F15865D42BC03D76D6F2E26B /* Data.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3444FDDF27C530128CCC8555 /* NotifyClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D3221A83D41229A6222ECBA /* NotifyClient.swift */; };
 		36195E9763D567D4943D04A5 /* NanaFSLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D169D8D0FCBC272D7D52A48D /* NanaFSLoginView.swift */; };
 		365D0F779C70E1A70CD34E47 /* BaseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D94E7A64E471A4AA49AD073 /* BaseViewModel.swift */; };
 		370C05F52B5D968B01C7B8BA /* GroupCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47C7B7767FFD65399621BCE1 /* GroupCreateView.swift */; };
-		37DEF779062434AF50F518C4 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A48818F488E9A1428054A8 /* main.swift */; };
 		38552653884E22993BB60E92 /* DomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4358EB5FD5FBEFB1D8072EE7 /* DomainTests.swift */; };
 		386B3E10311EA519A98FF357 /* WorkflowDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBBC659B9E5DE480A338ACD /* WorkflowDetailView.swift */; };
 		3969EE02F3C317544CBEEEE4 /* EntryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C47D6DE38AF89FE862B68A1 /* EntryRepository.swift */; };
 		3B330CA95C971998A9B3504A /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EFAD3DDF8C13F83BB8C889 /* Common.swift */; };
-		3D7B04130A687BBAA30CE246 /* BasenanaApp.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 240B0DA0A62F2DFB5337F51C /* BasenanaApp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3DC3726E688DD5F2E987F555 /* MasonrySectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522D2E1564C02E1EFCB7A607 /* MasonrySectionView.swift */; };
+		3DCB57A27F8B00F3F880081E /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DCD1DF713CCB1414EFCFC231 /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3E8C09A6948A29843E229EA6 /* WorkflowItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325A6EFB03F0B0E94AC12BD7 /* WorkflowItemView.swift */; };
 		3EFA46C14AF5C8F15D19E7E0 /* WebArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A6AA713678F09497E84BE2 /* WebArchive.swift */; };
 		3F7DDAC6FCCA65525A2BEF1D /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCD1DF713CCB1414EFCFC231 /* Domain.framework */; };
@@ -92,7 +93,6 @@
 		6C8CE360E4E379106A66D36D /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = AF6E9EB5A13A802C13429052 /* FeedKit */; };
 		6CA198379F445E1860533135 /* AppearanceSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC24EB0E13B6E98F2E940B83 /* AppearanceSettingView.swift */; };
 		6E7E995DD8D79F84CBB7356C /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCD1DF713CCB1414EFCFC231 /* Domain.framework */; };
-		7478B89BBDF6330A7DB129AC /* BasenanaApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 240B0DA0A62F2DFB5337F51C /* BasenanaApp.framework */; };
 		7674ABF1551856F55F5FB631 /* NotificationRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80180E2165BABA11EF06CB18 /* NotificationRepositoryProtocol.swift */; };
 		767EEA435EECB38D888D12A7 /* DialogueClientProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CFC827111F991DE58F52FA6 /* DialogueClientProtocol.swift */; };
 		7687A7C4473EB1E46771F5C8 /* BackgroundJobView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715C7C10763BFFEBC0CCEEB5 /* BackgroundJobView.swift */; };
@@ -137,6 +137,7 @@
 		B017AD7C48FECEEC3548E31A /* MasonryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341FEB52A1ADF4050CFE848F /* MasonryItemView.swift */; };
 		B0B57AA45AD1ED2FCAAAA6EC /* DocumentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE65E40F6E01219CDA9BB58 /* DocumentTests.swift */; };
 		B12D3D241866A3F35A7BDBEB /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 9F58766F974733F921EDED63 /* Swinject */; };
+		B85069F2A256B6105728D449 /* Feature.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 319551FAA79DEFE5AF5AB595 /* Feature.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BA1C0C1591B33C48E47C5B8E /* NotificationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE087876A9A1155A65C9196C /* NotificationModel.swift */; };
 		BA6DC8DC76D1BCFA7DDC5FA1 /* Data.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F15865D42BC03D76D6F2E26B /* Data.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BB6D1480AB5FFA6C267613C9 /* DialogueUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8733CDC61C3061C6BD5BF47 /* DialogueUseCase.swift */; };
@@ -265,13 +266,6 @@
 			remoteGlobalIDString = BF2B2590510E3CF9CB6C7FA4;
 			remoteInfo = Feature;
 		};
-		D91B3102C88041B8B0ED99C6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 50E268CDBC765C3EC259D3F1 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = CF0D067FFF61AC75255872EB;
-			remoteInfo = BasenanaApp;
-		};
 		DE57964269D4F5C8E7766B21 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 50E268CDBC765C3EC259D3F1 /* Project object */;
@@ -311,17 +305,6 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		23C3D0856B84E7CCC24120F7 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				3D7B04130A687BBAA30CE246 /* BasenanaApp.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A9E41EE64336888944DC1847 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -340,6 +323,20 @@
 			dstSubfolderSpec = 10;
 			files = (
 				6966097405F8F49C65E5D200 /* Domain.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F42A84E1EBCAA985740FCEE3 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3DCB57A27F8B00F3F880081E /* Domain.framework in Embed Frameworks */,
+				31594ACDA28566CA18A4F8A9 /* Data.framework in Embed Frameworks */,
+				B85069F2A256B6105728D449 /* Feature.framework in Embed Frameworks */,
+				1D2E828C6EF98DEF50DCE822 /* Styleguide.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -372,7 +369,6 @@
 		1FA1A15308F0E24639122D0A /* DataTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DataTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		204B90EE5184F4FCC00725FE /* CreateDeleteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDeleteViewModel.swift; sourceTree = "<group>"; };
 		20BFF72E754E5A5B5B50339E /* TreeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeListView.swift; sourceTree = "<group>"; };
-		240B0DA0A62F2DFB5337F51C /* BasenanaApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BasenanaApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		24B31BC9AFC4F3626DD49BC5 /* FileClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileClient.swift; sourceTree = "<group>"; };
 		26225BE00F26954CC8061BE1 /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		262AC0A7ACC3CA5DF4EC3511 /* WorkflowClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowClient.swift; sourceTree = "<group>"; };
@@ -381,6 +377,7 @@
 		29E71D97912F4DC8FE8CAB40 /* readability_images.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = readability_images.js; sourceTree = "<group>"; };
 		2BFCDA758A568AFC1306D480 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		2C1EA41773446254A494899E /* EntryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryTests.swift; sourceTree = "<group>"; };
+		2D04879A4B0B55851DA7171C /* BasenanaApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BasenanaApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30072FA5C1CBC8F46D968EEC /* DocumentNotify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentNotify.swift; sourceTree = "<group>"; };
 		30F3B7EB3BF06DB063D8B6D2 /* EntryRenameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryRenameView.swift; sourceTree = "<group>"; };
 		3109A46471865CC9709DC281 /* ReadingSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingSetting.swift; sourceTree = "<group>"; };
@@ -395,6 +392,7 @@
 		3ED5ED853F87EF090BB4ADB2 /* FileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileRepository.swift; sourceTree = "<group>"; };
 		40A5B51964F931C72C6A500D /* GeneralSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingView.swift; sourceTree = "<group>"; };
 		4102A3A954C732955F4E109A /* RestAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestAPIClient.swift; sourceTree = "<group>"; };
+		410B8D1A38CD0B9BB9EB4156 /* basenanaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = basenanaApp.swift; sourceTree = "<group>"; };
 		412B11691E278A7EE0C05EF7 /* ArchivingSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivingSession.swift; sourceTree = "<group>"; };
 		41DC79A1F4D08130A8A57F09 /* FeatureTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FeatureTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4251BCE56D4FAABEDCF55DB6 /* NotificationRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationRepository.swift; sourceTree = "<group>"; };
@@ -437,7 +435,6 @@
 		80180E2165BABA11EF06CB18 /* NotificationRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationRepositoryProtocol.swift; sourceTree = "<group>"; };
 		8658E5F8ADC932D7EE950C57 /* TreeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeViewModel.swift; sourceTree = "<group>"; };
 		88EE3464AF97830E518EFE03 /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
-		8933E9754DFBD9F478538CA9 /* basenana.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = basenana.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		897186F752E5F04AF99AA48D /* GroupTableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupTableViewModel.swift; sourceTree = "<group>"; };
 		899AC46E70E64BA9EF848E6C /* readability_initialization.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = readability_initialization.js; sourceTree = "<group>"; };
 		8C0EDBD874FD5179F523977C /* Setting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setting.swift; sourceTree = "<group>"; };
@@ -463,7 +460,6 @@
 		ADBBC659B9E5DE480A338ACD /* WorkflowDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowDetailView.swift; sourceTree = "<group>"; };
 		B126E5307FF327138C03F9C7 /* AppearanceSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSetting.swift; sourceTree = "<group>"; };
 		B12FCBE010D7E95D1638C2F4 /* DocumentListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentListViewModel.swift; sourceTree = "<group>"; };
-		B2A48818F488E9A1428054A8 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		B3505F9564062F21362B3C65 /* DomainTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DomainTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B481886119B4BD5B07A7CD58 /* SearchUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUseCase.swift; sourceTree = "<group>"; };
 		B6C33EB61FC902D233CE88FA /* DocumentUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentUseCaseProtocol.swift; sourceTree = "<group>"; };
@@ -515,7 +511,6 @@
 		F8642367A09BDAD689AE5598 /* SearchMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMenuView.swift; sourceTree = "<group>"; };
 		F8733CDC61C3061C6BD5BF47 /* DialogueUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueUseCase.swift; sourceTree = "<group>"; };
 		FCB8157BD1D38B07E43B862A /* DocumentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentListView.swift; sourceTree = "<group>"; };
-		FCDBD3D34B9410DB154BAA83 /* BasenanaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasenanaApp.swift; sourceTree = "<group>"; };
 		FCE25EAD07F82F5A4368DC2E /* api.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = api.md; sourceTree = "<group>"; };
 		FF15A71878499AB2EAC948B5 /* DocumentRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentRepositoryProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -526,14 +521,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C0FA4B9C2D040B52526545E /* Data.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		14D1837E1E02447C44450125 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7478B89BBDF6330A7DB129AC /* BasenanaApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -604,7 +591,6 @@
 			isa = PBXGroup;
 			children = (
 				8AFA5B8D46A7629CBF38C97D /* basenana */,
-				01EED526CBA03A0BAE6CB7ED /* basenana-exec */,
 				E39E8EDB949C66BDE8870EEC /* Data */,
 				508F1F25E70321338910A37F /* DataTests */,
 				51C4090011318EE70C1E563B /* Domain */,
@@ -615,14 +601,6 @@
 				19861349FA1646A45B55FA4A /* StyleguideTests */,
 				8EC6C204612D782D810028C2 /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		01EED526CBA03A0BAE6CB7ED /* basenana-exec */ = {
-			isa = PBXGroup;
-			children = (
-				B2A48818F488E9A1428054A8 /* main.swift */,
-			);
-			path = "basenana-exec";
 			sourceTree = "<group>";
 		};
 		04830DC43616B2D529C5385A /* WebPage */ = {
@@ -1074,7 +1052,7 @@
 			children = (
 				1B38294B1AAE92FF6093A92B /* Assets.xcassets */,
 				A453F887BAEED920867B0F6D /* basenana.entitlements */,
-				FCDBD3D34B9410DB154BAA83 /* BasenanaApp.swift */,
+				410B8D1A38CD0B9BB9EB4156 /* basenanaApp.swift */,
 				20981437AAEDB4C54E978A4A /* DI */,
 				63211643BD7BD8B0C9B4D6F0 /* Environment */,
 				E4EA628295539F27B7E7F6CB /* macOS */,
@@ -1097,8 +1075,7 @@
 		8EC6C204612D782D810028C2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8933E9754DFBD9F478538CA9 /* basenana.app */,
-				240B0DA0A62F2DFB5337F51C /* BasenanaApp.framework */,
+				2D04879A4B0B55851DA7171C /* BasenanaApp.app */,
 				F15865D42BC03D76D6F2E26B /* Data.framework */,
 				1FA1A15308F0E24639122D0A /* DataTests.xctest */,
 				DCD1DF713CCB1414EFCFC231 /* Domain.framework */,
@@ -1425,26 +1402,6 @@
 			productReference = B3505F9564062F21362B3C65 /* DomainTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		ACED6393B1934B4B355742E1 /* basenana */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 17E1D9792F6DC10B93AA710F /* Build configuration list for PBXNativeTarget "basenana" */;
-			buildPhases = (
-				60A71955427B93E5EC58A599 /* Sources */,
-				14D1837E1E02447C44450125 /* Frameworks */,
-				23C3D0856B84E7CCC24120F7 /* Embed Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				D83067739B01C2544EC3FA08 /* PBXTargetDependency */,
-			);
-			name = basenana;
-			packageProductDependencies = (
-			);
-			productName = basenana;
-			productReference = 8933E9754DFBD9F478538CA9 /* basenana.app */;
-			productType = "com.apple.product-type.application";
-		};
 		BF2B2590510E3CF9CB6C7FA4 /* Feature */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E54EB0935F29B72D1E69DE70 /* Build configuration list for PBXNativeTarget "Feature" */;
@@ -1478,6 +1435,7 @@
 				F4F5D41C63637A6D73D4E4A3 /* Sources */,
 				DB6C9F56522ED0A8CFF64E3C /* Resources */,
 				56293FEE95F453FC0BF6371B /* Frameworks */,
+				F42A84E1EBCAA985740FCEE3 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1494,8 +1452,8 @@
 				7C370A4A78A03687AABA5E93 /* Factory */,
 			);
 			productName = BasenanaApp;
-			productReference = 240B0DA0A62F2DFB5337F51C /* BasenanaApp.framework */;
-			productType = "com.apple.product-type.framework";
+			productReference = 2D04879A4B0B55851DA7171C /* BasenanaApp.app */;
+			productType = "com.apple.product-type.application";
 		};
 		E41AB3F9FE3438582EE9FC86 /* Domain */ = {
 			isa = PBXNativeTarget;
@@ -1563,9 +1521,6 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
-					ACED6393B1934B4B355742E1 = {
-						ProvisioningStyle = Automatic;
-					};
 					CF0D067FFF61AC75255872EB = {
 						ProvisioningStyle = Automatic;
 					};
@@ -1603,7 +1558,6 @@
 				FB605AEE351AAFAC8618D492 /* FeatureTests */,
 				3EA9433A759F197A2C7E6856 /* Styleguide */,
 				136FD917AD01F075573277E1 /* StyleguideTests */,
-				ACED6393B1934B4B355742E1 /* basenana */,
 			);
 		};
 /* End PBXProject section */
@@ -1645,14 +1599,6 @@
 			files = (
 				23672A4A3C0EE2274738E545 /* Color.swift in Sources */,
 				C746455A97AC8CC456B0EC4E /* Groups.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		60A71955427B93E5EC58A599 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				37DEF779062434AF50F518C4 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1847,7 +1793,6 @@
 			files = (
 				6CA198379F445E1860533135 /* AppearanceSettingView.swift in Sources */,
 				7687A7C4473EB1E46771F5C8 /* BackgroundJobView.swift in Sources */,
-				0A115D898C3BF943A56A94ED /* BasenanaApp.swift in Sources */,
 				E3892037419269360FFEFF75 /* Container.swift in Sources */,
 				6686E188A5285F981DDE9214 /* ContentView.swift in Sources */,
 				85CF17C5A0B6F78D3E045F81 /* DatabaseSettingView.swift in Sources */,
@@ -1860,6 +1805,7 @@
 				4F1AEFF4D7C163561A3ABA82 /* ReadingSettingView.swift in Sources */,
 				A2D53EB3C78730EA590BF63C /* SettingsView.swift in Sources */,
 				A0A8A78148E4396081F51908 /* StackContentView.swift in Sources */,
+				2420919D3909B9D0B2575C13 /* basenanaApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1916,11 +1862,6 @@
 			target = E563C779D0D05DE9FF509FC2 /* Data */;
 			targetProxy = 06CF896F0EACE5DCBC70FDDA /* PBXContainerItemProxy */;
 		};
-		D83067739B01C2544EC3FA08 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = CF0D067FFF61AC75255872EB /* BasenanaApp */;
-			targetProxy = D91B3102C88041B8B0ED99C6 /* PBXContainerItemProxy */;
-		};
 		D9B620A2ED8EB0C1A5710B47 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = BF2B2590510E3CF9CB6C7FA4 /* Feature */;
@@ -1938,17 +1879,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = basenana/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -1956,8 +1890,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.basenana.app;
 				PRODUCT_NAME = BasenanaApp;
 				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
@@ -1989,17 +1921,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = basenana/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2007,8 +1932,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.basenana.app;
 				PRODUCT_NAME = BasenanaApp;
 				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
@@ -2052,23 +1975,6 @@
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
-		};
-		3312366B3BB1F953AF3AFFC0 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.basenana.app;
-				PRODUCT_NAME = basenana;
-				SDKROOT = macosx;
-			};
-			name = Debug;
 		};
 		4991898CFFD913613F049204 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -2456,23 +2362,6 @@
 			};
 			name = Debug;
 		};
-		CD19A5820FE723B660FB0024 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.basenana.app;
-				PRODUCT_NAME = basenana;
-				SDKROOT = macosx;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2481,15 +2370,6 @@
 			buildConfigurations = (
 				CCDBEB3973E3CF54BC52E0E0 /* Debug */,
 				2CD73A41CA4E2D5888642B59 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		17E1D9792F6DC10B93AA710F /* Build configuration list for PBXNativeTarget "basenana" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3312366B3BB1F953AF3AFFC0 /* Debug */,
-				CD19A5820FE723B660FB0024 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

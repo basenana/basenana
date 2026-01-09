@@ -36,14 +36,12 @@ packages:
 
 targets:
   BasenanaApp:
-    type: framework
+    type: application
     platform: macOS
     sources:
       - path: basenana
         excludes:
           - "**/Info.plist"
-          - "main.swift"
-          - "basenana-exec"
     resources:
       - path: basenana/Assets.xcassets
     settings:
@@ -65,23 +63,6 @@ targets:
       - package: SwiftyBeaver
       - package: Swinject
       - package: Factory
-
-  basenana:
-    type: application
-    platform: macOS
-    sources:
-      - path: basenana-exec/main.swift
-    settings:
-      base:
-        PRODUCT_NAME: basenana
-        PRODUCT_BUNDLE_IDENTIFIER: com.basenana.app
-        CODE_SIGN_STYLE: Automatic
-        LD_RUNPATH_SEARCH_PATHS:
-          - $(inherited)
-          - "@executable_path/../Frameworks"
-        GENERATE_INFOPLIST_FILE: YES
-    dependencies:
-      - target: BasenanaApp
 
   Domain:
     type: framework

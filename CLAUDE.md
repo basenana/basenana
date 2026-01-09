@@ -17,40 +17,67 @@ xcodebuild test -project basenana.xcodeproj -scheme basenana
 
 ## Architecture
 
-This is a macOS desktop application using **Clean Architecture** with modular SPM packages. Each module has its own `Package.swift` and corresponds to a directory at the project root.
+This is a macOS desktop application using **Clean Architecture** with a unified Swift Package Manager setup.
+
+### Project Structure
+
+```
+basenana/
+├── Sources/                    # Source root
+│   ├── Domain/                 # Domain layer (independent)
+│   ├── Data/                   # Data layer (depends on Domain)
+│   ├── Feature/                # Feature layer (depends on Domain, Data, Styleguide)
+│   └── Styleguide/             # Styleguide layer (independent)
+├── Tests/                      # Test directory
+│   ├── DomainTests/
+│   ├── DataTests/
+│   ├── FeatureTests/
+│   └── StyleguideTests/
+├── basenana/                   # App layer (executable app)
+│   ├── basenanaApp.swift       # App entry point
+│   ├── DI/                     # Dependency injection container
+│   ├── Environment/            # Environment configuration
+│   ├── macOS/                  # macOS UI
+│   └── Share/                  # Share extension
+├── basenana-exec/              # Executable entry
+│   └── main.swift
+└── Package.swift               # SPM configuration
+```
 
 ### Layer Structure
 
 | Directory | Layer | Purpose |
 |-----------|-------|---------|
 | `basenana/` | App | App entry point, DI container, environment config, share extensions |
-| `Data/` | Data | NetworkCore (gRPC), NetworkExtension, Repository implementations |
-| `Domain/` | Domain | Entities, AppState, UseCaseProtocol, UseCase, DomainTestHelpers |
-| `Entry/` | UI | GroupTable (feed/group UI), WebPage (web scraping via Readability.js) |
-| `Document/` | UI/Feature | Document reading and search functionality |
-| `Notify/` | Feature | macOS notification handling |
-| `Styleguide/` | Shared | Reusable SwiftUI components and styling |
-| `Workflow/` | Feature | Business workflow management |
+| `Sources/Domain/` | Domain | Entities, AppState, Repository protocols, UseCases |
+| `Sources/Data/` | Data | Network clients, REST API, Repository implementations |
+| `Sources/Feature/Entry/` | Feature | GroupTable (feed/group UI), WebPage (Readability.js) |
+| `Sources/Feature/Document/` | Feature | Document reading, search, masonry layout |
+| `Sources/Feature/Workflow/` | Feature | Business workflow management |
+| `Sources/Styleguide/` | Shared | Reusable SwiftUI components and styling |
 
 ### Dependency Flow
 
-Domain layer is independent. Data layer depends on Domain. Entry and other feature modules depend on Domain.
+- **basenana** (Executable) → **BasenanaApp** (App Layer)
+- **Feature** depends on **Domain**, **Data**, **Styleguide**
+- **Data** depends on **Domain**
+- **Styleguide** is independent
 
 ### Key Patterns
 
 - **Dependency Injection**: `Container.swift` using Swinject and Factory property wrappers
-- **State Management**: `AppState` in Domain layer
-- **Repository Pattern**: Protocols in Domain, implementations in Data
-- **Use Case Pattern**: Abstracted via `UseCaseProtocol`, concrete implementations in Domain
+- **State Management**: `AppState` in Domain layer (`Sources/Domain/AppState/`)
+- **Repository Pattern**: Protocols in Domain (`Sources/Domain/RepositoryProtocol/`), implementations in Data (`Sources/Data/Repositories/`)
+- **Use Case Pattern**: Abstracted via `UseCaseProtocol`, concrete implementations in Domain (`Sources/Domain/UseCases/`)
 
 ## Key Dependencies
 
-- **Networking**: grpc-swift (gRPC client/server)
 - **Feed Parsing**: FeedKit (RSS/Atom)
 - **HTML Parsing**: SwiftSoup, Fuzi
 - **Web Scraping**: Readability.js (bundled in WebPage module)
 - **Logging**: SwiftyBeaver
-- **UI**: SwiftUI, SwiftData (persistence), SwiftUIMasonry
+- **DI**: Swinject, Factory
+- **UI**: SwiftUI, SwiftData, SwiftUIMasonry
 
 ## Testing
 
