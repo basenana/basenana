@@ -25,14 +25,14 @@ struct DocumentToolBarView: View {
     var body: some View {
         Button(action: {
             isUnread.toggle()
-            NotificationCenter.default.post(name: .updateDocumentMark, object: UpdateDocumentMark(doc: viewModel.docID, isUnread: isUnread))
+            NotificationCenter.default.post(name: .updateDocumentMark, object: UpdateDocumentMark(uri: viewModel.uri, isUnread: isUnread))
         }, label: {
             Image(systemName: isUnread ? "circle.inset.filled" : "circle")
                 .foregroundColor(.UnreadColor)
         })
         Button(action: {
             isMarked.toggle()
-            NotificationCenter.default.post(name: .updateDocumentMark, object: UpdateDocumentMark(doc: viewModel.docID, isMarked: isMarked))
+            NotificationCenter.default.post(name: .updateDocumentMark, object: UpdateDocumentMark(uri: viewModel.uri, isMarked: isMarked))
         }, label: {
             Image(systemName: isMarked ? "bookmark.fill": "bookmark")
                 .foregroundColor(.MarkedColor)

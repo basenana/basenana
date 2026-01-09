@@ -67,6 +67,7 @@ struct EntryInfoDTO: Decodable {
     let changed_at: Date
     let modified_at: Date
     let access_at: Date
+    let document: DocumentWrapperDTO?
 }
 
 struct EntriesResponse: Decodable {

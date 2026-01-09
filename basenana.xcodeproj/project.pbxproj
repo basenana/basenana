@@ -10,7 +10,6 @@
 		00054ED637786E9735275444 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = E129AC77BE06437558F9454C /* SwiftSoup */; };
 		006BBB77D42F6F23B9CEA481 /* GroupTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF540F402250197D49D56EB /* GroupTree.swift */; };
 		029D1CAA82079A50F0440937 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16275B3C664652B6D8BC2044 /* Error.swift */; };
-		037B12C0E89DAFA45E7F8AAF /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39144EFB5833F6B85A03E21C /* Document.swift */; };
 		0420B26731DF415C0D70A541 /* MasonryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00873FDCAF2D2BC65C363BF /* MasonryListView.swift */; };
 		04811554D113A8A739037BFC /* Styleguide.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72723282C662EEDA42C4AD5E /* Styleguide.framework */; };
 		05EED6F010F70C1DB7BDCD59 /* FileClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B31BC9AFC4F3626DD49BC5 /* FileClient.swift */; };
@@ -29,7 +28,6 @@
 		172507A5E9A5A8932442D038 /* GroupTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897186F752E5F04AF99AA48D /* GroupTableViewModel.swift */; };
 		1862FB7EB340BAF37C49E756 /* FsProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C2E8B30F87CF1407AA3C2 /* FsProperty.swift */; };
 		1B46D364DDC55F5158236998 /* SysHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86B516CAC64BB000E0F74AA /* SysHelper.swift */; };
-		1C4F24CD061C4C0B76A4342E /* DocumentRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF15A71878499AB2EAC948B5 /* DocumentRepositoryProtocol.swift */; };
 		1D2E828C6EF98DEF50DCE822 /* Styleguide.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 72723282C662EEDA42C4AD5E /* Styleguide.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		20E572DC62660C0030552B42 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA6FB97F8CD1AB40782C5FD /* NotificationView.swift */; };
 		2149A99C62D76BB395282FA5 /* GeneralSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A5B51964F931C72C6A500D /* GeneralSettingView.swift */; };
@@ -80,7 +78,6 @@
 		6415A82AA34EA5A3D57387DB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1B38294B1AAE92FF6093A92B /* Assets.xcassets */; };
 		64D585A869318B7B85B52BC8 /* WebHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06386DF72A2AEA378B29253B /* WebHelper.swift */; };
 		65BAABA873E24B091DB4B545 /* NotifyClientProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F8CAE33B64B9B4816CF1958 /* NotifyClientProtocol.swift */; };
-		660E748111277496D9E66458 /* DocumentClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A225BBF690D1B67EE1B42235 /* DocumentClient.swift */; };
 		661B3623C05D10B0EE4E47C4 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE3564BB83E48BAC3D6DF74 /* APIClient.swift */; };
 		6686E188A5285F981DDE9214 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FA31E2DE283331DEF35B6CB /* ContentView.swift */; };
 		66B6881838CAC01026D7E9ED /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCD1DF713CCB1414EFCFC231 /* Domain.framework */; };
@@ -111,7 +108,6 @@
 		8782376B4951A30216801EBF /* WorkflowClientProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8F32A4222016BE8AC0167 /* WorkflowClientProtocol.swift */; };
 		89FAC20F1E62BBF9C839B469 /* Dialogue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B70D1A9AC8DADEB04A798E4 /* Dialogue.swift */; };
 		8CA349D47EEFDDD78310375F /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 48352C4B3A1BD30785053968 /* SwiftyBeaver */; };
-		8F25E41C89BC2699744DDE7A /* DocumentRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDD2DF3F5D1EE89FF5EDDAE /* DocumentRepository.swift */; };
 		90D801535A21EDB321D987E4 /* WebPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28323CD95D5898C23118BDB2 /* WebPage.swift */; };
 		923378394A21AFE1705E95E0 /* PaperFlowUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121C7856F4715764CB85C8FE /* PaperFlowUseCase.swift */; };
 		9569A312F9C6775FEDCAF359 /* WorkflowListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64CF059CD92240EC9DEE1C3 /* WorkflowListViewModel.swift */; };
@@ -157,7 +153,6 @@
 		C97F388FA18083CE8B812A27 /* WorkflowClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262AC0A7ACC3CA5DF4EC3511 /* WorkflowClient.swift */; };
 		CBE85F2F5D003B5DD1502323 /* EntryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1EA41773446254A494899E /* EntryTests.swift */; };
 		CCF176A2B83F39A8C13614D6 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A184825803DCAF18AE821E8 /* Group.swift */; };
-		CD93B33C9529946FF626D8D8 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B78CC1E0BEF430AEAAC85A8 /* Document.swift */; };
 		CFD2F884D5837495A8995E1D /* DialogueUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90FA2217B8FBBF4E7B9B0B4 /* DialogueUseCaseProtocol.swift */; };
 		D0AE01B0E877D81AB032D97B /* AppearanceSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = B126E5307FF327138C03F9C7 /* AppearanceSetting.swift */; };
 		D36C9D94D4498543FD0DB59A /* Setting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C0EDBD874FD5179F523977C /* Setting.swift */; };
@@ -190,7 +185,6 @@
 		F4F1D4220EA4688A8B6F0091 /* Workflow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F76088500B33FC10D8BB6F /* Workflow.swift */; };
 		F5ED763A16F877FFC8E913A5 /* TreeMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 290D734607762564CAE0E07F /* TreeMenuView.swift */; };
 		FA11ED88F3A3C288AB503A71 /* WorkflowDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E442A0BBA0690922CB469040 /* WorkflowDetailViewModel.swift */; };
-		FBEC6DEB7E40B7BCC9D7053D /* DocumentClientProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E3283325B0B8BE3956BB9BD /* DocumentClientProtocol.swift */; };
 		FC4B9CA76D77EA6DA05C2FD1 /* EntriesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1387F1B43725137ED23BCAA7 /* EntriesClient.swift */; };
 		FCC25A11AF2E4DD92FE4FB07 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDF9A1E7AE5C803E7D3D304 /* String.swift */; };
 /* End PBXBuildFile section */
@@ -388,7 +382,6 @@
 		341FEB52A1ADF4050CFE848F /* MasonryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasonryItemView.swift; sourceTree = "<group>"; };
 		363A937A2C2C7A0D6FEDBD9B /* Notify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notify.swift; sourceTree = "<group>"; };
 		37179859C84D53147DA31E76 /* EntryGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryGroup.swift; sourceTree = "<group>"; };
-		39144EFB5833F6B85A03E21C /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 		3ED5ED853F87EF090BB4ADB2 /* FileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileRepository.swift; sourceTree = "<group>"; };
 		40A5B51964F931C72C6A500D /* GeneralSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingView.swift; sourceTree = "<group>"; };
 		4102A3A954C732955F4E109A /* RestAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestAPIClient.swift; sourceTree = "<group>"; };
@@ -416,12 +409,10 @@
 		6697571B10FCD4FBA8C374A2 /* NotifyUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifyUseCaseProtocol.swift; sourceTree = "<group>"; };
 		69DFAB7D3479AB9B4137A407 /* GeneralSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSetting.swift; sourceTree = "<group>"; };
 		6B67F6855A573B540E58DB50 /* DialogueRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueRepository.swift; sourceTree = "<group>"; };
-		6B78CC1E0BEF430AEAAC85A8 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 		6C07A4F2D4F399D79CD14E18 /* Destination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Destination.swift; sourceTree = "<group>"; };
 		6CFC827111F991DE58F52FA6 /* DialogueClientProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueClientProtocol.swift; sourceTree = "<group>"; };
 		6D3221A83D41229A6222ECBA /* NotifyClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifyClient.swift; sourceTree = "<group>"; };
 		6E0511BBB91C375B9220325A /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
-		6E3283325B0B8BE3956BB9BD /* DocumentClientProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentClientProtocol.swift; sourceTree = "<group>"; };
 		6E7391B51652EF8E03B3D34D /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		6EF31BDEFF283C79DF527EB6 /* AlertNotify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertNotify.swift; sourceTree = "<group>"; };
 		715C7C10763BFFEBC0CCEEB5 /* BackgroundJobView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundJobView.swift; sourceTree = "<group>"; };
@@ -444,14 +435,12 @@
 		96AE809D7B183AA65E8C02AA /* HTMLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLView.swift; sourceTree = "<group>"; };
 		96CC561062585BD86D3DCC11 /* WorkflowRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowRepositoryProtocol.swift; sourceTree = "<group>"; };
 		998BC25AD81DB5CC030DC0F3 /* NavigationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationListView.swift; sourceTree = "<group>"; };
-		9CDD2DF3F5D1EE89FF5EDDAE /* DocumentRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentRepository.swift; sourceTree = "<group>"; };
 		9F120F753825B0FA1F3AF9A8 /* NavigationItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationItemView.swift; sourceTree = "<group>"; };
 		9FA31E2DE283331DEF35B6CB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A035C7A0866B6E0833C68C62 /* GroupTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupTableView.swift; sourceTree = "<group>"; };
 		A0CC3FA6365FD805DDC3ABE2 /* DatabaseSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseSetting.swift; sourceTree = "<group>"; };
 		A1090BB8D7E305BBBB0F9187 /* Notify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notify.swift; sourceTree = "<group>"; };
 		A19828434C18221CAB3F80C2 /* DocumentReadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentReadView.swift; sourceTree = "<group>"; };
-		A225BBF690D1B67EE1B42235 /* DocumentClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentClient.swift; sourceTree = "<group>"; };
 		A400D8CCB8CC8DF71176AA3D /* DeleteEntriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteEntriesView.swift; sourceTree = "<group>"; };
 		A453F887BAEED920867B0F6D /* basenana.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = basenana.entitlements; sourceTree = "<group>"; };
 		A54CA93CDEA64C794E1AE368 /* ReadabilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadabilityView.swift; sourceTree = "<group>"; };
@@ -512,7 +501,6 @@
 		F8733CDC61C3061C6BD5BF47 /* DialogueUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogueUseCase.swift; sourceTree = "<group>"; };
 		FCB8157BD1D38B07E43B862A /* DocumentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentListView.swift; sourceTree = "<group>"; };
 		FCE25EAD07F82F5A4368DC2E /* api.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = api.md; sourceTree = "<group>"; };
-		FF15A71878499AB2EAC948B5 /* DocumentRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentRepositoryProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -659,7 +647,6 @@
 			isa = PBXGroup;
 			children = (
 				C4061BFBB0B267DE6AE13076 /* Dialogue.swift */,
-				39144EFB5833F6B85A03E21C /* Document.swift */,
 				C12BBAE785F7B59F71E8BC9D /* Entry.swift */,
 				F41E9F34DF48D1C9D4442801 /* Group.swift */,
 				CE087876A9A1155A65C9196C /* NotificationModel.swift */,
@@ -689,7 +676,6 @@
 			isa = PBXGroup;
 			children = (
 				173F70BA80A4B1E7A3200D5C /* DialogueRepositoryProtocol.swift */,
-				FF15A71878499AB2EAC948B5 /* DocumentRepositoryProtocol.swift */,
 				33AD384F08E8BE192821742E /* EntryRepositoryProtocol.swift */,
 				CE5FBD799444EDFD01C33B02 /* FileRepositoryProtocol.swift */,
 				80180E2165BABA11EF06CB18 /* NotificationRepositoryProtocol.swift */,
@@ -833,7 +819,6 @@
 			isa = PBXGroup;
 			children = (
 				0F51C176F0506DBFA9D2EB62 /* DialogueClient.swift */,
-				A225BBF690D1B67EE1B42235 /* DocumentClient.swift */,
 				1387F1B43725137ED23BCAA7 /* EntriesClient.swift */,
 				24B31BC9AFC4F3626DD49BC5 /* FileClient.swift */,
 				6D3221A83D41229A6222ECBA /* NotifyClient.swift */,
@@ -847,7 +832,6 @@
 			children = (
 				74EFAD3DDF8C13F83BB8C889 /* Common.swift */,
 				4B70D1A9AC8DADEB04A798E4 /* Dialogue.swift */,
-				6B78CC1E0BEF430AEAAC85A8 /* Document.swift */,
 				0CA9C404688771B98C09D987 /* Entry.swift */,
 				37179859C84D53147DA31E76 /* EntryGroup.swift */,
 				049C2E8B30F87CF1407AA3C2 /* FsProperty.swift */,
@@ -973,7 +957,6 @@
 			isa = PBXGroup;
 			children = (
 				6B67F6855A573B540E58DB50 /* DialogueRepository.swift */,
-				9CDD2DF3F5D1EE89FF5EDDAE /* DocumentRepository.swift */,
 				0C47D6DE38AF89FE862B68A1 /* EntryRepository.swift */,
 				3ED5ED853F87EF090BB4ADB2 /* FileRepository.swift */,
 				4251BCE56D4FAABEDCF55DB6 /* NotificationRepository.swift */,
@@ -1039,7 +1022,6 @@
 			isa = PBXGroup;
 			children = (
 				6CFC827111F991DE58F52FA6 /* DialogueClientProtocol.swift */,
-				6E3283325B0B8BE3956BB9BD /* DocumentClientProtocol.swift */,
 				AB3895003917E3C728B53E2A /* EntriesClientProtocol.swift */,
 				5F8CAE33B64B9B4816CF1958 /* NotifyClientProtocol.swift */,
 				F4D8F32A4222016BE8AC0167 /* WorkflowClientProtocol.swift */,
@@ -1642,8 +1624,6 @@
 				E6F8E27057DB23BA027F9373 /* DialogueRepositoryProtocol.swift in Sources */,
 				BB6D1480AB5FFA6C267613C9 /* DialogueUseCase.swift in Sources */,
 				CFD2F884D5837495A8995E1D /* DialogueUseCaseProtocol.swift in Sources */,
-				CD93B33C9529946FF626D8D8 /* Document.swift in Sources */,
-				1C4F24CD061C4C0B76A4342E /* DocumentRepositoryProtocol.swift in Sources */,
 				61AFFF83033AE37727BDF2CB /* DocumentSetting.swift in Sources */,
 				E2D98972B31BEA0A69896CA4 /* DocumentUseCase.swift in Sources */,
 				5263DF260E485CAF27B42A8E /* DocumentUseCaseProtocol.swift in Sources */,
@@ -1762,10 +1742,6 @@
 				506261CC05107629BEA21898 /* DialogueClient.swift in Sources */,
 				767EEA435EECB38D888D12A7 /* DialogueClientProtocol.swift in Sources */,
 				09D185ABD17277AC4527FD55 /* DialogueRepository.swift in Sources */,
-				037B12C0E89DAFA45E7F8AAF /* Document.swift in Sources */,
-				660E748111277496D9E66458 /* DocumentClient.swift in Sources */,
-				FBEC6DEB7E40B7BCC9D7053D /* DocumentClientProtocol.swift in Sources */,
-				8F25E41C89BC2699744DDE7A /* DocumentRepository.swift in Sources */,
 				FC4B9CA76D77EA6DA05C2FD1 /* EntriesClient.swift in Sources */,
 				9C840D9D559E890C6ECF4B73 /* EntriesClientProtocol.swift in Sources */,
 				EC1320F6B8AA3BE643B73DF6 /* Entry.swift in Sources */,

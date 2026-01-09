@@ -19,14 +19,14 @@ import Feature
 @MainActor
 class DIContainer {
     let c: Container
-    
+
     private var state: StateStore
     private var environment: Environment = Environment.shared
-    
+
     init(state: StateStore) {
         self.state = state
         self.c = Container()
-        
+
         // ViewModels
         self.c.register(TreeViewModel.self) { r in
             TreeViewModel(store: state, entryUsecase: r.resolve(EntryUseCaseProtocol.self)!)
@@ -40,8 +40,8 @@ class DIContainer {
         self.c.register(DocumentListViewModel.self, name: DocumentPrespective.unread.Title){ r in
             DocumentListViewModel(prespective: .unread, store: state, usecase: r.resolve(DocumentUseCaseProtocol.self)!)
         }//.inObjectScope(.container)
-        self.c.register(DocumentReadViewModel.self) { r, docID in
-            DocumentReadViewModel(docID: docID, store: state, usecase: r.resolve(DocumentUseCaseProtocol.self)!)
+        self.c.register(DocumentReadViewModel.self) { r, uri in
+            DocumentReadViewModel(uri: uri, store: state, usecase: r.resolve(DocumentUseCaseProtocol.self)!)
         }
         self.c.register(WorkflowListViewModel.self) { r in
             WorkflowListViewModel(store: state, usecase: r.resolve(WorkflowUseCaseProtocol.self)!)
@@ -58,7 +58,7 @@ class DIContainer {
             EntryUseCase(entryRepo: r.resolve(EntryRepositoryProtocol.self)!, fileRepo: r.resolve(FileRepositoryProtocol.self)!)
         }.inObjectScope(.container)
         self.c.register(DocumentUseCaseProtocol.self) { r in
-            DocumentUseCase(docRepo: r.resolve(DocumentRepositoryProtocol.self)!, entryRepo: r.resolve(EntryRepositoryProtocol.self)!)
+            DocumentUseCase(entryRepo: r.resolve(EntryRepositoryProtocol.self)!)
         }.inObjectScope(.container)
         self.c.register(WorkflowUseCaseProtocol.self) { r in
             WorkflowUseCase(repo: r.resolve(WorkflowRepositoryProtocol.self)!, entryRepo: r.resolve(EntryRepositoryProtocol.self)!)
@@ -67,9 +67,6 @@ class DIContainer {
         // Repositories
         self.c.register(EntryRepositoryProtocol.self) { r in
             EntryRepository(core: r.resolve(EntriesClientProtocol.self)!)
-        }.inObjectScope(.container)
-        self.c.register(DocumentRepositoryProtocol.self) { r in
-            DocumentRepository(core: r.resolve(DocumentClientProtocol.self)!)
         }.inObjectScope(.container)
         self.c.register(FileRepositoryProtocol.self) { r in
             FileRepository(core: r.resolve(FileClientProtocol.self)!)
@@ -81,9 +78,6 @@ class DIContainer {
         // Clients
         self.c.register(EntriesClientProtocol.self) { r in
             EntriesClient(apiClient: self.environment.restAPIClient!.apiClient)
-        }.inObjectScope(.container)
-        self.c.register(DocumentClientProtocol.self) { r in
-            DocumentClient(apiClient: self.environment.restAPIClient!.apiClient)
         }.inObjectScope(.container)
         self.c.register(FileClientProtocol.self) { r in
             FileClient(apiClient: self.environment.restAPIClient!.apiClient)

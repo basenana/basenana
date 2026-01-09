@@ -5,20 +5,15 @@
 //  Created by Hypo on 2024/9/18.
 //
 
-
-
-
 public class DocumentUseCase: DocumentUseCaseProtocol {
-    
-    private var docRepo: DocumentRepositoryProtocol
+
     private var entryRepo: EntryRepositoryProtocol
-    
-    public init(docRepo: DocumentRepositoryProtocol, entryRepo: EntryRepositoryProtocol) {
-        self.docRepo = docRepo
+
+    public init(entryRepo: EntryRepositoryProtocol) {
         self.entryRepo = entryRepo
     }
-    
-    public func listUnreadDocuments(page: Int, pageSize: Int) async throws -> [any  DocumentInfo] {
+
+    public func listUnreadDocuments(page: Int, pageSize: Int) async throws -> [any EntryInfo] {
         var filter = DocumentFilter()
         filter.page = Pagination()
         filter.page!.page = Int64(page)
@@ -27,13 +22,13 @@ public class DocumentUseCase: DocumentUseCaseProtocol {
         filter.order = .createdAt
         filter.orderDesc = true
         do {
-            return try await docRepo.ListDocuments(filter: filter)
+            return try await entryRepo.ListDocuments(filter: filter)
         } catch RepositoryError.canceled {
             throw UseCaseError.canceled
         }
     }
-    
-    public func listMarkedDocuments(page: Int, pageSize: Int) async throws -> [any  DocumentInfo] {
+
+    public func listMarkedDocuments(page: Int, pageSize: Int) async throws -> [any EntryInfo] {
         var filter = DocumentFilter()
         filter.page = Pagination()
         filter.page!.page = Int64(page)
@@ -42,13 +37,13 @@ public class DocumentUseCase: DocumentUseCaseProtocol {
         filter.order = .createdAt
         filter.orderDesc = true
         do {
-            return try await docRepo.ListDocuments(filter: filter)
+            return try await entryRepo.ListDocuments(filter: filter)
         } catch RepositoryError.canceled {
             throw UseCaseError.canceled
         }
     }
-    
-    public func searchDocuments(search: String, page: Int, pageSize: Int) async throws -> [any  DocumentInfo] {
+
+    public func searchDocuments(search: String, page: Int, pageSize: Int) async throws -> [any EntryInfo] {
         var filter = DocumentFilter()
         filter.page = Pagination()
         filter.page!.page = Int64(page)
@@ -57,29 +52,21 @@ public class DocumentUseCase: DocumentUseCaseProtocol {
         filter.order = .createdAt
         filter.orderDesc = true
         do {
-            return try await docRepo.ListDocuments(filter: filter)
+            return try await entryRepo.ListDocuments(filter: filter)
         } catch RepositoryError.canceled {
             throw UseCaseError.canceled
         }
     }
-    
-    public func getDocumentDetails(entry: Int64) async throws -> any  DocumentDetail {
+
+    public func getDocumentDetails(uri: String) async throws -> any EntryDetail {
         do {
-            return try await docRepo.GetDocumentDetail(id: DocumentID(entryID: entry))
+            return try await entryRepo.GetEntryDetail(uri: uri)
         } catch RepositoryError.canceled {
             throw UseCaseError.canceled
         }
     }
-    
-    public func getDocumentDetails(document: Int64) async throws -> any  DocumentDetail {
-        do {
-            return try await docRepo.GetDocumentDetail(id: DocumentID(documentID: document))
-        } catch RepositoryError.canceled {
-            throw UseCaseError.canceled
-        }
-    }
-    
-    public func getDocumentEntry(uri: String) async throws ->  EntryDetail? {
+
+    public func getDocumentEntry(uri: String) async throws -> EntryDetail? {
         do {
             return try await entryRepo.GetEntryDetail(uri: uri)
         } catch RepositoryError.canceled {
@@ -87,30 +74,17 @@ public class DocumentUseCase: DocumentUseCaseProtocol {
         }
     }
 
-    public func getDocumentEntry(document: Int64) async throws ->  EntryDetail? {
+    public func setDocumentMarkState(uri: String, ismark: Bool) async throws {
         do {
-            let doc = try await getDocumentDetails(document: document)
-            return try await getDocumentEntry(uri: "/\(doc.oid)")
-        } catch RepositoryError.canceled {
-            return nil
-        }
-    }
-    
-    public func setDocumentMarkState(document: Int64, ismark: Bool) async throws {
-        do {
-            var docUpdate = DocumentUpdate(docId: document)
-            docUpdate.marked = ismark
-            try await docRepo.UpdateDocument(doc: docUpdate)
+            try await entryRepo.UpdateDocument(uri: uri, unread: nil, marked: ismark)
         } catch RepositoryError.canceled {
             return
         }
     }
-    
-    public func setDocumentReadState(document: Int64, unread: Bool) async throws {
+
+    public func setDocumentReadState(uri: String, unread: Bool) async throws {
         do {
-            var docUpdate = DocumentUpdate(docId: document)
-            docUpdate.unread = unread
-            try await docRepo.UpdateDocument(doc: docUpdate)
+            try await entryRepo.UpdateDocument(uri: uri, unread: unread, marked: nil)
         } catch RepositoryError.canceled {
             return
         }

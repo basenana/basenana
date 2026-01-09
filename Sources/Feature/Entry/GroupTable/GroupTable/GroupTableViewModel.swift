@@ -20,7 +20,7 @@ public class GroupTableViewModel: BaseViewModel {
     var children: [EntryRow] = []
 
     var selection: Set<EntryRow.ID> = []
-    var selectedDocument: DocumentDetail? = nil
+    var selectedDocument: EntryDetail? = nil
 
     override public init(store: StateStore, entryUsecase: any EntryUseCaseProtocol) {
         super.init(store: store, entryUsecase: entryUsecase)

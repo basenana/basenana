@@ -25,5 +25,9 @@ public protocol EntryRepositoryProtocol {
     func AddProperty(entry: Int64, key: String, val: String) async throws
     func UpdateProperty(entry: Int64, key: String, val: String) async throws
     func DeleteProperty(entry: Int64, key: String) async throws
+
+    // document operations
+    func ListDocuments(filter: DocumentFilter) async throws -> [EntryInfo]
+    func UpdateDocument(uri: String, unread: Bool?, marked: Bool?) async throws
 }
 

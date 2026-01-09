@@ -29,8 +29,8 @@ struct MasonryItemView: View {
         self.section = section
         self.doc = doc
         self.viewModel = viewModel
-        self.properties = doc.properties
-        self.parent = doc.parent
+        self.properties = doc.info.properties
+        self.parent = doc.info.parent
     }
     
     var body: some View {

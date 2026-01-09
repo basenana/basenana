@@ -90,7 +90,7 @@ struct GroupCreateView: View {
 
     func buildOption() -> EntryCreate {
         var opt = EntryCreate(parentUri: parentUri, name: groupName, kind: "group")
-        opt.RSS = RSSConfig(feed: rssFeed, siteName: siteName, siteURL: siteURL, fileType: .Webarchive)
+        opt.RSS = RSSConfig(feed: rssFeed, siteName: siteName, siteURL: siteURL, fileType: .webarchive)
         return opt
     }
 

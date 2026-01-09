@@ -14,7 +14,7 @@ import Domain
 class DocumentSection: Identifiable {
     var id: String
     var documents: [DocumentItem]
-    
+
     init(id: String, documents: [DocumentItem]) {
         self.id = id
         self.documents = documents
@@ -23,56 +23,50 @@ class DocumentSection: Identifiable {
 
 @Observable
 class DocumentItem: Identifiable, Hashable, Equatable {
-    var id: Int64 {
+    var id: String {
         get {
-            return info.id
+            return info.uri
         }
     }
-    
+
+    var uri: String {
+        get {
+            return info.uri
+        }
+    }
+
     // editable
     var isUnread: Bool
     var isMarked: Bool
     var headerImage: String {
         get {
-            return info.headerImage
+            return info.documentHeaderImage ?? ""
         }
     }
-    
-    var properties: [EntryProperty] {
-        get {
-            return info.properties
-        }
-    }
-    
-    var parent: EntryInfo {
-        get {
-            return info.parent
-        }
-    }
-    
-    var info: DocumentInfo
+
+    var info: EntryInfo
     var readable: Bool = false
-    
+
     var keepLowProfile: Bool {
         return readable && !isUnread
     }
-    
-    init(info: DocumentInfo) {
+
+    init(info: EntryInfo) {
         self.info = info
         self.readable = false
-        
-        self.isMarked = info.marked
-        self.isUnread = info.unread
+
+        self.isMarked = info.documentMarked
+        self.isUnread = info.documentUnread
     }
-    
-    init(info: DocumentInfo, readable: Bool) {
+
+    init(info: EntryInfo, readable: Bool) {
         self.info = info
         self.readable = readable
-        
-        self.isMarked = info.marked
-        self.isUnread = info.unread
+
+        self.isMarked = info.documentMarked
+        self.isUnread = info.documentUnread
     }
-    
+
     var sectionName: String {
         if Calendar.current.isDateInToday(info.createdAt){
             return "TODAY"
@@ -80,10 +74,10 @@ class DocumentItem: Identifiable, Hashable, Equatable {
         if Calendar.current.isDateInYesterday(info.createdAt){
             return "YESTERDAY"
         }
-        
+
         return dateFormatter.string(from: info.createdAt)
     }
-    
+
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -91,58 +85,41 @@ class DocumentItem: Identifiable, Hashable, Equatable {
         formatter.dateFormat = "yyyy/MM/dd"
         return formatter
     }()
-    
+
     func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+        hasher.combine(uri)
     }
-    
+
     static func == (lhs: DocumentItem, rhs: DocumentItem) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.uri == rhs.uri
     }
 
 }
 
 struct DocumentSearchItem: Identifiable, Hashable, Equatable {
-    var id: Int64 {
+    var id: String {
         get {
-            info.id
+            info.uri
         }
     }
 
-    var searchContent: [String] {
+    var uri: String {
         get {
-            info.searchContent
+            info.uri
         }
     }
 
-    var properties: [EntryProperty] {
-        get {
-            return info.properties
-        }
-    }
+    var info: EntryInfo
 
-    var parent: EntryInfo {
-        get {
-            return info.parent
-        }
-    }
-    var headerImage: String {
-        get {
-            return info.headerImage
-        }
-    }
-
-    var info: DocumentInfo
-
-    init(info: DocumentInfo) {
+    init(info: EntryInfo) {
         self.info = info
     }
 
     func hash(into hasher: inout Hasher) {
-        hasher.combine(info.id)
+        hasher.combine(info.uri)
     }
 
     static func == (lhs: Self, rhs: Self) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.uri == rhs.uri
     }
 }

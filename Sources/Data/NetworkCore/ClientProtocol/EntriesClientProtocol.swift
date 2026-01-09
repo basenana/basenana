@@ -18,13 +18,17 @@ public protocol EntriesClientProtocol {
     func CreateEntry(entry: EntryCreate) async throws -> APIEntryInfo
     func UpdateEntry(uri: String, name: String?) async throws -> APIEntryDetail
     func DeleteEntries(uris: [String]) async throws
-    func ListGroupChildren(parentUri: String) async throws -> [APIEntryInfo]
+    func ListGroupChildren(parentUri: String) async throws -> [any EntryInfo]
     func ChangeParent(uri: String, newParentUri: String, option: ChangeParentOption) async throws
 
     // entry properties
     func AddProperty(entry: Int64, key: String, val: String) async throws
     func UpdateProperty(entry: Int64, key: String, val: String) async throws
     func DeleteProperty(entry: Int64, key: String) async throws
+
+    // document operations
+    func SearchEntries(celPattern: String, offset: Int?, limit: Int?) async throws -> [any EntryInfo]
+    func UpdateDocumentByURI(uri: String, unread: Bool?, marked: Bool?) async throws
 }
 
 

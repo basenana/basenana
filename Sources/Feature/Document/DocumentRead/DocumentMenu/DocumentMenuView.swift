@@ -8,7 +8,6 @@
 import SwiftUI
 import Foundation
 import Domain
-import Domain
 import Styleguide
 
 struct DocumentMenuView: View {
@@ -16,25 +15,25 @@ struct DocumentMenuView: View {
     @Binding var document: DocumentItem
     @State var parent: EntryInfo
     @State var viewModel: DocumentListViewModel
-    
+
     init(section: String, document: Binding<DocumentItem>, parent: EntryInfo, viewModel: DocumentListViewModel) {
         self.section = section
         self._document = document
         self.parent = parent
         self.viewModel = viewModel
     }
-    
-    
+
+
     var body: some View {
         VStack {
-            
+
             if let u = parseUrlString(urlStr: getEntryProperty(keys: [Property.WebPageURL, Property.WebSiteURL])?.value ?? "" ){
                 Section(){
                     Button("Launch URL", action: {
                         Task {
                             if document.isUnread {
                                 document.isUnread.toggle()
-                                NotificationCenter.default.post(name: .updateDocumentMark, object: UpdateDocumentMark(doc: document.id, isUnread: false))
+                                NotificationCenter.default.post(name: .updateDocumentMark, object: UpdateDocumentMark(uri: document.uri, isUnread: false))
                             }
                         }
                         openUrlInBrowser(url: u)
@@ -44,11 +43,11 @@ struct DocumentMenuView: View {
                     })
                 }
             }
-            
+
             Section{
                 Button("Go To EntryGroup", action: { gotoDestination(.groupList(groupUri: parent.uri)) })
             }
-            
+
             Section{
                 Menu("Mark To"){
                     DocumentMarkMenuView(section: section, document: $document, viewModel: viewModel)
@@ -56,10 +55,10 @@ struct DocumentMenuView: View {
             }
         }
     }
-    
+
     func getEntryProperty(keys: [String]) -> EntryProperty?{
         for k in keys {
-            for p in document.properties {
+            for p in document.info.properties {
                 if p.key == k {
                     return p
                 }
@@ -74,18 +73,18 @@ struct DocumentMarkMenuView: View {
     private var section: String
     @Binding var document: DocumentItem
     @State var viewModel: DocumentListViewModel
-    
+
     init(section: String, document: Binding<DocumentItem>, viewModel: DocumentListViewModel) {
         self.section = section
         self._document = document
         self.viewModel = viewModel
     }
-    
+
     var body: some View {
         Button {
             withAnimation(.easeInOut) {
                 document.isUnread.toggle()
-                NotificationCenter.default.post(name: .updateDocumentMark, object: UpdateDocumentMark(doc: document.id, isUnread: document.isUnread))
+                NotificationCenter.default.post(name: .updateDocumentMark, object: UpdateDocumentMark(uri: document.uri, isUnread: document.isUnread))
             }
         } label: {
             Image(systemName: document.isUnread ? "circle" : "circle.inset.filled")
@@ -96,7 +95,7 @@ struct DocumentMarkMenuView: View {
         Button {
             withAnimation(.easeInOut) {
                 document.isMarked.toggle()
-                NotificationCenter.default.post(name: .updateDocumentMark, object: UpdateDocumentMark(doc: document.id, isMarked: document.isMarked))
+                NotificationCenter.default.post(name: .updateDocumentMark, object: UpdateDocumentMark(uri: document.uri, isMarked: document.isMarked))
             }
         } label: {
             Image(systemName: document.isMarked ? "bookmark": "bookmark.fill")

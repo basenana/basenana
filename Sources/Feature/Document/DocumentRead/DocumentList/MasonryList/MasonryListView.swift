@@ -56,7 +56,7 @@ struct MasonryListReadAllView: View {
                 Spacer()
                 Button(action: {
                     Task {
-                        await viewModel.setAllAppearedDocuemntRead(before: 0, isAuto: false)
+                        await viewModel.setAllAppearedDocumentRead(before: 0, isAuto: false)
                         hasUnread = false
                     }
                 }, label: {

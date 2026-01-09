@@ -67,5 +67,22 @@ public class EntryRepository: EntryRepositoryProtocol {
         return try await core.DeleteProperty(entry: entry, key: key)
     }
 
+    // MARK: - Document Operations
+
+    public func ListDocuments(filter: DocumentFilter) async throws -> [any EntryInfo] {
+        var pattern = ""
+        if let unread = filter.unread {
+            pattern = "unread"
+        }
+        if let marked = filter.marked {
+            pattern = "marked"
+        }
+        return try await core.SearchEntries(celPattern: pattern, offset: nil, limit: nil)
+    }
+
+    public func UpdateDocument(uri: String, unread: Bool?, marked: Bool?) async throws {
+        try await core.UpdateDocumentByURI(uri: uri, unread: unread, marked: marked)
+    }
+
 }
 

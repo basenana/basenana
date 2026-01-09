@@ -34,13 +34,13 @@ public struct NavigationListView: View {
             .toolbar(removing: .sidebarToggle)
             
             if let doc = selection {
-                DocumentReadView(viewModel: DocumentReadViewModel(docID: doc.id, store: viewModel.store, usecase: viewModel.usecase))
+                DocumentReadView(viewModel: DocumentReadViewModel(uri: doc.uri, store: viewModel.store, usecase: viewModel.usecase))
                     .task {
                         if doc.isUnread {
                             doc.isUnread.toggle()
-                            NotificationCenter.default.post(name: .updateDocumentMark, object: UpdateDocumentMark(doc: doc.id, isUnread: false))
+                            NotificationCenter.default.post(name: .updateDocumentMark, object: UpdateDocumentMark(uri: doc.uri, isUnread: false))
                         }
-                    }.id(doc.id)
+                    }.id(doc.uri)
             }
         }
     }

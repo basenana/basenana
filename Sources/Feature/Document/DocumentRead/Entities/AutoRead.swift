@@ -9,13 +9,18 @@ import Foundation
 
 
 class AppearedDocument {
-    var section: String
-    var documentID: Int64
+    var section: String?
+    var uri: String
     var appearedAt: Date
-    
+
+    init(uri: String) {
+        self.uri = uri
+        self.appearedAt = Date()
+    }
+
     init(document: DocumentItem) {
         self.section = document.sectionName
-        self.documentID = document.id
+        self.uri = document.uri
         self.appearedAt = Date()
     }
 }

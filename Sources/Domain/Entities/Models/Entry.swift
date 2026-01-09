@@ -91,6 +91,21 @@ public struct EntryCreate {
     }
 }
 
+public enum FileType: String {
+    case xml
+    case json
+    case markdown
+    case webarchive
+
+    public init?(option: String) {
+        self.init(rawValue: option)
+    }
+
+    public func option() -> String {
+        return rawValue
+    }
+}
+
 public struct RSSConfig {
     public var feed: String
     public var siteName: String
@@ -136,4 +151,50 @@ public enum EntryOrder {
     case size
     case createdAt
     case modifiedAt
+}
+
+public struct DocumentFilter {
+    public var unread: Bool? = nil
+    public var marked: Bool? = nil
+    public var search: String? = nil
+    public var page: Pagination? = nil
+    public var order: EntryOrder? = nil
+    public var orderDesc: Bool? = nil
+
+    public init() { }
+}
+
+// MARK: - Document Properties Protocol Extensions
+
+extension EntryInfo {
+    public var documentTitle: String? { nil }
+    public var documentAuthor: String? { nil }
+    public var documentSource: String? { nil }
+    public var documentMarked: Bool { false }
+    public var documentUnread: Bool { false }
+    public var documentHeaderImage: String? { nil }
+
+    // Legacy DocumentInfo properties
+    public var parent: EntryInfo { self }
+    public var properties: [EntryProperty] { [] }
+    public var subContent: String { "" }
+    public var searchContent: [String] { [] }
+    public var headerImage: String { "" }
+    public var marked: Bool { documentMarked }
+    public var unread: Bool { documentUnread }
+}
+
+extension EntryDetail {
+    public var documentTitle: String? { nil }
+    public var documentAuthor: String? { nil }
+    public var documentSource: String? { nil }
+    public var documentAbstract: String? { nil }
+    public var documentKeywords: [String]? { nil }
+    public var documentNotes: String? { nil }
+    public var documentMarked: Bool { false }
+    public var documentUnread: Bool { false }
+    public var documentPublishAt: Date? { nil }
+    public var documentURL: String? { nil }
+    public var documentHeaderImage: String? { nil }
+    public var content: String { "" }
 }

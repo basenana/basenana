@@ -18,26 +18,26 @@ public extension Notification.Name {
 class UpdateDocumentMark {
     var updateRead: Bool
     var isUnread: Bool
-    
+
     var updateMark: Bool
     var isMarked: Bool
-    
-    var doc: Int64
-    
-    init(doc: Int64, isUnread: Bool) {
-        self.doc = doc
+
+    var uri: String
+
+    init(uri: String, isUnread: Bool) {
+        self.uri = uri
         self.updateRead = true
         self.isUnread = isUnread
-        
+
         self.updateMark = false
         self.isMarked = false
     }
-    
-    init(doc: Int64,  isMarked: Bool) {
-        self.doc = doc
+
+    init(uri: String, isMarked: Bool) {
+        self.uri = uri
         self.updateRead = false
         self.isUnread = false
-        
+
         self.updateMark = true
         self.isMarked = isMarked
     }

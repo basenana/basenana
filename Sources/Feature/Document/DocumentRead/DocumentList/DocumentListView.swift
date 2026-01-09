@@ -35,20 +35,20 @@ public struct DocumentListView: View {
                 Task {
                     if document.isUnread {
                         document.isUnread = false
-                        await viewModel.setDocumentReadStatus(document: document.id, isUnread: false)
+                        await viewModel.setDocumentReadStatus(uri: document.uri, isUnread: false)
                     }
                 }
-                gotoDestination(.readDocument(document: document.id))
+                gotoDestination(.readDocument(uri: document.uri))
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: .updateDocumentMark)) { [self] notification in
             if let update = notification.object as? UpdateDocumentMark {
                 Task {
                     if update.updateRead {
-                        await viewModel.setDocumentReadStatus(document: update.doc, isUnread: update.isUnread)
+                        await viewModel.setDocumentReadStatus(uri: update.uri, isUnread: update.isUnread)
                     }
                     if update.updateMark {
-                        await viewModel.setDocumentMarkStatus(document: update.doc, isMark: update.isMarked)
+                        await viewModel.setDocumentMarkStatus(uri: update.uri, isMark: update.isMarked)
                     }
                 }
             }
@@ -56,7 +56,7 @@ public struct DocumentListView: View {
         .onReceive(NotificationCenter.default.publisher(for: .loadMoreDocuments)) { _ in
             Task {
                 await viewModel.loadNextPage()
-                await viewModel.setAllAppearedDocuemntRead()
+                await viewModel.setAllAppearedDocumentRead()
             }
         }
         .onAppear { viewModel.reset() }

@@ -8,11 +8,27 @@
 import Foundation
 
 
+public enum DocumentPrespective: String, CaseIterable, Identifiable {
+    case unread
+    case marked
+
+    public var id: String { rawValue }
+
+    public var Title: String {
+        switch self {
+        case .unread:
+            return "Unread"
+        case .marked:
+            return "Marked"
+        }
+    }
+}
+
 
 public enum Destination: Identifiable, Hashable {
 
     case listDocuments(prespective: DocumentPrespective)
-    case readDocument(document: Int64)
+    case readDocument(uri: String)
     case groupList(groupUri: String)
     case workflowDashboard
     case workflowDetail(workflow: String)
@@ -23,8 +39,8 @@ public enum Destination: Identifiable, Hashable {
         switch self {
         case .listDocuments(prespective: let prespective):
             return "listDocument_\(prespective)"
-        case .readDocument(document: let document):
-            return "readDocument_\(document)"
+        case .readDocument(uri: let uri):
+            return "readDocument_\(uri)"
         case .groupList(groupUri: let groupUri):
             return "groupList_\(groupUri)"
         case .workflowDashboard:

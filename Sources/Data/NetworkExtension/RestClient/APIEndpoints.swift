@@ -43,8 +43,10 @@ public enum APIEndpoint {
             return "/_ping"
         case .entriesDetails:
             return "/api/v1/entries/details"
-        case .entriesCreate, .entriesSearch:
+        case .entriesCreate:
             return "/api/v1/entries"
+        case .entriesSearch:
+            return "/api/v1/entries/search"
         case .entriesUpdate, .entriesDelete, .entriesParent, .entriesProperty, .entriesDocument:
             return "/api/v1/entries"
         case .entriesBatchDelete:

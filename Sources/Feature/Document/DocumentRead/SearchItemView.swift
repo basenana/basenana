@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  SearchItemView.swift
 //  Document
 //
 //  Created by Weiwei on 2025/4/3.
@@ -12,30 +12,25 @@ import Domain
 struct SearchItemView: View {
     @State var doc: DocumentSearchItem
     @State var searchModel: SearchViewModel
-    
-    @State var properties: [EntryProperty]
-    @State var parent: EntryInfo
-    
+
     private static let logger = Logger(
             subsystem: Bundle.main.bundleIdentifier!,
             category: String(describing: SearchItemView.self)
         )
-    
+
     init(doc: DocumentSearchItem, searchModel: SearchViewModel) {
         self.doc = doc
         self.searchModel = searchModel
-        self.properties = doc.properties
-        self.parent = doc.parent
     }
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .top){
                 Image(systemName: "text.document")
                     .padding(.top, 2)
-                
+
                 VStack(alignment: .leading) {
-                            
+
                     HStack(){
                         HighlightedTitle(title: self.docTitle, key: self.searchModel.search)
                         Spacer()
@@ -70,11 +65,11 @@ struct SearchItemView: View {
         }
         .toolbar(removing: .sidebarToggle)
     }
-    
+
     var docTitle: String {
-        return properties.filter({ $0.key == Property.WebPageTitle}).first?.value ?? doc.info.name
+        return doc.info.properties.filter({ $0.key == Property.WebPageTitle}).first?.value ?? doc.info.name
     }
-    
+
     var searchContent: String {
         var searchContent: String = self.doc.info.subContent
         if self.doc.info.searchContent.count > 0 {
@@ -82,38 +77,38 @@ struct SearchItemView: View {
         }
         return searchContent
     }
-    
+
     var docTime: String {
         var datetime = doc.info.createdAt
-        
-        let updateAt = properties.filter({ $0.key == Property.WebPageUpdateAt}).first?.value ?? ""
+
+        let updateAt = doc.info.properties.filter({ $0.key == Property.WebPageUpdateAt}).first?.value ?? ""
         guard updateAt != "" else {
             return dateFormatter.string(from: datetime)
         }
-        
-        
+
+
         if let paresedDate = rfc3339Formatter.date(from: updateAt) {
             datetime = paresedDate
         }else {
             Self.logger.error("parse web page update at failed, got \(updateAt)")
         }
-        
+
         return dateFormatter.string(from: datetime)
     }
 
     var docURL: String {
-        if let urlStr = properties.filter({ ($0.key == Property.WebPageURL || $0.key == Property.WebSiteURL) && !$0.value.isEmpty }).first?.value{
+        if let urlStr = doc.info.properties.filter({ ($0.key == Property.WebPageURL || $0.key == Property.WebSiteURL) && !$0.value.isEmpty }).first?.value{
             return URL(string: urlStr)?.host() ?? ""
         }
         return ""
     }
-    
+
     var groupName: String {
-        return properties.filter({ $0.key == Property.WebSiteName}).first?.value ?? entryTitleName(en: parent)
+        return doc.info.properties.filter({ $0.key == Property.WebSiteName}).first?.value ?? entryTitleName(en: doc.info.parent)
     }
-    
+
     let rfc3339Formatter = RFC3339Formatter()
-    
+
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -126,11 +121,11 @@ struct SearchItemView: View {
 struct HighlightedTitle: View {
     let title: String
     let key: String
-    
+
     var body: some View {
         buildAttributedString(from: title, bolding: key)
     }
-    
+
     func buildAttributedString(from string: String, bolding substring: String) -> Text {
         // Create a mutable result Text
         var result: Text = Text("")
@@ -141,15 +136,15 @@ struct HighlightedTitle: View {
             // Add the text before the match
             let beforeMatch = string[currentIndex..<range.lowerBound]
             result = result + Text(beforeMatch).font(.body).foregroundColor(.gray)
-            
+
             // Add the matched substring in bold
             let matchedSubstring = string[range]
             result = result + Text(matchedSubstring).font(.headline)
-            
+
             // Move the current index to after the matched substring
             currentIndex = range.upperBound
         }
-        
+
         // Add any remaining text after the last match
         let remainingText = string[currentIndex..<string.endIndex]
         result = result + Text(remainingText).font(.body).foregroundColor(.gray)
@@ -213,7 +208,7 @@ struct HighlightedText: View {
 
 struct SearchItemBannerView: View{
     var bannerURL: String
-    
+
     var body: some View {
         if let safeUrl = URL(string: bannerURL) {
             GeometryReader { geometry in
@@ -237,4 +232,3 @@ struct SearchItemBannerView: View{
         }
     }
 }
-

@@ -10,6 +10,6 @@ import Foundation
 
 
 public protocol PaperFlowUseCaseProtocol {
-    func listUnreadDocuments(page: Pagination) throws -> [DocumentInfo]
-    func listMarkedDocuments(page: Pagination) throws -> [DocumentInfo]
+    func listUnreadDocuments(page: Pagination) throws -> [EntryInfo]
+    func listMarkedDocuments(page: Pagination) throws -> [EntryInfo]
 }

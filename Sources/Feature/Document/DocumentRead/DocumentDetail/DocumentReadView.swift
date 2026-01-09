@@ -7,20 +7,19 @@
 
 import SwiftUI
 import Domain
-import Domain
 
 
 public struct DocumentReadView: View {
-    @State var document: DocumentDetail? = nil
+    @State var document: EntryDetail? = nil
     @State var viewModel: DocumentReadViewModel
     @State var isUnread: Bool = false
     @State var isMarked: Bool = false
 
-    
+
     public init(viewModel: DocumentReadViewModel) {
         self.viewModel = viewModel
     }
-    
+
     public var body: some View {
         VStack {
             if let detailDocument = document {
@@ -31,7 +30,7 @@ public struct DocumentReadView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: .updateDocumentMark)) { [self] notification in
             if let update = notification.object as? UpdateDocumentMark {
-                if update.doc != viewModel.docID {
+                if update.uri != viewModel.uri {
                     return
                 }
                 if update.updateRead {
@@ -54,8 +53,8 @@ public struct DocumentReadView: View {
         .task {
             document = await viewModel.loadDocument()
             if let document = document {
-                isUnread = document.unread
-                isMarked = document.marked
+                isUnread = document.documentUnread
+                isMarked = document.documentMarked
             }
         }
     }

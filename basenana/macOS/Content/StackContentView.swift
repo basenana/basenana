@@ -44,8 +44,8 @@ struct StackContentView: View {
 
                         case .listDocuments(prespective: let prespective):
                             DocumentListView(viewModel: container.c.resolve(DocumentListViewModel.self, name: prespective.Title)!).id(prespective).navigationTitle(prespective.Title)
-                        case .readDocument(document: let document):
-                            DocumentReadView(viewModel: container.c.resolve(DocumentReadViewModel.self, argument: document)!).id(document)
+                        case .readDocument(uri: let uri):
+                            DocumentReadView(viewModel: container.c.resolve(DocumentReadViewModel.self, argument: uri)!).id(uri)
                             
                         case .workflowDashboard:
                             WorkflowListView(viewModel: container.c.resolve(WorkflowListViewModel.self)!)

@@ -83,7 +83,7 @@ public class EntriesClient: EntriesClientProtocol {
         throw RepositoryError.unimplement
     }
 
-    public func ListGroupChildren(parentUri: String) async throws -> [APIEntryInfo] {
+    public func ListGroupChildren(parentUri: String) async throws -> [any EntryInfo] {
         let response: EntriesResponse = try await apiClient.request(
             .groupsChildren(
                 uri: parentUri,
@@ -137,6 +137,27 @@ public class EntriesClient: EntriesClientProtocol {
         throw RepositoryError.unimplement
     }
 
+    // MARK: - Document Operations
+
+    public func SearchEntries(celPattern: String, offset: Int?, limit: Int?) async throws -> [any EntryInfo] {
+        let request = SearchRequest(cel_pattern: celPattern)
+        let response: EntriesResponse = try await apiClient.request(
+            .entriesSearch,
+            body: request,
+            responseType: EntriesResponse.self
+        )
+        return response.entries.map { $0.toAPIEntryInfo() }
+    }
+
+    public func UpdateDocumentByURI(uri: String, unread: Bool?, marked: Bool?) async throws {
+        let request = DocumentRequest(unread: unread, marked: marked)
+        _ = try await apiClient.request(
+            .entriesDocument(uri: uri, id: nil),
+            body: request,
+            responseType: DocumentWrapperDTO.self
+        )
+    }
+
     // MARK: - Private Helpers
 
     private func parseGroupTree(node: GroupTreeNodeDTO) -> APIGroup {
@@ -174,7 +195,8 @@ extension EntryDetailDTO {
             changedAt: self.changed_at,
             modifiedAt: self.modified_at,
             accessAt: self.access_at,
-            properties: []
+            properties: [],
+            document: DocumentInfo(from: self.document)
         )
     }
 
@@ -196,8 +218,8 @@ extension EntryDetailDTO {
 }
 
 extension EntryInfoDTO {
-    func toAPIEntryInfo() -> APIEntryInfo {
-        APIEntryInfo(
+    func toAPIEntryInfo() -> any EntryInfo {
+        let info = APIEntryInfo(
             id: self.entry,
             uri: self.uri,
             name: self.name,
@@ -210,5 +232,53 @@ extension EntryInfoDTO {
             modifiedAt: self.modified_at,
             accessAt: self.access_at
         )
+        // Apply document properties via runtime
+        return applyDocumentProperties(to: info)
     }
+
+    private func applyDocumentProperties(to info: APIEntryInfo) -> any EntryInfo {
+        guard let doc = self.document else {
+            return info
+        }
+        // Create a modified version with document properties
+        return DocumentEntryInfo(
+            base: info,
+            title: doc.title,
+            author: doc.author,
+            source: doc.source,
+            marked: doc.marked ?? false,
+            unread: doc.unread ?? false
+        )
+    }
+}
+
+// MARK: - Document Entry Info Wrapper
+
+private struct DocumentEntryInfo: EntryInfo {
+    let base: APIEntryInfo
+    let title: String?
+    let author: String?
+    let source: String?
+    let marked: Bool
+    let unread: Bool
+
+    var id: Int64 { base.id }
+    var uri: String { base.uri }
+    var name: String { base.name }
+    var kind: String { base.kind }
+    var isGroup: Bool { base.isGroup }
+    var size: Int64 { base.size }
+    var parentID: Int64 { base.parentID }
+    var createdAt: Date { base.createdAt }
+    var changedAt: Date { base.changedAt }
+    var modifiedAt: Date { base.modifiedAt }
+    var accessAt: Date { base.accessAt }
+
+    var documentTitle: String? { title }
+    var documentAuthor: String? { author }
+    var documentSource: String? { source }
+    var documentMarked: Bool { marked }
+    var documentUnread: Bool { unread }
+
+    func toGroup() -> EntryGroup? { base.toGroup() }
 }
