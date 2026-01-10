@@ -41,6 +41,10 @@ struct PropertyWrapperDTO: Decodable {
     let properties: [String: String]?
 }
 
+struct PropertiesResponse<T: Decodable>: Decodable {
+    let properties: T
+}
+
 struct DocumentWrapperDTO: Decodable {
     let title: String?
     let author: String?
@@ -54,6 +58,8 @@ struct DocumentWrapperDTO: Decodable {
     let publish_at: Date?
     let url: String?
     let header_image: String?
+    let site_name: String?
+    let site_url: String?
 }
 
 struct EntryInfoDTO: Decodable {
@@ -72,6 +78,12 @@ struct EntryInfoDTO: Decodable {
 
 struct EntriesResponse: Decodable {
     let entries: [EntryInfoDTO]
+    let pagination: EntriesPagination?
+}
+
+struct EntriesPagination: Decodable {
+    let page: Int64
+    let page_size: Int64
 }
 
 struct EntryDetailResponse: Decodable {
@@ -105,7 +117,13 @@ struct BatchDeleteRequest: Encodable {
     let uri_list: [String]
 }
 
+struct BatchDeleteResponse: Decodable {
+    let deleted: [String]
+    let message: String?
+}
+
 struct ChangeParentRequest: Encodable {
+    let entry_uri: String
     let new_entry_uri: String
     let replace: Bool?
     let exchange: Bool?

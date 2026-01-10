@@ -56,8 +56,14 @@ public enum APIEndpoint {
             return "/api/v1/entries"
         case .entriesSearch:
             return "/api/v1/entries/search"
-        case .entriesUpdate, .entriesDelete, .entriesParent, .entriesProperty, .entriesDocument:
+        case .entriesUpdate, .entriesDelete:
             return "/api/v1/entries"
+        case .entriesParent:
+            return "/api/v1/entries/parent"
+        case .entriesProperty:
+            return "/api/v1/entries/property"
+        case .entriesDocument:
+            return "/api/v1/entries/document"
         case .entriesBatchDelete:
             return "/api/v1/entries/batch-delete"
         case .groupsChildren:

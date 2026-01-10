@@ -20,8 +20,18 @@ public protocol EntryInfo {
     var changedAt: Date { get }
     var modifiedAt: Date { get }
     var accessAt: Date { get }
-    
-    
+
+    // Document properties - must be implemented by concrete types
+    var documentTitle: String? { get }
+    var documentAuthor: String? { get }
+    var documentAbstract: String? { get }
+    var documentURL: String? { get }
+    var documentHeaderImage: String? { get }
+    var documentMarked: Bool { get }
+    var documentUnread: Bool { get }
+    var documentPublishAt: Date? { get }
+    var documentSiteName: String? { get }
+
     func toGroup() -> EntryGroup?
 }
 
@@ -167,14 +177,15 @@ public struct DocumentFilter {
 // MARK: - Document Properties Protocol Extensions
 
 extension EntryInfo {
-    public var documentTitle: String? { nil }
+    // Document properties with default implementations for types that don't have document info
     public var documentAuthor: String? { nil }
+    public var documentYear: String? { nil }
     public var documentSource: String? { nil }
-    public var documentMarked: Bool { false }
-    public var documentUnread: Bool { false }
-    public var documentHeaderImage: String? { nil }
+    public var documentKeywords: [String]? { nil }
+    public var documentNotes: String? { nil }
+    public var documentSiteURL: String? { nil }
 
-    // Legacy DocumentInfo properties
+    // Legacy DocumentInfo properties (deprecated)
     public var parent: EntryInfo { self }
     public var properties: [EntryProperty] { [] }
     public var subContent: String { "" }
@@ -182,6 +193,20 @@ extension EntryInfo {
     public var headerImage: String { "" }
     public var marked: Bool { documentMarked }
     public var unread: Bool { documentUnread }
+
+    // Parent info parsed from URI (API no longer returns parent entry info)
+    public var parentName: String {
+        let components = uri.split(separator: "/").filter { !$0.isEmpty }
+        guard components.count >= 2 else { return "" }
+        return String(components[components.count - 2])
+    }
+
+    public var parentURI: String {
+        let components = uri.split(separator: "/").filter { !$0.isEmpty }
+        guard components.count >= 2 else { return "/" }
+        let parentPath = components.dropLast().joined(separator: "/")
+        return "/\(parentPath)"
+    }
 }
 
 extension EntryDetail {

@@ -86,6 +86,8 @@ Retrieve details of a specific entry.
       "marked": false,
       "publish_at": "2024-01-01T00:00:00Z",
       "url": "https://example.com/article",
+      "site_name": "example",
+      "site_url": "https://example.com",
       "header_image": ""
     },
     "created_at": "2024-01-01T00:00:00Z",
@@ -201,6 +203,8 @@ Filter entries using CEL (Common Expression Language) patterns.
         "marked": false,
         "publish_at": "2024-01-01T00:00:00Z",
         "url": "https://example.com/article",
+        "site_name": "example",
+        "site_url": "https://example.com",
         "header_image": ""
       },
       "created_at": "2024-01-01T00:00:00Z",

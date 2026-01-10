@@ -22,7 +22,7 @@ struct SearchMenuView: View {
     var body: some View {
         VStack {
 
-            if let u = parseUrlString(urlStr: getEntryProperty(keys: [Property.WebPageURL, Property.WebSiteURL])?.value ?? "" ){
+            if let urlStr = document.info.documentURL, let u = parseUrlString(urlStr: urlStr) {
                 Section(){
                     Button("Launch URL", action: {
                         openUrlInBrowser(url: u)
@@ -33,17 +33,5 @@ struct SearchMenuView: View {
                 }
             }
         }
-    }
-
-    func getEntryProperty(keys: [String]) -> EntryProperty?{
-        for k in keys {
-            for p in document.info.properties {
-                if p.key == k {
-                    return p
-                }
-            }
-        }
-        return nil
-
     }
 }

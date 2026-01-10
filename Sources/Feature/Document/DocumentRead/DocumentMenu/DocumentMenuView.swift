@@ -13,13 +13,13 @@ import Styleguide
 struct DocumentMenuView: View {
     private var section: String = ""
     @Binding var document: DocumentItem
-    @State var parent: EntryInfo
+    @State var parentURI: String
     @State var viewModel: DocumentListViewModel
 
-    init(section: String, document: Binding<DocumentItem>, parent: EntryInfo, viewModel: DocumentListViewModel) {
+    init(section: String, document: Binding<DocumentItem>, parentURI: String, viewModel: DocumentListViewModel) {
         self.section = section
         self._document = document
-        self.parent = parent
+        self.parentURI = parentURI
         self.viewModel = viewModel
     }
 
@@ -27,7 +27,7 @@ struct DocumentMenuView: View {
     var body: some View {
         VStack {
 
-            if let u = parseUrlString(urlStr: getEntryProperty(keys: [Property.WebPageURL, Property.WebSiteURL])?.value ?? "" ){
+            if let urlStr = document.info.documentURL, let u = parseUrlString(urlStr: urlStr) {
                 Section(){
                     Button("Launch URL", action: {
                         Task {
@@ -45,7 +45,7 @@ struct DocumentMenuView: View {
             }
 
             Section{
-                Button("Go To EntryGroup", action: { gotoDestination(.groupList(groupUri: parent.uri)) })
+                Button("Go To EntryGroup", action: { gotoDestination(.groupList(groupUri: parentURI)) })
             }
 
             Section{
@@ -54,17 +54,6 @@ struct DocumentMenuView: View {
                 }
             }
         }
-    }
-
-    func getEntryProperty(keys: [String]) -> EntryProperty?{
-        for k in keys {
-            for p in document.info.properties {
-                if p.key == k {
-                    return p
-                }
-            }
-        }
-        return nil
     }
 }
 

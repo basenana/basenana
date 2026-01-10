@@ -61,12 +61,11 @@ public class BaseViewModel {
             switch url.scheme {
             case "basenana":
 
-                let targetID = parseEntryIDFromURL(url: url)
-                guard targetID != nil && targetID! > 0 else {
+                guard let targetUri = parseUriFromURL(url: url), !targetUri.isEmpty else {
                     sentAlert("\(url) not a valid entry")
                     return false
                 }
-                entryUris.append("/\(targetID!)")
+                entryUris.append(targetUri)
 
             case "file":
 

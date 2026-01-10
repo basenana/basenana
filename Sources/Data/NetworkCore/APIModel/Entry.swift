@@ -244,9 +244,13 @@ public struct APIEntryProperty: EntryProperty, Decodable {
 extension APIEntryInfo {
     public var documentTitle: String? { nil }
     public var documentAuthor: String? { nil }
-    public var documentSource: String? { nil }
+    public var documentAbstract: String? { nil }
+    public var documentURL: String? { nil }
+    public var documentHeaderImage: String? { nil }
     public var documentMarked: Bool { false }
     public var documentUnread: Bool { false }
+    public var documentPublishAt: Date? { nil }
+    public var documentSiteName: String? { nil }
 }
 
 // MARK: - Document Properties Extension for APIEntryDetail
@@ -254,13 +258,11 @@ extension APIEntryInfo {
 extension APIEntryDetail {
     public var documentTitle: String? { document?.title }
     public var documentAuthor: String? { document?.author }
-    public var documentSource: String? { document?.source }
     public var documentAbstract: String? { document?.abstract }
-    public var documentKeywords: [String]? { document?.keywords }
-    public var documentNotes: String? { document?.notes }
+    public var documentURL: String? { document?.url }
+    public var documentHeaderImage: String? { document?.headerImage }
     public var documentMarked: Bool { document?.marked ?? false }
     public var documentUnread: Bool { document?.unread ?? false }
     public var documentPublishAt: Date? { document?.publishAt }
-    public var documentURL: String? { document?.url }
-    public var documentHeaderImage: String? { document?.headerImage }
+    public var documentSiteName: String? { nil }
 }

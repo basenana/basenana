@@ -67,47 +67,40 @@ struct SearchItemView: View {
     }
 
     var docTitle: String {
-        return doc.info.properties.filter({ $0.key == Property.WebPageTitle}).first?.value ?? doc.info.name
+        return doc.info.documentTitle ?? doc.info.name
     }
 
     var searchContent: String {
-        var searchContent: String = self.doc.info.subContent
-        if self.doc.info.searchContent.count > 0 {
-            searchContent = self.doc.info.searchContent[0]
-        }
-        return searchContent
+        return doc.info.documentAbstract ?? ""
     }
 
     var docTime: String {
         var datetime = doc.info.createdAt
 
-        let updateAt = doc.info.properties.filter({ $0.key == Property.WebPageUpdateAt}).first?.value ?? ""
-        guard updateAt != "" else {
-            return dateFormatter.string(from: datetime)
-        }
-
-
-        if let paresedDate = rfc3339Formatter.date(from: updateAt) {
-            datetime = paresedDate
-        }else {
-            Self.logger.error("parse web page update at failed, got \(updateAt)")
+        if let publishAt = doc.info.documentPublishAt {
+            datetime = publishAt
         }
 
         return dateFormatter.string(from: datetime)
     }
 
     var docURL: String {
-        if let urlStr = doc.info.properties.filter({ ($0.key == Property.WebPageURL || $0.key == Property.WebSiteURL) && !$0.value.isEmpty }).first?.value{
+        if let urlStr = doc.info.documentURL, !urlStr.isEmpty {
             return URL(string: urlStr)?.host() ?? ""
         }
         return ""
     }
 
     var groupName: String {
-        return doc.info.properties.filter({ $0.key == Property.WebSiteName}).first?.value ?? entryTitleName(en: doc.info.parent)
+        if let siteName = doc.info.documentSiteName {
+            return siteName
+        }
+        let parent = doc.info.parentName
+        if parent.isEmpty || parent.hasPrefix(".") {
+            return ""
+        }
+        return parent
     }
-
-    let rfc3339Formatter = RFC3339Formatter()
 
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()

@@ -13,11 +13,9 @@ import Domain
 
 
 struct NavigationItemView: View {
-    private var section: String
-    @State var doc: DocumentItem
-    @State var viewModel: DocumentListViewModel
-
-    @State var parentEntry: EntryDetail? = nil
+    private let section: String
+    @State private var doc: DocumentItem
+    private let viewModel: DocumentListViewModel
 
     private static let logger = Logger(
             subsystem: Bundle.main.bundleIdentifier!,
@@ -26,7 +24,7 @@ struct NavigationItemView: View {
 
     init(section: String, doc: DocumentItem, viewModel: DocumentListViewModel ) {
         self.section = section
-        self.doc = doc
+        self._doc = State(initialValue: doc)
         self.viewModel = viewModel
     }
 
@@ -53,14 +51,14 @@ struct NavigationItemView: View {
 
             HStack{
                 if viewModel.showTextPreview {
-                    Text("\(doc.info.subContent.prefix(100))")
+                    Text("\(doc.info.documentAbstract?.prefix(100) ?? "")")
                         .font(.body)
                         .foregroundColor(Color.gray)
                         .frame(idealWidth: 200,  maxWidth: .infinity, idealHeight: 40, maxHeight: 50, alignment: .leading)
                 }
 
                 if viewModel.showImagePreview {
-                    NavigationItemBannerView(bannerURL: doc.headerImage)
+                    NavigationItemBannerView(bannerURL: doc.info.documentHeaderImage ?? "")
                         .frame(width: 50, height: 50)
                 }
             }
@@ -69,44 +67,41 @@ struct NavigationItemView: View {
         }
         .padding(.vertical, 3)
         .contextMenu {
-            DocumentMenuView(section: section, document: $doc, parent: doc.info.parent, viewModel: viewModel)
+            DocumentMenuView(section: section, document: $doc, parentURI: doc.info.parentURI, viewModel: viewModel)
         }
     }
 
     var docTitle: String {
-        return doc.info.properties.filter({ $0.key == Property.WebPageTitle}).first?.value ?? doc.info.name
+        return doc.info.documentTitle ?? doc.info.name
     }
 
     var docTime: String {
         var datetime = doc.info.createdAt
 
-        let updateAt = doc.info.properties.filter({ $0.key == Property.WebPageUpdateAt}).first?.value ?? ""
-        guard updateAt != "" else {
-            return dateFormatter.string(from: datetime)
-        }
-
-
-        if let paresedDate = rfc3339Formatter.date(from: updateAt) {
-            datetime = paresedDate
-        }else {
-            Self.logger.error("parse web page update at failed, got \(updateAt)")
+        if let publishAt = doc.info.documentPublishAt {
+            datetime = publishAt
         }
 
         return dateFormatter.string(from: datetime)
     }
 
     var docURL: String {
-        if let urlStr = doc.info.properties.filter({ ($0.key == Property.WebPageURL || $0.key == Property.WebSiteURL) && !$0.value.isEmpty }).first?.value{
+        if let urlStr = doc.info.documentURL, !urlStr.isEmpty {
             return URL(string: urlStr)?.host() ?? ""
         }
         return ""
     }
 
     var groupName: String {
-        return doc.info.properties.filter({ $0.key == Property.WebSiteName}).first?.value ?? entryTitleName(en: doc.info.parent)
+        if let siteName = doc.info.documentSiteName {
+            return siteName
+        }
+        let parent = doc.info.parentName
+        if parent.isEmpty || parent.hasPrefix(".") {
+            return ""
+        }
+        return parent
     }
-
-    let rfc3339Formatter = RFC3339Formatter()
 
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()

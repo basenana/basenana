@@ -7,22 +7,8 @@
 import Foundation
 
 
-public func EntryUrl(entryID: Int64) -> URL{
-    return URL(string: "basenana://entries/\(entryID)")!
-}
-
-
 public func EntryUri(uri: String) -> URL{
     return URL(string: "basenana://entries\(uri)")!
-}
-
-
-public func parseEntryIDFromURL(url: URL) -> Int64? {
-    let pathParts = url.pathComponents
-    if let mayBeID = pathParts.last {
-        return Int64(mayBeID)
-    }
-    return nil
 }
 
 

@@ -39,7 +39,7 @@ struct TreeListView: View {
                 }
                 return true
             }
-            .draggable(EntryUrl(entryID: child.group.id))
+            .draggable(EntryUri(uri: child.group.uri))
         }
     }
 }

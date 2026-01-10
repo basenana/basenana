@@ -227,7 +227,7 @@ private struct GroupTableContentView: View {
                 if child.isGroup{
 
                     TableRow(child)
-                        .draggable(EntryUrl(entryID: child.id))
+                        .draggable(EntryUri(uri: child.uri))
                         .dropDestination(for: URL.self){ urls in
                             Task {
                                 let _ = await viewModel.moveEntriesToGroup(entryURLs: urls, newParentUri: child.uri)
@@ -236,7 +236,7 @@ private struct GroupTableContentView: View {
                 } else {
 
                     TableRow(child)
-                        .draggable(EntryUrl(entryID: child.id))
+                        .draggable(EntryUri(uri: child.uri))
                 }
             }
         }

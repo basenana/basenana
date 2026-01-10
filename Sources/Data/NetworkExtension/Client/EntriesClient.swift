@@ -84,7 +84,7 @@ public class EntriesClient: EntriesClientProtocol {
         _ = try await apiClient.request(
             .entriesBatchDelete,
             body: request,
-            responseType: VoidResponse.self
+            responseType: BatchDeleteResponse.self
         )
     }
 
@@ -106,6 +106,7 @@ public class EntriesClient: EntriesClientProtocol {
 
     public func ChangeParent(uri: String, newParentUri: String, option: ChangeParentOption) async throws {
         let request = ChangeParentRequest(
+            entry_uri: uri,
             new_entry_uri: newParentUri,
             replace: false,
             exchange: false
@@ -124,7 +125,7 @@ public class EntriesClient: EntriesClientProtocol {
         _ = try await apiClient.request(
             .entriesProperty(uri: nil, id: entry),
             body: request,
-            responseType: PropertyWrapperDTO.self
+            responseType: PropertiesResponse<PropertyWrapperDTO>.self
         )
     }
 
@@ -134,7 +135,7 @@ public class EntriesClient: EntriesClientProtocol {
         _ = try await apiClient.request(
             .entriesProperty(uri: nil, id: entry),
             body: request,
-            responseType: PropertyWrapperDTO.self
+            responseType: PropertiesResponse<PropertyWrapperDTO>.self
         )
     }
 
@@ -163,7 +164,7 @@ public class EntriesClient: EntriesClientProtocol {
         _ = try await apiClient.request(
             .entriesDocument(uri: uri, id: nil),
             body: request,
-            responseType: DocumentWrapperDTO.self
+            responseType: PropertiesResponse<DocumentWrapperDTO>.self
         )
     }
 
@@ -241,23 +242,27 @@ extension EntryInfoDTO {
             modifiedAt: self.modified_at,
             accessAt: self.access_at
         )
-        // Apply document properties via runtime
-        return applyDocumentProperties(to: info)
-    }
-
-    private func applyDocumentProperties(to info: APIEntryInfo) -> any EntryInfo {
-        guard let doc = self.document else {
-            return info
+        // Apply document properties - return concrete type to preserve protocol impl
+        if let doc = self.document {
+            return DocumentEntryInfo(
+                base: info,
+                title: doc.title,
+                author: doc.author,
+                year: doc.year,
+                source: doc.source,
+                abstract: doc.abstract,
+                keywords: doc.keywords,
+                notes: doc.notes,
+                marked: doc.marked ?? false,
+                unread: doc.unread ?? false,
+                publishAt: doc.publish_at,
+                url: doc.url,
+                _headerImage: doc.header_image,
+                siteName: doc.site_name,
+                siteURL: doc.site_url
+            )
         }
-        // Create a modified version with document properties
-        return DocumentEntryInfo(
-            base: info,
-            title: doc.title,
-            author: doc.author,
-            source: doc.source,
-            marked: doc.marked ?? false,
-            unread: doc.unread ?? false
-        )
+        return info
     }
 }
 
@@ -267,9 +272,18 @@ private struct DocumentEntryInfo: EntryInfo {
     let base: APIEntryInfo
     let title: String?
     let author: String?
+    let year: String?
     let source: String?
+    let abstract: String?
+    let keywords: [String]?
+    let notes: String?
     let marked: Bool
     let unread: Bool
+    let publishAt: Date?
+    let url: String?
+    let _headerImage: String?
+    let siteName: String?
+    let siteURL: String?
 
     var id: Int64 { base.id }
     var uri: String { base.uri }
@@ -285,9 +299,21 @@ private struct DocumentEntryInfo: EntryInfo {
 
     var documentTitle: String? { title }
     var documentAuthor: String? { author }
+    var documentYear: String? { year }
     var documentSource: String? { source }
+    var documentAbstract: String? { abstract }
+    var documentKeywords: [String]? { keywords }
+    var documentNotes: String? { notes }
     var documentMarked: Bool { marked }
     var documentUnread: Bool { unread }
+    var documentPublishAt: Date? { publishAt }
+    var documentURL: String? { url }
+    var documentHeaderImage: String? { _headerImage }
+    var documentSiteName: String? { siteName }
+    var documentSiteURL: String? { siteURL }
+
+    var subContent: String { abstract ?? "" }
+    var headerImage: String { _headerImage ?? "" }
 
     func toGroup() -> EntryGroup? { base.toGroup() }
 }
