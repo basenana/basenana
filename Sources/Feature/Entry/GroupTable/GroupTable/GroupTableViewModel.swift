@@ -49,7 +49,7 @@ public class GroupTableViewModel: BaseViewModel {
         defer { isLoading = false }
 
         do {
-            let newChildren = try await entryUsecase.listChildren(uri: group.uri, page: page, pageSize: pageSize)
+            let newChildren = try await entryUsecase.listChildren(uri: group.uri, page: page, pageSize: pageSize, sort: "name", order: "asc")
             if newChildren.isEmpty {
                 hasMore = false
                 return

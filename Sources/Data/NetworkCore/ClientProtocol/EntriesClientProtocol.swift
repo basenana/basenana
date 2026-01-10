@@ -7,6 +7,7 @@
 
 import Foundation
 import Domain
+import Data
 
 
 public protocol EntriesClientProtocol {
@@ -18,7 +19,7 @@ public protocol EntriesClientProtocol {
     func CreateEntry(entry: EntryCreate) async throws -> APIEntryInfo
     func UpdateEntry(uri: String, name: String?) async throws -> APIEntryDetail
     func DeleteEntries(uris: [String]) async throws
-    func ListGroupChildren(parentUri: String, page: Int?, pageSize: Int?) async throws -> [any EntryInfo]
+    func ListGroupChildren(parentUri: String, page: Int?, pageSize: Int?, sort: String?, order: String?) async throws -> [any EntryInfo]
     func ChangeParent(uri: String, newEntryUri: String, option: ChangeParentOption) async throws
 
     // entry properties
@@ -27,7 +28,7 @@ public protocol EntriesClientProtocol {
     func DeleteProperty(entry: Int64, key: String) async throws
 
     // document operations
-    func SearchEntries(celPattern: String, page: Int?, pageSize: Int?) async throws -> [any EntryInfo]
+    func SearchEntries(celPattern: String, page: Int?, pageSize: Int?, sort: String?, order: String?) async throws -> [any EntryInfo]
     func UpdateDocumentByURI(uri: String, unread: Bool?, marked: Bool?) async throws
 }
 

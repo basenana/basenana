@@ -25,7 +25,7 @@ public enum APIEndpoint {
     case entriesProperty(uri: String?, id: Int64?)
     case entriesDocument(uri: String?, id: Int64?)
     case entriesSearch
-    case groupsChildren(uri: String?, id: Int64?, page: Int64?, pageSize: Int64?, order: String?, desc: Bool?)
+    case groupsChildren(uri: String?, id: Int64?, page: Int64?, pageSize: Int64?, sort: String?, order: String?)
     case groupsTree
     case filesContent(uri: String?, id: Int64?)
     case filesUpload(uri: String?, id: Int64?)
@@ -152,13 +152,13 @@ public enum APIEndpoint {
         case .entriesSearch:
             break
 
-        case .groupsChildren(let uri, let id, let page, let pageSize, let order, let desc):
+        case .groupsChildren(let uri, let id, let page, let pageSize, let sort, let order):
             if let uri = uri { items.append(URLQueryItem(name: "uri", value: uri)) }
             if let id = id { items.append(URLQueryItem(name: "id", value: String(id))) }
             if let page = page { items.append(URLQueryItem(name: "page", value: String(page))) }
             if let pageSize = pageSize { items.append(URLQueryItem(name: "page_size", value: String(pageSize))) }
+            if let sort = sort { items.append(URLQueryItem(name: "sort", value: sort)) }
             if let order = order { items.append(URLQueryItem(name: "order", value: order)) }
-            if let desc = desc { items.append(URLQueryItem(name: "desc", value: String(desc))) }
 
         case .filesContent(let uri, let id), .filesUpload(let uri, let id):
             if let uri = uri { items.append(URLQueryItem(name: "uri", value: uri)) }

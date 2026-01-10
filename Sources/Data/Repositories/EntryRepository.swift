@@ -47,8 +47,8 @@ public class EntryRepository: EntryRepositoryProtocol {
         return try await core.DeleteEntries(uris: uris)
     }
 
-    public func ListGroupChildren(parentUri: String, page: Int?, pageSize: Int?) async throws -> [any EntryInfo] {
-        return try await core.ListGroupChildren(parentUri: parentUri, page: page, pageSize: pageSize)
+    public func ListGroupChildren(parentUri: String, page: Int?, pageSize: Int?, sort: String?, order: String?) async throws -> [any EntryInfo] {
+        return try await core.ListGroupChildren(parentUri: parentUri, page: page, pageSize: pageSize, sort: sort, order: order)
     }
 
     public func ChangeParent(uri: String, newEntryUri: String, option: ChangeParentOption) async throws {
@@ -80,8 +80,19 @@ public class EntryRepository: EntryRepositoryProtocol {
 
         let page = filter.page.map { Int($0.page) }
         let pageSize = filter.page.map { Int($0.pageSize) }
+        // API 支持: created_at, changed_at, name
+        let sort: String? = {
+            guard let order = filter.order else { return nil }
+            switch order {
+            case .name: return "name"
+            case .createdAt: return "created_at"
+            case .modifiedAt: return "changed_at"
+            default: return nil
+            }
+        }()
+        let order = filter.orderDesc == true ? "desc" : "asc"
 
-        return try await core.SearchEntries(celPattern: pattern, page: page, pageSize: pageSize)
+        return try await core.SearchEntries(celPattern: pattern, page: page, pageSize: pageSize, sort: sort, order: order)
     }
 
     public func UpdateDocument(uri: String, unread: Bool?, marked: Bool?) async throws {

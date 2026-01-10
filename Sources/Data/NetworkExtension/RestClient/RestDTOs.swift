@@ -95,6 +95,8 @@ struct CreateEntryRequest: Encodable {
     let kind: String?
     let rss: RSSConfigRequest?
     let filter: FilterRequest?
+    let properties: PropertyRequest?
+    let document: DocumentCreateRequest?
 }
 
 struct RSSConfigRequest: Encodable {
@@ -106,6 +108,18 @@ struct RSSConfigRequest: Encodable {
 
 struct FilterRequest: Encodable {
     let cel_pattern: String?
+}
+
+struct DocumentCreateRequest: Encodable {
+    let title: String?
+    let author: String?
+    let year: String?
+    let source: String?
+    let abstract: String?
+    let keywords: [String]?
+    let notes: String?
+    let url: String?
+    let header_image: String?
 }
 
 struct UpdateEntryRequest: Encodable {
@@ -135,17 +149,36 @@ struct PropertyRequest: Encodable {
 }
 
 struct DocumentRequest: Encodable {
+    let title: String?
+    let author: String?
+    let year: String?
+    let source: String?
+    let abstract: String?
+    let notes: String?
+    let keywords: [String]?
+    let url: String?
+    let site_name: String?
+    let site_url: String?
+    let header_image: String?
     let unread: Bool?
     let marked: Bool?
+    let publish_at: Int64?
+
+    enum CodingKeys: String, CodingKey {
+        case title, author, year, source, abstract, notes, keywords,
+             url, site_name, site_url, header_image, unread, marked, publish_at
+    }
 }
 
 struct SearchRequest: Encodable {
     let cel_pattern: String
     let page: Int64?
     let page_size: Int64?
+    let sort: String?
+    let order: String?
 
     enum CodingKeys: String, CodingKey {
-        case cel_pattern, page, page_size
+        case cel_pattern, page, page_size, sort, order
     }
 }
 

@@ -7,7 +7,6 @@
 
 import Foundation
 import Domain
-import Data
 
 public class EntriesClient: EntriesClientProtocol {
 
@@ -57,7 +56,9 @@ public class EntriesClient: EntriesClientProtocol {
                 site_url: $0.siteURL,
                 file_type: $0.fileType.option()
             )},
-            filter: nil
+            filter: nil,
+            properties: nil,
+            document: nil
         )
 
         let response: EntryDetailResponse = try await apiClient.request(
@@ -88,15 +89,15 @@ public class EntriesClient: EntriesClientProtocol {
         )
     }
 
-    public func ListGroupChildren(parentUri: String, page: Int?, pageSize: Int?) async throws -> [any EntryInfo] {
+    public func ListGroupChildren(parentUri: String, page: Int?, pageSize: Int?, sort: String?, order: String?) async throws -> [any EntryInfo] {
         let response: EntriesResponse = try await apiClient.request(
             .groupsChildren(
                 uri: parentUri,
                 id: nil,
                 page: page.map { Int64($0) },
                 pageSize: pageSize.map { Int64($0) },
-                order: nil,
-                desc: nil
+                sort: sort,
+                order: order
             ),
             responseType: EntriesResponse.self
         )
@@ -145,11 +146,13 @@ public class EntriesClient: EntriesClientProtocol {
 
     // MARK: - Document Operations
 
-    public func SearchEntries(celPattern: String, page: Int?, pageSize: Int?) async throws -> [any EntryInfo] {
+    public func SearchEntries(celPattern: String, page: Int?, pageSize: Int?, sort: String?, order: String?) async throws -> [any EntryInfo] {
         let request = SearchRequest(
             cel_pattern: celPattern,
             page: page.map { Int64($0) },
-            page_size: pageSize.map { Int64($0) }
+            page_size: pageSize.map { Int64($0) },
+            sort: sort,
+            order: order
         )
         let response: EntriesResponse = try await apiClient.request(
             .entriesSearch,
@@ -160,7 +163,22 @@ public class EntriesClient: EntriesClientProtocol {
     }
 
     public func UpdateDocumentByURI(uri: String, unread: Bool?, marked: Bool?) async throws {
-        let request = DocumentRequest(unread: unread, marked: marked)
+        let request = DocumentRequest(
+            title: nil,
+            author: nil,
+            year: nil,
+            source: nil,
+            abstract: nil,
+            notes: nil,
+            keywords: nil,
+            url: nil,
+            site_name: nil,
+            site_url: nil,
+            header_image: nil,
+            unread: unread,
+            marked: marked,
+            publish_at: nil
+        )
         _ = try await apiClient.request(
             .entriesDocument(uri: uri, id: nil),
             body: request,
