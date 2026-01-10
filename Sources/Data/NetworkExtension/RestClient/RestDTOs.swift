@@ -212,6 +212,16 @@ struct TriggerWorkflowResponse: Decodable {
     let job_id: String
 }
 
+struct WorkflowJobDetailResponse: Decodable {
+    let job: WorkflowJobDTO
+}
+
+struct UpdateWorkflowRequest: Encodable {
+    let name: String?
+    let enable: Bool?
+    let queue_name: String?
+}
+
 // MARK: - Configs DTOs
 
 struct ConfigItemDTO: Decodable {
@@ -233,6 +243,16 @@ struct ConfigResponse: Decodable {
 
 struct SetConfigRequest: Encodable {
     let value: String
+}
+
+struct DeleteConfigResponse: Decodable {
+    let group: String
+    let name: String
+    let deleted: Bool
+}
+
+struct DeleteWorkflowResponse: Decodable {
+    let message: String
 }
 
 // MARK: - File Response

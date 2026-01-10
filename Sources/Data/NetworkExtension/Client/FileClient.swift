@@ -27,7 +27,7 @@ public class FileClient: FileClientProtocol {
         let fileData = try fileHandle.readToEnd() ?? Data()
 
         _ = try await apiClient.uploadFile(
-            .filesUpload(id: entry),
+            .filesUpload(uri: nil, id: entry),
             fileData: fileData,
             fileName: "file",
             mimeType: "application/octet-stream"
@@ -61,7 +61,7 @@ public class FileClient: FileClientProtocol {
         }
 
         do {
-            let data = try await apiClient.requestData(.filesContent(id: entry))
+            let data = try await apiClient.requestData(.filesContent(uri: nil, id: entry))
             try fileHandle.write(contentsOf: data)
         } catch {
             Self.logger.error("download failed: \(error.localizedDescription)")

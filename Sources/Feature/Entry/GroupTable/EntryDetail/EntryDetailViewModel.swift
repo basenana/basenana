@@ -65,12 +65,19 @@ public class EntryDetailViewModel {
                 }
             }
 
-            NotificationCenter.default.post(name: .reopenGroup, object: ["/\(entry.parent)"])
+            NotificationCenter.default.post(name: .reopenGroup, object: [parentUri(of: entry.uri)])
         } catch {
             errorMessage = "rename failed \(error)"
             return false
         }
 
         return true
+    }
+
+    private func parentUri(of uri: String) -> String {
+        let components = uri.split(separator: "/")
+        guard components.count > 1 else { return "/" }
+        let parentPath = components.dropLast().joined(separator: "/")
+        return "/" + parentPath
     }
 }

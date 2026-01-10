@@ -12,7 +12,7 @@ import SwiftData
 
 
 struct TreeListView: View {
-    @State private var groupTree = GroupTree.shared
+    @Bindable var groupTree = GroupTree.shared
     @State private var viewModel: TreeViewModel
     
     public init(viewModel: TreeViewModel) {

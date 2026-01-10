@@ -12,7 +12,7 @@ import Styleguide
 
 struct SidebarButtonView: View {
     @State private var viewModel: TreeViewModel
-    @State private var groupTree = GroupTree.shared
+    @Bindable var groupTree = GroupTree.shared
 
     @State private var showCreateGroup: Bool = false
     @State private var createGroupInParentUri: String = ""

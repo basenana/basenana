@@ -11,7 +11,7 @@ import Domain
 
 
 struct TreeMenuView: View {
-    @State private var groupTree = GroupTree.shared
+    @Bindable var groupTree = GroupTree.shared
     @State private var target: EntryGroup
     @State private var targetDetail: EntryDetail?
     @State private var viewModel: TreeViewModel

@@ -94,8 +94,8 @@ public class EntriesClient: EntriesClientProtocol {
             .groupsChildren(
                 uri: parentUri,
                 id: nil,
-                offset: nil,
-                limit: nil,
+                page: nil,
+                pageSize: nil,
                 order: nil,
                 desc: nil
             ),
@@ -147,8 +147,10 @@ public class EntriesClient: EntriesClientProtocol {
 
     public func SearchEntries(celPattern: String, offset: Int?, limit: Int?) async throws -> [any EntryInfo] {
         let request = SearchRequest(cel_pattern: celPattern)
+        let page = offset != nil ? Int64(offset! / (limit ?? 10) + 1) : nil
+        let pageSize = limit != nil ? Int64(limit!) : nil
         let response: EntriesResponse = try await apiClient.request(
-            .entriesSearch,
+            .entriesSearch(page: page, pageSize: pageSize),
             body: request,
             responseType: EntriesResponse.self
         )

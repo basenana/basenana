@@ -59,6 +59,11 @@ public struct SidebarView: View {
         .task {
             await viewModel.resetGroupTree()
         }
+        .onReceive(NotificationCenter.default.publisher(for: .reopenGroup)) { _ in
+            Task {
+                await viewModel.resetGroupTree()
+            }
+        }
         .listStyle(.sidebar)
         .padding(.bottom, 40)
         .overlay(alignment: .bottom, content: { SidebarButtonView(viewModel: viewModel) })

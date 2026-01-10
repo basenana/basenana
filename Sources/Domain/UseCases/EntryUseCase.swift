@@ -35,13 +35,19 @@ public class EntryUseCase: EntryUseCaseProtocol {
 
     public func renameEntry(uri: String, newName: String) async throws {
         do {
-            let en = try await getEntryDetails(uri: uri)
+            let newUri = parentUri(of: uri) + "/" + newName
             var opt = ChangeParentOption()
-            opt.newName = newName
-            return try await entryRepo.ChangeParent(uri: uri, newParentUri: en.uri, option: opt)
+            return try await entryRepo.ChangeParent(uri: uri, newParentUri: newUri, option: opt)
         } catch RepositoryError.canceled {
             return
         }
+    }
+
+    private func parentUri(of uri: String) -> String {
+        let components = uri.split(separator: "/")
+        guard components.count > 1 else { return "/" }
+        let parentPath = components.dropLast().joined(separator: "/")
+        return "/" + parentPath
     }
 
     public func deleteEntry(uri: String) async throws {
