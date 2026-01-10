@@ -41,7 +41,8 @@ public class DocumentReadViewModel {
 
     private var cacheDirectory: URL {
         let cachesDir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
-        let documentsDir = cachesDir.appendingPathComponent("documents", isDirectory: true)
+        let documentsDir = cachesDir.appendingPathComponent("nanafs", isDirectory: true)
+            .appendingPathComponent("documents", isDirectory: true)
 
         let fm = FileManager.default
         if !fm.fileExists(atPath: documentsDir.path) {
@@ -51,52 +52,61 @@ public class DocumentReadViewModel {
         return documentsDir
     }
 
-    private func cachedFileURL(for entryId: Int64) -> URL {
-        cacheDirectory.appendingPathComponent("en-\(entryId)")
+    private func cachedFileURL(for entryId: Int64, name: String) -> URL {
+        let ext = (name as NSString).pathExtension
+        let baseName = ext.isEmpty ? "\(entryId)" : "\(entryId).\(ext)"
+        return cacheDirectory.appendingPathComponent(baseName)
     }
 
     func loadDocument() async {
         isLoading = true
         errorMessage = nil
 
-        Self.logger.info("loadDocument: start for uri=\(self.uri)")
+        Self.logger.info("loadDocument: uri=\(self.uri)")
 
         do {
             guard let entryDetail = try await usecase.getDocumentEntry(uri: uri) else {
-                Self.logger.error("loadDocument: getDocumentEntry returned nil")
+                Self.logger.error("getDocumentEntry returned nil")
                 errorMessage = "Failed to load document"
                 isLoading = false
                 return
             }
 
-            Self.logger.info("loadDocument: got entryDetail, id=\(entryDetail.id)")
-
+            Self.logger.info("entryDetail id=\(entryDetail.id), name=\(entryDetail.name)")
             entry = entryDetail
-
-            let fileURL = cachedFileURL(for: entryDetail.id)
-            Self.logger.info("loadDocument: cache file path=\(fileURL.path)")
+            let fileURL = cachedFileURL(for: entryDetail.id, name: entryDetail.name)
 
             if FileManager.default.fileExists(atPath: fileURL.path) {
-                Self.logger.info("loadDocument: file already cached")
+                Self.logger.info("file already cached")
                 cachedFileURL = fileURL
             } else {
-                Self.logger.info("loadDocument: file not cached, downloading...")
+                Self.logger.info("downloading...")
                 do {
-                    _ = try await fileRepository.DownloadFile(entry: entryDetail.id, dir: cacheDirectory.path)
-                    Self.logger.info("loadDocument: download completed")
+                    print("[DocumentReadViewModel] cacheDirectory=\(cacheDirectory.path)")
+                    let resultPath = try await fileRepository.DownloadFile(entry: entryDetail.id, name: entryDetail.name, dir: cacheDirectory.path)
+                    print("[DocumentReadViewModel] download result=\(resultPath)")
+
+                    // Verify file exists and has content
+                    let fm = FileManager.default
+                    if fm.fileExists(atPath: fileURL.path) {
+                        if let attrs = try? fm.attributesOfItem(atPath: fileURL.path),
+                           let size = attrs[.size] as? Int64 {
+                            print("[DocumentReadViewModel] file size=\(size)")
+                        }
+                    }
+                    Self.logger.info("download completed")
                     cachedFileURL = fileURL
                 } catch {
-                    Self.logger.error("loadDocument: download failed, error=\(error.localizedDescription)")
-                    errorMessage = "Download failed: \(error.localizedDescription)"
+                    Self.logger.error("download failed: \(error.localizedDescription)")
+                    errorMessage = "Download failed"
                 }
             }
         } catch {
-            Self.logger.error("loadDocument: error=\(error.localizedDescription)")
-            errorMessage = "Load document failed: \(error.localizedDescription)"
+            Self.logger.error("error: \(error.localizedDescription)")
+            errorMessage = "Load document failed"
         }
 
         isLoading = false
-        Self.logger.info("loadDocument: finished, isLoading=\(self.isLoading), hasError=\(self.errorMessage != nil)")
     }
 
     var targetURL: URL? {

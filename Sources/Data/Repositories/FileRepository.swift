@@ -9,7 +9,6 @@ import os
 import Foundation
 import Domain
 import Data
-import Domain
 
 
 public class FileRepository: FileRepositoryProtocol {
@@ -29,25 +28,36 @@ public class FileRepository: FileRepositoryProtocol {
         return try await core.UploadFile(entry: entry, fileHandle: fileHandle)
     }
     
-    public func DownloadFile(entry: Int64, dir: String) async throws -> String {
-        let file = "\(dir)/en-\(entry)"
-        let fileTmp = "\(dir)/en-\(entry).tmp"
+    public func DownloadFile(entry: Int64, name: String, dir: String) async throws -> String {
+        let ext = (name as NSString).pathExtension
+        let baseName = ext.isEmpty ? "\(entry)" : "\(entry).\(ext)"
+        let file = "\(dir)/\(baseName)"
+        let fileTmp = "\(dir)/\(baseName).tmp"
         let fmanager = FileManager.default
+
+        print("[FileRepository] dir=\(dir)")
+        print("[FileRepository] name=\(name)")
+        print("[FileRepository] ext=\(ext)")
+        print("[FileRepository] file=\(file)")
+        print("[FileRepository] fileTmp=\(fileTmp)")
+
+        // Ensure directory exists
+        if !fmanager.fileExists(atPath: dir) {
+            print("[FileRepository] creating directory")
+            try fmanager.createDirectory(atPath: dir, withIntermediateDirectories: true)
+        } else {
+            print("[FileRepository] directory exists")
+        }
+
+        // Clean up any existing temp file before download
         if fmanager.fileExists(atPath: fileTmp) {
+            print("[FileRepository] removing existing tmp file")
             try fmanager.removeItem(atPath: fileTmp)
         }
-        
-        defer {
-            do {
-                try fmanager.removeItem(atPath: fileTmp)
-            } catch {
-                Self.logger.error("clean up tmp file \(fileTmp) failed \(error)")
-            }
-        }
-        
+
         try await core.DownloadFile(entry: entry, file: fileTmp)
         try fmanager.moveItem(atPath: fileTmp, toPath: file)
-        
+
         return file
     }
     

@@ -37,14 +37,35 @@ public class FileClient: FileClientProtocol {
     }
 
     public func DownloadFile(entry: Int64, file: String) async throws {
+        print("[FileClient] entry=\(entry), file=\(file)")
+
+        // Check if parent directory exists
+        let parentDir = (file as NSString).deletingLastPathComponent
+        let fm = FileManager.default
+        print("[FileClient] parentDir=\(parentDir)")
+        print("[FileClient] parent exists=\(fm.fileExists(atPath: parentDir))")
+
+        // Create file if it doesn't exist (FileHandle requires file to exist)
+        if !fm.fileExists(atPath: file) {
+            print("[FileClient] creating file: \(file)")
+            fm.createFile(atPath: file, contents: nil, attributes: nil)
+        }
+
         guard let fileHandle = FileHandle(forWritingAtPath: file) else {
+            print("[FileClient] ERROR: failed to create file handle for \(file)")
+            Self.logger.error("failed to create file handle")
             throw BizError.openFileError
         }
         defer {
             fileHandle.closeFile()
         }
 
-        let data = try await apiClient.requestData(.filesContent(uri: nil, id: entry))
-        try fileHandle.write(contentsOf: data)
+        do {
+            let data = try await apiClient.requestData(.filesContent(uri: nil, id: entry))
+            try fileHandle.write(contentsOf: data)
+        } catch {
+            Self.logger.error("download failed: \(error.localizedDescription)")
+            throw error
+        }
     }
 }

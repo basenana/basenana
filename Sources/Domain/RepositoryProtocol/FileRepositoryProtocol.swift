@@ -11,5 +11,5 @@ import Foundation
 
 public protocol FileRepositoryProtocol {
     func UploadFile(entry: Int64, fileHandle: FileHandle) async throws
-    func DownloadFile(entry: Int64, dir: String) async throws -> String
+    func DownloadFile(entry: Int64, name: String, dir: String) async throws -> String
 }

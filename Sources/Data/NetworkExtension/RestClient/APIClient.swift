@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import os
 
 public enum APIError: Error, LocalizedError {
     case invalidURL
@@ -48,6 +49,11 @@ final public class APIClient {
     private let session: URLSession
     private let baseURL: String
     private var authInterceptor: AuthInterceptor?
+
+    private static let logger = Logger(
+        subsystem: Bundle.main.bundleIdentifier!,
+        category: "APIClient"
+    )
 
     /// Default timeout for requests (in seconds)
     public var requestTimeout: TimeInterval = 10
@@ -94,11 +100,13 @@ final public class APIClient {
         let (data, response) = try await performRequestWithTimeout(request)
 
         guard let httpResponse = response as? HTTPURLResponse else {
+            Self.logger.error("invalid response type")
             throw APIError.networkError(NSError(domain: "APIClient", code: -1))
         }
 
         guard (200...299).contains(httpResponse.statusCode) else {
-            let message = String(data: data, encoding: .utf8)
+            let message = String(data: data, encoding: .utf8) ?? "nil"
+            Self.logger.error("HTTP \(httpResponse.statusCode): \(message)")
             throw APIError.httpError(statusCode: httpResponse.statusCode, message: message)
         }
 
@@ -154,24 +162,22 @@ final public class APIClient {
         do {
             return try await session.data(for: request)
         } catch {
+            Self.logger.error("network error: \(error.localizedDescription)")
             throw APIError.networkError(error)
         }
     }
 
     private func performRequestWithTimeout(_ request: URLRequest) async throws -> (Data, URLResponse) {
         return try await withThrowingTaskGroup(of: (Data, URLResponse).self) { group in
-            // Add the actual request task
             group.addTask {
-                return try await self.session.data(for: request)
+                try await self.session.data(for: request)
             }
 
-            // Add a timeout task
             group.addTask {
                 try await Task.sleep(nanoseconds: UInt64(self.requestTimeout * 1_000_000_000))
                 throw APIError.timeout
             }
 
-            // Return the first completed result
             let result = try await group.next()!
             group.cancelAll()
             return result
