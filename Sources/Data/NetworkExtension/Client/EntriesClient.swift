@@ -104,16 +104,16 @@ public class EntriesClient: EntriesClientProtocol {
         return response.entries.map { $0.toAPIEntryInfo() }
     }
 
-    public func ChangeParent(uri: String, newParentUri: String, option: ChangeParentOption) async throws {
+    public func ChangeParent(uri: String, newEntryUri: String, option: ChangeParentOption) async throws {
         let request = ChangeParentRequest(
             entry_uri: uri,
-            new_entry_uri: newParentUri,
+            new_entry_uri: newEntryUri,
             replace: false,
             exchange: false
         )
 
         _ = try await apiClient.request(
-            .entriesParent(uri: uri, id: nil, newUri: newParentUri),
+            .entriesParent(uri: uri, id: nil, newUri: newEntryUri),
             body: request,
             responseType: EntryDetailResponse.self
         )

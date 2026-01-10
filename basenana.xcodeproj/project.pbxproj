@@ -26,7 +26,6 @@
 		156BD8B868C5AD0CAF0EE7F3 /* DocumentNotify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30072FA5C1CBC8F46D968EEC /* DocumentNotify.swift */; };
 		16EF550E6294250EC730CCC4 /* AuthInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52BEF39ADA32A121B0ADAE75 /* AuthInterceptor.swift */; };
 		172507A5E9A5A8932442D038 /* GroupTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897186F752E5F04AF99AA48D /* GroupTableViewModel.swift */; };
-		1862FB7EB340BAF37C49E756 /* FsProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049C2E8B30F87CF1407AA3C2 /* FsProperty.swift */; };
 		1B46D364DDC55F5158236998 /* SysHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86B516CAC64BB000E0F74AA /* SysHelper.swift */; };
 		1D2E828C6EF98DEF50DCE822 /* Styleguide.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 72723282C662EEDA42C4AD5E /* Styleguide.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		20E572DC62660C0030552B42 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA6FB97F8CD1AB40782C5FD /* NotificationView.swift */; };
@@ -339,7 +338,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		049C2E8B30F87CF1407AA3C2 /* FsProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FsProperty.swift; sourceTree = "<group>"; };
 		06386DF72A2AEA378B29253B /* WebHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebHelper.swift; sourceTree = "<group>"; };
 		08E63667B92ACC2CA7505982 /* Datetime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Datetime.swift; sourceTree = "<group>"; };
 		0A05E8FD2F80AAB23C669140 /* URLSchema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSchema.swift; sourceTree = "<group>"; };
@@ -836,7 +834,6 @@
 				4B70D1A9AC8DADEB04A798E4 /* Dialogue.swift */,
 				0CA9C404688771B98C09D987 /* Entry.swift */,
 				37179859C84D53147DA31E76 /* EntryGroup.swift */,
-				049C2E8B30F87CF1407AA3C2 /* FsProperty.swift */,
 				26225BE00F26954CC8061BE1 /* Search.swift */,
 				BDD77677B427DAE46EEA8274 /* System.swift */,
 				D05024CEA7472755005E3028 /* Workflow.swift */,
@@ -1637,7 +1634,6 @@
 				22B44767C9B0F334AEAD63AF /* EntryUseCaseProtocol.swift in Sources */,
 				029D1CAA82079A50F0440937 /* Error.swift in Sources */,
 				C0866299BB49471C901F75D0 /* FileRepositoryProtocol.swift in Sources */,
-				1862FB7EB340BAF37C49E756 /* FsProperty.swift in Sources */,
 				AF0E8D02EDC88D74F11FCF63 /* GeneralSetting.swift in Sources */,
 				A542B8436AFA0B2CA77CF49F /* Job.swift in Sources */,
 				7674ABF1551856F55F5FB631 /* NotificationRepositoryProtocol.swift in Sources */,

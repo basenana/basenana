@@ -40,38 +40,17 @@ struct FileToolBarView: View {
         }
 
         EmptyView()
-            .onChange(of: viewModel.selection){
-                let selectedEntries = viewModel.selectedEntries
-                if selectedEntries.count == 1 {
-                    if let target = selectedEntries.first {
-                        Task {
-                            targetDetail = await viewModel.describeEntry(uri: target.uri)
-
-                            // parse url
-                            if let pro = getEntryProperty(keys: [Property.WebPageURL, Property.WebSiteURL]) {
-                                if let u = URL(string: pro.value) {
-                                    targetURL = u
-                                    return
-                                }
-                            }
-                        }
-                        targetURL = nil
-                    }
+            .onChange(of: viewModel.selection) {
+                guard viewModel.selectedEntries.count == 1,
+                      let target = viewModel.selectedEntries.first else {
+                    targetDetail = nil
+                    targetURL = nil
+                    return
+                }
+                Task {
+                    targetDetail = await viewModel.describeEntry(uri: target.uri)
+                    targetURL = targetDetail?.documentURL.flatMap { URL(string: $0) }
                 }
             }
-    }
-
-    func getEntryProperty(keys: [String]) -> EntryProperty?{
-        guard targetDetail != nil else {
-            return nil
-        }
-        for k in keys {
-            for p in targetDetail!.properties {
-                if p.key == k {
-                    return p
-                }
-            }
-        }
-        return nil
     }
 }

@@ -125,13 +125,12 @@ public class BaseViewModel {
             store.newBackgroundJob(
                 name: "Uploading \(file.lastPathComponent)",
                 job: {
-                    let properties: [String:String] = [Property.LocalFile:file.path()]
                     do {
                         if try file.resourceValues(forKeys: [.isDirectoryKey]).isDirectory ?? false {
                             throw BizError.isGroup
                         }
 
-                        let en = try await self.entryUsecase.UploadFile(parentUri: parentUri, file: file, properties: properties)
+                        let en = try await self.entryUsecase.UploadFile(parentUri: parentUri, file: file)
                         Self.logger.notice("upload new entry \(en.id)/\(en.name)")
                     } catch {
                         sentAlert("upload file \(file.lastPathComponent) failed \(error)")

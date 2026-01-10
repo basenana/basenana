@@ -56,18 +56,19 @@ public struct DocumentReadView: View {
         }
         .navigationTitle(document?.name ?? "")
         .frame(minWidth: 200, minHeight: 100)
-        .toolbar{
-            if document != nil {
-                ToolbarItemGroup(placement: .primaryAction){
-                    DocumentToolBarView(viewModel: viewModel, isUnread: $isUnread, isMarked: $isMarked)
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                if let doc = viewModel.entry {
+                    DocumentToolBarView(document: doc, isUnread: $isUnread, isMarked: $isMarked)
                 }
             }
         }
         .task {
             await viewModel.loadDocument()
-            if let document = viewModel.entry {
-                isUnread = document.documentUnread
-                isMarked = document.documentMarked
+            if let entry = viewModel.entry {
+                self.document = entry
+                isUnread = entry.documentUnread
+                isMarked = entry.documentMarked
             }
         }
     }

@@ -82,14 +82,13 @@ public class InboxViewModel: BaseViewModel {
         store.newBackgroundJob(
             name: "Uploading Web Archive \(file.lastPathComponent)",
             job: {
-                let properties: [String:String] = [Property.WebPageURL:url.absoluteString, Property.WebPageTitle: title]
                 do {
                     if try file.resourceValues(forKeys: [.isDirectoryKey]).isDirectory ?? false {
                         sentAlert("invalid web file")
                         return
                     }
                     
-                    let en = try await self.entryUsecase.UploadFile(parentUri: EntryURI.inbox, file: file, properties: properties)
+                    let en = try await self.entryUsecase.UploadFile(parentUri: EntryURI.inbox, file: file)
                     Self.logger.info("upload new entry \(en.id)/\(en.name)")
                 } catch {
                     sentAlert("upload file \(file.lastPathComponent) failed \(error)")

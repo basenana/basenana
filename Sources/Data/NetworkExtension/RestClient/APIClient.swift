@@ -90,7 +90,7 @@ final public class APIClient {
 
     public func request<T: Decodable, B: Encodable>(_ endpoint: APIEndpoint, body: B, responseType: T.Type) async throws -> T {
         var request = try buildRequest(endpoint)
-        request.httpBody = try JSONEncoder.apiEncoder.encode(body)
+        request.httpBody = try JSONEncoder.encodeWithNilOmit(body)
         let (data, response) = try await performRequestWithTimeout(request)
         return try decodeResponse(data: data, response: response)
     }
@@ -227,6 +227,21 @@ extension JSONEncoder {
         encoder.dateEncodingStrategy = .iso8601
         return encoder
     }()
+
+    static func encodeWithNilOmit<T: Encodable>(_ value: T) throws -> Data {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        let container = try encoder.encode(value)
+        return try filterNilValues(in: container)
+    }
+
+    private static func filterNilValues(in data: Data) throws -> Data {
+        guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            return data
+        }
+        let filtered = json.filter { $0.value is NSNull == false }
+        return try JSONSerialization.data(withJSONObject: filtered)
+    }
 }
 
 // MARK: - Error Response Model

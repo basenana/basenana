@@ -51,8 +51,8 @@ public class EntryRepository: EntryRepositoryProtocol {
         return try await core.ListGroupChildren(parentUri: parentUri, page: page, pageSize: pageSize)
     }
 
-    public func ChangeParent(uri: String, newParentUri: String, option: ChangeParentOption) async throws {
-        return try await core.ChangeParent(uri: uri, newParentUri: newParentUri, option: option)
+    public func ChangeParent(uri: String, newEntryUri: String, option: ChangeParentOption) async throws {
+        return try await core.ChangeParent(uri: uri, newEntryUri: newEntryUri, option: option)
     }
 
     public func AddProperty(entry: Int64, key: String, val: String) async throws {

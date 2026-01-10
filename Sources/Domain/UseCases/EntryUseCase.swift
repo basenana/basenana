@@ -37,7 +37,7 @@ public class EntryUseCase: EntryUseCaseProtocol {
         do {
             let newUri = parentUri(of: uri) + "/" + newName
             var opt = ChangeParentOption()
-            return try await entryRepo.ChangeParent(uri: uri, newParentUri: newUri, option: opt)
+            return try await entryRepo.ChangeParent(uri: uri, newEntryUri: newUri, option: opt)
         } catch RepositoryError.canceled {
             return
         }
@@ -95,7 +95,8 @@ public class EntryUseCase: EntryUseCaseProtocol {
 
             for uri in uris {
                 let entry = try await getEntryDetails(uri: uri)
-                try await entryRepo.ChangeParent(uri: uri, newParentUri: newParentUri, option: ChangeParentOption())
+                let newEntryUri = newParentUri + "/" + entry.name
+                try await entryRepo.ChangeParent(uri: uri, newEntryUri: newEntryUri, option: ChangeParentOption())
                 DispatchQueue.main.async {
                     finisher(entry, parent)
                 }
@@ -118,7 +119,7 @@ public class EntryUseCase: EntryUseCaseProtocol {
         }
     }
 
-    public func UploadFile(parentUri: String, file: URL, properties: [String:String] = [:]) async throws -> EntryInfo {
+    public func UploadFile(parentUri: String, file: URL) async throws -> EntryInfo {
         let fileHandle = try FileHandle(forReadingFrom: file)
         defer {
             fileHandle.closeFile()
@@ -127,10 +128,6 @@ public class EntryUseCase: EntryUseCaseProtocol {
         let option = EntryCreate(parentUri: parentUri, name: file.lastPathComponent, kind: "raw")
         let entry = try await entryRepo.CreateEntry(entry: option)
         Self.logger.info("create entry \(entry.id) for upload")
-
-        for kv in properties {
-            try await entryRepo.AddProperty(entry: entry.id, key: kv.key, val: kv.value)
-        }
 
         try await fileRepo.UploadFile(entry: entry.id, fileHandle: fileHandle)
         return entry
