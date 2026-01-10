@@ -24,6 +24,8 @@ public struct DocumentInfo {
     public var publishAt: Date?
     public var url: String?
     public var headerImage: String?
+    public var siteName: String?
+    public var siteURL: String?
 
     public init() { }
 
@@ -40,6 +42,8 @@ public struct DocumentInfo {
         self.publishAt = dto?.publish_at
         self.url = dto?.url
         self.headerImage = dto?.header_image
+        self.siteName = dto?.site_name
+        self.siteURL = dto?.site_url
     }
 }
 
@@ -50,6 +54,8 @@ extension DocumentInfo: Decodable {
         case publishAt = "publish_at"
         case url
         case headerImage = "header_image"
+        case siteName = "site_name"
+        case siteURL = "site_url"
     }
 
     public init(from decoder: Decoder) throws {
@@ -66,32 +72,26 @@ extension DocumentInfo: Decodable {
         self.publishAt = try container.decodeIfPresent(Date.self, forKey: .publishAt)
         self.url = try container.decodeIfPresent(String.self, forKey: .url)
         self.headerImage = try container.decodeIfPresent(String.self, forKey: .headerImage)
+        self.siteName = try container.decodeIfPresent(String.self, forKey: .siteName)
+        self.siteURL = try container.decodeIfPresent(String.self, forKey: .siteURL)
     }
 }
 
 public struct APIEntryInfo: EntryInfo {
     public var id: Int64
     public var uri: String
-
     public var name: String
-
     public var kind: String
-
     public var isGroup: Bool
-
     public var size: Int64
-
     public var parentID: Int64
-
     public var createdAt: Date
-
     public var changedAt: Date
-
     public var modifiedAt: Date
-
     public var accessAt: Date
+    public var document: DocumentInfo?
 
-    public init(id: Int64, uri: String, name: String, kind: String, isGroup: Bool, size: Int64, parentID: Int64, createdAt: Date, changedAt: Date, modifiedAt: Date, accessAt: Date) {
+    public init(id: Int64, uri: String, name: String, kind: String, isGroup: Bool, size: Int64, parentID: Int64, createdAt: Date, changedAt: Date, modifiedAt: Date, accessAt: Date, document: DocumentInfo? = nil) {
         self.id = id
         self.uri = uri
         self.name = name
@@ -103,6 +103,7 @@ public struct APIEntryInfo: EntryInfo {
         self.changedAt = changedAt
         self.modifiedAt = modifiedAt
         self.accessAt = accessAt
+        self.document = document
     }
 
     public func toGroup() -> (any EntryGroup)? {
@@ -242,15 +243,20 @@ public struct APIEntryProperty: EntryProperty, Decodable {
 // MARK: - Document Properties Extension for APIEntryInfo
 
 extension APIEntryInfo {
-    public var documentTitle: String? { nil }
-    public var documentAuthor: String? { nil }
-    public var documentAbstract: String? { nil }
-    public var documentURL: String? { nil }
-    public var documentHeaderImage: String? { nil }
-    public var documentMarked: Bool { false }
-    public var documentUnread: Bool { false }
-    public var documentPublishAt: Date? { nil }
-    public var documentSiteName: String? { nil }
+    public var documentTitle: String? { document?.title }
+    public var documentAuthor: String? { document?.author }
+    public var documentYear: String? { document?.year }
+    public var documentSource: String? { document?.source }
+    public var documentAbstract: String? { document?.abstract }
+    public var documentKeywords: [String]? { document?.keywords }
+    public var documentNotes: String? { document?.notes }
+    public var documentURL: String? { document?.url }
+    public var documentHeaderImage: String? { document?.headerImage }
+    public var documentMarked: Bool { document?.marked ?? false }
+    public var documentUnread: Bool { document?.unread ?? false }
+    public var documentPublishAt: Date? { document?.publishAt }
+    public var documentSiteName: String? { document?.siteName }
+    public var documentSiteURL: String? { document?.siteURL }
 }
 
 // MARK: - Document Properties Extension for APIEntryDetail
@@ -258,11 +264,16 @@ extension APIEntryInfo {
 extension APIEntryDetail {
     public var documentTitle: String? { document?.title }
     public var documentAuthor: String? { document?.author }
+    public var documentYear: String? { document?.year }
+    public var documentSource: String? { document?.source }
     public var documentAbstract: String? { document?.abstract }
+    public var documentKeywords: [String]? { document?.keywords }
+    public var documentNotes: String? { document?.notes }
     public var documentURL: String? { document?.url }
     public var documentHeaderImage: String? { document?.headerImage }
     public var documentMarked: Bool { document?.marked ?? false }
     public var documentUnread: Bool { document?.unread ?? false }
     public var documentPublishAt: Date? { document?.publishAt }
-    public var documentSiteName: String? { nil }
+    public var documentSiteName: String? { document?.siteName }
+    public var documentSiteURL: String? { document?.siteURL }
 }

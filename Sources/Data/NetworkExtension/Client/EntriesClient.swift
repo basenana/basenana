@@ -222,14 +222,15 @@ extension EntryDetailDTO {
             createdAt: self.created_at,
             changedAt: self.changed_at,
             modifiedAt: self.modified_at,
-            accessAt: self.access_at
+            accessAt: self.access_at,
+            document: DocumentInfo(from: self.document)
         )
     }
 }
 
 extension EntryInfoDTO {
     func toAPIEntryInfo() -> any EntryInfo {
-        let info = APIEntryInfo(
+        APIEntryInfo(
             id: self.entry,
             uri: self.uri,
             name: self.name,
@@ -240,80 +241,8 @@ extension EntryInfoDTO {
             createdAt: self.created_at,
             changedAt: self.changed_at,
             modifiedAt: self.modified_at,
-            accessAt: self.access_at
+            accessAt: self.access_at,
+            document: DocumentInfo(from: self.document)
         )
-        // Apply document properties - return concrete type to preserve protocol impl
-        if let doc = self.document {
-            return DocumentEntryInfo(
-                base: info,
-                title: doc.title,
-                author: doc.author,
-                year: doc.year,
-                source: doc.source,
-                abstract: doc.abstract,
-                keywords: doc.keywords,
-                notes: doc.notes,
-                marked: doc.marked ?? false,
-                unread: doc.unread ?? false,
-                publishAt: doc.publish_at,
-                url: doc.url,
-                _headerImage: doc.header_image,
-                siteName: doc.site_name,
-                siteURL: doc.site_url
-            )
-        }
-        return info
     }
-}
-
-// MARK: - Document Entry Info Wrapper
-
-private struct DocumentEntryInfo: EntryInfo {
-    let base: APIEntryInfo
-    let title: String?
-    let author: String?
-    let year: String?
-    let source: String?
-    let abstract: String?
-    let keywords: [String]?
-    let notes: String?
-    let marked: Bool
-    let unread: Bool
-    let publishAt: Date?
-    let url: String?
-    let _headerImage: String?
-    let siteName: String?
-    let siteURL: String?
-
-    var id: Int64 { base.id }
-    var uri: String { base.uri }
-    var name: String { base.name }
-    var kind: String { base.kind }
-    var isGroup: Bool { base.isGroup }
-    var size: Int64 { base.size }
-    var parentID: Int64 { base.parentID }
-    var createdAt: Date { base.createdAt }
-    var changedAt: Date { base.changedAt }
-    var modifiedAt: Date { base.modifiedAt }
-    var accessAt: Date { base.accessAt }
-
-    var documentTitle: String? { title }
-    var documentAuthor: String? { author }
-    var documentYear: String? { year }
-    var documentSource: String? { source }
-    var documentAbstract: String? { abstract }
-    var documentKeywords: [String]? { keywords }
-    var documentNotes: String? { notes }
-    var documentMarked: Bool { marked }
-    var documentUnread: Bool { unread }
-    var documentPublishAt: Date? { publishAt }
-    var documentURL: String? { url }
-    var documentHeaderImage: String? { _headerImage }
-    var documentSiteName: String? { siteName }
-    var documentSiteURL: String? { siteURL }
-
-    var subContent: String { abstract ?? "" }
-    var headerImage: String { _headerImage ?? "" }
-
-    func toGroup() -> EntryGroup? { base.toGroup() }
 }

@@ -24,13 +24,18 @@ public protocol EntryInfo {
     // Document properties - must be implemented by concrete types
     var documentTitle: String? { get }
     var documentAuthor: String? { get }
+    var documentYear: String? { get }
+    var documentSource: String? { get }
     var documentAbstract: String? { get }
+    var documentKeywords: [String]? { get }
+    var documentNotes: String? { get }
     var documentURL: String? { get }
     var documentHeaderImage: String? { get }
     var documentMarked: Bool { get }
     var documentUnread: Bool { get }
     var documentPublishAt: Date? { get }
     var documentSiteName: String? { get }
+    var documentSiteURL: String? { get }
 
     func toGroup() -> EntryGroup?
 }
@@ -58,6 +63,22 @@ public protocol EntryDetail {
     var accessAt: Date { get }
 
     var properties: [EntryProperty] { get }
+
+    // Document properties
+    var documentTitle: String? { get }
+    var documentAuthor: String? { get }
+    var documentYear: String? { get }
+    var documentSource: String? { get }
+    var documentAbstract: String? { get }
+    var documentKeywords: [String]? { get }
+    var documentNotes: String? { get }
+    var documentURL: String? { get }
+    var documentHeaderImage: String? { get }
+    var documentMarked: Bool { get }
+    var documentUnread: Bool { get }
+    var documentPublishAt: Date? { get }
+    var documentSiteName: String? { get }
+    var documentSiteURL: String? { get }
 
     func toInfo() -> EntryInfo?
     func toGroup() -> EntryGroup?
@@ -178,11 +199,19 @@ public struct DocumentFilter {
 
 extension EntryInfo {
     // Document properties with default implementations for types that don't have document info
+    public var documentTitle: String? { nil }
     public var documentAuthor: String? { nil }
     public var documentYear: String? { nil }
     public var documentSource: String? { nil }
+    public var documentAbstract: String? { nil }
     public var documentKeywords: [String]? { nil }
     public var documentNotes: String? { nil }
+    public var documentURL: String? { nil }
+    public var documentHeaderImage: String? { nil }
+    public var documentMarked: Bool { false }
+    public var documentUnread: Bool { false }
+    public var documentPublishAt: Date? { nil }
+    public var documentSiteName: String? { nil }
     public var documentSiteURL: String? { nil }
 
     // Legacy DocumentInfo properties (deprecated)
@@ -212,14 +241,17 @@ extension EntryInfo {
 extension EntryDetail {
     public var documentTitle: String? { nil }
     public var documentAuthor: String? { nil }
+    public var documentYear: String? { nil }
     public var documentSource: String? { nil }
     public var documentAbstract: String? { nil }
     public var documentKeywords: [String]? { nil }
     public var documentNotes: String? { nil }
+    public var documentURL: String? { nil }
+    public var documentHeaderImage: String? { nil }
     public var documentMarked: Bool { false }
     public var documentUnread: Bool { false }
     public var documentPublishAt: Date? { nil }
-    public var documentURL: String? { nil }
-    public var documentHeaderImage: String? { nil }
+    public var documentSiteName: String? { nil }
+    public var documentSiteURL: String? { nil }
     public var content: String { "" }
 }

@@ -97,18 +97,7 @@ public class DocumentReadViewModel {
             } else {
                 Self.logger.info("downloading...")
                 do {
-                    print("[DocumentReadViewModel] cacheDirectory=\(cacheDirectory.path)")
                     let resultPath = try await fileRepository.DownloadFile(entry: entryDetail.id, name: entryDetail.name, dir: cacheDirectory.path)
-                    print("[DocumentReadViewModel] download result=\(resultPath)")
-
-                    // Verify file exists and has content
-                    let fm = FileManager.default
-                    if fm.fileExists(atPath: fileURL.path) {
-                        if let attrs = try? fm.attributesOfItem(atPath: fileURL.path),
-                           let size = attrs[.size] as? Int64 {
-                            print("[DocumentReadViewModel] file size=\(size)")
-                        }
-                    }
                     Self.logger.info("download completed")
                     cachedFileURL = fileURL
                 } catch {
