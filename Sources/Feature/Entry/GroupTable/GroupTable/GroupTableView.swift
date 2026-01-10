@@ -200,7 +200,8 @@ private struct GroupTableContentView: View {
     }
 
     public var body: some View {
-        Table(of: EntryRow.self, selection: $viewModel.selection, sortOrder: $order) {
+        VStack(spacing: 0) {
+            Table(of: EntryRow.self, selection: $viewModel.selection, sortOrder: $order) {
             TableColumn("Name", value: \.name) { entry in
                 HStack {
                     Image(systemName: entry.isGroup ? "folder" : "doc.text")
@@ -243,6 +244,17 @@ private struct GroupTableContentView: View {
             withAnimation {
                 viewModel.children.sort(using: order)
             }
+        }
+
+        if viewModel.hasMore {
+            ProgressView()
+                .padding()
+                .onAppear {
+                    Task {
+                        await viewModel.loadNextPage()
+                    }
+                }
+        }
         }
     }
 }

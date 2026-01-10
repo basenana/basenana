@@ -24,7 +24,7 @@ public enum APIEndpoint {
     case entriesParent(uri: String?, id: Int64?, newUri: String)
     case entriesProperty(uri: String?, id: Int64?)
     case entriesDocument(uri: String?, id: Int64?)
-    case entriesSearch(page: Int64?, pageSize: Int64?)
+    case entriesSearch
     case groupsChildren(uri: String?, id: Int64?, page: Int64?, pageSize: Int64?, order: String?, desc: Bool?)
     case groupsTree
     case filesContent(uri: String?, id: Int64?)
@@ -112,11 +112,11 @@ public enum APIEndpoint {
             return .get
         case .filesUpload:
             return .post
-        case .entriesCreate, .entriesSearch, .messagesRead, .workflowTrigger:
+        case .entriesCreate, .entriesBatchDelete, .entriesSearch, .messagesRead, .workflowTrigger:
             return .post
         case .entriesUpdate, .entriesParent, .entriesProperty, .entriesDocument, .workflowUpdate, .configSet:
             return .put
-        case .entriesDelete, .entriesBatchDelete, .workflowDelete, .configDelete:
+        case .entriesDelete, .workflowDelete, .configDelete:
             return .delete
         case .workflowJobPause, .workflowJobResume, .workflowJobCancel:
             return .post
@@ -135,18 +135,16 @@ public enum APIEndpoint {
             if let uri = uri { items.append(URLQueryItem(name: "uri", value: uri)) }
             if let id = id { items.append(URLQueryItem(name: "id", value: String(id))) }
 
-        case .entriesParent(let uri, let id, let newUri):
+        case .entriesParent(let uri, let id, _):
             if let uri = uri { items.append(URLQueryItem(name: "uri", value: uri)) }
             if let id = id { items.append(URLQueryItem(name: "id", value: String(id))) }
-            items.append(URLQueryItem(name: "new_uri", value: newUri))
 
         case .entriesProperty(let uri, let id), .entriesDocument(let uri, let id):
             if let uri = uri { items.append(URLQueryItem(name: "uri", value: uri)) }
             if let id = id { items.append(URLQueryItem(name: "id", value: String(id))) }
 
-        case .entriesSearch(let page, let pageSize):
-            if let page = page { items.append(URLQueryItem(name: "page", value: String(page))) }
-            if let pageSize = pageSize { items.append(URLQueryItem(name: "page_size", value: String(pageSize))) }
+        case .entriesSearch:
+            break
 
         case .groupsChildren(let uri, let id, let page, let pageSize, let order, let desc):
             if let uri = uri { items.append(URLQueryItem(name: "uri", value: uri)) }

@@ -18,7 +18,7 @@ public protocol EntryRepositoryProtocol {
     func CreateEntry(entry: EntryCreate) async throws -> EntryInfo
     func UpdateEntry(uri: String, name: String?) async throws -> EntryDetail
     func DeleteEntries(uris: [String]) async throws
-    func ListGroupChildren(parentUri: String) async throws -> [EntryInfo]
+    func ListGroupChildren(parentUri: String, page: Int?, pageSize: Int?) async throws -> [EntryInfo]
     func ChangeParent(uri: String, newParentUri: String, option: ChangeParentOption) async throws
 
     // entry properties

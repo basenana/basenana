@@ -16,7 +16,7 @@ public protocol EntryUseCaseProtocol {
     func deleteEntries(uris: [String]) async throws
 
     func getTreeRoot() async throws -> EntryGroup
-    func listChildren(uri: String) async throws -> [EntryInfo]
+    func listChildren(uri: String, page: Int?, pageSize: Int?) async throws -> [EntryInfo]
     func changeParent(uris: [String], newParentUri: String, finisher: @escaping (EntryDetail, EntryDetail) -> Void) async throws
     func createGroups(parentUri: String, option: EntryCreate) async throws -> EntryInfo
 

@@ -28,7 +28,7 @@ public class DocumentListViewModel {
 
     var isLoading: Bool = false
     var page: Int = 1
-    var pageSize: Int = 40
+    var pageSize: Int = 10
     var hasMore = true
 
     private static let logger = Logger(
@@ -178,27 +178,30 @@ public class DocumentListViewModel {
     // MARK: list document
     func reset() {
         self.page = 1
+        self.hasMore = true
+        self.isLoading = false
         Self.logger.info("reinit main documents: current cached \(self.sectionDocuments.count)")
         sectionDocuments.removeAll()
         documentsSectionMap.removeAll()
-        self.hasMore = true
 
         self.enableHooks = true
         unreadDocumentsAppeared.removeAll()
     }
 
     func loadNextPage() async {
-        let nextPage = await listNextPage()
-        if self.isLoading {
-            return
-        }
+        guard !isLoading && hasMore else { return }
 
+        Self.logger.info("load next page, page=\(self.page)")
+        isLoading = true
+
+        let nextPage = await listNextPage()
         Self.logger.info("list document len \(nextPage.count)")
-        self.isLoading = true
+
         for nextDoc in nextPage {
             insertToSectionDocuments(doc: DocumentItem(info: nextDoc, readable: prespective == .unread ? true : false))
         }
-        self.isLoading = false
+
+        isLoading = false
     }
 
     func listNextPage() async -> [EntryInfo] {
@@ -215,6 +218,8 @@ public class DocumentListViewModel {
             if nextPageList.isEmpty || pageSize > nextPageList.count {
                 Self.logger.info("no more documents, page=\(self.page)")
                 hasMore = false
+            } else {
+                self.page += 1
             }
         } catch let error as UseCaseError where error == .canceled {
             // do nothing
@@ -224,7 +229,6 @@ public class DocumentListViewModel {
             return []
         }
 
-        page += 1
         return nextPageList
     }
 

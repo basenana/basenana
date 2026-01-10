@@ -47,8 +47,8 @@ public class EntryRepository: EntryRepositoryProtocol {
         return try await core.DeleteEntries(uris: uris)
     }
 
-    public func ListGroupChildren(parentUri: String) async throws -> [any EntryInfo] {
-        return try await core.ListGroupChildren(parentUri: parentUri)
+    public func ListGroupChildren(parentUri: String, page: Int?, pageSize: Int?) async throws -> [any EntryInfo] {
+        return try await core.ListGroupChildren(parentUri: parentUri, page: page, pageSize: pageSize)
     }
 
     public func ChangeParent(uri: String, newParentUri: String, option: ChangeParentOption) async throws {
@@ -77,7 +77,11 @@ public class EntryRepository: EntryRepositoryProtocol {
         if let marked = filter.marked {
             pattern = "marked"
         }
-        return try await core.SearchEntries(celPattern: pattern, offset: nil, limit: nil)
+
+        let page = filter.page.map { Int($0.page) }
+        let pageSize = filter.page.map { Int($0.pageSize) }
+
+        return try await core.SearchEntries(celPattern: pattern, page: page, pageSize: pageSize)
     }
 
     public func UpdateDocument(uri: String, unread: Bool?, marked: Bool?) async throws {

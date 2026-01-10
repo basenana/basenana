@@ -80,8 +80,7 @@ public class EntriesClient: EntriesClientProtocol {
     }
 
     public func DeleteEntries(uris: [String]) async throws {
-        let encodedUris = uris.map { $0.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? $0 }
-        let request = BatchDeleteRequest(uri_list: encodedUris)
+        let request = BatchDeleteRequest(uri_list: uris)
         _ = try await apiClient.request(
             .entriesBatchDelete,
             body: request,
@@ -89,13 +88,13 @@ public class EntriesClient: EntriesClientProtocol {
         )
     }
 
-    public func ListGroupChildren(parentUri: String) async throws -> [any EntryInfo] {
+    public func ListGroupChildren(parentUri: String, page: Int?, pageSize: Int?) async throws -> [any EntryInfo] {
         let response: EntriesResponse = try await apiClient.request(
             .groupsChildren(
                 uri: parentUri,
                 id: nil,
-                page: nil,
-                pageSize: nil,
+                page: page.map { Int64($0) },
+                pageSize: pageSize.map { Int64($0) },
                 order: nil,
                 desc: nil
             ),
@@ -145,12 +144,14 @@ public class EntriesClient: EntriesClientProtocol {
 
     // MARK: - Document Operations
 
-    public func SearchEntries(celPattern: String, offset: Int?, limit: Int?) async throws -> [any EntryInfo] {
-        let request = SearchRequest(cel_pattern: celPattern)
-        let page = offset != nil ? Int64(offset! / (limit ?? 10) + 1) : nil
-        let pageSize = limit != nil ? Int64(limit!) : nil
+    public func SearchEntries(celPattern: String, page: Int?, pageSize: Int?) async throws -> [any EntryInfo] {
+        let request = SearchRequest(
+            cel_pattern: celPattern,
+            page: page.map { Int64($0) },
+            page_size: pageSize.map { Int64($0) }
+        )
         let response: EntriesResponse = try await apiClient.request(
-            .entriesSearch(page: page, pageSize: pageSize),
+            .entriesSearch,
             body: request,
             responseType: EntriesResponse.self
         )

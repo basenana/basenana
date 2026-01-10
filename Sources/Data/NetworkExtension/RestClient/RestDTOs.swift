@@ -123,6 +123,12 @@ struct DocumentRequest: Encodable {
 
 struct SearchRequest: Encodable {
     let cel_pattern: String
+    let page: Int64?
+    let page_size: Int64?
+
+    enum CodingKeys: String, CodingKey {
+        case cel_pattern, page, page_size
+    }
 }
 
 // MARK: - EntryGroup Tree DTOs

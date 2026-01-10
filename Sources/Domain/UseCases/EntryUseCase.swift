@@ -56,7 +56,7 @@ public class EntryUseCase: EntryUseCaseProtocol {
             return try await entryRepo.DeleteEntries(uris: [uri])
         }
 
-        let children = try await listChildren(uri: uri)
+        let children = try await listChildren(uri: uri, page: nil, pageSize: nil)
         for child in children {
             try await deleteEntry(uri: child.uri)
         }
@@ -78,9 +78,9 @@ public class EntryUseCase: EntryUseCaseProtocol {
         }
     }
     
-    public func listChildren(uri: String) async throws -> [any  EntryInfo] {
+    public func listChildren(uri: String, page: Int?, pageSize: Int?) async throws -> [any  EntryInfo] {
         do {
-            return try await entryRepo.ListGroupChildren(parentUri: uri)
+            return try await entryRepo.ListGroupChildren(parentUri: uri, page: page, pageSize: pageSize)
         } catch RepositoryError.canceled {
             return []
         }
