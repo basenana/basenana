@@ -35,13 +35,28 @@ class DIContainer {
             GroupTableViewModel(store: state, entryUsecase: r.resolve(EntryUseCaseProtocol.self)!)
         }
         self.c.register(DocumentListViewModel.self, name: DocumentPrespective.marked.Title){ r in
-            DocumentListViewModel(prespective: .marked, store: state, usecase: r.resolve(DocumentUseCaseProtocol.self)!)
+            DocumentListViewModel(
+                prespective: .marked,
+                store: state,
+                usecase: r.resolve(DocumentUseCaseProtocol.self)!,
+                fileRepository: r.resolve(FileRepositoryProtocol.self)!
+            )
         }//.inObjectScope(.container)
         self.c.register(DocumentListViewModel.self, name: DocumentPrespective.unread.Title){ r in
-            DocumentListViewModel(prespective: .unread, store: state, usecase: r.resolve(DocumentUseCaseProtocol.self)!)
+            DocumentListViewModel(
+                prespective: .unread,
+                store: state,
+                usecase: r.resolve(DocumentUseCaseProtocol.self)!,
+                fileRepository: r.resolve(FileRepositoryProtocol.self)!
+            )
         }//.inObjectScope(.container)
         self.c.register(DocumentReadViewModel.self) { r, uri in
-            DocumentReadViewModel(uri: uri, store: state, usecase: r.resolve(DocumentUseCaseProtocol.self)!)
+            DocumentReadViewModel(
+                uri: uri,
+                store: state,
+                usecase: r.resolve(DocumentUseCaseProtocol.self)!,
+                fileRepository: r.resolve(FileRepositoryProtocol.self)!
+            )
         }
         self.c.register(WorkflowListViewModel.self) { r in
             WorkflowListViewModel(store: state, usecase: r.resolve(WorkflowUseCaseProtocol.self)!)

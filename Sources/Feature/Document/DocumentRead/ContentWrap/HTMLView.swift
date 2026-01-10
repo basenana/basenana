@@ -28,16 +28,25 @@ struct HTMLStringView: UIViewRepresentable {
 #if os(macOS)
 struct HTMLStringView: NSViewRepresentable {
     typealias NSViewType = WKWebView
-    
+
+    let fileURL: URL?
     let url: URL?
     let htmlContent: String
-    
+
+    init(fileURL: URL) {
+        self.fileURL = fileURL
+        self.url = nil
+        self.htmlContent = ""
+    }
+
     init(htmlContent: String) {
+        self.fileURL = nil
         self.url = nil
         self.htmlContent = documentHtmlTemplate.replacingOccurrences(of: "{Content}", with: htmlContent)
     }
 
     init(url: URL?, htmlContent: String) {
+        self.fileURL = nil
         self.url = url
         self.htmlContent = documentHtmlTemplate.replacingOccurrences(of: "{Content}", with: htmlContent)
     }
@@ -47,15 +56,19 @@ struct HTMLStringView: NSViewRepresentable {
         webView.navigationDelegate = context.coordinator
         return webView
     }
-    
+
     func updateNSView(_ nsView: WKWebView, context: Context) {
-        nsView.loadHTMLString(htmlContent, baseURL: url)
+        if let fileURL = fileURL {
+            nsView.loadFileURL(fileURL, allowingReadAccessTo: fileURL.deletingLastPathComponent())
+        } else {
+            nsView.loadHTMLString(htmlContent, baseURL: url)
+        }
     }
-    
+
     func makeCoordinator() -> Coordinator {
         Coordinator()
     }
-    
+
     class Coordinator: NSObject, WKNavigationDelegate {
         func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
             if navigationAction.navigationType == .linkActivated, let url = navigationAction.request.url {

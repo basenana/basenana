@@ -22,9 +22,17 @@ public struct DocumentReadView: View {
 
     public var body: some View {
         VStack {
-            if let detailDocument = document {
-                HTMLStringView(url: viewModel.targetURL, htmlContent: detailDocument.content)
-            }else {
+            if viewModel.isLoading {
+                Text("Loading")
+                    .font(.title)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if let fileURL = viewModel.cachedFileURL {
+                HTMLStringView(fileURL: fileURL)
+            } else if let error = viewModel.errorMessage {
+                Text(error)
+                    .foregroundColor(.red)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
                 EmptyView()
             }
         }
@@ -51,8 +59,8 @@ public struct DocumentReadView: View {
             }
         }
         .task {
-            document = await viewModel.loadDocument()
-            if let document = document {
+            await viewModel.loadDocument()
+            if let document = viewModel.entry {
                 isUnread = document.documentUnread
                 isMarked = document.documentMarked
             }

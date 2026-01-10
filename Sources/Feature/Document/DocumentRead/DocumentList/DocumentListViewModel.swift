@@ -16,6 +16,7 @@ public class DocumentListViewModel {
     var prespective: DocumentPrespective
     var store: StateStore
     var usecase: any DocumentUseCaseProtocol
+    var fileRepository: FileRepositoryProtocol
 
     // documents need to display
     var sectionDocuments: [DocumentSection] = []
@@ -35,10 +36,16 @@ public class DocumentListViewModel {
             category: String(describing: DocumentListViewModel.self)
         )
 
-    public init(prespective: DocumentPrespective, store: StateStore, usecase: any DocumentUseCaseProtocol) {
+    public init(
+        prespective: DocumentPrespective,
+        store: StateStore,
+        usecase: any DocumentUseCaseProtocol,
+        fileRepository: FileRepositoryProtocol
+    ) {
         self.prespective = prespective
         self.store = store
         self.usecase = usecase
+        self.fileRepository = fileRepository
     }
 
 
