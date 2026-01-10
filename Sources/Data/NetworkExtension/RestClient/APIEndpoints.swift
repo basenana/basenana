@@ -27,7 +27,8 @@ public enum APIEndpoint {
     case entriesSearch
     case groupsChildren(uri: String?, id: Int64?, offset: Int?, limit: Int?, order: String?, desc: Bool?)
     case groupsTree
-    case filesContent(uri: String?, id: Int64?)
+    case filesContent(id: Int64?)
+    case filesUpload(id: Int64?)
     case messages(all: Bool)
     case messagesRead
     case workflows
@@ -57,6 +58,8 @@ public enum APIEndpoint {
             return "/api/v1/groups/tree"
         case .filesContent:
             return "/api/v1/files/content"
+        case .filesUpload:
+            return "/api/v1/files/content"
         case .messages(let all):
             if all == true {
                 return "/api/v1/messages?all=true"
@@ -83,6 +86,8 @@ public enum APIEndpoint {
         switch self {
         case .healthCheck, .entriesDetails, .groupsChildren, .groupsTree, .filesContent, .messages, .workflows, .workflow, .workflowJobs, .configsGroup, .config:
             return .get
+        case .filesUpload:
+            return .post
         case .entriesCreate, .entriesSearch, .messagesRead, .workflowTrigger:
             return .post
         case .entriesUpdate, .entriesParent, .entriesProperty, .entriesDocument:
@@ -121,8 +126,7 @@ public enum APIEndpoint {
             if let order = order { items.append(URLQueryItem(name: "order", value: order)) }
             if let desc = desc { items.append(URLQueryItem(name: "desc", value: String(desc))) }
 
-        case .filesContent(let uri, let id):
-            if let uri = uri { items.append(URLQueryItem(name: "uri", value: uri)) }
+        case .filesContent(let id), .filesUpload(let id):
             if let id = id { items.append(URLQueryItem(name: "id", value: String(id))) }
 
         case .messages(let all):

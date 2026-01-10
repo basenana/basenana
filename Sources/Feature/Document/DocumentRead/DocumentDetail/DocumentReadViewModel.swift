@@ -13,6 +13,11 @@ import Domain
 @Observable
 @MainActor
 public class DocumentReadViewModel {
+    public enum DocumentFileType {
+        case html
+        case pdf
+    }
+
     var uri: String
     var store: StateStore
     var usecase: any DocumentUseCaseProtocol
@@ -21,6 +26,7 @@ public class DocumentReadViewModel {
     var isLoading: Bool = false
     var cachedFileURL: URL?
     var errorMessage: String?
+    var fileType: DocumentFileType = .html
 
     private static let logger = Logger(
             subsystem: Bundle.main.bundleIdentifier!,
@@ -53,9 +59,18 @@ public class DocumentReadViewModel {
     }
 
     private func cachedFileURL(for entryId: Int64, name: String) -> URL {
-        let ext = (name as NSString).pathExtension
+        let ext = (name as NSString).pathExtension.lowercased()
         let baseName = ext.isEmpty ? "\(entryId)" : "\(entryId).\(ext)"
-        return cacheDirectory.appendingPathComponent(baseName)
+        let url = cacheDirectory.appendingPathComponent(baseName)
+
+        switch ext {
+        case "pdf":
+            fileType = .pdf
+        default:
+            fileType = .html
+        }
+
+        return url
     }
 
     func loadDocument() async {

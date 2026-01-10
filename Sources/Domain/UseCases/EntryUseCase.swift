@@ -112,13 +112,13 @@ public class EntryUseCase: EntryUseCaseProtocol {
         }
     }
 
-    public func UploadFile(parent: Int64, file: URL, properties: [String:String] = [:]) async throws -> EntryInfo {
+    public func UploadFile(parentUri: String, file: URL, properties: [String:String] = [:]) async throws -> EntryInfo {
         let fileHandle = try FileHandle(forReadingFrom: file)
         defer {
             fileHandle.closeFile()
         }
 
-        let option = EntryCreate(parentUri: "/\(parent)", name: file.lastPathComponent, kind: "raw")
+        let option = EntryCreate(parentUri: parentUri, name: file.lastPathComponent, kind: "raw")
         let entry = try await entryRepo.CreateEntry(entry: option)
         Self.logger.info("create entry \(entry.id) for upload")
 

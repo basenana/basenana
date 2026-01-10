@@ -89,7 +89,7 @@ public class InboxViewModel: BaseViewModel {
                         return
                     }
                     
-                    let en = try await self.entryUsecase.UploadFile(parent: self.store.fsInfo.inboxID, file: file, properties: properties)
+                    let en = try await self.entryUsecase.UploadFile(parentUri: EntryURI.inbox, file: file, properties: properties)
                     Self.logger.info("upload new entry \(en.id)/\(en.name)")
                 } catch {
                     sentAlert("upload file \(file.lastPathComponent) failed \(error)")

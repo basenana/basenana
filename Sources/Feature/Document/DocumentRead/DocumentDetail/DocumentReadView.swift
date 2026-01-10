@@ -27,7 +27,12 @@ public struct DocumentReadView: View {
                     .font(.title)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if let fileURL = viewModel.cachedFileURL {
-                HTMLStringView(fileURL: fileURL)
+                switch viewModel.fileType {
+                case .pdf:
+                    PDFDocumentView(fileURL: fileURL)
+                case .html:
+                    HTMLStringView(fileURL: fileURL)
+                }
             } else if let error = viewModel.errorMessage {
                 Text(error)
                     .foregroundColor(.red)
