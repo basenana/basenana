@@ -42,11 +42,11 @@ struct LoginView: View {
 
     func doLogin(req: LoginRequest) {
         Task {
-            await handleLogin(serverHost: req.serverHost, serverPort: req.serverPort, accessTokenKey: req.accessTokenKey, secretToken: req.secretToken)
+            await handleLogin(serverHost: req.serverHost, serverPort: req.serverPort, bearerToken: req.bearerToken, namespace: req.namespace)
         }
     }
 
-    func handleLogin(serverHost: String, serverPort: Int, accessTokenKey: String, secretToken: String) async {
+    func handleLogin(serverHost: String, serverPort: Int, bearerToken: String, namespace: String) async {
         isLogining = true
         errorMessage = ""
 
@@ -58,9 +58,8 @@ struct LoginView: View {
             restAPIClient = RestAPIClient(
                 host: serverHost,
                 port: serverPort,
-                username: accessTokenKey,
-                password: secretToken,
-                namespace: ""
+                token: bearerToken,
+                namespace: namespace
             )
 
             // Adjust timeout for login
@@ -89,7 +88,7 @@ struct LoginView: View {
                 responseType: RootEntryResponse.self
             )
 
-            fsInfo = FSInfo(namespace: rootResponse.entry.namespace)
+            fsInfo = FSInfo(namespace: namespace)
 
         } catch let error as APIError {
             isLogining = false
@@ -97,12 +96,12 @@ struct LoginView: View {
             case .timeout:
                 errorMessage = "Connection timed out. Please check the server address and try again."
             case .unauthorized:
-                errorMessage = "Invalid credentials. Please check your username and password."
+                errorMessage = "Invalid credentials. Please check your bearer token."
             case .networkError:
                 errorMessage = "Unable to connect to server. Please check the server address."
             case .httpError(let statusCode, _):
                 if statusCode == 401 || statusCode == 403 {
-                    errorMessage = "Invalid credentials. Please check your username and password."
+                    errorMessage = "Invalid credentials. Please check your bearer token."
                 } else {
                     errorMessage = "Server error (\(statusCode)). Please try again."
                 }
@@ -125,8 +124,8 @@ struct LoginView: View {
         complateLogin(restAPIClient: client, fsInfo: info)
         store.setting.database.apiHost = serverHost
         store.setting.database.apiPort = serverPort
-        store.setting.database.apiaccessTokenKey = accessTokenKey
-        store.setting.database.apiSecretToken = secretToken
+        store.setting.database.apiBearerToken = bearerToken
+        store.setting.database.apiNamespace = namespace
         isLogining = false
     }
 
@@ -147,14 +146,14 @@ public extension Notification.Name {
 class LoginRequest {
     var serverHost: String
     var serverPort: Int
-    var accessTokenKey: String
-    var secretToken: String
+    var bearerToken: String
+    var namespace: String
 
-    init(serverHost: String, serverPort: Int, accessTokenKey: String, secretToken: String) {
+    init(serverHost: String, serverPort: Int, bearerToken: String, namespace: String) {
         self.serverHost = serverHost
         self.serverPort = serverPort
-        self.accessTokenKey = accessTokenKey
-        self.secretToken = secretToken
+        self.bearerToken = bearerToken
+        self.namespace = namespace
     }
 }
 

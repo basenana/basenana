@@ -26,7 +26,7 @@ public enum SettingCategory: Int, CaseIterable, Hashable {
         case .document:
             return "Document"
         case .database:
-            return "Database"
+            return "NanaFS"
         }
     }
 
@@ -41,7 +41,7 @@ public enum SettingCategory: Int, CaseIterable, Hashable {
         case .document:
             return "SettingCategory_Document"
         case .database:
-            return "SettingCategory_Database"
+            return "SettingCategory_NanaFS"
         }
     }
 }

@@ -101,7 +101,7 @@
 		8185C13241A383D3860B1C4B /* NavigationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 998BC25AD81DB5CC030DC0F3 /* NavigationListView.swift */; };
 		821B1416FBDC4C9ECD0429CF /* api.md in Resources */ = {isa = PBXBuildFile; fileRef = FCE25EAD07F82F5A4368DC2E /* api.md */; };
 		838B228F5789735E6A0E4F68 /* EntryUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64275A1AB6F53A0B1E642F7 /* EntryUseCase.swift */; };
-		85CF17C5A0B6F78D3E045F81 /* DatabaseSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B86BA199747FDCF9FAF0CA0 /* DatabaseSettingView.swift */; };
+		85CF17C5A0B6F78D3E045F81 /* DatabaseSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F1234567890ABCDEF123456 /* NanaFSSettingsView.swift */; };
 		866CB1584579624FB3401C66 /* System.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD77677B427DAE46EEA8274 /* System.swift */; };
 		86BB16C84EBE8CCEA34C2F94 /* AlertNotify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF31BDEFF283C79DF527EB6 /* AlertNotify.swift */; };
 		8782376B4951A30216801EBF /* WorkflowClientProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8F32A4222016BE8AC0167 /* WorkflowClientProtocol.swift */; };
@@ -398,7 +398,7 @@
 		55F76088500B33FC10D8BB6F /* Workflow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workflow.swift; sourceTree = "<group>"; };
 		59BF3414BD34EA823F1FE836 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		5AE65E40F6E01219CDA9BB58 /* DocumentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentTests.swift; sourceTree = "<group>"; };
-		5B86BA199747FDCF9FAF0CA0 /* DatabaseSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseSettingView.swift; sourceTree = "<group>"; };
+		5F1234567890ABCDEF123456 /* NanaFSSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NanaFSSettingsView.swift; sourceTree = "<group>"; };
 		5E92A0F052FAE0CBDE42F703 /* EntryMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryMenuView.swift; sourceTree = "<group>"; };
 		5F8CAE33B64B9B4816CF1958 /* NotifyClientProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifyClientProtocol.swift; sourceTree = "<group>"; };
 		61C39D688625B40A5838FF67 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -795,7 +795,7 @@
 			isa = PBXGroup;
 			children = (
 				DC24EB0E13B6E98F2E940B83 /* AppearanceSettingView.swift */,
-				5B86BA199747FDCF9FAF0CA0 /* DatabaseSettingView.swift */,
+				5F1234567890ABCDEF123456 /* NanaFSSettingsView.swift */,
 				14E6E9CE89EDB3595C815972 /* DocumentSettingView.swift */,
 				40A5B51964F931C72C6A500D /* GeneralSettingView.swift */,
 				537318CC6474A88FD72D2DDE /* ReadingSettingView.swift */,

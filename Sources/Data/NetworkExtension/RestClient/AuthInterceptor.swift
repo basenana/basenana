@@ -2,32 +2,27 @@
 //  AuthInterceptor.swift
 //  Data
 //
-//  Basic Auth authentication interceptor
+//  Bearer Token authentication interceptor
 //
 
 import Foundation
 
 struct AuthInterceptor {
-    let username: String
-    let password: String
+    let token: String
+    let namespace: String
 
-    init(username: String, password: String) {
-        self.username = username
-        self.password = password
+    init(token: String, namespace: String) {
+        self.token = token
+        self.namespace = namespace
     }
 
     var authorizationHeader: String {
-        let credentials = "\(username):\(password)"
-        guard let credentialsData = credentials.data(using: .utf8) else {
-            return ""
-        }
-        let base64Credentials = credentialsData.base64EncodedString()
-        return "Basic \(base64Credentials)"
+        return "Bearer \(token)"
     }
 
     func configureRequest(_ request: inout URLRequest) {
         request.setValue(authorizationHeader, forHTTPHeaderField: "Authorization")
-        request.setValue("hypo", forHTTPHeaderField: "X-Namespace")
+        request.setValue(namespace, forHTTPHeaderField: "X-Namespace")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
     }

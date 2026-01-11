@@ -13,48 +13,49 @@ import Data
 
 struct NanaFSLoginView: View {
     @State private var store = StateStore.shared
-    
+
     @State private var serverHost:String = ""
     @State private var serverPortStr: String = "7081"
-    @State private var accessTokenKey:String = ""
-    @State private var secretToken:String = ""
-    
+    @State private var bearerToken:String = ""
+    @State private var namespace:String = ""
+
     @Binding private var isLogining: Bool
-    
+
     init(isLogining: Binding<Bool>) {
         self._isLogining = isLogining
     }
-    
+
     public var body: some View {
         VStack {
             Text("Connect to NanaFS🍌")
                 .font(.largeTitle)
                 .padding(30)
             Form {
-                
+
                 HStack {
                     TextField("Server", text: $serverHost)
                         .textFieldStyle(.roundedBorder)
                         .disabled(isLogining)
                         .padding()
-                    
+
                     TextField("Port", text: $serverPortStr)
                         .textFieldStyle(.roundedBorder)
                         .labelsHidden()
                         .disabled(isLogining)
                         .padding()
                 }
-                
-                TextField("AccessToken", text: $accessTokenKey)
+
+                SecureField("BearerToken", text: $bearerToken)
                     .textFieldStyle(.roundedBorder)
                     .disabled(isLogining)
                     .padding()
-                SecureField("SecretToken", text: $secretToken)
+
+                TextField("Namespace", text: $namespace)
                     .textFieldStyle(.roundedBorder)
                     .disabled(isLogining)
                     .padding()
             }
-            
+
             Button(action: { tryConnect() }) {
                 Text(isLogining ? "Connecting" : "Connect" )
                     .font(.body)
@@ -66,45 +67,44 @@ struct NanaFSLoginView: View {
         .onAppear {
             serverHost = store.setting.database.apiHost
             serverPortStr = String(store.setting.database.apiPort)
-            accessTokenKey = store.setting.database.apiaccessTokenKey
-            secretToken = store.setting.database.apiSecretToken
+            bearerToken = store.setting.database.apiBearerToken
+            namespace = store.setting.database.apiNamespace
             defaultLogin()
         }
         .padding(50)
         .frame(minWidth: 700, minHeight: 500)
     }
-    
+
     func tryConnect() {
         isLogining = true
-        
+
         NotificationCenter.default.post(name: .tryLogin, object: LoginRequest(
             serverHost: serverHost,
             serverPort: Int(serverPortStr) ?? -1,
-            accessTokenKey: accessTokenKey,
-            secretToken: secretToken))
+            bearerToken: bearerToken,
+            namespace: namespace))
     }
-    
+
     func defaultLogin() {
         guard serverHost != "" else {
             return
         }
-        
+
         guard let _ = Int(serverPortStr) else {
             return
         }
-        
-        guard accessTokenKey != "" else {
+
+        guard bearerToken != "" else {
             return
         }
-        
-        guard secretToken != "" else {
+
+        guard namespace != "" else {
             return
         }
-        
+
         isLogining = true
-        
+
         tryConnect()
     }
-    
-}
 
+}

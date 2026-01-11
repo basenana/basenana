@@ -36,7 +36,7 @@ public struct SettingsView: View {
                 }
                 
                 NavigationLink(value: SettingCategory.database) {
-                    SettingSideBaLabelView(category: .database, image: "externaldrive.badge.icloud")
+                    SettingSideBaLabelView(category: .database, image: "server.rack")
                 }
             }
             .toolbar(removing: .sidebarToggle)
@@ -52,7 +52,7 @@ public struct SettingsView: View {
                 case .document:
                     DocumentSettingView()
                 case .database:
-                    DatabaseSettingView()
+                    NanaFSSettingsView()
                 }
             }
             .padding(.vertical, 10)

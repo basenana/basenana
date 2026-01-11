@@ -1,5 +1,5 @@
 //
-//  DatabaseSettingView.swift
+//  NanaFSSettingsView.swift
 //  basenana
 //
 //  Created by Hypo on 2024/12/8.
@@ -9,25 +9,25 @@ import SwiftUI
 import Domain
 
 
-struct DatabaseSettingView: View {
+struct NanaFSSettingsView: View {
     @State private var state = StateStore.shared
-    
+
     @State private var serverHost:String = ""
     @State private var serverPortStr: String = ""
-    @State private var accessTokenKey:String = ""
-    @State private var secretToken:String = ""
+    @State private var bearerToken:String = ""
+    @State private var namespace:String = ""
     @State private var errorMessage = ""
-    
+
     public var body: some View {
         VStack{
             Form {
                 VStack {
                     TextField("Host", text: $serverHost)
                     TextField("Port", text: $serverPortStr)
-                    TextField("AccessTokenKey", text: $accessTokenKey)
-                    TextField("SecretToken", text: $secretToken)
+                    SecureField("BearerToken", text: $bearerToken)
+                    TextField("Namespace", text: $namespace)
                 }
-                
+
                 HStack{
                     Spacer()
                     Button {
@@ -37,7 +37,7 @@ struct DatabaseSettingView: View {
                     }
                     .buttonStyle(.link)
                 }
-                
+
             }
             .formStyle(.grouped)
 
@@ -51,11 +51,11 @@ struct DatabaseSettingView: View {
         .onAppear{
             serverHost = state.setting.database.apiHost
             serverPortStr = String(state.setting.database.apiPort)
-            accessTokenKey = state.setting.database.apiaccessTokenKey
-            secretToken = state.setting.database.apiSecretToken
+            bearerToken = state.setting.database.apiBearerToken
+            namespace = state.setting.database.apiNamespace
         }
     }
-    
+
     func submit(){
         errorMessage = "not check"
     }
@@ -66,4 +66,3 @@ public extension UserDefaults {
     static let standard = UserDefaults(suiteName: "org.basenana-dev")!
 }
 #endif
-
