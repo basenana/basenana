@@ -27,9 +27,9 @@ public class GroupTableViewModel: BaseViewModel {
     var selection: Set<EntryRow.ID> = []
     var selectedDocument: EntryDetail? = nil
 
-    // Panel visibility states
-    var showInspector: Bool = false
-    var showDocumentView: Bool = false
+    // Panel visibility states (from global StateStore)
+    var showInspector: Bool { store.showInspector }
+    var showDocumentView: Bool { store.showDocumentView }
     var selectedEntryDetail: EntryDetail? = nil
 
     // Document view height (resizable)

@@ -72,18 +72,20 @@ public struct GroupTableView: View {
 
             ToolbarItemGroup(placement: .secondaryAction){
                 Button {
-                    viewModel.showInspector.toggle()
+                    viewModel.store.showDocumentView.toggle()
                 } label: {
-                    Image(systemName: viewModel.showInspector ? "sidebar.right.fill" : "sidebar.right")
-                }
-                .help("Toggle Inspector")
-
-                Button {
-                    viewModel.showDocumentView.toggle()
-                } label: {
-                    Image(systemName: viewModel.showDocumentView ? "doc.text.image.fill" : "doc.text.image")
+                    Image(systemName: "doc.text.image")
+                        .foregroundStyle(viewModel.store.showDocumentView ? Color.accentColor : Color.primary)
                 }
                 .help("Toggle Document View")
+
+                Button {
+                    viewModel.store.showInspector.toggle()
+                } label: {
+                    Image(systemName: "sidebar.right")
+                        .foregroundStyle(viewModel.store.showInspector ? Color.accentColor : Color.primary)
+                }
+                .help("Toggle Inspector")
             }
         }
     }

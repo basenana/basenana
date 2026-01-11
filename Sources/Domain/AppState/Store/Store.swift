@@ -16,7 +16,11 @@ public class StateStore {
     public var backgroupJobs = [BackgroundJob]()
     public var fsInfo = FSInfo()
     public var setting = Setting.global
-    
+
+    // Global panel visibility states
+    public var showInspector: Bool = false
+    public var showDocumentView: Bool = false
+
     private init(){ }
 }
 
