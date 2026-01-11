@@ -91,13 +91,16 @@ struct GroupCreateView: View {
                 parent = p.toGroup()
                 parentName = parent?.groupName ?? "Unknown"
             }
+            if parentUri.isEmpty || parentUri == EntryURI.root {
+                parentName = "root"
+            } 
         }
         .padding(50)
         .frame(minWidth: 500)
     }
 
     func buildOption() -> EntryCreate {
-        var opt = EntryCreate(parentUri: parentUri, name: groupName, kind: "group")
+        var opt = EntryCreate(parentUri: parentUri.isEmpty ? EntryURI.root : parentUri, name: groupName, kind: "group")
         opt.RSS = RSSConfig(feed: rssFeed, siteName: siteName, siteURL: siteURL, fileType: .webarchive)
         return opt
     }

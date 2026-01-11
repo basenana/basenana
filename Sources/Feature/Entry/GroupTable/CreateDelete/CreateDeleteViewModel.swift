@@ -42,17 +42,20 @@ public class CreateDeleteViewModel {
     }
 
     func createGroup(parentUri: String, option: EntryCreate, onCreated: ((EntryInfo) -> Void)? = nil) async {
-        guard groupTree.getGroup(uri: parentUri) != nil else {
+        let isRoot = parentUri.isEmpty || parentUri == EntryURI.root
+        let effectiveParentUri = isRoot ? "" : parentUri
+
+        guard isRoot || groupTree.getGroup(uri: parentUri) != nil else {
             sentAlert("create group failed: parent \(parentUri) not exist")
             return
         }
 
         do {
-            let newGroup = try await entryUsecase.createGroups(parentUri: parentUri, option: option)
-            groupTree.addChildGroup(parentUri: parentUri, child: newGroup.toGroup()!, grandChildren: nil)
+            let newGroup = try await entryUsecase.createGroups(parentUri: effectiveParentUri, option: option)
+            groupTree.addChildGroup(parentUri: effectiveParentUri, child: newGroup.toGroup()!, grandChildren: nil)
 
             onCreated?(newGroup)
-            NotificationCenter.default.post(name: .reopenGroup, object: [parentUri])
+            NotificationCenter.default.post(name: .reopenGroup, object: [effectiveParentUri])
         } catch {
             sentAlert("create group failed: \(error)")
             return
