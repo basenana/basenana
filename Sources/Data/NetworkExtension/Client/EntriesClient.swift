@@ -172,21 +172,21 @@ public class EntriesClient: EntriesClientProtocol {
         return response.entries.map { $0.toAPIEntryInfo() }
     }
 
-    public func UpdateDocumentByURI(uri: String, unread: Bool?, marked: Bool?) async throws {
+    public func UpdateDocumentByURI(uri: String, update: DocumentUpdate) async throws {
         let request = DocumentRequest(
-            title: nil,
-            author: nil,
-            year: nil,
-            source: nil,
-            abstract: nil,
-            notes: nil,
-            keywords: nil,
-            url: nil,
+            title: update.title,
+            author: update.author,
+            year: update.year,
+            source: update.source,
+            abstract: update.abstract,
+            notes: update.notes,
+            keywords: update.keywords,
+            url: update.url,
             site_name: nil,
             site_url: nil,
-            header_image: nil,
-            unread: unread,
-            marked: marked,
+            header_image: update.headerImage,
+            unread: update.unread,
+            marked: update.marked,
             publish_at: nil
         )
         _ = try await apiClient.request(

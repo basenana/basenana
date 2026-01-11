@@ -76,7 +76,9 @@ public class DocumentUseCase: DocumentUseCaseProtocol {
 
     public func setDocumentMarkState(uri: String, ismark: Bool) async throws {
         do {
-            try await entryRepo.UpdateDocument(uri: uri, unread: nil, marked: ismark)
+            var update = DocumentUpdate()
+            update.marked = ismark
+            try await entryRepo.UpdateDocument(uri: uri, update: update)
         } catch RepositoryError.canceled {
             return
         }
@@ -84,9 +86,46 @@ public class DocumentUseCase: DocumentUseCaseProtocol {
 
     public func setDocumentReadState(uri: String, unread: Bool) async throws {
         do {
-            try await entryRepo.UpdateDocument(uri: uri, unread: unread, marked: nil)
+            var update = DocumentUpdate()
+            update.unread = unread
+            try await entryRepo.UpdateDocument(uri: uri, update: update)
         } catch RepositoryError.canceled {
             return
+        }
+    }
+
+    public func updateDocumentMetadata(uri: String, update: DocumentUpdate) async throws {
+        do {
+            try await entryRepo.UpdateDocument(uri: uri, update: update)
+        } catch RepositoryError.canceled {
+            throw UseCaseError.canceled
+        }
+    }
+
+    public func addProperty(uri: String, key: String, value: String) async throws {
+        do {
+            let entry = try await entryRepo.GetEntryDetail(uri: uri)
+            try await entryRepo.AddProperty(entry: entry.id, key: key, val: value)
+        } catch RepositoryError.canceled {
+            throw UseCaseError.canceled
+        }
+    }
+
+    public func updateProperty(uri: String, key: String, value: String) async throws {
+        do {
+            let entry = try await entryRepo.GetEntryDetail(uri: uri)
+            try await entryRepo.UpdateProperty(entry: entry.id, key: key, val: value)
+        } catch RepositoryError.canceled {
+            throw UseCaseError.canceled
+        }
+    }
+
+    public func deleteProperty(uri: String, key: String) async throws {
+        do {
+            let entry = try await entryRepo.GetEntryDetail(uri: uri)
+            try await entryRepo.DeleteProperty(entry: entry.id, key: key)
+        } catch RepositoryError.canceled {
+            throw UseCaseError.canceled
         }
     }
 }

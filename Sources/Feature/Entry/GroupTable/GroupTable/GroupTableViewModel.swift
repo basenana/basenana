@@ -35,7 +35,7 @@ public class GroupTableViewModel: BaseViewModel {
     // Document view height (resizable)
     var documentViewHeight: CGFloat = 500
     let minDocumentViewHeight: CGFloat = 100
-    let maxDocumentViewHeight: CGFloat = 600
+    let maxDocumentViewHeight: CGFloat = 1000
 
     // Dependencies
     var fileRepository: FileRepositoryProtocol
@@ -282,5 +282,52 @@ public class GroupTableViewModel: BaseViewModel {
         guard components.count > 1 else { return "/" }
         let parentPath = components.dropLast().joined(separator: "/")
         return "/" + parentPath
+    }
+
+    // MARK: - Inspector Edit Methods
+
+    func updateDocumentMetadata(uri: String, update: DocumentUpdate) async {
+        do {
+            try await documentUsecase.updateDocumentMetadata(uri: uri, update: update)
+            await refreshSelectedEntryDetail()
+        } catch {
+            sentAlert("update document metadata failed: \(error)")
+        }
+    }
+
+    func addProperty(uri: String, key: String, value: String) async {
+        do {
+            try await documentUsecase.addProperty(uri: uri, key: key, value: value)
+            await refreshSelectedEntryDetail()
+        } catch {
+            sentAlert("add property failed: \(error)")
+        }
+    }
+
+    func updateProperty(uri: String, key: String, value: String) async {
+        do {
+            try await documentUsecase.updateProperty(uri: uri, key: key, value: value)
+            await refreshSelectedEntryDetail()
+        } catch {
+            sentAlert("update property failed: \(error)")
+        }
+    }
+
+    func deleteProperty(uri: String, key: String) async {
+        do {
+            try await documentUsecase.deleteProperty(uri: uri, key: key)
+            await refreshSelectedEntryDetail()
+        } catch {
+            sentAlert("delete property failed: \(error)")
+        }
+    }
+
+    private func refreshSelectedEntryDetail() async {
+        guard let entry = selectedEntryDetail else { return }
+        do {
+            selectedEntryDetail = try await entryUsecase.getEntryDetails(uri: entry.uri)
+        } catch {
+            sentAlert("refresh entry detail failed: \(error)")
+        }
     }
 }

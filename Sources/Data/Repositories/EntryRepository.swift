@@ -95,8 +95,8 @@ public class EntryRepository: EntryRepositoryProtocol {
         return try await core.SearchEntries(celPattern: pattern, page: page, pageSize: pageSize, sort: sort, order: order)
     }
 
-    public func UpdateDocument(uri: String, unread: Bool?, marked: Bool?) async throws {
-        try await core.UpdateDocumentByURI(uri: uri, unread: unread, marked: marked)
+    public func UpdateDocument(uri: String, update: DocumentUpdate) async throws {
+        try await core.UpdateDocumentByURI(uri: uri, update: update)
     }
 
 }

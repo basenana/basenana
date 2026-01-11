@@ -316,7 +316,7 @@ private struct GroupTableContentView: View {
     private var inspectorSection: some View {
         if let entry = viewModel.selectedEntryDetail {
             Divider()
-            InspectorView(entry: entry)
+            InspectorView(entry: entry, viewModel: viewModel)
                 .frame(width: 280)
                 .background(Color(NSColor.controlBackgroundColor))
         }
@@ -456,6 +456,7 @@ func bytesToHumanReadableString(bytes: Int64) -> String {
 
 private struct InspectorView: View {
     let entry: EntryDetail
+    @Bindable var viewModel: GroupTableViewModel
 
     var body: some View {
         ScrollView {
@@ -480,18 +481,10 @@ private struct InspectorView: View {
                 .font(.headline)
                 .foregroundColor(.secondary)
 
-            InspectorPropertyRow(label: "Name", value: entry.name)
-            InspectorPropertyRow(label: "Kind", value: entry.kind)
-            InspectorPropertyRow(label: "Size", value: bytesToHumanReadableString(bytes: entry.size))
-            InspectorPropertyRow(label: "URI", value: entry.uri)
-            InspectorPropertyRow(label: "Is Group", value: entry.isGroup ? "Yes" : "No")
-
-            if let storage = entry.storage {
-                InspectorPropertyRow(label: "Storage", value: storage)
-            }
-            if let ns = entry.namespace {
-                InspectorPropertyRow(label: "Namespace", value: ns)
-            }
+            InspectorPropertyRow(label: "Name", value: entry.name, isReadOnly: true)
+            InspectorPropertyRow(label: "Kind", value: entry.kind, isReadOnly: true)
+            InspectorPropertyRow(label: "Size", value: bytesToHumanReadableString(bytes: entry.size), isReadOnly: true)
+            InspectorPropertyRow(label: "URI", value: entry.uri, isReadOnly: true)
         }
     }
 
@@ -501,71 +494,238 @@ private struct InspectorView: View {
                 .font(.headline)
                 .foregroundColor(.secondary)
 
-            InspectorPropertyRow(label: "Created", value: formatDate(entry.createdAt))
-            InspectorPropertyRow(label: "Changed", value: formatDate(entry.changedAt))
-            InspectorPropertyRow(label: "Modified", value: formatDate(entry.modifiedAt))
-            InspectorPropertyRow(label: "Accessed", value: formatDate(entry.accessAt))
+            InspectorPropertyRow(label: "Created", value: formatDate(entry.createdAt), isReadOnly: true)
+            InspectorPropertyRow(label: "Changed", value: formatDate(entry.changedAt), isReadOnly: true)
+            InspectorPropertyRow(label: "Modified", value: formatDate(entry.modifiedAt), isReadOnly: true)
+            InspectorPropertyRow(label: "Accessed", value: formatDate(entry.accessAt), isReadOnly: true)
         }
     }
 
+    @State private var editedTitle: String = ""
+    @State private var editedAuthor: String = ""
+    @State private var editedYear: String = ""
+    @State private var editedSource: String = ""
+    @State private var editedAbstract: String = ""
+    @State private var editedNotes: String = ""
+    @State private var editedURL: String = ""
+    @State private var editedKeywords: String = ""
+    @State private var isEditing: Bool = false
+
+    // Properties editing state
+    @State private var editedTags: String = ""
+    @State private var newPropertyKey: String = ""
+    @State private var newPropertyValue: String = ""
+    @State private var editingPropertyKey: String = ""
+    @State private var editingPropertyValue: String = ""
+    @State private var isEditingProperties: Bool = false
+
     private var documentInfoSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Document")
-                .font(.headline)
-                .foregroundColor(.secondary)
-
-            if let title = entry.documentTitle {
-                InspectorPropertyRow(label: "Title", value: title)
-            }
-            if let author = entry.documentAuthor {
-                InspectorPropertyRow(label: "Author", value: author)
-            }
-            if let year = entry.documentYear {
-                InspectorPropertyRow(label: "Year", value: year)
-            }
-            if let source = entry.documentSource {
-                InspectorPropertyRow(label: "Source", value: source)
-            }
-            if let abstract = entry.documentAbstract {
-                InspectorPropertyRow(label: "Abstract", value: abstract)
-            }
-            if let notes = entry.documentNotes {
-                InspectorPropertyRow(label: "Notes", value: notes)
-            }
-            if let url = entry.documentURL {
-                InspectorPropertyRow(label: "URL", value: url)
-            }
-            if let keywords = entry.documentKeywords, !keywords.isEmpty {
-                InspectorPropertyRow(label: "Keywords", value: keywords.joined(separator: ", "))
+            HStack {
+                Text("Document")
+                    .font(.headline)
+                    .foregroundColor(.secondary)
+                Spacer()
+                if isEditing {
+                    Button("Save") {
+                        saveDocumentMetadata()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.small)
+                    Button("Cancel") {
+                        cancelEditing()
+                    }
+                    .controlSize(.small)
+                } else {
+                    Button("Edit") {
+                        loadEditingValues()
+                        isEditing = true
+                    }
+                    .controlSize(.small)
+                }
             }
 
-            InspectorPropertyRow(label: "Marked", value: entry.documentMarked ? "Yes" : "No")
-            InspectorPropertyRow(label: "Unread", value: entry.documentUnread ? "Yes" : "No")
+            EditablePropertyRow(label: "Title", value: $editedTitle, isEditing: isEditing, isReadOnly: false)
+            EditablePropertyRow(label: "Author", value: $editedAuthor, isEditing: isEditing, isReadOnly: false)
+            EditablePropertyRow(label: "Year", value: $editedYear, isEditing: isEditing, isReadOnly: false)
+            EditablePropertyRow(label: "Source", value: $editedSource, isEditing: isEditing, isReadOnly: false)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Abstract")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                if isEditing {
+                    TextEditor(text: $editedAbstract)
+                        .font(.caption)
+                        .frame(height: 100)
+                        .scrollContentBackground(.hidden)
+                        .background(Color(NSColor.textBackgroundColor))
+                } else if let abstract = entry.documentAbstract, !abstract.isEmpty {
+                    Text(abstract)
+                        .font(.caption)
+                        .textSelection(.enabled)
+                } else {
+                    Text("-")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Notes")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                if isEditing {
+                    TextEditor(text: $editedNotes)
+                        .font(.caption)
+                        .frame(height: 120)
+                        .scrollContentBackground(.hidden)
+                        .background(Color(NSColor.textBackgroundColor))
+                } else if let notes = entry.documentNotes, !notes.isEmpty {
+                    Text(notes)
+                        .font(.caption)
+                        .textSelection(.enabled)
+                } else {
+                    Text("-")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
+
+            EditablePropertyRow(label: "URL", value: $editedURL, isEditing: isEditing, isReadOnly: false)
+            EditablePropertyRow(label: "Keywords", value: $editedKeywords, isEditing: isEditing, isReadOnly: false, placeholder: "comma separated")
 
             if let siteName = entry.documentSiteName {
-                InspectorPropertyRow(label: "Site Name", value: siteName)
+                EditablePropertyRow(label: "Site Name", value: .constant(siteName), isEditing: false, isReadOnly: true)
             }
             if let siteURL = entry.documentSiteURL {
-                InspectorPropertyRow(label: "Site URL", value: siteURL)
+                EditablePropertyRow(label: "Site URL", value: .constant(siteURL), isEditing: false, isReadOnly: true)
             }
+        }
+        .onAppear {
+            loadEditingValues()
+        }
+        .onChange(of: entry.uri) { _, _ in
+            loadEditingValues()
+            isEditing = false
         }
     }
 
     private var propertiesSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Properties")
-                .font(.headline)
-                .foregroundColor(.secondary)
-
-            ForEach(entry.properties, id: \.key) { property in
-                InspectorPropertyRow(label: property.key, value: property.value, isEncoded: property.encoded)
+            HStack {
+                Text("Properties")
+                    .font(.headline)
+                    .foregroundColor(.secondary)
+                Spacer()
+                if isEditingProperties {
+                    Button("Done") {
+                        saveProperties()
+                    }
+                    .controlSize(.small)
+                } else {
+                    Button("Edit") {
+                        loadPropertiesEditingValues()
+                        isEditingProperties = true
+                    }
+                    .controlSize(.small)
+                }
             }
 
-            if entry.properties.isEmpty {
+            // Tags section
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Tags")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                if isEditingProperties {
+                    TextField("comma separated", text: $editedTags)
+                        .font(.caption)
+                        .controlSize(.small)
+                } else {
+                    let tags = entry.properties.filter { $0.key == "tags" }.first?.value
+                    Text(tags ?? "-")
+                        .font(.caption)
+                        .textSelection(.enabled)
+                }
+            }
+
+            Divider()
+
+            // Custom properties
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Custom Properties")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                if isEditingProperties {
+                    // Add new property
+                    HStack {
+                        TextField("key", text: $newPropertyKey)
+                            .font(.caption)
+                            .controlSize(.small)
+                            .frame(width: 100)
+                        TextField("value", text: $newPropertyValue)
+                            .font(.caption)
+                            .controlSize(.small)
+                        Button("+") {
+                            addNewProperty()
+                        }
+                        .controlSize(.small)
+                    }
+                }
+
+                ForEach(entry.properties.filter { $0.key != "tags" }, id: \.key) { property in
+                    HStack {
+                        if isEditingProperties && editingPropertyKey == property.key {
+                            TextField("key", text: $editingPropertyKey)
+                                .font(.caption)
+                                .controlSize(.small)
+                                .frame(width: 100)
+                            TextField("value", text: $editingPropertyValue)
+                                .font(.caption)
+                                .controlSize(.small)
+                            Button("✓") {
+                                savePropertyEdit(property.key)
+                            }
+                            .controlSize(.small)
+                        } else {
+                            Text(property.key)
+                                .font(.caption)
+                                .frame(width: 100, alignment: .leading)
+                            Text(property.value)
+                                .font(.caption)
+                                .textSelection(.enabled)
+                            if isEditingProperties {
+                                Button("✎") {
+                                    startEditingProperty(property)
+                                }
+                                .controlSize(.small)
+                                Button("×") {
+                                    deleteProperty(property.key)
+                                }
+                                .controlSize(.small)
+                                .foregroundColor(.red)
+                            }
+                        }
+                    }
+                }
+            }
+
+            if entry.properties.isEmpty && !isEditingProperties {
                 Text("No properties")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
+        }
+        .onAppear {
+            loadPropertiesEditingValues()
+        }
+        .onChange(of: entry.uri) { _, _ in
+            loadPropertiesEditingValues()
+            isEditingProperties = false
+        }
+        .onChange(of: entry.properties.count) { _, _ in
+            loadPropertiesEditingValues()
         }
     }
 
@@ -575,13 +735,101 @@ private struct InspectorView: View {
         formatter.timeStyle = .short
         return formatter.string(from: date)
     }
+
+    private func loadEditingValues() {
+        editedTitle = entry.documentTitle ?? ""
+        editedAuthor = entry.documentAuthor ?? ""
+        editedYear = entry.documentYear ?? ""
+        editedSource = entry.documentSource ?? ""
+        editedAbstract = entry.documentAbstract ?? ""
+        editedNotes = entry.documentNotes ?? ""
+        editedURL = entry.documentURL ?? ""
+        editedKeywords = entry.documentKeywords?.joined(separator: ", ") ?? ""
+    }
+
+    private func cancelEditing() {
+        isEditing = false
+    }
+
+    private func saveDocumentMetadata() {
+        var update = DocumentUpdate()
+        update.title = editedTitle.isEmpty ? nil : editedTitle
+        update.author = editedAuthor.isEmpty ? nil : editedAuthor
+        update.year = editedYear.isEmpty ? nil : editedYear
+        update.source = editedSource.isEmpty ? nil : editedSource
+        update.abstract = editedAbstract.isEmpty ? nil : editedAbstract
+        update.notes = editedNotes.isEmpty ? nil : editedNotes
+        update.url = editedURL.isEmpty ? nil : editedURL
+        update.keywords = editedKeywords.isEmpty ? nil : editedKeywords.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+
+        Task {
+            await viewModel.updateDocumentMetadata(uri: entry.uri, update: update)
+        }
+        isEditing = false
+    }
+
+    // MARK: - Properties Editing
+
+    private func loadPropertiesEditingValues() {
+        let tags = entry.properties.filter { $0.key == "tags" }.first
+        editedTags = tags?.value ?? ""
+    }
+
+    private func startEditingProperty(_ property: any EntryProperty) {
+        editingPropertyKey = property.key
+        editingPropertyValue = property.value
+    }
+
+    private func addNewProperty() {
+        guard !newPropertyKey.isEmpty && !newPropertyValue.isEmpty else { return }
+        Task {
+            await viewModel.addProperty(uri: entry.uri, key: newPropertyKey, value: newPropertyValue)
+            newPropertyKey = ""
+            newPropertyValue = ""
+        }
+    }
+
+    private func savePropertyEdit(_ oldKey: String) {
+        guard !editingPropertyKey.isEmpty && !editingPropertyValue.isEmpty else { return }
+        Task {
+            if oldKey != editingPropertyKey {
+                await viewModel.deleteProperty(uri: entry.uri, key: oldKey)
+            }
+            await viewModel.updateProperty(uri: entry.uri, key: editingPropertyKey, value: editingPropertyValue)
+            editingPropertyKey = ""
+            editingPropertyValue = ""
+        }
+    }
+
+    private func deleteProperty(_ key: String) {
+        Task {
+            await viewModel.deleteProperty(uri: entry.uri, key: key)
+        }
+    }
+
+    private func saveProperties() {
+        // Save tags
+        let currentTags = entry.properties.filter { $0.key == "tags" }.first?.value ?? ""
+        if currentTags != editedTags {
+            Task {
+                if currentTags.isEmpty && !editedTags.isEmpty {
+                    await viewModel.addProperty(uri: entry.uri, key: "tags", value: editedTags)
+                } else if !currentTags.isEmpty && editedTags.isEmpty {
+                    await viewModel.deleteProperty(uri: entry.uri, key: "tags")
+                } else {
+                    await viewModel.updateProperty(uri: entry.uri, key: "tags", value: editedTags)
+                }
+            }
+        }
+        isEditingProperties = false
+    }
 }
 
 
 private struct InspectorPropertyRow: View {
     let label: String
     let value: String
-    var isEncoded: Bool = false
+    var isReadOnly: Bool = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
@@ -590,8 +838,39 @@ private struct InspectorPropertyRow: View {
                 .foregroundColor(.secondary)
             Text(value)
                 .font(.caption)
-                .lineLimit(3)
                 .textSelection(.enabled)
+        }
+    }
+}
+
+
+private struct EditablePropertyRow: View {
+    let label: String
+    @Binding var value: String
+    var isEditing: Bool = false
+    var isReadOnly: Bool = true
+    var placeholder: String = ""
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(label)
+                .font(.caption)
+                .foregroundColor(.secondary)
+
+            if isEditing && !isReadOnly {
+                TextField(placeholder.isEmpty ? label : placeholder, text: $value)
+                    .font(.caption)
+                    .textFieldStyle(.plain)
+                    .controlSize(.small)
+            } else if !value.isEmpty {
+                Text(value)
+                    .font(.caption)
+                    .textSelection(.enabled)
+            } else {
+                Text("-")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
         }
     }
 }

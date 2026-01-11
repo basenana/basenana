@@ -170,6 +170,22 @@ public struct DocumentCreate {
     }
 }
 
+public struct DocumentUpdate {
+    public var title: String?
+    public var author: String?
+    public var year: String?
+    public var source: String?
+    public var abstract: String?
+    public var keywords: [String]?
+    public var notes: String?
+    public var url: String?
+    public var headerImage: String?
+    public var marked: Bool?
+    public var unread: Bool?
+
+    public init() { }
+}
+
 public enum FileType: String {
     case xml
     case json

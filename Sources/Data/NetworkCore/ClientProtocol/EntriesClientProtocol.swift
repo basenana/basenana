@@ -29,7 +29,7 @@ public protocol EntriesClientProtocol {
 
     // document operations
     func SearchEntries(celPattern: String, page: Int?, pageSize: Int?, sort: String?, order: String?) async throws -> [any EntryInfo]
-    func UpdateDocumentByURI(uri: String, unread: Bool?, marked: Bool?) async throws
+    func UpdateDocumentByURI(uri: String, update: DocumentUpdate) async throws
 }
 
 

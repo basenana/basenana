@@ -28,6 +28,6 @@ public protocol EntryRepositoryProtocol {
 
     // document operations
     func ListDocuments(filter: DocumentFilter) async throws -> [EntryInfo]
-    func UpdateDocument(uri: String, unread: Bool?, marked: Bool?) async throws
+    func UpdateDocument(uri: String, update: DocumentUpdate) async throws
 }
 
