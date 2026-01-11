@@ -229,10 +229,10 @@ extension EntryDetailDTO {
             uid: self.access?.uid ?? 0,
             gid: self.access?.gid ?? 0,
             permissions: self.access?.permissions ?? [],
-            createdAt: self.created_at,
-            changedAt: self.changed_at,
-            modifiedAt: self.modified_at,
-            accessAt: self.access_at,
+            createdAt: self.created_at ?? Date.distantPast,
+            changedAt: self.changed_at ?? Date.distantPast,
+            modifiedAt: self.modified_at ?? Date.distantPast,
+            accessAt: self.access_at ?? Date.distantPast,
             properties: [],
             document: DocumentInfo(from: self.document)
         )
@@ -247,10 +247,10 @@ extension EntryDetailDTO {
             isGroup: self.is_group,
             size: self.size,
             parentID: 0,
-            createdAt: self.created_at,
-            changedAt: self.changed_at,
-            modifiedAt: self.modified_at,
-            accessAt: self.access_at,
+            createdAt: self.created_at ?? Date.distantPast,
+            changedAt: self.changed_at ?? Date.distantPast,
+            modifiedAt: self.modified_at ?? Date.distantPast,
+            accessAt: self.access_at ?? Date.distantPast,
             document: DocumentInfo(from: self.document)
         )
     }
@@ -266,10 +266,10 @@ extension EntryInfoDTO {
             isGroup: self.is_group,
             size: self.size,
             parentID: 0,
-            createdAt: self.created_at,
-            changedAt: self.changed_at,
-            modifiedAt: self.modified_at,
-            accessAt: self.access_at,
+            createdAt: self.created_at ?? Date.distantPast,
+            changedAt: self.changed_at ?? Date.distantPast,
+            modifiedAt: self.modified_at ?? Date.distantPast,
+            accessAt: self.access_at ?? Date.distantPast,
             document: DocumentInfo(from: self.document)
         )
     }

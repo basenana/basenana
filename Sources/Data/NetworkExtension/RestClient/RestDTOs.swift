@@ -24,10 +24,10 @@ struct EntryDetailDTO: Decodable {
     let access: AccessDTO?
     let property: PropertyWrapperDTO?
     let document: DocumentWrapperDTO?
-    let created_at: Date
-    let changed_at: Date
-    let modified_at: Date
-    let access_at: Date
+    let created_at: Date?
+    let changed_at: Date?
+    let modified_at: Date?
+    let access_at: Date?
 }
 
 struct AccessDTO: Decodable {
@@ -69,10 +69,10 @@ struct EntryInfoDTO: Decodable {
     let kind: String
     let is_group: Bool
     let size: Int64
-    let created_at: Date
-    let changed_at: Date
-    let modified_at: Date
-    let access_at: Date
+    let created_at: Date?
+    let changed_at: Date?
+    let modified_at: Date?
+    let access_at: Date?
     let document: DocumentWrapperDTO?
 }
 
