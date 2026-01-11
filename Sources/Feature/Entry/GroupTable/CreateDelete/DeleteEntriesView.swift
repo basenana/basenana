@@ -19,15 +19,18 @@ struct DeleteEntriesView: View {
     @State private var entries: [EntryRow] = []
     @State private var errorMsg: String = ""
 
+    private let onDeleted: (([Int64]) -> Void)?
+
     private static let logger = Logger(
             subsystem: Bundle.main.bundleIdentifier!,
             category: String(describing: DeleteEntriesView.self)
         )
 
-    init(entryUris: [String], viewModel: CreateDeleteViewModel, showDeleteView: Binding<Bool>) {
+    init(entryUris: [String], viewModel: CreateDeleteViewModel, showDeleteView: Binding<Bool>, onDeleted: (([Int64]) -> Void)? = nil) {
         self.entryUris = entryUris
         self.viewModel = viewModel
         self._showDeleteView = showDeleteView
+        self.onDeleted = onDeleted
     }
 
     var body: some View{
@@ -54,7 +57,7 @@ struct DeleteEntriesView: View {
                 }
                 Button {
                     Task {
-                        await viewModel.deleteEntries(entries: entries.map({$0.info}))
+                        await viewModel.deleteEntries(entries: entries.map({$0.info}), onDeleted: onDeleted)
                         showDeleteView.toggle()
                     }
                 } label: {

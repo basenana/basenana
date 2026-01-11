@@ -46,7 +46,7 @@ public class GroupTableViewModel: BaseViewModel {
         self.documentUsecase = documentUsecase
         super.init(store: store, entryUsecase: entryUsecase)
     }
-    
+
     var selectedEntries: [EntryInfo] {
         get {
             children.filter( { selection.contains($0.id)} ).map({ $0.info })
@@ -133,5 +133,148 @@ public class GroupTableViewModel: BaseViewModel {
         } catch {
             sentAlert("open group failed: \(error)")
         }
+    }
+
+    // MARK: - Synchronous Update Methods
+
+    func updateChild(id: Int64, newName: String, newUri: String) {
+        if let index = children.firstIndex(where: { $0.id == id }) {
+            children[index].name = newName
+            children[index].uri = newUri
+        }
+    }
+
+    func removeChildren(ids: [Int64]) {
+        children.removeAll { ids.contains($0.id) }
+    }
+
+    func addChildren(infos: [EntryInfo]) {
+        for info in infos {
+            children.append(EntryRow(info: info))
+        }
+        children.sort { $0.name < $1.name }
+    }
+
+    // MARK: - Wrapper Methods
+
+    func moveChildrenToGroup(entryUris: [String], newParentUri: String) async -> Bool {
+        let success = await moveEntriesToGroup(entryUris: entryUris, newParentUri: newParentUri)
+        if success {
+            children.removeAll { entryUris.contains($0.uri) }
+        }
+        return success
+    }
+
+    func moveChildrenToGroup(entryURLs: [URL], newParentUri: String) async -> Bool {
+        var entryUris: [String] = []
+        var files = [URL]()
+
+        for url in entryURLs {
+            switch url.scheme {
+            case "basenana":
+                guard let targetUri = parseUriFromURL(url: url), !targetUri.isEmpty else {
+                    sentAlert("\(url) not a valid entry")
+                    continue
+                }
+                entryUris.append(targetUri)
+            case "file":
+                files.append(url)
+            default:
+                print("[moveChildrenToGroup] unknown url schema \(url)")
+            }
+        }
+
+        if !entryUris.isEmpty {
+            return await moveChildrenToGroup(entryUris: entryUris, newParentUri: newParentUri)
+        }
+
+        if !files.isEmpty {
+            await uploadFilesToGroup(parentUri: newParentUri, files: files)
+            return true
+        }
+
+        return false
+    }
+
+    private func parseUriFromURL(url: URL) -> String? {
+        guard url.scheme == "basenana" else { return nil }
+        var path = url.path
+        if path.isEmpty {
+            path = url.host ?? ""
+        }
+
+        if let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+           let queryItems = components.queryItems,
+           let id = queryItems.first(where: { $0.name == "id" })?.value {
+            return "\(path)/\(id)"
+        }
+        return path.isEmpty ? nil : path
+    }
+
+    func renameEntry(entry: EntryDetail, newName: String) async -> Bool {
+        let vm = EntryDetailViewModel(store: store, entryUsecase: entryUsecase)
+
+        return await vm.renameEntry(entry: entry, newName: newName) { [self] id, newName, newUri in
+            updateChild(id: id, newName: newName, newUri: newUri)
+        }
+    }
+
+    func createGroup(parentUri: String, option: EntryCreate) async {
+        let vm = CreateDeleteViewModel(store: store, entryUsecase: entryUsecase)
+
+        await vm.createGroup(parentUri: parentUri, option: option) { [self] info in
+            if group?.uri == parentUri {
+                addChildren(infos: [info])
+            }
+        }
+    }
+
+    func deleteEntries(entries: [EntryInfo]) async {
+        let uris = entries.map { $0.uri }
+        let vm = CreateDeleteViewModel(store: store, entryUsecase: entryUsecase)
+
+        children.removeAll { uris.contains($0.uri) }
+
+        await vm.deleteEntries(entries: entries) { deletedUris in
+            // Already removed from children above
+        }
+    }
+
+    func uploadFilesToGroup(parentUri: String, files: [URL]) async {
+        let isCurrentGroup = group?.uri == parentUri
+
+        for file in files {
+            store.newBackgroundJob(
+                name: "Uploading \(file.lastPathComponent)",
+                job: { [self] in
+                    do {
+                        if try file.resourceValues(forKeys: [.isDirectoryKey]).isDirectory ?? false {
+                            throw BizError.isGroup
+                        }
+
+                        let en = try await entryUsecase.UploadFile(parentUri: parentUri, file: file)
+                        print("upload new entry \(en.id)/\(en.name)")
+
+                        if isCurrentGroup {
+                            await MainActor.run {
+                                addChildren(infos: [en])
+                            }
+                        }
+                    } catch {
+                        sentAlert("upload file \(file.lastPathComponent) failed \(error)")
+                    }
+                },
+                complete: {
+                    NotificationCenter.default.post(name: .reopenGroup, object: [parentUri])
+                }
+            )
+        }
+    }
+
+    private func parentUri(of uri: String) -> String {
+        let components = uri.split(separator: "/")
+        guard components.count > 1 else { return "/" }
+        let parentPath = components.dropLast().joined(separator: "/")
+        return "/" + parentPath
     }
 }

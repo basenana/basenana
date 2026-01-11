@@ -117,7 +117,11 @@ private struct GroupTableWithSheetView: View {
                     parentUri: createGroupInParentUri,
                     groupType: createGroupType,
                     viewModel: CreateDeleteViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase),
-                    showCreateGroup: $showCreateGroup)
+                    showCreateGroup: $showCreateGroup,
+                    onCreated: viewModel.group?.uri == createGroupInParentUri ? { info in
+                        viewModel.addChildren(infos: [info])
+                    } : nil
+                )
             }
             .onReceive(NotificationCenter.default.publisher(for: .createGroup)) { [self] notification in
                 if let req = notification.object as? NewGroupRequest {
@@ -134,7 +138,11 @@ private struct GroupTableWithSheetView: View {
                     entryUri: renameEntryUri,
                     viewModel: EntryDetailViewModel(
                         store: viewModel.store,entryUsecase: viewModel.entryUsecase),
-                    showRenameView: $showRenameEntry)
+                    showRenameView: $showRenameEntry,
+                    onRenamed: { id, newName, newUri in
+                        viewModel.updateChild(id: id, newName: newName, newUri: newUri)
+                    }
+                )
             }
             .onReceive(NotificationCenter.default.publisher(for: .renameEntry)) { [self] notification in
                 if let uri = notification.object as? String {
@@ -148,7 +156,11 @@ private struct GroupTableWithSheetView: View {
                 DeleteEntriesView(
                     entryUris: needDeletedEnties,
                     viewModel: CreateDeleteViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase),
-                    showDeleteView: $showDeleteConfirm)
+                    showDeleteView: $showDeleteConfirm,
+                    onDeleted: { ids in
+                        viewModel.removeChildren(ids: ids)
+                    }
+                )
             }
             .onReceive(NotificationCenter.default.publisher(for: .deleteEntry)) { [self] notification in
                 if let uris = notification.object as? [String] {
@@ -174,7 +186,7 @@ private struct GroupTableWithDropView: View {
         GroupTableWithMenuView(groupUri: groupUri, viewModel: viewModel)
             .dropDestination(for: URL.self){ urls, _  in
                 Task {
-                    await viewModel.moveEntriesToGroup(entryURLs: urls, newParentUri: groupUri)
+                    await viewModel.moveChildrenToGroup(entryURLs: urls, newParentUri: groupUri)
                 }
                 return true
             }
@@ -279,12 +291,17 @@ private struct GroupTableContentView: View {
                         .draggable(EntryUri(uri: child.uri))
                         .dropDestination(for: URL.self) { urls in
                             Task {
-                                let _ = await viewModel.moveEntriesToGroup(entryURLs: urls, newParentUri: child.uri)
+                                let _ = await viewModel.moveChildrenToGroup(entryURLs: urls, newParentUri: child.uri)
                             }
                         }
                 } else {
                     TableRow(child)
                         .draggable(EntryUri(uri: child.uri))
+                        .dropDestination(for: URL.self) { urls in
+                            Task {
+                                let _ = await viewModel.moveChildrenToGroup(entryURLs: urls, newParentUri: child.uri)
+                            }
+                        }
                 }
             }
         }

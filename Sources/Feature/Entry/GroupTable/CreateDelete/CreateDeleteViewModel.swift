@@ -41,25 +41,28 @@ public class CreateDeleteViewModel {
         return nil
     }
 
-    func createGroup(parentUri: String, option: EntryCreate) async {
+    func createGroup(parentUri: String, option: EntryCreate, onCreated: ((EntryInfo) -> Void)? = nil) async {
         guard groupTree.getGroup(uri: parentUri) != nil else {
-            sentAlert("creatr group failed: parent \(parentUri) not exist")
+            sentAlert("create group failed: parent \(parentUri) not exist")
             return
         }
 
         do {
             let newGroup = try await entryUsecase.createGroups(parentUri: parentUri, option: option)
             groupTree.addChildGroup(parentUri: parentUri, child: newGroup.toGroup()!, grandChildren: nil)
+
+            onCreated?(newGroup)
             NotificationCenter.default.post(name: .reopenGroup, object: [parentUri])
         } catch {
-            sentAlert("creatr group failed: \(error)")
+            sentAlert("create group failed: \(error)")
             return
         }
     }
 
-    func deleteEntries(entries: [EntryInfo]) async {
+    func deleteEntries(entries: [EntryInfo], onDeleted: (([Int64]) -> Void)? = nil) async {
         let uc = entryUsecase
         let gt = groupTree
+        let ids = entries.map { $0.id }
 
         for entry in entries {
             store.newBackgroundJob(
@@ -81,7 +84,8 @@ public class CreateDeleteViewModel {
                     }
                 }
             )
-
         }
+
+        onDeleted?(ids)
     }
 }

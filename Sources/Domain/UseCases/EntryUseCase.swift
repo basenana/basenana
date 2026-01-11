@@ -33,13 +33,14 @@ public class EntryUseCase: EntryUseCaseProtocol {
         }
     }
 
-    public func renameEntry(uri: String, newName: String) async throws {
+    public func renameEntry(uri: String, newName: String) async throws -> EntryDetail {
         do {
             let newUri = parentUri(of: uri) + "/" + newName
-            var opt = ChangeParentOption()
-            return try await entryRepo.ChangeParent(uri: uri, newEntryUri: newUri, option: opt)
+            let opt = ChangeParentOption()
+            try await entryRepo.ChangeParent(uri: uri, newEntryUri: newUri, option: opt)
+            return try await getEntryDetails(uri: newUri)
         } catch RepositoryError.canceled {
-            return
+            throw UseCaseError.canceled
         }
     }
 

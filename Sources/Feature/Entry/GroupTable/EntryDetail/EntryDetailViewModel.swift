@@ -43,7 +43,7 @@ public class EntryDetailViewModel {
         return nil
     }
 
-    func renameEntry(entry: EntryDetail, newName: String) async -> Bool {
+    func renameEntry(entry: EntryDetail, newName: String, onRenamed: ((Int64, String, String) -> Void)? = nil) async -> Bool {
         Self.logger.notice("rename entry \(entry.name) = > \(newName)")
         if entry.name == newName {
             return true
@@ -56,16 +56,17 @@ public class EntryDetailViewModel {
         }
 
         do {
-            try await entryUsecase.renameEntry(uri: entry.uri, newName: validName)
+            let newDetail = try await entryUsecase.renameEntry(uri: entry.uri, newName: validName)
+
             if entry.isGroup {
-                let entryDetail = try await entryUsecase.getEntryDetails(uri: entry.uri)
-                if let grp = groupTree.getGroup(uri: entry.uri){
+                if let grp = groupTree.getGroup(uri: entry.uri) {
                     groupTree.removeChildGroup(parentUri: grp.parentUri, childUri: entry.uri)
-                    groupTree.addChildGroup(parentUri: grp.parentUri, child: entryDetail.toGroup()!, grandChildren: grp.children)
+                    groupTree.addChildGroup(parentUri: grp.parentUri, child: newDetail.toGroup()!, grandChildren: grp.children)
                 }
             }
 
-            NotificationCenter.default.post(name: .reopenGroup, object: [parentUri(of: entry.uri)])
+            onRenamed?(entry.id, validName, newDetail.uri)
+            NotificationCenter.default.post(name: .reopenGroup, object: [parentUri(of: newDetail.uri)])
         } catch {
             errorMessage = "rename failed \(error)"
             return false

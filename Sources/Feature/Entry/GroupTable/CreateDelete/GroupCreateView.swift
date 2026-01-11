@@ -17,12 +17,20 @@ struct GroupCreateView: View {
     @State private var viewModel: CreateDeleteViewModel
 
     @Binding private var showCreateGroup: Bool
+    private let onCreated: ((EntryInfo) -> Void)?
 
-    init(parentUri: String, groupType: GroupType, viewModel: CreateDeleteViewModel, showCreateGroup: Binding<Bool>) {
+    init(
+        parentUri: String,
+        groupType: GroupType,
+        viewModel: CreateDeleteViewModel,
+        showCreateGroup: Binding<Bool>,
+        onCreated: ((EntryInfo) -> Void)? = nil
+    ) {
         self.parentUri = parentUri
         self.groupType = groupType
         self.viewModel = viewModel
         self._showCreateGroup = showCreateGroup
+        self.onCreated = onCreated
     }
 
     // Common
@@ -62,7 +70,7 @@ struct GroupCreateView: View {
                 }
                 Button {
                     Task {
-                        await viewModel.createGroup(parentUri: parentUri, option: buildOption())
+                        await viewModel.createGroup(parentUri: parentUri, option: buildOption(), onCreated: onCreated)
                         showCreateGroup.toggle()
                     }
                 } label: {

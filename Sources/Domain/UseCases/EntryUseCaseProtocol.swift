@@ -11,7 +11,7 @@ import Foundation
 
 public protocol EntryUseCaseProtocol {
     func getEntryDetails(uri: String) async throws -> EntryDetail
-    func renameEntry(uri: String, newName: String) async throws
+    func renameEntry(uri: String, newName: String) async throws -> EntryDetail
     func deleteEntry(uri: String) async throws
     func deleteEntries(uris: [String]) async throws
 

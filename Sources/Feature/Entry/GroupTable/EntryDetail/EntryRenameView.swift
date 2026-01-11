@@ -16,10 +16,13 @@ struct EntryRenameView: View {
 
     @Binding private var showRenameView: Bool
 
-    init(entryUri: String, viewModel: EntryDetailViewModel, showRenameView: Binding<Bool>) {
+    private let onRenamed: ((Int64, String, String) -> Void)?
+
+    init(entryUri: String, viewModel: EntryDetailViewModel, showRenameView: Binding<Bool>, onRenamed: ((Int64, String, String) -> Void)? = nil) {
         self.entryUri = entryUri
         self.viewModel = viewModel
         self._showRenameView = showRenameView
+        self.onRenamed = onRenamed
     }
 
     // Common
@@ -43,7 +46,7 @@ struct EntryRenameView: View {
                 Button {
                     if let en = entry {
                         Task {
-                            if await viewModel.renameEntry(entry: en, newName: entryName){
+                            if await viewModel.renameEntry(entry: en, newName: entryName, onRenamed: onRenamed){
                                 showRenameView.toggle()
                             }
                         }

@@ -145,7 +145,7 @@ public struct EntryMenuView: View {
 
     func moveEntriesToGroup(newParentUri: String) {
         Task {
-            let _ = await viewModel.moveEntriesToGroup(entryUris: targets.map({$0.uri}), newParentUri: newParentUri)
+            let _ = await viewModel.moveChildrenToGroup(entryUris: targets.map({$0.uri}), newParentUri: newParentUri)
         }
     }
 
