@@ -112,4 +112,22 @@ public class DocumentReadViewModel {
 
         isLoading = false
     }
+
+    func setDocumentReadStatus(isUnread: Bool) async {
+        guard let entry = entry else { return }
+        do {
+            try await usecase.setDocumentReadState(uri: entry.uri, unread: isUnread)
+        } catch {
+            Self.logger.error("set read status failed: \(error.localizedDescription)")
+        }
+    }
+
+    func setDocumentMarkStatus(isMarked: Bool) async {
+        guard let entry = entry else { return }
+        do {
+            try await usecase.setDocumentMarkState(uri: entry.uri, ismark: isMarked)
+        } catch {
+            Self.logger.error("set mark status failed: \(error.localizedDescription)")
+        }
+    }
 }

@@ -43,14 +43,18 @@ public struct DocumentReadView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: .updateDocumentMark)) { [self] notification in
             if let update = notification.object as? UpdateDocumentMark {
-                if update.uri != viewModel.uri {
-                    return
-                }
+                if update.uri != viewModel.uri { return }
                 if update.updateRead {
                     isUnread = update.isUnread
+                    Task {
+                        await viewModel.setDocumentReadStatus(isUnread: update.isUnread)
+                    }
                 }
                 if update.updateMark {
                     isMarked = update.isMarked
+                    Task {
+                        await viewModel.setDocumentMarkStatus(isMarked: update.isMarked)
+                    }
                 }
             }
         }
@@ -59,7 +63,11 @@ public struct DocumentReadView: View {
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
                 if let doc = viewModel.entry {
-                    DocumentToolBarView(document: doc, isUnread: $isUnread, isMarked: $isMarked)
+                    DocumentToolBarView(
+                        document: doc,
+                        isUnread: $isUnread,
+                        isMarked: $isMarked
+                    )
                 }
             }
         }
