@@ -27,13 +27,63 @@ public class GroupTableViewModel: BaseViewModel {
     var selection: Set<EntryRow.ID> = []
     var selectedDocument: EntryDetail? = nil
 
-    override public init(store: StateStore, entryUsecase: any EntryUseCaseProtocol) {
+    // Panel visibility states
+    var showInspector: Bool = false
+    var showDocumentView: Bool = false
+    var selectedEntryDetail: EntryDetail? = nil
+
+    // Document view height (resizable)
+    var documentViewHeight: CGFloat = 500
+    let minDocumentViewHeight: CGFloat = 100
+    let maxDocumentViewHeight: CGFloat = 600
+
+    // Dependencies
+    var fileRepository: FileRepositoryProtocol
+    var documentUsecase: any DocumentUseCaseProtocol
+
+    public init(store: StateStore, entryUsecase: any EntryUseCaseProtocol, fileRepository: FileRepositoryProtocol, documentUsecase: any DocumentUseCaseProtocol) {
+        self.fileRepository = fileRepository
+        self.documentUsecase = documentUsecase
         super.init(store: store, entryUsecase: entryUsecase)
     }
     
     var selectedEntries: [EntryInfo] {
         get {
             children.filter( { selection.contains($0.id)} ).map({ $0.info })
+        }
+    }
+
+    var canShowPanels: Bool {
+        selection.count == 1 && {
+            guard let id = selection.first,
+                  let entry = children.first(where: { $0.id == id }) else {
+                return false
+            }
+            return !entry.isGroup
+        }()
+    }
+
+    func loadSelectedEntryDetail() async {
+        guard selection.count == 1, let id = selection.first else {
+            selectedEntryDetail = nil
+            return
+        }
+
+        guard let entry = children.first(where: { $0.id == id }) else {
+            selectedEntryDetail = nil
+            return
+        }
+
+        if entry.isGroup {
+            selectedEntryDetail = nil
+            return
+        }
+
+        do {
+            selectedEntryDetail = try await entryUsecase.getEntryDetails(uri: entry.uri)
+        } catch {
+            sentAlert("load entry detail failed: \(error)")
+            selectedEntryDetail = nil
         }
     }
 

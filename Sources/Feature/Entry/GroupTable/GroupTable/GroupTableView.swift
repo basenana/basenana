@@ -9,7 +9,7 @@ import os
 import SwiftUI
 import Foundation
 import Domain
-import Domain
+import Data
 
 
 public struct GroupTableView: View {
@@ -30,7 +30,7 @@ public struct GroupTableView: View {
     }
 
     public var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             GroupTableWithSheetView(groupUri: groupUri, viewModel: viewModel)
         }
         .onReceive(NotificationCenter.default.publisher(for: .reopenGroup)) { [self] notification in
@@ -68,6 +68,22 @@ public struct GroupTableView: View {
         .toolbar{
             ToolbarItemGroup(placement: .primaryAction){
                 FileToolBarView(viewModel: viewModel)
+            }
+
+            ToolbarItemGroup(placement: .secondaryAction){
+                Button {
+                    viewModel.showInspector.toggle()
+                } label: {
+                    Image(systemName: viewModel.showInspector ? "sidebar.right.fill" : "sidebar.right")
+                }
+                .help("Toggle Inspector")
+
+                Button {
+                    viewModel.showDocumentView.toggle()
+                } label: {
+                    Image(systemName: viewModel.showDocumentView ? "doc.text.image.fill" : "doc.text.image")
+                }
+                .help("Toggle Document View")
             }
         }
     }
@@ -201,7 +217,39 @@ private struct GroupTableContentView: View {
 
     public var body: some View {
         VStack(spacing: 0) {
-            Table(of: EntryRow.self, selection: $viewModel.selection, sortOrder: $order) {
+            HStack(spacing: 0) {
+                VStack(spacing: 0) {
+                    tableContent
+
+                    if viewModel.showDocumentView {
+                        documentViewSection
+                    }
+                }
+
+                if viewModel.showInspector {
+                    inspectorSection
+                }
+            }
+
+            if viewModel.hasMore {
+                ProgressView()
+                    .padding()
+                    .onAppear {
+                        Task {
+                            await viewModel.loadNextPage()
+                        }
+                    }
+            }
+        }
+        .onChange(of: viewModel.selection) { _, _ in
+            Task {
+                await viewModel.loadSelectedEntryDetail()
+            }
+        }
+    }
+
+    private var tableContent: some View {
+        Table(of: EntryRow.self, selection: $viewModel.selection, sortOrder: $order) {
             TableColumn("Name", value: \.name) { entry in
                 HStack {
                     Image(systemName: entry.isGroup ? "folder" : "doc.text")
@@ -224,37 +272,143 @@ private struct GroupTableContentView: View {
             }
         } rows: {
             ForEach(viewModel.children, id: \.id) { child in
-                if child.isGroup{
-
+                if child.isGroup {
                     TableRow(child)
                         .draggable(EntryUri(uri: child.uri))
-                        .dropDestination(for: URL.self){ urls in
+                        .dropDestination(for: URL.self) { urls in
                             Task {
                                 let _ = await viewModel.moveEntriesToGroup(entryURLs: urls, newParentUri: child.uri)
                             }
                         }
                 } else {
-
                     TableRow(child)
                         .draggable(EntryUri(uri: child.uri))
                 }
             }
         }
-        .onChange(of: order){
+        .onChange(of: order) {
             withAnimation {
                 viewModel.children.sort(using: order)
             }
         }
+    }
 
-        if viewModel.hasMore {
-            ProgressView()
-                .padding()
-                .onAppear {
-                    Task {
-                        await viewModel.loadNextPage()
-                    }
-                }
+    @ViewBuilder
+    private var inspectorSection: some View {
+        if let entry = viewModel.selectedEntryDetail {
+            Divider()
+            InspectorView(entry: entry)
+                .frame(width: 280)
+                .background(Color(NSColor.controlBackgroundColor))
         }
+    }
+
+    @ViewBuilder
+    private var documentViewSection: some View {
+        if let entry = viewModel.selectedEntryDetail {
+            Divider()
+            ResizableDocumentView(entry: entry, viewModel: viewModel)
+                .frame(height: viewModel.documentViewHeight)
+        }
+    }
+}
+
+
+private struct ResizableDocumentView: View {
+    let entry: EntryDetail
+    let viewModel: GroupTableViewModel
+
+    @State private var isDragging = false
+
+    var body: some View {
+        VStack(spacing: 0) {
+            dragHandle
+            documentContent
+        }
+    }
+
+    private var dragHandle: some View {
+        Rectangle()
+            .fill(isDragging ? Color(NSColor.selectedControlColor) : Color(NSColor.separatorColor))
+            .frame(height: 4)
+            .overlay(alignment: .center) {
+                RoundedRectangle(cornerRadius: 1)
+                    .fill(Color(NSColor.disabledControlTextColor).opacity(0.5))
+                    .frame(width: 30, height: 2)
+            }
+            .contentShape(Rectangle())
+            .gesture(
+                DragGesture()
+                    .onChanged { value in
+                        isDragging = true
+                        let newHeight = viewModel.documentViewHeight - value.translation.height
+                        viewModel.documentViewHeight = min(
+                            max(newHeight, viewModel.minDocumentViewHeight),
+                            viewModel.maxDocumentViewHeight
+                        )
+                    }
+                    .onEnded { _ in
+                        isDragging = false
+                    }
+            )
+            .onHover { hovering in
+                if hovering {
+                    NSCursor.resizeUpDown.push()
+                } else {
+                    NSCursor.pop()
+                }
+            }
+    }
+
+    private var documentContent: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Text("Document: \(entry.documentTitle ?? entry.name)")
+                    .font(.headline)
+                Spacer()
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 8)
+            .background(Color(NSColor.controlBackgroundColor))
+
+            Divider()
+
+            if let uri = viewModel.selectedEntryDetail?.uri {
+                DocumentReadContainerView(entryUri: uri, store: viewModel.store, fileRepository: viewModel.fileRepository, documentUsecase: viewModel.documentUsecase)
+                    .id(uri)
+                    .frame(maxHeight: .infinity)
+            } else {
+                Text("No document selected")
+                    .frame(maxHeight: .infinity)
+            }
+        }
+    }
+}
+
+
+private struct DocumentReadContainerView: View {
+    let entryUri: String
+    let store: StateStore
+    let fileRepository: FileRepositoryProtocol
+    let documentUsecase: any DocumentUseCaseProtocol
+
+    @State private var viewModel: DocumentReadViewModel?
+
+    var body: some View {
+        Group {
+            if let vm = viewModel {
+                DocumentReadView(viewModel: vm)
+            } else {
+                ProgressView("Loading...")
+                    .onAppear {
+                        viewModel = DocumentReadViewModel(
+                            uri: entryUri,
+                            store: store,
+                            usecase: documentUsecase,
+                            fileRepository: fileRepository
+                        )
+                    }
+            }
         }
     }
 }
@@ -278,5 +432,147 @@ func bytesToHumanReadableString(bytes: Int64) -> String {
         return String(format: "%.2f GB", Double(bytes) / Double(gigabyte))
     } else {
         return String(format: "%.2f TB", Double(bytes) / Double(terabyte))
+    }
+}
+
+private struct InspectorView: View {
+    let entry: EntryDetail
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                basicInfoSection
+                Divider()
+                timeInfoSection
+                Divider()
+                documentInfoSection
+                Divider()
+                propertiesSection
+            }
+            .padding()
+        }
+        .frame(minWidth: 260)
+        .background(Color(NSColor.windowBackgroundColor))
+    }
+
+    private var basicInfoSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Basic")
+                .font(.headline)
+                .foregroundColor(.secondary)
+
+            InspectorPropertyRow(label: "Name", value: entry.name)
+            InspectorPropertyRow(label: "Kind", value: entry.kind)
+            InspectorPropertyRow(label: "Size", value: bytesToHumanReadableString(bytes: entry.size))
+            InspectorPropertyRow(label: "URI", value: entry.uri)
+            InspectorPropertyRow(label: "Is Group", value: entry.isGroup ? "Yes" : "No")
+
+            if let storage = entry.storage {
+                InspectorPropertyRow(label: "Storage", value: storage)
+            }
+            if let ns = entry.namespace {
+                InspectorPropertyRow(label: "Namespace", value: ns)
+            }
+        }
+    }
+
+    private var timeInfoSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Time")
+                .font(.headline)
+                .foregroundColor(.secondary)
+
+            InspectorPropertyRow(label: "Created", value: formatDate(entry.createdAt))
+            InspectorPropertyRow(label: "Changed", value: formatDate(entry.changedAt))
+            InspectorPropertyRow(label: "Modified", value: formatDate(entry.modifiedAt))
+            InspectorPropertyRow(label: "Accessed", value: formatDate(entry.accessAt))
+        }
+    }
+
+    private var documentInfoSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Document")
+                .font(.headline)
+                .foregroundColor(.secondary)
+
+            if let title = entry.documentTitle {
+                InspectorPropertyRow(label: "Title", value: title)
+            }
+            if let author = entry.documentAuthor {
+                InspectorPropertyRow(label: "Author", value: author)
+            }
+            if let year = entry.documentYear {
+                InspectorPropertyRow(label: "Year", value: year)
+            }
+            if let source = entry.documentSource {
+                InspectorPropertyRow(label: "Source", value: source)
+            }
+            if let abstract = entry.documentAbstract {
+                InspectorPropertyRow(label: "Abstract", value: abstract)
+            }
+            if let notes = entry.documentNotes {
+                InspectorPropertyRow(label: "Notes", value: notes)
+            }
+            if let url = entry.documentURL {
+                InspectorPropertyRow(label: "URL", value: url)
+            }
+            if let keywords = entry.documentKeywords, !keywords.isEmpty {
+                InspectorPropertyRow(label: "Keywords", value: keywords.joined(separator: ", "))
+            }
+
+            InspectorPropertyRow(label: "Marked", value: entry.documentMarked ? "Yes" : "No")
+            InspectorPropertyRow(label: "Unread", value: entry.documentUnread ? "Yes" : "No")
+
+            if let siteName = entry.documentSiteName {
+                InspectorPropertyRow(label: "Site Name", value: siteName)
+            }
+            if let siteURL = entry.documentSiteURL {
+                InspectorPropertyRow(label: "Site URL", value: siteURL)
+            }
+        }
+    }
+
+    private var propertiesSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Properties")
+                .font(.headline)
+                .foregroundColor(.secondary)
+
+            ForEach(entry.properties, id: \.key) { property in
+                InspectorPropertyRow(label: property.key, value: property.value, isEncoded: property.encoded)
+            }
+
+            if entry.properties.isEmpty {
+                Text("No properties")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+        }
+    }
+
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
+    }
+}
+
+
+private struct InspectorPropertyRow: View {
+    let label: String
+    let value: String
+    var isEncoded: Bool = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(label)
+                .font(.caption)
+                .foregroundColor(.secondary)
+            Text(value)
+                .font(.caption)
+                .lineLimit(3)
+                .textSelection(.enabled)
+        }
     }
 }

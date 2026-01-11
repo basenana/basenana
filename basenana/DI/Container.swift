@@ -32,7 +32,12 @@ class DIContainer {
             TreeViewModel(store: state, entryUsecase: r.resolve(EntryUseCaseProtocol.self)!)
         }.inObjectScope(.container)
         self.c.register(GroupTableViewModel.self) { r in
-            GroupTableViewModel(store: state, entryUsecase: r.resolve(EntryUseCaseProtocol.self)!)
+            GroupTableViewModel(
+                store: state,
+                entryUsecase: r.resolve(EntryUseCaseProtocol.self)!,
+                fileRepository: r.resolve(FileRepositoryProtocol.self)!,
+                documentUsecase: r.resolve(DocumentUseCaseProtocol.self)!
+            )
         }
         self.c.register(DocumentListViewModel.self, name: DocumentPrespective.marked.Title){ r in
             DocumentListViewModel(
