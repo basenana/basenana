@@ -113,12 +113,60 @@ public struct EntryCreate {
     public var kind: String
 
     public var RSS: RSSConfig?
+    public var properties: [String: String]?
+    public var tags: [String]?
+    public var document: DocumentCreate?
 
-    public init(parentUri: String, name: String, kind: String) {
+    public init(
+        parentUri: String,
+        name: String,
+        kind: String,
+        RSS: RSSConfig? = nil,
+        properties: [String: String]? = nil,
+        tags: [String]? = nil,
+        document: DocumentCreate? = nil
+    ) {
         self.parentUri = parentUri
         self.name = name
         self.kind = kind
-        self.RSS = nil
+        self.RSS = RSS
+        self.properties = properties
+        self.tags = tags
+        self.document = document
+    }
+}
+
+public struct DocumentCreate {
+    public var title: String?
+    public var author: String?
+    public var year: String?
+    public var source: String?
+    public var abstract: String?
+    public var keywords: [String]?
+    public var notes: String?
+    public var url: String?
+    public var headerImage: String?
+
+    public init(
+        title: String? = nil,
+        author: String? = nil,
+        year: String? = nil,
+        source: String? = nil,
+        abstract: String? = nil,
+        keywords: [String]? = nil,
+        notes: String? = nil,
+        url: String? = nil,
+        headerImage: String? = nil
+    ) {
+        self.title = title
+        self.author = author
+        self.year = year
+        self.source = source
+        self.abstract = abstract
+        self.keywords = keywords
+        self.notes = notes
+        self.url = url
+        self.headerImage = headerImage
     }
 }
 

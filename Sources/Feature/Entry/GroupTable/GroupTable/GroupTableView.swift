@@ -82,7 +82,7 @@ public struct GroupTableView: View {
                 Button {
                     viewModel.store.showInspector.toggle()
                 } label: {
-                    Image(systemName: "sidebar.right")
+                    Image(systemName: "info.square")
                         .foregroundStyle(viewModel.store.showInspector ? Color.accentColor : Color.primary)
                 }
                 .help("Toggle Inspector")

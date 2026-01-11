@@ -57,8 +57,18 @@ public class EntriesClient: EntriesClientProtocol {
                 file_type: $0.fileType.option()
             )},
             filter: nil,
-            properties: nil,
-            document: nil
+            properties: PropertyRequest(tags: entry.tags, properties: entry.properties),
+            document: entry.document.map { DocumentCreateRequest(
+                title: $0.title,
+                author: $0.author,
+                year: $0.year,
+                source: $0.source,
+                abstract: $0.abstract,
+                keywords: $0.keywords,
+                notes: $0.notes,
+                url: $0.url,
+                header_image: $0.headerImage
+            )}
         )
 
         let response: EntryDetailResponse = try await apiClient.request(

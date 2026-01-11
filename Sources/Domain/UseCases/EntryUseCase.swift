@@ -108,11 +108,16 @@ public class EntryUseCase: EntryUseCaseProtocol {
         }
     }
 
-    public func createGroups(parentUri: String, option:  EntryCreate) async throws -> EntryInfo{
-        var entry = EntryCreate(parentUri: parentUri, name: option.name, kind: option.kind)
-        if let rssCfg = option.RSS{
-            entry.RSS = rssCfg
-        }
+    public func createGroups(parentUri: String, option: EntryCreate) async throws -> EntryInfo {
+        let entry = EntryCreate(
+            parentUri: parentUri,
+            name: option.name,
+            kind: option.kind,
+            RSS: option.RSS,
+            properties: option.properties,
+            tags: option.tags,
+            document: option.document
+        )
         do {
             return try await entryRepo.CreateEntry(entry: entry)
         } catch RepositoryError.canceled {
@@ -120,13 +125,32 @@ public class EntryUseCase: EntryUseCaseProtocol {
         }
     }
 
-    public func UploadFile(parentUri: String, file: URL) async throws -> EntryInfo {
+    private func sanitizeFileName(_ name: String) -> String {
+        let illegalCharacters = CharacterSet(charactersIn: "|:\\?*<\"\">/")
+        return name.components(separatedBy: illegalCharacters).joined()
+    }
+
+    public func UploadFile(
+        parentUri: String,
+        file: URL,
+        properties: [String: String]? = nil,
+        tags: [String]? = nil,
+        document: DocumentCreate? = nil
+    ) async throws -> EntryInfo {
         let fileHandle = try FileHandle(forReadingFrom: file)
         defer {
             fileHandle.closeFile()
         }
 
-        let option = EntryCreate(parentUri: parentUri, name: file.lastPathComponent, kind: "raw")
+        let sanitizedName = sanitizeFileName(file.lastPathComponent)
+        let option = EntryCreate(
+            parentUri: parentUri,
+            name: sanitizedName,
+            kind: "raw",
+            properties: properties,
+            tags: tags,
+            document: document
+        )
         let entry = try await entryRepo.CreateEntry(entry: option)
         Self.logger.info("create entry \(entry.id) for upload")
 

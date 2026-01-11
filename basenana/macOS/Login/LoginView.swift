@@ -89,7 +89,7 @@ struct LoginView: View {
                 responseType: RootEntryResponse.self
             )
 
-            fsInfo = FSInfo(namespace: rootResponse.entry.namespace, rootID: rootResponse.entry.entry, inboxID: 0)
+            fsInfo = FSInfo(namespace: rootResponse.entry.namespace)
 
         } catch let error as APIError {
             isLogining = false

@@ -252,7 +252,13 @@ public class GroupTableViewModel: BaseViewModel {
                             throw BizError.isGroup
                         }
 
-                        let en = try await entryUsecase.UploadFile(parentUri: parentUri, file: file)
+                        let en = try await entryUsecase.UploadFile(
+                            parentUri: parentUri,
+                            file: file,
+                            properties: nil,
+                            tags: nil,
+                            document: nil
+                        )
                         print("upload new entry \(en.id)/\(en.name)")
 
                         if isCurrentGroup {

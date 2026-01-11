@@ -78,7 +78,9 @@ public class InboxViewModel: BaseViewModel {
     
     func uploadWebarchive(url: URL, title: String, file: URL)  {
         assert(Thread.isMainThread)
-        
+
+        let document = DocumentCreate(title: title, url: url.absoluteString)
+
         store.newBackgroundJob(
             name: "Uploading Web Archive \(file.lastPathComponent)",
             job: {
@@ -88,14 +90,20 @@ public class InboxViewModel: BaseViewModel {
                         return
                     }
                     
-                    let en = try await self.entryUsecase.UploadFile(parentUri: EntryURI.inbox, file: file)
+                    let en = try await self.entryUsecase.UploadFile(
+                        parentUri: EntryURI.inbox,
+                        file: file,
+                        properties: nil,
+                        tags: nil,
+                        document: document
+                    )
                     Self.logger.info("upload new entry \(en.id)/\(en.name)")
                 } catch {
                     sentAlert("upload file \(file.lastPathComponent) failed \(error)")
                 }
             },
             complete: {
-                NotificationCenter.default.post(name: .reopenGroup, object: [self.store.fsInfo.inboxID])
+                NotificationCenter.default.post(name: .reopenGroup, object: [EntryURI.inbox])
             }
         )
     }

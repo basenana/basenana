@@ -130,7 +130,13 @@ public class BaseViewModel {
                             throw BizError.isGroup
                         }
 
-                        let en = try await self.entryUsecase.UploadFile(parentUri: parentUri, file: file)
+                        let en = try await self.entryUsecase.UploadFile(
+                            parentUri: parentUri,
+                            file: file,
+                            properties: nil,
+                            tags: nil,
+                            document: nil
+                        )
                         Self.logger.notice("upload new entry \(en.id)/\(en.name)")
                     } catch {
                         sentAlert("upload file \(file.lastPathComponent) failed \(error)")

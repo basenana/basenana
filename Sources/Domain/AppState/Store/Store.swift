@@ -19,7 +19,7 @@ public class StateStore {
 
     // Global panel visibility states
     public var showInspector: Bool = false
-    public var showDocumentView: Bool = false
+    public var showDocumentView: Bool = true
 
     private init(){ }
 }
@@ -28,15 +28,11 @@ public class StateStore {
 public class FSInfo {
     public var fsApiReady = false
     public var namespace = ""
-    public var rootID: Int64 = 0
-    public var inboxID: Int64 = 0
-    
+
     init(){}
-    
-    public init(namespace: String, rootID: Int64, inboxID: Int64) {
+
+    public init(namespace: String) {
         self.fsApiReady = true
         self.namespace = namespace
-        self.rootID = rootID
-        self.inboxID = inboxID
     }
 }
