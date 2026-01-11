@@ -133,27 +133,23 @@ public enum APIEndpoint {
         var items: [URLQueryItem] = []
 
         switch self {
-        case .entriesDetails(let uri, let id):
-            if let uri = uri { items.append(URLQueryItem(name: "uri", value: uri)) }
-            if let id = id { items.append(URLQueryItem(name: "id", value: String(id))) }
-
-        case .entriesUpdate(let uri, let id), .entriesDelete(let uri, let id):
-            if let uri = uri { items.append(URLQueryItem(name: "uri", value: uri)) }
+        case .entriesDetails(let uri, let id), .entriesUpdate(let uri, let id), .entriesDelete(let uri, let id):
+            if let uri = uri { items.append(URLQueryItem(name: "uri", value: encodeURI(uri))) }
             if let id = id { items.append(URLQueryItem(name: "id", value: String(id))) }
 
         case .entriesParent(let uri, let id, _):
-            if let uri = uri { items.append(URLQueryItem(name: "uri", value: uri)) }
+            if let uri = uri { items.append(URLQueryItem(name: "uri", value: encodeURI(uri))) }
             if let id = id { items.append(URLQueryItem(name: "id", value: String(id))) }
 
         case .entriesProperty(let uri, let id), .entriesDocument(let uri, let id):
-            if let uri = uri { items.append(URLQueryItem(name: "uri", value: uri)) }
+            if let uri = uri { items.append(URLQueryItem(name: "uri", value: encodeURI(uri))) }
             if let id = id { items.append(URLQueryItem(name: "id", value: String(id))) }
 
         case .entriesSearch:
             break
 
         case .groupsChildren(let uri, let id, let page, let pageSize, let sort, let order):
-            if let uri = uri { items.append(URLQueryItem(name: "uri", value: uri)) }
+            if let uri = uri { items.append(URLQueryItem(name: "uri", value: encodeURI(uri))) }
             if let id = id { items.append(URLQueryItem(name: "id", value: String(id))) }
             if let page = page { items.append(URLQueryItem(name: "page", value: String(page))) }
             if let pageSize = pageSize { items.append(URLQueryItem(name: "page_size", value: String(pageSize))) }
@@ -161,7 +157,7 @@ public enum APIEndpoint {
             if let order = order { items.append(URLQueryItem(name: "order", value: order)) }
 
         case .filesContent(let uri, let id), .filesUpload(let uri, let id):
-            if let uri = uri { items.append(URLQueryItem(name: "uri", value: uri)) }
+            if let uri = uri { items.append(URLQueryItem(name: "uri", value: encodeURI(uri))) }
             if let id = id { items.append(URLQueryItem(name: "id", value: String(id))) }
 
         case .messages(let all):
@@ -172,5 +168,11 @@ public enum APIEndpoint {
         }
 
         return items
+    }
+
+    private func encodeURI(_ uri: String) -> String {
+        // URLQueryItem does not encode + (it has special meaning in query strings).
+        // We manually encode + to %2B, and let the backend handle other encodings.
+        return uri.replacingOccurrences(of: "+", with: "%2B")
     }
 }
