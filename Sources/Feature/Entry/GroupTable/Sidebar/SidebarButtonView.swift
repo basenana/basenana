@@ -38,19 +38,30 @@ struct SidebarButtonView: View {
             })
             .buttonStyle(.accessoryBar)
 
-            Button(action: {
-                if let uri = viewModel.selectedGroupUri {
+            Menu {
+                Button("EntryGroup", action: {
+                    let parentUri = viewModel.selectedGroupUri ?? groupTree.root.uri
                     NotificationCenter.default.post(
                         name: NSNotification.Name.createGroupInTree,
-                        object: NewGroupRequest(parentUri: uri, groupType: .standard))
-                } else {
+                        object: NewGroupRequest(parentUri: parentUri, groupType: .standard))
+                })
+                Button("RSS Feed", action: {
+                    let parentUri = viewModel.selectedGroupUri ?? groupTree.root.uri
                     NotificationCenter.default.post(
                         name: NSNotification.Name.createGroupInTree,
-                        object: NewGroupRequest(parentUri: groupTree.root.uri, groupType: .standard))
-                }
-            }, label: {
+                        object: NewGroupRequest(parentUri: parentUri, groupType: .feed))
+                })
+                Button("Dynamic EntryGroup", action: {
+                    let parentUri = viewModel.selectedGroupUri ?? groupTree.root.uri
+                    NotificationCenter.default.post(
+                        name: NSNotification.Name.createGroupInTree,
+                        object: NewGroupRequest(parentUri: parentUri, groupType: .dynamic))
+                })
+            } label: {
                 Image(systemName: "folder.badge.plus")
-            })
+            }
+            .menuIndicator(.hidden)
+            .menuStyle(.button)
             .buttonStyle(.accessoryBar)
 
             Spacer()
