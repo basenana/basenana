@@ -10,20 +10,26 @@ import SwiftUI
 
 public extension Color {
     static let UserMsgBackground = Color("userMsgBackground")
-    
+
     static let RobotMsgBackground = Color("robotMsgBackground")
-    
+
     static let CardBackground = Color("cardBackground")
-    
+
     static let CardFrontground = Color("cardFrontground")
 
     static let DialogBoxBackground = Color("dialogBoxBackground")
-    
+
     static let DateColor = Color("dateColor")
-    
+
     static let InboxColor = Color(.blue)
     static let UnreadColor = Color(.brown)
     static let MarkedColor = Color(.yellow)
+
+    static let WorkflowSuccess = Color.green
+    static let WorkflowRunning = Color.blue
+    static let WorkflowFailed = Color.red
+    static let WorkflowPending = Color.orange
+    static let WorkflowTextSecondary = Color.gray
 
 #if os(macOS)
     static let background = Color(NSColor.windowBackgroundColor)

@@ -50,7 +50,6 @@
 		3B330CA95C971998A9B3504A /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EFAD3DDF8C13F83BB8C889 /* Common.swift */; };
 		3DC3726E688DD5F2E987F555 /* MasonrySectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522D2E1564C02E1EFCB7A607 /* MasonrySectionView.swift */; };
 		3DCB57A27F8B00F3F880081E /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DCD1DF713CCB1414EFCFC231 /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3E8C09A6948A29843E229EA6 /* WorkflowItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325A6EFB03F0B0E94AC12BD7 /* WorkflowItemView.swift */; };
 		3EFA46C14AF5C8F15D19E7E0 /* WebArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A6AA713678F09497E84BE2 /* WebArchive.swift */; };
 		3F7DDAC6FCCA65525A2BEF1D /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCD1DF713CCB1414EFCFC231 /* Domain.framework */; };
 		3FCA6456C12136BE4CD5A727 /* RestDTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C4D5F00A497077642B3010 /* RestDTOs.swift */; };
@@ -375,7 +374,6 @@
 		30F3B7EB3BF06DB063D8B6D2 /* EntryRenameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryRenameView.swift; sourceTree = "<group>"; };
 		3109A46471865CC9709DC281 /* ReadingSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingSetting.swift; sourceTree = "<group>"; };
 		319551FAA79DEFE5AF5AB595 /* Feature.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Feature.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		325A6EFB03F0B0E94AC12BD7 /* WorkflowItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowItemView.swift; sourceTree = "<group>"; };
 		33AD384F08E8BE192821742E /* EntryRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryRepositoryProtocol.swift; sourceTree = "<group>"; };
 		33B7A2B6048E22DE113428C7 /* StyleguideTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleguideTests.swift; sourceTree = "<group>"; };
 		341FEB52A1ADF4050CFE848F /* MasonryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasonryItemView.swift; sourceTree = "<group>"; };
@@ -908,7 +906,6 @@
 		5A96528CC90B8F81B5A1F5E3 /* WorkflowList */ = {
 			isa = PBXGroup;
 			children = (
-				325A6EFB03F0B0E94AC12BD7 /* WorkflowItemView.swift */,
 				903DB521758241DD19BFD5EF /* WorkflowListView.swift */,
 				D64CF059CD92240EC9DEE1C3 /* WorkflowListViewModel.swift */,
 			);
@@ -1725,7 +1722,6 @@
 				F4F1D4220EA4688A8B6F0091 /* Workflow.swift in Sources */,
 				386B3E10311EA519A98FF357 /* WorkflowDetailView.swift in Sources */,
 				FA11ED88F3A3C288AB503A71 /* WorkflowDetailViewModel.swift in Sources */,
-				3E8C09A6948A29843E229EA6 /* WorkflowItemView.swift in Sources */,
 				419125E5ADDC1442B9AD1483 /* WorkflowListView.swift in Sources */,
 				9569A312F9C6775FEDCAF359 /* WorkflowListViewModel.swift in Sources */,
 			);

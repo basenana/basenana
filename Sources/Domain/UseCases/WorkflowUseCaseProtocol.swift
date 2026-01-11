@@ -12,4 +12,5 @@ import Foundation
 public protocol WorkflowUseCaseProtocol {
     func listWorkflows() async throws -> [Workflow]
     func listWorkflowJobs(workflow: String) async throws -> [WorkflowJob]
+    func triggerWorkflow(_ workflow: String, option: WorkflowJobOption) async throws -> WorkflowJob
 }

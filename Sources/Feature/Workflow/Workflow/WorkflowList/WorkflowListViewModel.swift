@@ -7,15 +7,12 @@
 
 import SwiftUI
 import Domain
-import Domain
-import Domain
-
 
 @Observable
 @MainActor
 public class WorkflowListViewModel {
-
     var workflows = [WorkflowItem]()
+    var isLoading = false
 
     var store: StateStore
     var usecase: any WorkflowUseCaseProtocol
@@ -24,17 +21,21 @@ public class WorkflowListViewModel {
         self.store = store
         self.usecase = usecase
     }
-    
+
     func initWorkflows() async {
+        isLoading = true
         workflows.removeAll()
-        
+
         do {
-            let wokflowList = try await usecase.listWorkflows()
-            for workflow in wokflowList {
-                workflows.append(WorkflowItem(workflow: workflow))
+            let workflowList = try await usecase.listWorkflows()
+            for workflow in workflowList {
+                let item = WorkflowItem(workflow: workflow)
+                workflows.append(item)
             }
         } catch {
             sentAlert("load workflow failed \(error)")
         }
+
+        isLoading = false
     }
 }

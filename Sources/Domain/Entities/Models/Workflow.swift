@@ -50,6 +50,6 @@ public protocol WorkflowJobStep {
 }
 
 public struct WorkflowJobOption {
-    
+    public init() {}
 }
 
