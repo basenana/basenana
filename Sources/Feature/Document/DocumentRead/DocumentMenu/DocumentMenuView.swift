@@ -45,7 +45,7 @@ struct DocumentMenuView: View {
             }
 
             Section{
-                Button("Go To EntryGroup", action: { gotoDestination(.groupList(groupUri: parentURI)) })
+                Button("Go To Group", action: { gotoDestination(.groupList(groupUri: parentURI)) })
             }
 
             Section{
