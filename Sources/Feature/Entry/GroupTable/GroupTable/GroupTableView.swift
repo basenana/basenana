@@ -476,11 +476,13 @@ private struct InspectorView: View {
             VStack(alignment: .leading, spacing: 16) {
                 basicInfoSection
                 Divider()
-                timeInfoSection
-                Divider()
                 documentInfoSection
                 Divider()
                 propertiesSection
+                Divider()
+                timeInfoSection
+
+                Spacer(minLength: 15)
             }
             .padding()
         }
@@ -655,14 +657,14 @@ private struct InspectorView: View {
                         .font(.caption)
                         .controlSize(.small)
                 } else {
-                    let tags = entry.properties.filter { $0.key == "tags" }.first?.value
+                    let tags = entry.property?.tags?.joined(separator: ", ")
                     Text(tags ?? "-")
                         .font(.caption)
                         .textSelection(.enabled)
                 }
             }
-
-            Divider()
+            
+            Spacer(minLength: 5)
 
             // Custom properties
             VStack(alignment: .leading, spacing: 4) {
@@ -677,6 +679,7 @@ private struct InspectorView: View {
                             .font(.caption)
                             .controlSize(.small)
                             .frame(width: 100)
+                            .bold()
                         TextField("value", text: $newPropertyValue)
                             .font(.caption)
                             .controlSize(.small)
@@ -687,48 +690,52 @@ private struct InspectorView: View {
                     }
                 }
 
-                ForEach(entry.properties.filter { $0.key != "tags" }, id: \.key) { property in
-                    HStack {
-                        if isEditingProperties && editingPropertyKey == property.key {
-                            TextField("key", text: $editingPropertyKey)
-                                .font(.caption)
-                                .controlSize(.small)
-                                .frame(width: 100)
-                            TextField("value", text: $editingPropertyValue)
-                                .font(.caption)
-                                .controlSize(.small)
-                            Button("✓") {
-                                savePropertyEdit(property.key)
-                            }
-                            .controlSize(.small)
-                        } else {
-                            Text(property.key)
-                                .font(.caption)
-                                .frame(width: 100, alignment: .leading)
-                            Text(property.value)
-                                .font(.caption)
-                                .textSelection(.enabled)
-                            if isEditingProperties {
-                                Button("✎") {
-                                    startEditingProperty(property)
+                ForEach(Array((entry.property?.properties ?? [:]).keys), id: \.self) { key in
+                    if let value = entry.property?.properties?[key] {
+                        HStack {
+                            if isEditingProperties && editingPropertyKey == key {
+                                TextField("key", text: $editingPropertyKey)
+                                    .font(.caption)
+                                    .controlSize(.small)
+                                    .frame(width: 100)
+                                    .bold()
+                                TextField("value", text: $editingPropertyValue)
+                                    .font(.caption)
+                                    .controlSize(.small)
+                                Button("✓") {
+                                    savePropertyEdit(key)
                                 }
                                 .controlSize(.small)
-                                Button("×") {
-                                    deleteProperty(property.key)
+                            } else {
+                                Text(key)
+                                    .font(.caption)
+                                    .frame(width: 100, alignment: .leading)
+                                Text(value)
+                                    .font(.caption)
+                                    .textSelection(.enabled)
+                                if isEditingProperties {
+                                    Button("✎") {
+                                        startEditingProperty(key: key, value: value)
+                                    }
+                                    .controlSize(.small)
+                                    Button("×") {
+                                        deleteProperty(key)
+                                    }
+                                    .controlSize(.small)
+                                    .foregroundColor(.red)
                                 }
-                                .controlSize(.small)
-                                .foregroundColor(.red)
                             }
                         }
                     }
                 }
             }
 
-            if entry.properties.isEmpty && !isEditingProperties {
+            if (entry.property?.properties?.isEmpty ?? true) && !isEditingProperties {
                 Text("No properties")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
+
         }
         .onAppear {
             loadPropertiesEditingValues()
@@ -737,7 +744,7 @@ private struct InspectorView: View {
             loadPropertiesEditingValues()
             isEditingProperties = false
         }
-        .onChange(of: entry.properties.count) { _, _ in
+        .onChange(of: entry.property?.properties?.count ?? 0) { _, _ in
             loadPropertiesEditingValues()
         }
     }
@@ -784,13 +791,13 @@ private struct InspectorView: View {
     // MARK: - Properties Editing
 
     private func loadPropertiesEditingValues() {
-        let tags = entry.properties.filter { $0.key == "tags" }.first
-        editedTags = tags?.value ?? ""
+        let tags = entry.property?.tags?.joined(separator: ", ")
+        editedTags = tags ?? ""
     }
 
-    private func startEditingProperty(_ property: any EntryProperty) {
-        editingPropertyKey = property.key
-        editingPropertyValue = property.value
+    private func startEditingProperty(key: String, value: String) {
+        editingPropertyKey = key
+        editingPropertyValue = value
     }
 
     private func addNewProperty() {
@@ -822,16 +829,11 @@ private struct InspectorView: View {
 
     private func saveProperties() {
         // Save tags
-        let currentTags = entry.properties.filter { $0.key == "tags" }.first?.value ?? ""
-        if currentTags != editedTags {
+        let currentTags = entry.property?.tags ?? []
+        let newTags = editedTags.isEmpty ? [] : editedTags.split(separator: ",").map { String($0.trimmingCharacters(in: .whitespaces)) }
+        if currentTags != newTags {
             Task {
-                if currentTags.isEmpty && !editedTags.isEmpty {
-                    await viewModel.addProperty(uri: entry.uri, key: "tags", value: editedTags)
-                } else if !currentTags.isEmpty && editedTags.isEmpty {
-                    await viewModel.deleteProperty(uri: entry.uri, key: "tags")
-                } else {
-                    await viewModel.updateProperty(uri: entry.uri, key: "tags", value: editedTags)
-                }
+                await viewModel.updateTags(uri: entry.uri, tags: newTags)
             }
         }
         isEditingProperties = false

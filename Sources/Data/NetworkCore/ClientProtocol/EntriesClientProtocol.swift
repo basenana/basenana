@@ -23,9 +23,7 @@ public protocol EntriesClientProtocol {
     func ChangeParent(uri: String, newEntryUri: String, option: ChangeParentOption) async throws
 
     // entry properties
-    func AddProperty(entry: Int64, key: String, val: String) async throws
-    func UpdateProperty(entry: Int64, key: String, val: String) async throws
-    func DeleteProperty(entry: Int64, key: String) async throws
+    func SetProperties(entry: Int64, tags: [String]?, properties: [String: String]?) async throws
 
     // document operations
     func SearchEntries(celPattern: String, page: Int?, pageSize: Int?, sort: String?, order: String?) async throws -> [any EntryInfo]

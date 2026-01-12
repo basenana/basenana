@@ -102,28 +102,20 @@ public class DocumentUseCase: DocumentUseCaseProtocol {
         }
     }
 
-    public func addProperty(uri: String, key: String, value: String) async throws {
+    public func setProperties(uri: String, tags: [String]?, properties: [String: String]?) async throws {
         do {
             let entry = try await entryRepo.GetEntryDetail(uri: uri)
-            try await entryRepo.AddProperty(entry: entry.id, key: key, val: value)
+            try await entryRepo.SetProperties(entry: entry.id, tags: tags, properties: properties)
         } catch RepositoryError.canceled {
             throw UseCaseError.canceled
         }
     }
 
-    public func updateProperty(uri: String, key: String, value: String) async throws {
+    public func updateTags(uri: String, tags: [String]) async throws {
         do {
             let entry = try await entryRepo.GetEntryDetail(uri: uri)
-            try await entryRepo.UpdateProperty(entry: entry.id, key: key, val: value)
-        } catch RepositoryError.canceled {
-            throw UseCaseError.canceled
-        }
-    }
-
-    public func deleteProperty(uri: String, key: String) async throws {
-        do {
-            let entry = try await entryRepo.GetEntryDetail(uri: uri)
-            try await entryRepo.DeleteProperty(entry: entry.id, key: key)
+            let properties = entry.property?.properties
+            try await entryRepo.SetProperties(entry: entry.id, tags: tags, properties: properties)
         } catch RepositoryError.canceled {
             throw UseCaseError.canceled
         }

@@ -62,7 +62,7 @@ public protocol EntryDetail {
     var modifiedAt: Date { get }
     var accessAt: Date { get }
 
-    var properties: [EntryProperty] { get }
+    var property: EntryPropertyInfo? { get }
 
     // Document properties
     var documentTitle: String? { get }
@@ -100,12 +100,17 @@ public func isVisitable(en: EntryDetail) -> Bool{
     return !en.name.starts(with: ".")
 }
 
-public protocol EntryProperty {
-    var key: String { get }
-    var value : String { get }
-    var encoded: Bool { get }
-}
+public struct EntryPropertyInfo {
+    public var tags: [String]?
+    public var properties: [String: String]?
 
+    public init() { }
+
+    public init(tags: [String]?, properties: [String: String]?) {
+        self.tags = tags
+        self.properties = properties
+    }
+}
 
 public struct EntryCreate {
     public var parentUri: String
@@ -280,7 +285,8 @@ extension EntryInfo {
 
     // Legacy DocumentInfo properties (deprecated)
     public var parent: EntryInfo { self }
-    public var properties: [EntryProperty] { [] }
+    public var properties: [String: String]? { nil }
+    public var tags: [String]? { nil }
     public var subContent: String { "" }
     public var searchContent: [String] { [] }
     public var headerImage: String { "" }

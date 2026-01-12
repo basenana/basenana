@@ -55,16 +55,8 @@ public class EntryRepository: EntryRepositoryProtocol {
         return try await core.ChangeParent(uri: uri, newEntryUri: newEntryUri, option: option)
     }
 
-    public func AddProperty(entry: Int64, key: String, val: String) async throws {
-        return try await core.AddProperty(entry: entry, key: key, val: val)
-    }
-
-    public func UpdateProperty(entry: Int64, key: String, val: String) async throws {
-        return try await core.UpdateProperty(entry: entry, key: key, val: val)
-    }
-
-    public func DeleteProperty(entry: Int64, key: String) async throws {
-        return try await core.DeleteProperty(entry: entry, key: key)
+    public func SetProperties(entry: Int64, tags: [String]?, properties: [String: String]?) async throws {
+        return try await core.SetProperties(entry: entry, tags: tags, properties: properties)
     }
 
     // MARK: - Document Operations

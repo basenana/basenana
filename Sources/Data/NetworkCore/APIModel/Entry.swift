@@ -77,6 +77,8 @@ extension DocumentInfo: Decodable {
     }
 }
 
+// MARK: - API Entry Info
+
 public struct APIEntryInfo: EntryInfo {
     public var id: Int64
     public var uri: String
@@ -150,11 +152,11 @@ public struct APIEntryDetail: EntryDetail {
 
     public var accessAt: Date
 
-    public var properties: [any EntryProperty]
+    public var property: EntryPropertyInfo?
 
     public var document: DocumentInfo?
 
-    public init(id: Int64, uri: String, name: String, aliases: String?, parent: Int64, kind: String, isGroup: Bool, size: Int64, version: Int64?, namespace: String?, storage: String?, uid: Int64?, gid: Int64?, permissions: [String]?, createdAt: Date, changedAt: Date, modifiedAt: Date, accessAt: Date, properties: [any EntryProperty], document: DocumentInfo? = nil) {
+    public init(id: Int64, uri: String, name: String, aliases: String?, parent: Int64, kind: String, isGroup: Bool, size: Int64, version: Int64?, namespace: String?, storage: String?, uid: Int64?, gid: Int64?, permissions: [String]?, createdAt: Date, changedAt: Date, modifiedAt: Date, accessAt: Date, property: EntryPropertyInfo?, document: DocumentInfo? = nil) {
         self.id = id
         self.uri = uri
         self.name = name
@@ -173,7 +175,7 @@ public struct APIEntryDetail: EntryDetail {
         self.changedAt = changedAt
         self.modifiedAt = modifiedAt
         self.accessAt = accessAt
-        self.properties = properties
+        self.property = property
         self.document = document
     }
 
@@ -198,7 +200,7 @@ extension APIEntryDetail: Decodable {
         case changedAt = "changed_at"
         case modifiedAt = "modified_at"
         case accessAt = "access_at"
-        case properties, document
+        case property, document
     }
 
     public init(from decoder: Decoder) throws {
@@ -221,23 +223,19 @@ extension APIEntryDetail: Decodable {
         self.changedAt = try container.decode(Date.self, forKey: .changedAt)
         self.modifiedAt = try container.decode(Date.self, forKey: .modifiedAt)
         self.accessAt = try container.decode(Date.self, forKey: .accessAt)
-        self.properties = try container.decodeIfPresent([APIEntryProperty].self, forKey: .properties) ?? []
+
+        let propertyDTO = try container.decodeIfPresent(PropertyWrapperDTO.self, forKey: .property)
+        self.property = EntryPropertyInfo(tags: propertyDTO?.tags, properties: propertyDTO?.properties)
+
         self.document = try container.decodeIfPresent(DocumentInfo.self, forKey: .document)
     }
 }
 
-public struct APIEntryProperty: EntryProperty, Decodable {
-    public var key: String
+// MARK: - Property Info Extension for APIEntryDetail
 
-    public var value: String
-
-    public var encoded: Bool
-
-    public init(key: String, value: String, encoded: Bool) {
-        self.key = key
-        self.value = value
-        self.encoded = encoded
-    }
+extension APIEntryDetail {
+    public var entryTags: [String]? { property?.tags }
+    public var entryProperties: [String: String]? { property?.properties }
 }
 
 // MARK: - Document Properties Extension for APIEntryInfo

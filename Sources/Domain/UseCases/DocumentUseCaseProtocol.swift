@@ -25,7 +25,6 @@ public protocol DocumentUseCaseProtocol {
     func updateDocumentMetadata(uri: String, update: DocumentUpdate) async throws
 
     // property operations
-    func addProperty(uri: String, key: String, value: String) async throws
-    func updateProperty(uri: String, key: String, value: String) async throws
-    func deleteProperty(uri: String, key: String) async throws
+    func setProperties(uri: String, tags: [String]?, properties: [String: String]?) async throws
+    func updateTags(uri: String, tags: [String]) async throws
 }

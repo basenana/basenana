@@ -300,7 +300,11 @@ public class GroupTableViewModel: BaseViewModel {
 
     func addProperty(uri: String, key: String, value: String) async {
         do {
-            try await documentUsecase.addProperty(uri: uri, key: key, value: value)
+            let entry = selectedEntryDetail
+            var properties = entry?.property?.properties ?? [:]
+            properties[key] = value
+            let tags = entry?.property?.tags
+            try await documentUsecase.setProperties(uri: uri, tags: tags, properties: properties)
             await refreshSelectedEntryDetail()
         } catch {
             sentAlert("add property failed: \(error)")
@@ -309,7 +313,11 @@ public class GroupTableViewModel: BaseViewModel {
 
     func updateProperty(uri: String, key: String, value: String) async {
         do {
-            try await documentUsecase.updateProperty(uri: uri, key: key, value: value)
+            let entry = selectedEntryDetail
+            var properties = entry?.property?.properties ?? [:]
+            properties[key] = value
+            let tags = entry?.property?.tags
+            try await documentUsecase.setProperties(uri: uri, tags: tags, properties: properties)
             await refreshSelectedEntryDetail()
         } catch {
             sentAlert("update property failed: \(error)")
@@ -318,10 +326,23 @@ public class GroupTableViewModel: BaseViewModel {
 
     func deleteProperty(uri: String, key: String) async {
         do {
-            try await documentUsecase.deleteProperty(uri: uri, key: key)
+            let entry = selectedEntryDetail
+            var properties = entry?.property?.properties ?? [:]
+            properties.removeValue(forKey: key)
+            let tags = entry?.property?.tags
+            try await documentUsecase.setProperties(uri: uri, tags: tags, properties: properties)
             await refreshSelectedEntryDetail()
         } catch {
             sentAlert("delete property failed: \(error)")
+        }
+    }
+
+    func updateTags(uri: String, tags: [String]) async {
+        do {
+            try await documentUsecase.updateTags(uri: uri, tags: tags)
+            await refreshSelectedEntryDetail()
+        } catch {
+            sentAlert("update tags failed: \(error)")
         }
     }
 

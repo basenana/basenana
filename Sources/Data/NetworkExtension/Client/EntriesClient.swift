@@ -130,28 +130,13 @@ public class EntriesClient: EntriesClientProtocol {
         )
     }
 
-    public func AddProperty(entry: Int64, key: String, val: String) async throws {
-        let request = PropertyRequest(tags: nil, properties: [key: val])
-
+    public func SetProperties(entry: Int64, tags: [String]?, properties: [String: String]?) async throws {
+        let request = PropertyRequest(tags: tags, properties: properties)
         _ = try await apiClient.request(
             .entriesProperty(uri: nil, id: entry),
             body: request,
             responseType: PropertiesResponse<PropertyWrapperDTO>.self
         )
-    }
-
-    public func UpdateProperty(entry: Int64, key: String, val: String) async throws {
-        let request = PropertyRequest(tags: nil, properties: [key: val])
-
-        _ = try await apiClient.request(
-            .entriesProperty(uri: nil, id: entry),
-            body: request,
-            responseType: PropertiesResponse<PropertyWrapperDTO>.self
-        )
-    }
-
-    public func DeleteProperty(entry: Int64, key: String) async throws {
-        throw RepositoryError.unimplement
     }
 
     // MARK: - Document Operations
@@ -233,7 +218,7 @@ extension EntryDetailDTO {
             changedAt: self.changed_at ?? Date.distantPast,
             modifiedAt: self.modified_at ?? Date.distantPast,
             accessAt: self.access_at ?? Date.distantPast,
-            properties: [],
+            property: EntryPropertyInfo(tags: self.property?.tags, properties: self.property?.properties),
             document: DocumentInfo(from: self.document)
         )
     }
