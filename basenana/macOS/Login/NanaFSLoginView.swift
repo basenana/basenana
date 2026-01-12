@@ -14,10 +14,9 @@ import Data
 struct NanaFSLoginView: View {
     @State private var store = StateStore.shared
 
-    @State private var serverHost:String = ""
-    @State private var serverPortStr: String = "7081"
-    @State private var bearerToken:String = ""
-    @State private var namespace:String = ""
+    @State private var serverURL: String = ""
+    @State private var bearerToken: String = ""
+    @State private var namespace: String = ""
 
     @Binding private var isLogining: Bool
 
@@ -26,47 +25,69 @@ struct NanaFSLoginView: View {
     }
 
     public var body: some View {
-        VStack {
-            Text("Connect to NanaFS🍌")
+        VStack(spacing: 0) {
+            Text("🍌")
+                .font(.system(size: 70))
+                .padding(.top, 20)
+
+            Text("Connect to NanaFS")
                 .font(.largeTitle)
-                .padding(30)
-            Form {
+                .fontWeight(.semibold)
+                .padding(.top, 10)
 
-                HStack {
-                    TextField("Server", text: $serverHost)
+            VStack(spacing: 20) {
+                HStack(spacing: 12) {
+                    Image(systemName: "server.rack")
+                        .foregroundStyle(.secondary)
+                        .frame(width: 20)
+
+                    TextField("Server URL", text: $serverURL)
                         .textFieldStyle(.roundedBorder)
                         .disabled(isLogining)
-                        .padding()
-
-                    TextField("Port", text: $serverPortStr)
-                        .textFieldStyle(.roundedBorder)
-                        .labelsHidden()
-                        .disabled(isLogining)
-                        .padding()
                 }
 
-                SecureField("BearerToken", text: $bearerToken)
-                    .textFieldStyle(.roundedBorder)
-                    .disabled(isLogining)
-                    .padding()
+                HStack(spacing: 12) {
+                    Image(systemName: "key.fill")
+                        .foregroundStyle(.secondary)
+                        .frame(width: 20)
 
-                TextField("Namespace", text: $namespace)
-                    .textFieldStyle(.roundedBorder)
-                    .disabled(isLogining)
-                    .padding()
+                    SecureField("Bearer Token", text: $bearerToken)
+                        .textFieldStyle(.roundedBorder)
+                        .disabled(isLogining)
+                }
+
+                HStack(spacing: 12) {
+                    Image(systemName: "square.on.square.squareshape.controlhandles")
+                        .foregroundStyle(.secondary)
+                        .frame(width: 20)
+
+                    TextField("Namespace", text: $namespace)
+                        .textFieldStyle(.roundedBorder)
+                        .disabled(isLogining)
+                }
             }
+            .padding(.top, 40)
+            .padding(.horizontal, 60)
 
             Button(action: { tryConnect() }) {
-                Text(isLogining ? "Connecting" : "Connect" )
-                    .font(.body)
-                    .padding(10)
-                    .frame(width: 220, height: 40)
+                HStack {
+                    if isLogining {
+                        ProgressView()
+                            .controlSize(.small)
+                            .padding(.trailing, 8)
+                    }
+                    Text(isLogining ? "Connecting..." : "Connect")
+                }
+                .font(.body.weight(.medium))
+                .padding(10)
+                .frame(width: 220, height: 40)
             }
-            .padding(.vertical, 30)
+            .buttonStyle(.borderedProminent)
+            .padding(.top, 40)
+            .padding(.bottom, 30)
         }
         .onAppear {
-            serverHost = store.setting.database.apiHost
-            serverPortStr = String(store.setting.database.apiPort)
+            serverURL = store.setting.database.apiURL
             bearerToken = store.setting.database.apiBearerToken
             namespace = store.setting.database.apiNamespace
             defaultLogin()
@@ -76,21 +97,21 @@ struct NanaFSLoginView: View {
     }
 
     func tryConnect() {
+        guard serverURL.hasPrefix("http://") || serverURL.hasPrefix("https://") else {
+            NotificationCenter.default.post(name: .loginValidationError, object: "URL must start with http:// or https://")
+            return
+        }
+
         isLogining = true
 
         NotificationCenter.default.post(name: .tryLogin, object: LoginRequest(
-            serverHost: serverHost,
-            serverPort: Int(serverPortStr) ?? -1,
+            apiURL: serverURL,
             bearerToken: bearerToken,
             namespace: namespace))
     }
 
     func defaultLogin() {
-        guard serverHost != "" else {
-            return
-        }
-
-        guard let _ = Int(serverPortStr) else {
+        guard serverURL != "" else {
             return
         }
 

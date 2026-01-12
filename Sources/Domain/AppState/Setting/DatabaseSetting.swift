@@ -8,11 +8,8 @@
 import SwiftUI
 
 public class DatabaseSetting {
-    @AppStorage("org.basenana.nanafs.host", store: UserDefaults.standard)
-    public var apiHost: String = ""
-
-    @AppStorage("org.basenana.nanafs.port", store: UserDefaults.standard)
-    public var apiPort: Int = 0
+    @AppStorage("org.basenana.nanafs.url", store: UserDefaults.standard)
+    public var apiURL: String = "http://localhost:7081"
 
     @AppStorage("org.basenana.nanafs.auth.bearerToken", store: UserDefaults.standard)
     public var apiBearerToken: String = ""

@@ -12,18 +12,16 @@ import Domain
 struct NanaFSSettingsView: View {
     @State private var state = StateStore.shared
 
-    @State private var serverHost:String = ""
-    @State private var serverPortStr: String = ""
-    @State private var bearerToken:String = ""
-    @State private var namespace:String = ""
+    @State private var serverURL: String = ""
+    @State private var bearerToken: String = ""
+    @State private var namespace: String = ""
     @State private var errorMessage = ""
 
     public var body: some View {
         VStack{
             Form {
                 VStack {
-                    TextField("Host", text: $serverHost)
-                    TextField("Port", text: $serverPortStr)
+                    TextField("Server URL", text: $serverURL)
                     SecureField("BearerToken", text: $bearerToken)
                     TextField("Namespace", text: $namespace)
                 }
@@ -49,8 +47,7 @@ struct NanaFSSettingsView: View {
         }
         .navigationTitle(SettingCategory.database.display)
         .onAppear{
-            serverHost = state.setting.database.apiHost
-            serverPortStr = String(state.setting.database.apiPort)
+            serverURL = state.setting.database.apiURL
             bearerToken = state.setting.database.apiBearerToken
             namespace = state.setting.database.apiNamespace
         }

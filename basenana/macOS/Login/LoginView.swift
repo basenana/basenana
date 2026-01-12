@@ -36,17 +36,22 @@ struct LoginView: View {
                 self.doLogin(req: req)
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: .loginValidationError)) { [self] notification in
+            if let msg = notification.object as? String {
+                errorMessage = msg
+            }
+        }
         .padding(50)
         .frame(minWidth: 700, minHeight: 500)
     }
 
     func doLogin(req: LoginRequest) {
         Task {
-            await handleLogin(serverHost: req.serverHost, serverPort: req.serverPort, bearerToken: req.bearerToken, namespace: req.namespace)
+            await handleLogin(apiURL: req.apiURL, bearerToken: req.bearerToken, namespace: req.namespace)
         }
     }
 
-    func handleLogin(serverHost: String, serverPort: Int, bearerToken: String, namespace: String) async {
+    func handleLogin(apiURL: String, bearerToken: String, namespace: String) async {
         isLogining = true
         errorMessage = ""
 
@@ -56,8 +61,7 @@ struct LoginView: View {
         do {
             // Create REST API client with short timeout for login check
             restAPIClient = RestAPIClient(
-                host: serverHost,
-                port: serverPort,
+                apiURL: apiURL,
                 token: bearerToken,
                 namespace: namespace
             )
@@ -122,8 +126,7 @@ struct LoginView: View {
         }
 
         complateLogin(restAPIClient: client, fsInfo: info)
-        store.setting.database.apiHost = serverHost
-        store.setting.database.apiPort = serverPort
+        store.setting.database.apiURL = apiURL
         store.setting.database.apiBearerToken = bearerToken
         store.setting.database.apiNamespace = namespace
         isLogining = false
@@ -140,18 +143,17 @@ struct LoginView: View {
 
 public extension Notification.Name {
     static let tryLogin = Notification.Name(rawValue: "tryLogin")
+    static let loginValidationError = Notification.Name(rawValue: "loginValidationError")
 }
 
 
 class LoginRequest {
-    var serverHost: String
-    var serverPort: Int
+    var apiURL: String
     var bearerToken: String
     var namespace: String
 
-    init(serverHost: String, serverPort: Int, bearerToken: String, namespace: String) {
-        self.serverHost = serverHost
-        self.serverPort = serverPort
+    init(apiURL: String, bearerToken: String, namespace: String) {
+        self.apiURL = apiURL
         self.bearerToken = bearerToken
         self.namespace = namespace
     }
