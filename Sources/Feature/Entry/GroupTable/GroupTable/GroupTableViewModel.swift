@@ -113,6 +113,9 @@ public class GroupTableViewModel: BaseViewModel {
                 hasMore = false
             } else {
                 page += 1
+                Task.detached { [weak self] in
+                    await self?.loadNextPage()
+                }
             }
         } catch {
             sentAlert("load more children failed: \(error)")

@@ -245,19 +245,32 @@ private struct GroupTableContentView: View {
                 }
             }
 
+            loadMoreTrigger
+        }
+        .onChange(of: viewModel.selection) { _, _ in
+            Task {
+                await viewModel.loadSelectedEntryDetail()
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var loadMoreTrigger: some View {
+        ScrollViewReader { proxy in
             if viewModel.hasMore {
                 ProgressView()
                     .padding()
+                    .id(viewModel.children.count)
                     .onAppear {
                         Task {
                             await viewModel.loadNextPage()
                         }
                     }
-            }
-        }
-        .onChange(of: viewModel.selection) { _, _ in
-            Task {
-                await viewModel.loadSelectedEntryDetail()
+                    .onChange(of: viewModel.children.count) { _, newCount in
+                        withAnimation {
+                            proxy.scrollTo(newCount, anchor: .bottom)
+                        }
+                    }
             }
         }
     }
