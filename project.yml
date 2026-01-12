@@ -46,7 +46,7 @@ targets:
       - path: basenana/Assets.xcassets
     settings:
       base:
-        PRODUCT_NAME: BasenanaApp
+        PRODUCT_NAME: Basenana
         PRODUCT_BUNDLE_IDENTIFIER: com.basenana.app
         COMBINE_HIDPI_IMAGES: YES
         CODE_SIGN_STYLE: Automatic
