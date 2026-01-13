@@ -25,14 +25,12 @@ public class StateStore {
 }
 
 
-public class FSInfo {
+public class FSInfo: Equatable {
     public var fsApiReady = false
-    public var namespace = ""
 
-    init(){}
+    public init() {}
 
-    public init(namespace: String) {
-        self.fsApiReady = true
-        self.namespace = namespace
+    public static func == (lhs: FSInfo, rhs: FSInfo) -> Bool {
+        return lhs.fsApiReady == rhs.fsApiReady
     }
 }

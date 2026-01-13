@@ -66,18 +66,18 @@ final public class APIClient {
         self.baseURL = ""
     }
 
-    init(baseURL: String, token: String, namespace: String, timeout: TimeInterval = 10) {
+    init(baseURL: String, token: String, timeout: TimeInterval = 10) {
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = timeout
         configuration.timeoutIntervalForResource = 300
         self.session = URLSession(configuration: configuration)
         self.baseURL = baseURL
-        self.authInterceptor = AuthInterceptor(token: token, namespace: namespace)
+        self.authInterceptor = AuthInterceptor(token: token)
         self.requestTimeout = timeout
     }
 
-    func setAuth(token: String, namespace: String) {
-        self.authInterceptor = AuthInterceptor(token: token, namespace: namespace)
+    func setAuth(token: String) {
+        self.authInterceptor = AuthInterceptor(token: token)
     }
 
     // MARK: - Generic Request Methods

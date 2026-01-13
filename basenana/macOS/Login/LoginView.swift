@@ -47,11 +47,11 @@ struct LoginView: View {
 
     func doLogin(req: LoginRequest) {
         Task {
-            await handleLogin(apiURL: req.apiURL, bearerToken: req.bearerToken, namespace: req.namespace)
+            await handleLogin(apiURL: req.apiURL, bearerToken: req.bearerToken)
         }
     }
 
-    func handleLogin(apiURL: String, bearerToken: String, namespace: String) async {
+    func handleLogin(apiURL: String, bearerToken: String) async {
         isLogining = true
         errorMessage = ""
 
@@ -62,8 +62,7 @@ struct LoginView: View {
             // Create REST API client with short timeout for login check
             restAPIClient = RestAPIClient(
                 apiURL: apiURL,
-                token: bearerToken,
-                namespace: namespace
+                token: bearerToken
             )
 
             // Adjust timeout for login
@@ -92,7 +91,7 @@ struct LoginView: View {
                 responseType: RootEntryResponse.self
             )
 
-            fsInfo = FSInfo(namespace: namespace)
+            fsInfo = FSInfo()
 
         } catch let error as APIError {
             isLogining = false
@@ -128,7 +127,6 @@ struct LoginView: View {
         complateLogin(restAPIClient: client, fsInfo: info)
         store.setting.database.apiURL = apiURL
         store.setting.database.apiBearerToken = bearerToken
-        store.setting.database.apiNamespace = namespace
         isLogining = false
     }
 
@@ -136,6 +134,7 @@ struct LoginView: View {
     func complateLogin(restAPIClient: RestAPIClient, fsInfo: FSInfo) {
         assert(Thread.isMainThread)
         environment.restAPIClient = restAPIClient
+        fsInfo.fsApiReady = true
         store.fsInfo = fsInfo
     }
 }
@@ -150,12 +149,10 @@ public extension Notification.Name {
 class LoginRequest {
     var apiURL: String
     var bearerToken: String
-    var namespace: String
 
-    init(apiURL: String, bearerToken: String, namespace: String) {
+    init(apiURL: String, bearerToken: String) {
         self.apiURL = apiURL
         self.bearerToken = bearerToken
-        self.namespace = namespace
     }
 }
 

@@ -13,7 +13,6 @@ import Domain
 @MainActor
 public struct ContentView: View {
     @State private var state = StateStore.shared
-    @State private var environment = Environment.shared
 
     public init() {}
 

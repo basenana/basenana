@@ -16,7 +16,6 @@ struct NanaFSLoginView: View {
 
     @State private var serverURL: String = ""
     @State private var bearerToken: String = ""
-    @State private var namespace: String = ""
 
     @Binding private var isLogining: Bool
 
@@ -55,16 +54,6 @@ struct NanaFSLoginView: View {
                         .textFieldStyle(.roundedBorder)
                         .disabled(isLogining)
                 }
-
-                HStack(spacing: 12) {
-                    Image(systemName: "square.on.square.squareshape.controlhandles")
-                        .foregroundStyle(.secondary)
-                        .frame(width: 20)
-
-                    TextField("Namespace", text: $namespace)
-                        .textFieldStyle(.roundedBorder)
-                        .disabled(isLogining)
-                }
             }
             .padding(.top, 40)
             .padding(.horizontal, 60)
@@ -89,7 +78,6 @@ struct NanaFSLoginView: View {
         .onAppear {
             serverURL = store.setting.database.apiURL
             bearerToken = store.setting.database.apiBearerToken
-            namespace = store.setting.database.apiNamespace
             defaultLogin()
         }
         .padding(50)
@@ -106,8 +94,7 @@ struct NanaFSLoginView: View {
 
         NotificationCenter.default.post(name: .tryLogin, object: LoginRequest(
             apiURL: serverURL,
-            bearerToken: bearerToken,
-            namespace: namespace))
+            bearerToken: bearerToken))
     }
 
     func defaultLogin() {
@@ -116,10 +103,6 @@ struct NanaFSLoginView: View {
         }
 
         guard bearerToken != "" else {
-            return
-        }
-
-        guard namespace != "" else {
             return
         }
 

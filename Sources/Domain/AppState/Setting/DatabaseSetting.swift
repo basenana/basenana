@@ -14,8 +14,5 @@ public class DatabaseSetting {
     @AppStorage("org.basenana.nanafs.auth.bearerToken", store: UserDefaults.standard)
     public var apiBearerToken: String = ""
 
-    @AppStorage("org.basenana.nanafs.namespace", store: UserDefaults.standard)
-    public var apiNamespace: String = ""
-
     init() { }
 }
