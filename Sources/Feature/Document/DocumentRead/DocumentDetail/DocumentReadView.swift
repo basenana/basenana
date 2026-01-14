@@ -31,7 +31,7 @@ public struct DocumentReadView: View {
                 case .pdf:
                     PDFDocumentView(fileURL: fileURL)
                 case .html:
-                    HTMLStringView(fileURL: fileURL)
+                    HTMLStringView(fileURL: fileURL, originalUrl: viewModel.entry?.documentURL.flatMap { URL(string: $0) })
                 case .markdown:
                     MarkdownDocumentView(fileURL: fileURL)
                 }

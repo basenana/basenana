@@ -33,9 +33,9 @@ struct HTMLStringView: NSViewRepresentable {
     let url: URL?
     let htmlContent: String
 
-    init(fileURL: URL) {
+    init(fileURL: URL, originalUrl: URL?) {
         self.fileURL = fileURL
-        self.url = nil
+        self.url = originalUrl
         self.htmlContent = ""
     }
 
@@ -65,17 +65,43 @@ struct HTMLStringView: NSViewRepresentable {
         }
     }
 
+    private func injectStylesheet(to webView: WKWebView) {
+        let styles = documentStyles
+        let js = """
+        (function() {
+            if (document.head.querySelector('#document-styles')) return;
+            const style = document.createElement('style');
+            style.id = 'document-styles';
+            style.textContent = `\(styles)`;
+            document.head.appendChild(style);
+        })();
+        """
+        webView.evaluateJavaScript(js, completionHandler: nil)
+    }
+
     func makeCoordinator() -> Coordinator {
-        Coordinator()
+        Coordinator(self)
     }
 
     class Coordinator: NSObject, WKNavigationDelegate {
+        private let parent: HTMLStringView
+
+        init(_ parent: HTMLStringView) {
+            self.parent = parent
+        }
+
         func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
             if navigationAction.navigationType == .linkActivated, let url = navigationAction.request.url {
                 NSWorkspace.shared.open(url)
                 decisionHandler(.cancel)
             } else {
                 decisionHandler(.allow)
+            }
+        }
+
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            if parent.fileURL != nil {
+                parent.injectStylesheet(to: webView)
             }
         }
     }
@@ -143,3 +169,11 @@ iframe { height: auto; width: auto; max-width: 95%; max-height: 100%; }
 <div class="content"> {Content} </div>
 </body>
 """
+
+private var documentStyles: String {
+    guard let startRange = documentHtmlTemplate.range(of: "<style type='text/css'>"),
+          let endRange = documentHtmlTemplate.range(of: "</style>", range: startRange.upperBound..<documentHtmlTemplate.endIndex) else {
+        return ""
+    }
+    return String(documentHtmlTemplate[startRange.upperBound..<endRange.lowerBound])
+}
