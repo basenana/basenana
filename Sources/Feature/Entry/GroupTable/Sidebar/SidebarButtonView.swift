@@ -67,7 +67,7 @@ struct SidebarButtonView: View {
             Spacer()
 
             Button(action: {
-                gotoDestination(Destination.workflowDashboard)
+                resetDestination(.workflowDashboard)
             }, label: {
                 Image(systemName: "ellipsis.curlybraces")
             })

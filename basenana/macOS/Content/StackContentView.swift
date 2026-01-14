@@ -12,29 +12,25 @@ import Feature
 
 
 struct StackContentView: View {
-    
-    @State private var state: StateStore
-    
+
+    @State private var destinations: [Destination] = []
     @State private var container: DIContainer
-    @State private var destinations = [Destination]()
     @State private var alertMessage: String = ""
     @State private var hasAlert: Bool = false
     @State private var searchContent: String = ""
     @State private var isSearchActive = false
-    
-    
-    init(state: StateStore) {
-        self.state = state
-        self.container = DIContainer(state: state)
+
+
+    init() {
+        self.container = DIContainer(state: .shared)
     }
-    
+
     public var body: some View {
         NavigationSplitView {
             SidebarView(viewModel: container.c.resolve(TreeViewModel.self)!)
                 .frame(minWidth: 180,idealWidth: 200)
         }detail: {
             NavigationStack(path: $destinations) {
-                
                 StackBannerView()
                     .navigationDestination(for: Destination.self) { destination in
                         switch destination {
@@ -61,15 +57,12 @@ struct StackContentView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: .setDestination)) { [self] notification in
             if let ds = notification.object as? [Destination] {
-                self.destinations.removeAll()
-                for d in ds {
-                    self.destinations.append(d)
-                }
+                destinations = ds
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: .gotoDestination)) { [self] notification in
             if let dest = notification.object as? Destination {
-                self.destinations.append(dest)
+                destinations.append(dest)
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("alert"))) { [self] notification in
@@ -80,11 +73,11 @@ struct StackContentView: View {
         }
         .toolbar{
             ToolbarItemGroup(placement: .principal){
-                BackgroundJobView(state: state)
-                NotificationView(state: state)
+                BackgroundJobView(state: .shared)
+                NotificationView(state: .shared)
                 Spacer()
             }
-            
+
         }
         .searchable(text: $searchContent)
         .onSubmit(of: .search) {

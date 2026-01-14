@@ -21,6 +21,9 @@ public class StateStore {
     public var showInspector: Bool = false
     public var showDocumentView: Bool = true
 
+    // Navigation state
+    public var destinations: [Destination] = []
+
     private init(){ }
 }
 

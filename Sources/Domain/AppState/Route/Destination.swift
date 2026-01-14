@@ -58,6 +58,10 @@ public enum Destination: Identifiable, Hashable {
         return lhs.id == rhs.id
     }
 
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
 }
 
 

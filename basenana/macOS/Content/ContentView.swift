@@ -22,7 +22,7 @@ public struct ContentView: View {
                 LoginView()
                     .frame(minWidth: 400, maxWidth: 400, minHeight: 500, maxHeight: 500)
             } else {
-                StackContentView(state: state)
+                StackContentView()
             }
         }
         .preferredColorScheme(state.setting.appearance.overColorScheme)
