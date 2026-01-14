@@ -1,5 +1,5 @@
 import XCTest
-@testable import Workflow
+@testable import Feature
 
 final class WorkflowTests: XCTestCase {
     func testExample() throws {
