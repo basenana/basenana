@@ -16,6 +16,7 @@ public class DocumentReadViewModel {
     public enum DocumentFileType {
         case html
         case pdf
+        case markdown
     }
 
     var uri: String
@@ -66,6 +67,8 @@ public class DocumentReadViewModel {
         switch ext {
         case "pdf":
             fileType = .pdf
+        case "md", "markdown":
+            fileType = .markdown
         default:
             fileType = .html
         }

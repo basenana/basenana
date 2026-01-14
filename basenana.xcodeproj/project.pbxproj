@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -102,6 +102,7 @@
 		8185C13241A383D3860B1C4B /* NavigationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 998BC25AD81DB5CC030DC0F3 /* NavigationListView.swift */; };
 		821B1416FBDC4C9ECD0429CF /* api.md in Resources */ = {isa = PBXBuildFile; fileRef = FCE25EAD07F82F5A4368DC2E /* api.md */; };
 		838B228F5789735E6A0E4F68 /* EntryUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64275A1AB6F53A0B1E642F7 /* EntryUseCase.swift */; };
+		83E35011AD82F8B5331380BC /* MarkdownDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87726852951165E8093BD0F9 /* MarkdownDocumentView.swift */; };
 		866CB1584579624FB3401C66 /* System.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD77677B427DAE46EEA8274 /* System.swift */; };
 		86BB16C84EBE8CCEA34C2F94 /* AlertNotify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF31BDEFF283C79DF527EB6 /* AlertNotify.swift */; };
 		8782376B4951A30216801EBF /* WorkflowClientProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D8F32A4222016BE8AC0167 /* WorkflowClientProtocol.swift */; };
@@ -372,7 +373,7 @@
 		29E71D97912F4DC8FE8CAB40 /* readability_images.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = readability_images.js; sourceTree = "<group>"; };
 		2BFCDA758A568AFC1306D480 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		2C1EA41773446254A494899E /* EntryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryTests.swift; sourceTree = "<group>"; };
-		2D04879A4B0B55851DA7171C /* Basenana.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Basenana.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D04879A4B0B55851DA7171C /* BasenanaApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BasenanaApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30072FA5C1CBC8F46D968EEC /* DocumentNotify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentNotify.swift; sourceTree = "<group>"; };
 		30F3B7EB3BF06DB063D8B6D2 /* EntryRenameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryRenameView.swift; sourceTree = "<group>"; };
 		3109A46471865CC9709DC281 /* ReadingSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingSetting.swift; sourceTree = "<group>"; };
@@ -427,6 +428,7 @@
 		80180E2165BABA11EF06CB18 /* NotificationRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationRepositoryProtocol.swift; sourceTree = "<group>"; };
 		8658E5F8ADC932D7EE950C57 /* TreeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeViewModel.swift; sourceTree = "<group>"; };
 		868C70AE5A2AD6CCFD20F7D2 /* ConfigClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigClient.swift; sourceTree = "<group>"; };
+		87726852951165E8093BD0F9 /* MarkdownDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownDocumentView.swift; sourceTree = "<group>"; };
 		88EE3464AF97830E518EFE03 /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
 		897186F752E5F04AF99AA48D /* GroupTableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupTableViewModel.swift; sourceTree = "<group>"; };
 		899AC46E70E64BA9EF848E6C /* readability_initialization.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = readability_initialization.js; sourceTree = "<group>"; };
@@ -1015,6 +1017,7 @@
 			isa = PBXGroup;
 			children = (
 				96AE809D7B183AA65E8C02AA /* HTMLView.swift */,
+				87726852951165E8093BD0F9 /* MarkdownDocumentView.swift */,
 				361803AA345C7B260215AE32 /* PDFDocumentView.swift */,
 			);
 			path = ContentWrap;
@@ -1060,7 +1063,7 @@
 		8EC6C204612D782D810028C2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2D04879A4B0B55851DA7171C /* Basenana.app */,
+				2D04879A4B0B55851DA7171C /* BasenanaApp.app */,
 				F15865D42BC03D76D6F2E26B /* Data.framework */,
 				1FA1A15308F0E24639122D0A /* DataTests.xctest */,
 				DCD1DF713CCB1414EFCFC231 /* Domain.framework */,
@@ -1437,7 +1440,7 @@
 				7C370A4A78A03687AABA5E93 /* Factory */,
 			);
 			productName = BasenanaApp;
-			productReference = 2D04879A4B0B55851DA7171C /* Basenana.app */;
+			productReference = 2D04879A4B0B55851DA7171C /* BasenanaApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E41AB3F9FE3438582EE9FC86 /* Domain */ = {
@@ -1530,6 +1533,7 @@
 				33A0643CE8DA5FACC6E986D4 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
 				8D40C462D5608D71A5DAD104 /* XCRemoteSwiftPackageReference "Swinject" */,
 			);
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -1700,6 +1704,7 @@
 				5F78672F8DF126A42C65058C /* InboxPreviewView.swift in Sources */,
 				BD20DBD4EBA43FCCBDEBDF6D /* InboxViewModel.swift in Sources */,
 				D54FD0F4D1835BACE11EB208 /* Job.swift in Sources */,
+				83E35011AD82F8B5331380BC /* MarkdownDocumentView.swift in Sources */,
 				B017AD7C48FECEEC3548E31A /* MasonryItemView.swift in Sources */,
 				0420B26731DF415C0D70A541 /* MasonryListView.swift in Sources */,
 				3DC3726E688DD5F2E987F555 /* MasonrySectionView.swift in Sources */,

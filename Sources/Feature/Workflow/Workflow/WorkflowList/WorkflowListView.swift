@@ -82,15 +82,7 @@ public struct WorkflowListView: View {
         VStack(spacing: 16) {
             Image(systemName: "tray")
                 .font(.system(size: 48))
-                .foregroundColor(.WorkflowTextSecondary)
-
-            Text("No workflows found")
-                .font(.headline)
-                .foregroundColor(.CardFrontground)
-
-            Text(searchText.isEmpty ? "Create your first workflow to get started" : "Try adjusting your search or filters")
-                .font(.subheadline)
-                .foregroundColor(.WorkflowTextSecondary)
+                .foregroundColor(.gray)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

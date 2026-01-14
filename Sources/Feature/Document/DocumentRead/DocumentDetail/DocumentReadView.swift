@@ -32,6 +32,8 @@ public struct DocumentReadView: View {
                     PDFDocumentView(fileURL: fileURL)
                 case .html:
                     HTMLStringView(fileURL: fileURL)
+                case .markdown:
+                    MarkdownDocumentView(fileURL: fileURL)
                 }
             } else if let error = viewModel.errorMessage {
                 Text(error)
