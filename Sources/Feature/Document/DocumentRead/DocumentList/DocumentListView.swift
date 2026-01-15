@@ -53,12 +53,6 @@ public struct DocumentListView: View {
                 }
             }
         }
-        .onReceive(NotificationCenter.default.publisher(for: .loadMoreDocuments)) { _ in
-            Task {
-                await viewModel.loadNextPage()
-                await viewModel.setAllAppearedDocumentRead()
-            }
-        }
         .onAppear { viewModel.reset() }
         .onDisappear{ viewModel.disableHooks() }
         .toolbar {
@@ -85,14 +79,30 @@ public struct DocumentListView: View {
     }
 }
 
+private struct DocumentListViewModelKey: EnvironmentKey {
+    static let defaultValue: DocumentListViewModel? = nil
+}
+
+extension EnvironmentValues {
+    var documentListViewModel: DocumentListViewModel? {
+        get { self[DocumentListViewModelKey.self] }
+        set { self[DocumentListViewModelKey.self] = newValue }
+    }
+}
+
 struct LoadingView: View {
+    @Environment(\.documentListViewModel) var viewModel
+
     var body: some View {
         HStack(alignment: .center){
             Spacer()
             Text("☁️Loading ...")
                 .padding(.vertical)
                 .onAppear{
-                    NotificationCenter.default.post(name: .loadMoreDocuments, object: nil)
+                    Task {
+                        await viewModel?.loadNextPage()
+                        await viewModel?.setAllAppearedDocumentRead()
+                    }
                 }
             Spacer()
         }

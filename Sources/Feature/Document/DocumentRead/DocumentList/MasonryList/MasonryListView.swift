@@ -29,6 +29,7 @@ public struct MasonryListView: View {
                 LazyVStack {
                     if viewModel.hasMore {
                         LoadingView()
+                            .environment(\.documentListViewModel, viewModel)
                     } else {
                         MasonryListReadAllView(viewModel: viewModel)
                     }

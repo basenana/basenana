@@ -142,7 +142,7 @@ public class DocumentListViewModel {
         }
     }
 
-    func setAllAppearedDocumentRead(before: Int = 30, isAuto: Bool = true) async {
+    func setAllAppearedDocumentRead(before: Int = 5, isAuto: Bool = true) async {
         if unreadDocumentsAppeared.isEmpty {
             return
         }

@@ -11,7 +11,6 @@ import Foundation
 public extension Notification.Name {
     static let openDocument = Notification.Name(rawValue: "openDocument")
     static let updateDocumentMark = Notification.Name(rawValue: "updateDocumentMark")
-    static let loadMoreDocuments = Notification.Name(rawValue: "loadMoreDocuments")
 }
 
 

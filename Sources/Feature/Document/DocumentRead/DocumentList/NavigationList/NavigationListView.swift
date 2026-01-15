@@ -28,6 +28,7 @@ public struct NavigationListView: View {
                 }
                 if viewModel.hasMore {
                     LoadingView()
+                        .environment(\.documentListViewModel, viewModel)
                 }
             }
             .frame(minWidth: 300)
