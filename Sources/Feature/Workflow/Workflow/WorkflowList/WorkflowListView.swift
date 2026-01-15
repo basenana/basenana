@@ -9,6 +9,56 @@ import SwiftUI
 import Domain
 import Styleguide
 
+enum JobStatus: String {
+    case initializing = "initializing"
+    case running = "running"
+    case pausing = "pausing"
+    case succeed = "succeed"
+    case failed = "failed"
+    case error = "error"
+    case paused = "paused"
+    case canceled = "canceled"
+
+    var color: Color {
+        switch self {
+        case .succeed: return .WorkflowSuccess
+        case .failed, .error: return .WorkflowFailed
+        case .running, .initializing, .pausing: return .WorkflowPending
+        case .paused, .canceled: return .gray
+        }
+    }
+
+    var displayName: String {
+        switch self {
+        case .initializing: return "Initializing"
+        case .running: return "Running"
+        case .pausing: return "Pausing"
+        case .succeed: return "Succeed"
+        case .failed: return "Failed"
+        case .error: return "Error"
+        case .paused: return "Paused"
+        case .canceled: return "Canceled"
+        }
+    }
+
+    var isSuccess: Bool {
+        self == .succeed
+    }
+}
+
+enum HealthStatus {
+    case healthy, warning, critical, unknown
+
+    var color: Color {
+        switch self {
+        case .healthy: return .WorkflowSuccess
+        case .warning: return .WorkflowPending
+        case .critical: return .WorkflowFailed
+        case .unknown: return .gray
+        }
+    }
+}
+
 public struct WorkflowListView: View {
     @State private var viewModel: WorkflowListViewModel
 
@@ -57,29 +107,56 @@ public struct WorkflowListView: View {
     }
 
     private var listView: some View {
-        List {
-            ForEach(viewModel.workflows) { workflow in
-                WorkflowListRow(workflow: workflow)
-                    .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                    .listRowBackground(Color.clear)
-                    .onTapGesture {
-                        gotoDestination(.workflowDetail(workflow: workflow.id))
-                    }
+        ScrollView {
+            LazyVStack(spacing: 8) {
+                ForEach(viewModel.workflows) { workflow in
+                    WorkflowListRow(workflow: workflow, viewModel: viewModel)
+                        .id(workflow.id)
+                        .onAppear {
+                            if workflow.id == viewModel.workflows.last?.id {
+                                Task { await viewModel.loadMoreWorkflows() }
+                            }
+                        }
+                        .onTapGesture {
+                            gotoDestination(.workflowDetail(workflow: workflow.id))
+                        }
+                }
+
+                if viewModel.isLoadingMore {
+                    loadingMoreView
+                }
             }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
         }
-        .listStyle(.plain)
         .background(Color.background)
+    }
+
+    private var loadingMoreView: some View {
+        HStack {
+            Spacer()
+            ProgressView()
+                .padding()
+            Spacer()
+        }
     }
 }
 
 struct WorkflowListRow: View {
-    let workflow: WorkflowItem
+    let workflow: WorkflowRowItem
+    let viewModel: WorkflowListViewModel
+
+    @State private var healthStatus: HealthStatus = .unknown
+    @State private var successRateText: String = "Loading..."
+    @State private var latestJobTriggerReason: String?
+    @State private var latestJobStatus: String?
+    @State private var latestJobCreatedAt: Date?
     @State private var isHovered = false
 
     var body: some View {
         HStack(spacing: 16) {
             Circle()
-                .fill(workflow.healthStatus.color)
+                .fill(healthStatus.color)
                 .frame(width: 10, height: 10)
 
             VStack(alignment: .leading, spacing: 4) {
@@ -88,18 +165,29 @@ struct WorkflowListRow: View {
                     .foregroundColor(.CardFrontground)
 
                 HStack(spacing: 4) {
-                    Text(workflow.queueDisplayName)
+                    Text(latestJobTriggerReason ?? "Loading...")
+                        .foregroundColor(.WorkflowTextSecondary)
+                    if let status = latestJobStatus {
+                        Text("•")
+                        Text(status)
+                            .foregroundColor(jobStatusColor(status))
+                    }
                 }
                 .font(.caption)
-                .foregroundColor(.WorkflowTextSecondary)
             }
 
             Spacer()
 
             VStack(alignment: .trailing, spacing: 4) {
-                Text("Updated \(workflow.updatedText)")
-                    .font(.caption2)
-                    .foregroundColor(.WorkflowTextSecondary)
+                Text(successRateText)
+                    .font(.caption)
+                    .foregroundColor(healthStatus.color)
+
+                if let createdAt = latestJobCreatedAt {
+                    Text(relativeTimeString(from: createdAt))
+                        .font(.caption2)
+                        .foregroundColor(.WorkflowTextSecondary)
+                }
             }
         }
         .padding(12)
@@ -108,5 +196,74 @@ struct WorkflowListRow: View {
         .onHover { hovering in
             isHovered = hovering
         }
+        .task {
+            await loadHealthData()
+        }
+    }
+
+    private func loadHealthData() async {
+        do {
+            let jobs = try await viewModel.usecase.listWorkflowJobs(
+                workflow: workflow.id,
+                page: 1,
+                pageSize: 10,
+                sort: "created_at",
+                order: "desc"
+            )
+            let jobItems = jobs.map { JobItem(job: $0) }
+            updateHealthStatus(from: jobItems)
+        } catch {
+            updateHealthStatus(from: [])
+        }
+    }
+
+    private func updateHealthStatus(from jobs: [JobItem]) {
+        let total = jobs.count
+        guard total > 0 else {
+            healthStatus = .healthy
+            successRateText = "No jobs"
+            return
+        }
+
+        let latestJob = jobs[0]
+        latestJobTriggerReason = latestJob.triggerReason
+        latestJobStatus = latestJob.status
+        latestJobCreatedAt = latestJob.createdAt
+
+        let successCount = jobs.filter { $0.status == "succeed" }.count
+        let successRate = Double(successCount) / Double(total)
+        let rate = Int(successRate * 100)
+        successRateText = "\(rate)%"
+
+        if successRate > 0.7 {
+            healthStatus = .healthy
+        } else if successRate < 0.3 {
+            healthStatus = .critical
+        } else {
+            healthStatus = .warning
+        }
+    }
+
+    private func jobStatusColor(_ status: String) -> Color {
+        switch status {
+        case "succeed": return .WorkflowSuccess
+        case "failed", "error": return .WorkflowFailed
+        case "running", "initializing", "pausing": return .WorkflowPending
+        case "paused", "canceled": return .gray
+        default: return .gray
+        }
+    }
+
+    private func relativeTimeString(from date: Date) -> String {
+        let interval = Date().timeIntervalSince(date)
+
+        if interval < 60 { return "Just now" }
+        if interval < 3600 { return "\(Int(interval / 60))m ago" }
+        if interval < 86400 { return "\(Int(interval / 3600))h ago" }
+        if interval < 604800 { return "\(Int(interval / 86400))d ago" }
+
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        return formatter.string(from: date)
     }
 }
