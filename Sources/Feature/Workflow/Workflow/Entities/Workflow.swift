@@ -17,6 +17,9 @@ class WorkflowItem: Identifiable, Equatable, Hashable {
     var queueName: String { info.queueName }
     var trigger: WorkflowTrigger? { info.trigger }
     var nodes: [any Domain.WorkflowNode] { info.nodes }
+    var createdAt: Date { info.createdAt }
+    var updatedAt: Date { info.updatedAt }
+    var lastTriggeredAt: Date { info.lastTriggeredAt }
 
     var info: Workflow
 

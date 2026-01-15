@@ -249,13 +249,73 @@ struct WorkflowTriggerDTO: Decodable {
     let local_file_watch: WorkflowTriggerLocalFileWatchDTO?
 }
 
-struct WorkflowNodeParamDTO: Decodable {
-    let key: String
-    let value: String
-}
-
 struct WorkflowNodeInputDTO: Decodable {
-    let source: String
+    let source: String?
+    let feed: String?
+    let file_path: String?
+    let site_name: String?
+    let site_url: String?
+    let title: String?
+    let url: String?
+    let document: String?
+    let parent_uri: String?
+
+    private var otherFields: [String: String]?
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        source = try container.decodeIfPresent(String.self, forKey: .source)
+        feed = try container.decodeIfPresent(String.self, forKey: .feed)
+        file_path = try container.decodeIfPresent(String.self, forKey: .file_path)
+        site_name = try container.decodeIfPresent(String.self, forKey: .site_name)
+        site_url = try container.decodeIfPresent(String.self, forKey: .site_url)
+        title = try container.decodeIfPresent(String.self, forKey: .title)
+        url = try container.decodeIfPresent(String.self, forKey: .url)
+        document = try container.decodeIfPresent(String.self, forKey: .document)
+        parent_uri = try container.decodeIfPresent(String.self, forKey: .parent_uri)
+
+        var otherFields: [String: String] = [:]
+        for key in container.allKeys {
+            if let value = try? container.decodeIfPresent(String.self, forKey: key) {
+                otherFields[key.stringValue] = value
+            }
+        }
+        self.otherFields = otherFields
+    }
+
+    func getValue(forKey key: String) -> String? {
+        switch key {
+        case "source": return source
+        case "feed": return feed
+        case "file_path": return file_path
+        case "site_name": return site_name
+        case "site_url": return site_url
+        case "title": return title
+        case "url": return url
+        case "document": return document
+        case "parent_uri": return parent_uri
+        default: return nil
+        }
+    }
+
+    func getAnyValue(forKey key: String) -> Any? {
+        switch key {
+        case "source": return source
+        case "feed": return feed
+        case "file_path": return file_path
+        case "site_name": return site_name
+        case "site_url": return site_url
+        case "title": return title
+        case "url": return url
+        case "document": return document
+        case "parent_uri": return parent_uri
+        default: return nil
+        }
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case source, feed, file_path, site_name, site_url, title, url, document, parent_uri
+    }
 }
 
 struct WorkflowNodeMatrixDTO: Decodable {
@@ -265,7 +325,7 @@ struct WorkflowNodeMatrixDTO: Decodable {
 struct WorkflowNodeDTO: Decodable {
     let name: String
     let type: String
-    let params: [WorkflowNodeParamDTO]?
+    let params: [String: String]?
     let input: WorkflowNodeInputDTO?
     let next: String?
     let matrix: WorkflowNodeMatrixDTO?
@@ -274,6 +334,10 @@ struct WorkflowNodeDTO: Decodable {
 struct WorkflowsResponse: Decodable {
     let workflows: [WorkflowDTO]
     let pagination: EntriesPagination?
+}
+
+struct WorkflowResponse: Decodable {
+    let workflow: WorkflowDTO
 }
 
 struct WorkflowJobStepDTO: Decodable {

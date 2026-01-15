@@ -23,11 +23,27 @@ public class WorkflowRepository: WorkflowRepositoryProtocol {
         return try await core.ListWorkflows(page: page, pageSize: pageSize, sort: sort, order: order)
     }
 
+    public func GetWorkflow(id: String) async throws -> Workflow {
+        return try await core.GetWorkflow(id: id)
+    }
+
     public func ListWorkflowJobs(workflow: String, page: Int64?, pageSize: Int64?, sort: String?, order: String?) async throws -> [any WorkflowJob] {
         return try await core.ListWorkflowJobs(workflow: workflow, page: page, pageSize: pageSize, sort: sort, order: order)
     }
 
     public func TriggerWorkflow(workflow: String, option: WorkflowJobOption) async throws -> any WorkflowJob {
         return try await core.TriggerWorkflow(workflow: workflow, option: option)
+    }
+
+    public func PauseWorkflowJob(workflowId: String, jobId: String) async throws {
+        try await core.PauseWorkflowJob(workflowId: workflowId, jobId: jobId)
+    }
+
+    public func ResumeWorkflowJob(workflowId: String, jobId: String) async throws {
+        try await core.ResumeWorkflowJob(workflowId: workflowId, jobId: jobId)
+    }
+
+    public func CancelWorkflowJob(workflowId: String, jobId: String) async throws {
+        try await core.CancelWorkflowJob(workflowId: workflowId, jobId: jobId)
     }
 }

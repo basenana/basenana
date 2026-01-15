@@ -56,22 +56,41 @@ public struct APIWorkflowNodeParam: WorkflowNodeParam {
         self.key = key
         self.value = value
     }
-
-    init(from dto: WorkflowNodeParamDTO) {
-        self.key = dto.key
-        self.value = dto.value
-    }
 }
 
 public struct APIWorkflowNodeInput: WorkflowNodeInput {
     public var source: String
+    public var feed: String?
+    public var file_path: String?
+    public var site_name: String?
+    public var site_url: String?
+    public var title: String?
+    public var url: String?
+    public var document: String?
+    public var parent_uri: String?
 
     public init(source: String) {
         self.source = source
+        self.feed = nil
+        self.file_path = nil
+        self.site_name = nil
+        self.site_url = nil
+        self.title = nil
+        self.url = nil
+        self.document = nil
+        self.parent_uri = nil
     }
 
     init(from dto: WorkflowNodeInputDTO?) {
-        self.source = dto?.source ?? ""
+        self.source = dto?.source ?? dto?.feed ?? dto?.file_path ?? ""
+        self.feed = dto?.feed
+        self.file_path = dto?.file_path
+        self.site_name = dto?.site_name
+        self.site_url = dto?.site_url
+        self.title = dto?.title
+        self.url = dto?.url
+        self.document = dto?.document
+        self.parent_uri = dto?.parent_uri
     }
 }
 
@@ -107,7 +126,9 @@ public struct APIWorkflowNode: WorkflowNode {
     init(from dto: WorkflowNodeDTO) {
         self.name = dto.name
         self.type = dto.type
-        self.params = dto.params?.map { APIWorkflowNodeParam(from: $0) }
+        self.params = dto.params?.flatMap { key, value in
+            [APIWorkflowNodeParam(key: key, value: value) as any WorkflowNodeParam]
+        }
         self.input = dto.input.map { APIWorkflowNodeInput(from: $0) }
         self.next = dto.next
         self.matrix = dto.matrix.map { APIWorkflowNodeMatrix(from: $0) }

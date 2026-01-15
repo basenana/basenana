@@ -64,12 +64,12 @@ public class WorkflowClient: WorkflowClientProtocol {
     }
 
     public func GetWorkflow(id: String) async throws -> APIWorkflow {
-        let response: WorkflowDTO = try await apiClient.request(
+        let response: WorkflowResponse = try await apiClient.request(
             .workflow(id: id),
-            responseType: WorkflowDTO.self
+            responseType: WorkflowResponse.self
         )
 
-        return APIWorkflow(from: response)
+        return APIWorkflow(from: response.workflow)
     }
 
     public func UpdateWorkflow(id: String, name: String?, enable: Bool?, queueName: String?) async throws -> APIWorkflow {
