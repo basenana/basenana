@@ -11,8 +11,6 @@ import Styleguide
 
 public struct WorkflowListView: View {
     @State private var viewModel: WorkflowListViewModel
-    @State private var searchText = ""
-    @State private var selectedStatusFilter: HealthStatus?
 
     public init(viewModel: WorkflowListViewModel) {
         self.viewModel = viewModel
@@ -20,8 +18,6 @@ public struct WorkflowListView: View {
 
     public var body: some View {
         VStack(spacing: 0) {
-            toolbarSection
-            Divider()
             contentSection
         }
         .task { await viewModel.initWorkflows() }
@@ -29,38 +25,11 @@ public struct WorkflowListView: View {
         .navigationTitle("Workflow")
     }
 
-    private var toolbarSection: some View {
-        HStack(spacing: 16) {
-            HStack {
-                Image(systemName: "magnifyingglass")
-                    .foregroundColor(.WorkflowTextSecondary)
-                TextField("Search workflows...", text: $searchText)
-                    .textFieldStyle(.plain)
-            }
-            .padding(8)
-            .background(Color.secondaryBackground)
-            .cornerRadius(8)
-            .frame(maxWidth: 300)
-
-            Picker("Status", selection: $selectedStatusFilter) {
-                Text("All").tag(nil as HealthStatus?)
-                Text("Healthy").tag(HealthStatus.healthy as HealthStatus?)
-                Text("Warning").tag(HealthStatus.warning as HealthStatus?)
-                Text("Critical").tag(HealthStatus.critical as HealthStatus?)
-            }
-            .pickerStyle(.menu)
-
-            Spacer()
-        }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 12)
-    }
-
     @ViewBuilder
     private var contentSection: some View {
         if viewModel.isLoading {
             loadingView
-        } else if filteredWorkflows.isEmpty {
+        } else if viewModel.workflows.isEmpty {
             emptyStateView
         } else {
             listView
@@ -89,7 +58,7 @@ public struct WorkflowListView: View {
 
     private var listView: some View {
         List {
-            ForEach(filteredWorkflows) { workflow in
+            ForEach(viewModel.workflows) { workflow in
                 WorkflowListRow(workflow: workflow)
                     .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
                     .listRowBackground(Color.clear)
@@ -100,23 +69,6 @@ public struct WorkflowListView: View {
         }
         .listStyle(.plain)
         .background(Color.background)
-    }
-
-    private var filteredWorkflows: [WorkflowItem] {
-        var result = viewModel.workflows
-
-        if !searchText.isEmpty {
-            result = result.filter {
-                $0.name.localizedCaseInsensitiveContains(searchText) ||
-                $0.executorDisplayName.localizedCaseInsensitiveContains(searchText)
-            }
-        }
-
-        if let status = selectedStatusFilter {
-            result = result.filter { $0.healthStatus == status }
-        }
-
-        return result
     }
 }
 
@@ -136,8 +88,6 @@ struct WorkflowListRow: View {
                     .foregroundColor(.CardFrontground)
 
                 HStack(spacing: 4) {
-                    Text(workflow.executorDisplayName)
-                    Text("·")
                     Text(workflow.queueDisplayName)
                 }
                 .font(.caption)
@@ -147,11 +97,6 @@ struct WorkflowListRow: View {
             Spacer()
 
             VStack(alignment: .trailing, spacing: 4) {
-                Text(workflow.healthScoreText)
-                    .font(.caption)
-                    .fontWeight(.medium)
-                    .foregroundColor(workflow.healthStatus.color)
-
                 Text("Updated \(workflow.updatedText)")
                     .font(.caption2)
                     .foregroundColor(.WorkflowTextSecondary)

@@ -36,9 +36,9 @@ public class WorkflowDetailViewModel {
     
     func initWorkflowJobs() async {
         jobs.removeAll()
-        
+
         do {
-            let jobList = try await usecase.listWorkflowJobs(workflow: workflowID)
+            let jobList = try await usecase.listWorkflowJobs(workflow: workflowID, page: nil, pageSize: nil, sort: nil, order: nil)
             Self.logger.notice("load workflow \(self.workflowID) jobs, got \(jobList.count)")
             for job in jobList {
                 jobs.append(JobItem(job: job))

@@ -220,14 +220,60 @@ struct ReadMessagesRequest: Encodable {
 struct WorkflowDTO: Decodable {
     let id: String
     let name: String
+    let enable: Bool?
     let queue_name: String
+    let namespace: String?
+    let trigger: WorkflowTriggerDTO?
+    let nodes: [WorkflowNodeDTO]?
     let created_at: Date
     let updated_at: Date
     let last_triggered_at: Date?
 }
 
+struct WorkflowTriggerRSSDTO: Decodable {
+    let feed: String?
+    let interval: Int?
+}
+
+struct WorkflowTriggerIntervalDTO: Decodable {
+    let interval: Int?
+}
+
+struct WorkflowTriggerLocalFileWatchDTO: Decodable {
+    let path: String?
+}
+
+struct WorkflowTriggerDTO: Decodable {
+    let rss: WorkflowTriggerRSSDTO?
+    let interval: Int?
+    let local_file_watch: WorkflowTriggerLocalFileWatchDTO?
+}
+
+struct WorkflowNodeParamDTO: Decodable {
+    let key: String
+    let value: String
+}
+
+struct WorkflowNodeInputDTO: Decodable {
+    let source: String
+}
+
+struct WorkflowNodeMatrixDTO: Decodable {
+    let data: [String: String]?
+}
+
+struct WorkflowNodeDTO: Decodable {
+    let name: String
+    let type: String
+    let params: [WorkflowNodeParamDTO]?
+    let input: WorkflowNodeInputDTO?
+    let next: String?
+    let matrix: WorkflowNodeMatrixDTO?
+}
+
 struct WorkflowsResponse: Decodable {
     let workflows: [WorkflowDTO]
+    let pagination: EntriesPagination?
 }
 
 struct WorkflowJobStepDTO: Decodable {
@@ -238,6 +284,7 @@ struct WorkflowJobStepDTO: Decodable {
 
 struct WorkflowJobTargetDTO: Decodable {
     let entries: [String]?
+    let parent_entry_id: String?
 }
 
 struct WorkflowJobDTO: Decodable {
@@ -257,6 +304,7 @@ struct WorkflowJobDTO: Decodable {
 
 struct WorkflowJobsResponse: Decodable {
     let jobs: [WorkflowJobDTO]
+    let pagination: EntriesPagination?
 }
 
 struct TriggerWorkflowRequest: Encodable {

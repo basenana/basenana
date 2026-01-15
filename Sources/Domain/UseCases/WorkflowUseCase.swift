@@ -19,12 +19,12 @@ public class WorkflowUseCase: WorkflowUseCaseProtocol {
         self.entryRepo = entryRepo
     }
 
-    public func listWorkflows() async throws -> [any  Workflow] {
-        return try await repo.ListWorkflows()
+    public func listWorkflows(page: Int64?, pageSize: Int64?, sort: String?, order: String?) async throws -> [any Workflow] {
+        return try await repo.ListWorkflows(page: page, pageSize: pageSize, sort: sort, order: order)
     }
 
-    public func listWorkflowJobs(workflow: String) async throws -> [any  WorkflowJob] {
-        return try await repo.ListWorkflowJobs(workflow: workflow)
+    public func listWorkflowJobs(workflow: String, page: Int64?, pageSize: Int64?, sort: String?, order: String?) async throws -> [any WorkflowJob] {
+        return try await repo.ListWorkflowJobs(workflow: workflow, page: page, pageSize: pageSize, sort: sort, order: order)
     }
 
     public func triggerWorkflow(_ workflow: String, option: WorkflowJobOption) async throws -> WorkflowJob {

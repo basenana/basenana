@@ -27,7 +27,7 @@ public class WorkflowListViewModel {
         workflows.removeAll()
 
         do {
-            let workflowList = try await usecase.listWorkflows()
+            let workflowList = try await usecase.listWorkflows(page: nil, pageSize: nil, sort: nil, order: nil)
             for workflow in workflowList {
                 let item = WorkflowItem(workflow: workflow)
                 workflows.append(item)

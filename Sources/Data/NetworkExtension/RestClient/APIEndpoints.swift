@@ -31,9 +31,9 @@ public enum APIEndpoint {
     case filesUpload(uri: String?, id: Int64?)
     case messages(all: Bool)
     case messagesRead
-    case workflows
+    case workflows(page: Int64?, pageSize: Int64?, sort: String?, order: String?)
     case workflow(id: String)
-    case workflowJobs(id: String)
+    case workflowJobs(id: String, page: Int64?, pageSize: Int64?, sort: String?, order: String?)
     case workflowJob(id: String, jobId: String)
     case workflowJobPause(id: String, jobId: String)
     case workflowJobResume(id: String, jobId: String)
@@ -85,7 +85,7 @@ public enum APIEndpoint {
             return "/api/v1/workflows"
         case .workflow(let id):
             return "/api/v1/workflows/\(id)"
-        case .workflowJobs(let id):
+        case .workflowJobs(let id, _, _, _, _):
             return "/api/v1/workflows/\(id)/jobs"
         case .workflowJob(let id, let jobId):
             return "/api/v1/workflows/\(id)/jobs/\(jobId)"
@@ -162,6 +162,18 @@ public enum APIEndpoint {
 
         case .messages(let all):
             items.append(URLQueryItem(name: "all", value: String(all)))
+
+        case .workflows(let page, let pageSize, let sort, let order):
+            if let page = page { items.append(URLQueryItem(name: "page", value: String(page))) }
+            if let pageSize = pageSize { items.append(URLQueryItem(name: "page_size", value: String(pageSize))) }
+            if let sort = sort { items.append(URLQueryItem(name: "sort", value: sort)) }
+            if let order = order { items.append(URLQueryItem(name: "order", value: order)) }
+
+        case .workflowJobs(_, let page, let pageSize, let sort, let order):
+            if let page = page { items.append(URLQueryItem(name: "page", value: String(page))) }
+            if let pageSize = pageSize { items.append(URLQueryItem(name: "page_size", value: String(pageSize))) }
+            if let sort = sort { items.append(URLQueryItem(name: "sort", value: sort)) }
+            if let order = order { items.append(URLQueryItem(name: "order", value: order)) }
 
         default:
             break

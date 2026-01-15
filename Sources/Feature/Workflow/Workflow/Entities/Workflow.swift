@@ -13,6 +13,11 @@ class WorkflowItem: Identifiable, Equatable, Hashable {
 
     var id: String { info.id }
     var name: String { info.name }
+    var enable: Bool { info.enable }
+    var namespace: String { info.namespace }
+    var queueName: String { info.queueName }
+    var trigger: WorkflowTrigger? { info.trigger }
+    var nodes: [any Domain.WorkflowNode] { info.nodes }
 
     var info: Workflow
 
@@ -29,20 +34,7 @@ class WorkflowItem: Identifiable, Equatable, Hashable {
     }
 
     var healthStatus: HealthStatus {
-        switch info.healthScore {
-        case 80...100: return .healthy
-        case 50..<80: return .warning
-        default: return .critical
-        }
-    }
-
-    var healthScoreText: String {
-        "\(info.healthScore)%"
-    }
-
-    var executorDisplayName: String {
-        if info.executor.isEmpty { return "Unknown" }
-        return info.executor
+        return .unknown
     }
 
     var queueDisplayName: String {
@@ -52,6 +44,19 @@ class WorkflowItem: Identifiable, Equatable, Hashable {
 
     var updatedText: String {
         relativeTimeString(from: info.updatedAt)
+    }
+
+    var triggerDescription: String {
+        switch info.trigger {
+        case .rss(let rss):
+            return "RSS: \(rss.feed)"
+        case .interval(let interval):
+            return "Interval: \(interval.interval)s"
+        case .localFileWatch(let lfw):
+            return "Watch: \(lfw.path)"
+        case .none:
+            return "Manual"
+        }
     }
 
     private func relativeTimeString(from date: Date) -> String {
@@ -69,13 +74,14 @@ class WorkflowItem: Identifiable, Equatable, Hashable {
 }
 
 enum HealthStatus {
-    case healthy, warning, critical
+    case healthy, warning, critical, unknown
 
     var color: Color {
         switch self {
         case .healthy: return .WorkflowSuccess
         case .warning: return .WorkflowPending
         case .critical: return .WorkflowFailed
+        case .unknown: return .gray
         }
     }
 
@@ -84,6 +90,7 @@ enum HealthStatus {
         case .healthy: return "Healthy"
         case .warning: return "Warning"
         case .critical: return "Critical"
+        case .unknown: return "Unknown"
         }
     }
 }

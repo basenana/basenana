@@ -9,25 +9,191 @@ import Foundation
 import Domain
 
 
+public struct APIWorkflowTriggerRSS: WorkflowTriggerRSS {
+    public var feed: String
+    public var interval: Int
+
+    public init(feed: String, interval: Int) {
+        self.feed = feed
+        self.interval = interval
+    }
+
+    init(from dto: WorkflowTriggerRSSDTO?) {
+        self.feed = dto?.feed ?? ""
+        self.interval = dto?.interval ?? 0
+    }
+}
+
+public struct APIWorkflowTriggerInterval: WorkflowTriggerInterval {
+    public var interval: Int
+
+    public init(interval: Int) {
+        self.interval = interval
+    }
+
+    init(from interval: Int?) {
+        self.interval = interval ?? 0
+    }
+}
+
+public struct APIWorkflowTriggerLocalFileWatch: WorkflowTriggerLocalFileWatch {
+    public var path: String
+
+    public init(path: String) {
+        self.path = path
+    }
+
+    init(from dto: WorkflowTriggerLocalFileWatchDTO?) {
+        self.path = dto?.path ?? ""
+    }
+}
+
+public struct APIWorkflowNodeParam: WorkflowNodeParam {
+    public var key: String
+    public var value: String
+
+    public init(key: String, value: String) {
+        self.key = key
+        self.value = value
+    }
+
+    init(from dto: WorkflowNodeParamDTO) {
+        self.key = dto.key
+        self.value = dto.value
+    }
+}
+
+public struct APIWorkflowNodeInput: WorkflowNodeInput {
+    public var source: String
+
+    public init(source: String) {
+        self.source = source
+    }
+
+    init(from dto: WorkflowNodeInputDTO?) {
+        self.source = dto?.source ?? ""
+    }
+}
+
+public struct APIWorkflowNodeMatrix: WorkflowNodeMatrix {
+    public var data: [String: String]
+
+    public init(data: [String: String]) {
+        self.data = data
+    }
+
+    init(from dto: WorkflowNodeMatrixDTO?) {
+        self.data = dto?.data ?? [:]
+    }
+}
+
+public struct APIWorkflowNode: WorkflowNode {
+    public var name: String
+    public var type: String
+    public var params: [any WorkflowNodeParam]?
+    public var input: (any WorkflowNodeInput)?
+    public var next: String?
+    public var matrix: (any WorkflowNodeMatrix)?
+
+    public init(name: String, type: String, params: [any WorkflowNodeParam]?, input: (any WorkflowNodeInput)?, next: String?, matrix: (any WorkflowNodeMatrix)?) {
+        self.name = name
+        self.type = type
+        self.params = params
+        self.input = input
+        self.next = next
+        self.matrix = matrix
+    }
+
+    init(from dto: WorkflowNodeDTO) {
+        self.name = dto.name
+        self.type = dto.type
+        self.params = dto.params?.map { APIWorkflowNodeParam(from: $0) }
+        self.input = dto.input.map { APIWorkflowNodeInput(from: $0) }
+        self.next = dto.next
+        self.matrix = dto.matrix.map { APIWorkflowNodeMatrix(from: $0) }
+    }
+}
+
 public struct APIWorkflow: Workflow {
     public var id: String
     public var name: String
-    public var executor: String
+    public var enable: Bool
+    public var namespace: String
     public var queueName: String
-    public var healthScore: Int
+    public var trigger: WorkflowTrigger?
+    public var nodes: [any WorkflowNode]
+
     public var createdAt: Date
     public var updatedAt: Date
     public var lastTriggeredAt: Date
-    
-    public init(id: String, name: String, executor: String, queueName: String, healthScore: Int, createdAt: Date, updatedAt: Date, lastTriggeredAt: Date) {
+
+    public init(id: String, name: String, enable: Bool, namespace: String, queueName: String, trigger: WorkflowTrigger?, nodes: [any WorkflowNode], createdAt: Date, updatedAt: Date, lastTriggeredAt: Date) {
         self.id = id
         self.name = name
-        self.executor = executor
+        self.enable = enable
+        self.namespace = namespace
         self.queueName = queueName
-        self.healthScore = healthScore
+        self.trigger = trigger
+        self.nodes = nodes
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.lastTriggeredAt = lastTriggeredAt
+    }
+
+    init(from dto: WorkflowDTO) {
+        self.id = dto.id
+        self.name = dto.name
+        self.enable = dto.enable ?? true
+        self.namespace = dto.namespace ?? ""
+        self.queueName = dto.queue_name
+        self.nodes = dto.nodes?.map { APIWorkflowNode(from: $0) } ?? []
+
+        if let rss = dto.trigger?.rss {
+            self.trigger = .rss(APIWorkflowTriggerRSS(from: rss))
+        } else if let interval = dto.trigger?.interval {
+            self.trigger = .interval(APIWorkflowTriggerInterval(from: interval))
+        } else if let lfw = dto.trigger?.local_file_watch {
+            self.trigger = .localFileWatch(APIWorkflowTriggerLocalFileWatch(from: lfw))
+        } else {
+            self.trigger = nil
+        }
+
+        self.createdAt = dto.created_at
+        self.updatedAt = dto.updated_at
+        self.lastTriggeredAt = dto.last_triggered_at ?? Date()
+    }
+}
+
+public struct APIWorkflowJobTarget {
+    public var entries: [String]
+    public var parentEntryID: String
+
+    public init(entries: [String], parentEntryID: String) {
+        self.entries = entries
+        self.parentEntryID = parentEntryID
+    }
+
+    init(from dto: WorkflowJobTargetDTO?) {
+        self.entries = dto?.entries ?? []
+        self.parentEntryID = dto?.parent_entry_id ?? ""
+    }
+}
+
+public struct APIWorkflowJobStep: WorkflowJobStep {
+    public var name: String
+    public var status: String
+    public var message: String
+
+    public init(name: String, status: String, message: String) {
+        self.name = name
+        self.status = status
+        self.message = message
+    }
+
+    init(from dto: WorkflowJobStepDTO) {
+        self.name = dto.name
+        self.status = dto.status
+        self.message = dto.message
     }
 }
 
@@ -37,24 +203,22 @@ public struct APIWorkflowJob: WorkflowJob {
     public var triggerReason: String
     public var status: String
     public var message: String
-    public var executor: String
     public var queueName: String
-    
+
     public var jobTarget: WorkflowJobTarget
-    public var steps: [WorkflowJobStep]
+    public var steps: [any WorkflowJobStep]
 
     public var createdAt: Date
     public var updatedAt: Date
     public var startAt: Date
     public var finishAt: Date
-    
-    public init(id: String, workflow: String, triggerReason: String, status: String, message: String, executor: String, queueName: String, jobTarget: WorkflowJobTarget, steps: [WorkflowJobStep], createdAt: Date, updatedAt: Date, startAt: Date, finishAt: Date) {
+
+    public init(id: String, workflow: String, triggerReason: String, status: String, message: String, queueName: String, jobTarget: WorkflowJobTarget, steps: [any WorkflowJobStep], createdAt: Date, updatedAt: Date, startAt: Date, finishAt: Date) {
         self.id = id
         self.workflow = workflow
         self.triggerReason = triggerReason
         self.status = status
         self.message = message
-        self.executor = executor
         self.queueName = queueName
         self.jobTarget = jobTarget
         self.steps = steps
@@ -63,26 +227,19 @@ public struct APIWorkflowJob: WorkflowJob {
         self.startAt = startAt
         self.finishAt = finishAt
     }
-}
 
-public struct APIWorkflowJobTarget: WorkflowJobTarget {
-    public var entries: [Int64]
-    public var parentEntryID: Int64
-    
-    public init(entries: [Int64], parentEntryID: Int64) {
-        self.entries = entries
-        self.parentEntryID = parentEntryID
-    }
-}
-
-public struct APIWorkflowJobStep: WorkflowJobStep {
-    public var name: String
-    public var status: String
-    public var message: String
-    
-    public init(name: String, status: String, message: String) {
-        self.name = name
-        self.status = status
-        self.message = message
+    init(from dto: WorkflowJobDTO) {
+        self.id = dto.id
+        self.workflow = dto.workflow
+        self.triggerReason = dto.trigger_reason
+        self.status = dto.status
+        self.message = dto.message
+        self.queueName = dto.queue_name
+        self.jobTarget = WorkflowJobTarget(entries: dto.target?.entries ?? [], parentEntryID: dto.target?.parent_entry_id ?? "")
+        self.steps = dto.steps?.map { APIWorkflowJobStep(from: $0) } ?? []
+        self.createdAt = dto.created_at
+        self.updatedAt = dto.updated_at
+        self.startAt = dto.start_at ?? Date()
+        self.finishAt = dto.finish_at ?? Date()
     }
 }
