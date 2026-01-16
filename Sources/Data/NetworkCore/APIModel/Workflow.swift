@@ -37,14 +37,32 @@ public struct APIWorkflowTriggerInterval: WorkflowTriggerInterval {
 }
 
 public struct APIWorkflowTriggerLocalFileWatch: WorkflowTriggerLocalFileWatch {
-    public var path: String
+    public var directory: String
+    public var event: String
+    public var filePattern: String?
+    public var fileTypes: String?
+    public var minFileSize: Int?
+    public var maxFileSize: Int?
+    public var celPattern: String?
 
-    public init(path: String) {
-        self.path = path
+    public init(directory: String, event: String, filePattern: String? = nil, fileTypes: String? = nil, minFileSize: Int? = nil, maxFileSize: Int? = nil, celPattern: String? = nil) {
+        self.directory = directory
+        self.event = event
+        self.filePattern = filePattern
+        self.fileTypes = fileTypes
+        self.minFileSize = minFileSize
+        self.maxFileSize = maxFileSize
+        self.celPattern = celPattern
     }
 
     init(from dto: WorkflowTriggerLocalFileWatchDTO?) {
-        self.path = dto?.path ?? ""
+        self.directory = dto?.directory ?? ""
+        self.event = dto?.event ?? ""
+        self.filePattern = dto?.file_pattern
+        self.fileTypes = dto?.file_types
+        self.minFileSize = dto?.min_file_size
+        self.maxFileSize = dto?.max_file_size
+        self.celPattern = dto?.cel_pattern
     }
 }
 
@@ -106,20 +124,61 @@ public struct APIWorkflowNodeMatrix: WorkflowNodeMatrix {
     }
 }
 
+public struct APIWorkflowNodeCase: WorkflowNodeCase {
+    public var value: String
+    public var next: String
+
+    public init(value: String, next: String) {
+        self.value = value
+        self.next = next
+    }
+
+    init(from dto: WorkflowNodeCaseDTO) {
+        self.value = dto.value
+        self.next = dto.next
+    }
+}
+
+public struct APIWorkflowInputParameter: WorkflowInputParameter {
+    public var name: String
+    public var describe: String
+    public var required: Bool
+
+    public init(name: String, describe: String, required: Bool) {
+        self.name = name
+        self.describe = describe
+        self.required = required
+    }
+
+    init(from dto: WorkflowInputParameterDTO) {
+        self.name = dto.name
+        self.describe = dto.describe
+        self.required = dto.required
+    }
+}
+
 public struct APIWorkflowNode: WorkflowNode {
     public var name: String
     public var type: String
     public var params: [any WorkflowNodeParam]?
     public var input: (any WorkflowNodeInput)?
     public var next: String?
+    public var condition: String?
+    public var branches: [String: String]?
+    public var cases: [any WorkflowNodeCase]?
+    public var defaultCase: String?
     public var matrix: (any WorkflowNodeMatrix)?
 
-    public init(name: String, type: String, params: [any WorkflowNodeParam]?, input: (any WorkflowNodeInput)?, next: String?, matrix: (any WorkflowNodeMatrix)?) {
+    public init(name: String, type: String, params: [any WorkflowNodeParam]?, input: (any WorkflowNodeInput)?, next: String?, condition: String? = nil, branches: [String: String]? = nil, cases: [any WorkflowNodeCase]? = nil, defaultCase: String? = nil, matrix: (any WorkflowNodeMatrix)? = nil) {
         self.name = name
         self.type = type
         self.params = params
         self.input = input
         self.next = next
+        self.condition = condition
+        self.branches = branches
+        self.cases = cases
+        self.defaultCase = defaultCase
         self.matrix = matrix
     }
 
@@ -131,6 +190,10 @@ public struct APIWorkflowNode: WorkflowNode {
         }
         self.input = dto.input.map { APIWorkflowNodeInput(from: $0) }
         self.next = dto.next
+        self.condition = dto.condition
+        self.branches = dto.branches
+        self.cases = dto.cases?.map { APIWorkflowNodeCase(from: $0) }
+        self.defaultCase = dto.default
         self.matrix = dto.matrix.map { APIWorkflowNodeMatrix(from: $0) }
     }
 }
@@ -262,5 +325,50 @@ public struct APIWorkflowJob: WorkflowJob {
         self.updatedAt = dto.updated_at
         self.startAt = dto.start_at ?? Date()
         self.finishAt = dto.finish_at ?? Date()
+    }
+}
+
+public struct APIWorkflowJobOption {
+    public var uri: String?
+    public var reason: String?
+    public var timeout: Int64?
+    public var parameters: [String: String]?
+
+    public init(uri: String? = nil, reason: String? = nil, timeout: Int64? = nil, parameters: [String: String]? = nil) {
+        self.uri = uri
+        self.reason = reason
+        self.timeout = timeout
+        self.parameters = parameters
+    }
+
+    init(from option: WorkflowJobOption) {
+        self.uri = option.uri
+        self.reason = option.reason
+        self.timeout = option.timeout
+        self.parameters = option.parameters
+    }
+}
+
+public struct APICreateWorkflowOption {
+    public var name: String
+    public var trigger: WorkflowTrigger?
+    public var nodes: [any WorkflowNode]
+    public var enable: Bool
+    public var queueName: String?
+
+    public init(name: String, trigger: WorkflowTrigger?, nodes: [any WorkflowNode], enable: Bool = true, queueName: String? = nil) {
+        self.name = name
+        self.trigger = trigger
+        self.nodes = nodes
+        self.enable = enable
+        self.queueName = queueName
+    }
+
+    init(from option: WorkflowCreationOption) {
+        self.name = option.name
+        self.trigger = option.trigger
+        self.nodes = option.nodes
+        self.enable = option.enable
+        self.queueName = option.queueName
     }
 }

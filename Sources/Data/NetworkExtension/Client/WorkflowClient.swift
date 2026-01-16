@@ -38,7 +38,8 @@ public class WorkflowClient: WorkflowClientProtocol {
         let request = TriggerWorkflowRequest(
             uri: option.uri,
             reason: option.reason,
-            timeout: option.timeout
+            timeout: option.timeout,
+            parameters: option.parameters
         )
 
         let response: TriggerWorkflowResponse = try await apiClient.request(
@@ -60,6 +61,78 @@ public class WorkflowClient: WorkflowClientProtocol {
             updatedAt: Date(),
             startAt: Date(),
             finishAt: Date()
+        )
+    }
+
+    public func CreateWorkflow(option: APICreateWorkflowOption) async throws -> APIWorkflow {
+        let request = convertToCreateWorkflowRequest(option)
+        let response: WorkflowDTO = try await apiClient.request(
+            .workflowCreate,
+            body: request,
+            responseType: WorkflowDTO.self
+        )
+
+        return APIWorkflow(from: response)
+    }
+
+    private func convertToCreateWorkflowRequest(_ option: APICreateWorkflowOption) -> CreateWorkflowRequest {
+        CreateWorkflowRequest(
+            name: option.name,
+            trigger: convertTrigger(option.trigger),
+            nodes: option.nodes.map { convertNode($0) },
+            enable: option.enable,
+            queue_name: option.queueName
+        )
+    }
+
+    private func convertTrigger(_ trigger: WorkflowTrigger?) -> WorkflowTriggerDTO {
+        switch trigger {
+        case .rss(let rss):
+            return WorkflowTriggerDTO(
+                rss: WorkflowTriggerRSSDTO(feed: rss.feed, interval: rss.interval),
+                interval: nil,
+                local_file_watch: nil,
+                input_parameters: nil
+            )
+        case .interval(let interval):
+            return WorkflowTriggerDTO(
+                rss: nil,
+                interval: interval.interval,
+                local_file_watch: nil,
+                input_parameters: nil
+            )
+        case .localFileWatch(let lfw):
+            return WorkflowTriggerDTO(
+                rss: nil,
+                interval: nil,
+                local_file_watch: WorkflowTriggerLocalFileWatchDTO(
+                    directory: lfw.directory,
+                    event: lfw.event,
+                    file_pattern: lfw.filePattern,
+                    file_types: lfw.fileTypes,
+                    min_file_size: lfw.minFileSize,
+                    max_file_size: lfw.maxFileSize,
+                    cel_pattern: lfw.celPattern
+                ),
+                input_parameters: nil
+            )
+        case .none:
+            return WorkflowTriggerDTO(rss: nil, interval: nil, local_file_watch: nil, input_parameters: nil)
+        }
+    }
+
+    private func convertNode(_ node: any WorkflowNode) -> WorkflowNodeDTO {
+        WorkflowNodeDTO(
+            name: node.name,
+            type: node.type,
+            params: nil,
+            input: nil,
+            next: node.next,
+            condition: node.condition,
+            branches: node.branches,
+            cases: node.cases?.map { WorkflowNodeCaseDTO(value: $0.value, next: $0.next) },
+            default: node.defaultCase,
+            matrix: nil
         )
     }
 

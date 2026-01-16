@@ -12,6 +12,7 @@ import Domain
 public protocol WorkflowClientProtocol {
     func ListWorkflows(page: Int64?, pageSize: Int64?, sort: String?, order: String?) async throws -> [APIWorkflow]
     func GetWorkflow(id: String) async throws -> APIWorkflow
+    func CreateWorkflow(option: APICreateWorkflowOption) async throws -> APIWorkflow
     func UpdateWorkflow(id: String, name: String?, enable: Bool?, queueName: String?) async throws -> APIWorkflow
     func DeleteWorkflow(id: String) async throws
     func ListWorkflowJobs(workflow: String, status: [String]?, page: Int64?, pageSize: Int64?, sort: String?, order: String?) async throws -> [APIWorkflowJob]

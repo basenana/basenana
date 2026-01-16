@@ -140,7 +140,7 @@ public struct WorkflowDetailView: View {
                     Label("File Watch", systemImage: "eye")
                         .font(.caption)
                         .foregroundColor(.WorkflowPending)
-                    Text(watch.path)
+                    Text(watch.directory)
                         .font(.caption)
                         .foregroundColor(.CardFrontground)
                         .lineLimit(1)

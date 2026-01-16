@@ -230,26 +230,39 @@ struct WorkflowDTO: Decodable {
     let last_triggered_at: Date?
 }
 
-struct WorkflowTriggerRSSDTO: Decodable {
+struct WorkflowTriggerRSSDTO: Codable {
     let feed: String?
     let interval: Int?
 }
 
-struct WorkflowTriggerIntervalDTO: Decodable {
+struct WorkflowTriggerIntervalDTO: Codable {
     let interval: Int?
 }
 
-struct WorkflowTriggerLocalFileWatchDTO: Decodable {
-    let path: String?
+struct WorkflowTriggerLocalFileWatchDTO: Codable {
+    let directory: String?
+    let event: String?
+    let file_pattern: String?
+    let file_types: String?
+    let min_file_size: Int?
+    let max_file_size: Int?
+    let cel_pattern: String?
 }
 
-struct WorkflowTriggerDTO: Decodable {
+struct WorkflowTriggerDTO: Codable {
     let rss: WorkflowTriggerRSSDTO?
     let interval: Int?
     let local_file_watch: WorkflowTriggerLocalFileWatchDTO?
+    let input_parameters: [WorkflowInputParameterDTO]?
 }
 
-struct WorkflowNodeInputDTO: Decodable {
+struct WorkflowInputParameterDTO: Codable {
+    let name: String
+    let describe: String
+    let required: Bool
+}
+
+struct WorkflowNodeInputDTO: Codable {
     let source: String?
     let feed: String?
     let file_path: String?
@@ -281,6 +294,19 @@ struct WorkflowNodeInputDTO: Decodable {
             }
         }
         self.otherFields = otherFields
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(source, forKey: .source)
+        try container.encodeIfPresent(feed, forKey: .feed)
+        try container.encodeIfPresent(file_path, forKey: .file_path)
+        try container.encodeIfPresent(site_name, forKey: .site_name)
+        try container.encodeIfPresent(site_url, forKey: .site_url)
+        try container.encodeIfPresent(title, forKey: .title)
+        try container.encodeIfPresent(url, forKey: .url)
+        try container.encodeIfPresent(document, forKey: .document)
+        try container.encodeIfPresent(parent_uri, forKey: .parent_uri)
     }
 
     func getValue(forKey key: String) -> String? {
@@ -318,17 +344,31 @@ struct WorkflowNodeInputDTO: Decodable {
     }
 }
 
-struct WorkflowNodeMatrixDTO: Decodable {
+struct WorkflowNodeMatrixDTO: Codable {
     let data: [String: String]?
 }
 
-struct WorkflowNodeDTO: Decodable {
+struct WorkflowNodeCaseDTO: Codable {
+    let value: String
+    let next: String
+}
+
+struct WorkflowNodeDTO: Codable {
     let name: String
     let type: String
     let params: [String: String]?
     let input: WorkflowNodeInputDTO?
     let next: String?
+    let condition: String?
+    let branches: [String: String]?
+    let cases: [WorkflowNodeCaseDTO]?
+    let `default`: String?
     let matrix: WorkflowNodeMatrixDTO?
+
+    enum CodingKeys: String, CodingKey {
+        case name, type, params, input, next, condition, branches, cases, matrix
+        case `default` = "default"
+    }
 }
 
 struct WorkflowsResponse: Decodable {
@@ -375,6 +415,15 @@ struct TriggerWorkflowRequest: Encodable {
     let uri: String?
     let reason: String?
     let timeout: Int64?
+    let parameters: [String: String]?
+}
+
+struct CreateWorkflowRequest: Encodable {
+    let name: String
+    let trigger: WorkflowTriggerDTO
+    let nodes: [WorkflowNodeDTO]
+    let enable: Bool
+    let queue_name: String?
 }
 
 struct TriggerWorkflowResponse: Decodable {

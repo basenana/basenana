@@ -27,6 +27,10 @@ public class WorkflowUseCase: WorkflowUseCaseProtocol {
         return try await repo.GetWorkflow(id: id)
     }
 
+    public func createWorkflow(option: WorkflowCreationOption) async throws -> Workflow {
+        return try await repo.CreateWorkflow(option: option)
+    }
+
     public func listWorkflowJobs(workflow: String, status: [WorkflowJobStatus]?, page: Int64?, pageSize: Int64?, sort: String?, order: String?) async throws -> [any WorkflowJob] {
         return try await repo.ListWorkflowJobs(workflow: workflow, status: status, page: page, pageSize: pageSize, sort: sort, order: order)
     }

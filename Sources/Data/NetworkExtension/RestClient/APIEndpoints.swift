@@ -33,6 +33,7 @@ public enum APIEndpoint {
     case messagesRead
     case workflows(page: Int64?, pageSize: Int64?, sort: String?, order: String?)
     case workflow(id: String)
+    case workflowCreate
     case workflowJobs(id: String, status: [String]?, page: Int64?, pageSize: Int64?, sort: String?, order: String?)
     case workflowJob(id: String, jobId: String)
     case workflowJobPause(id: String, jobId: String)
@@ -85,6 +86,8 @@ public enum APIEndpoint {
             return "/api/v1/workflows"
         case .workflow(let id):
             return "/api/v1/workflows/\(id)"
+        case .workflowCreate:
+            return "/api/v1/workflows"
         case .workflowJobs(let id, _, _, _, _, _):
             return "/api/v1/workflows/\(id)/jobs"
         case .workflowJob(let id, let jobId):
@@ -118,7 +121,7 @@ public enum APIEndpoint {
             return .get
         case .filesUpload:
             return .post
-        case .entriesCreate, .entriesBatchDelete, .entriesSearch, .messagesRead, .workflowTrigger:
+        case .entriesCreate, .entriesBatchDelete, .entriesSearch, .messagesRead, .workflowTrigger, .workflowCreate:
             return .post
         case .entriesUpdate, .entriesParent, .entriesProperty, .entriesDocument, .workflowUpdate, .configSet:
             return .put
