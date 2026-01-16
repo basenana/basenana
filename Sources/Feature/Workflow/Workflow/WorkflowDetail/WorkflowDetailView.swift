@@ -206,6 +206,42 @@ public struct WorkflowDetailView: View {
         .cornerRadius(8)
     }
 
+    private var jobListHeader: some View {
+        LazyVGrid(columns: [
+            GridItem(.fixed(100), alignment: .leading),
+            GridItem(.flexible(), alignment: .leading),
+            GridItem(.flexible(), alignment: .leading),
+            GridItem(.fixed(80), alignment: .leading),
+            GridItem(.fixed(70), alignment: .leading),
+            GridItem(.fixed(90), alignment: .leading),
+            GridItem(.fixed(100), alignment: .leading)
+        ], spacing: 8) {
+            Text("ID")
+                .font(.caption2)
+                .foregroundColor(.WorkflowTextSecondary)
+            Text("Target")
+                .font(.caption2)
+                .foregroundColor(.WorkflowTextSecondary)
+            Text("Steps")
+                .font(.caption2)
+                .foregroundColor(.WorkflowTextSecondary)
+            Text("Status")
+                .font(.caption2)
+                .foregroundColor(.WorkflowTextSecondary)
+            Text("Duration")
+                .font(.caption2)
+                .foregroundColor(.WorkflowTextSecondary)
+            Text("Created")
+                .font(.caption2)
+                .foregroundColor(.WorkflowTextSecondary)
+            Text("Actions")
+                .font(.caption2)
+                .foregroundColor(.WorkflowTextSecondary)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+    }
+
     @ViewBuilder
     private var jobListSection: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -222,6 +258,8 @@ public struct WorkflowDetailView: View {
             }
             .padding(.horizontal, 16)
             .padding(.top, 12)
+
+            jobListHeader
 
             ScrollView {
                 LazyVStack(spacing: 8) {

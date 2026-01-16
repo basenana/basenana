@@ -28,123 +28,73 @@ struct JobRow: View {
     let job: JobItem
     let viewModel: WorkflowDetailViewModel
 
-    @State private var isHovered = false
     @State private var hoveredStep: JobStepItem?
     @State private var selectedStep: JobStepItem?
     @State private var healthStatus: JobRowStatus = .unknown
 
     var body: some View {
-        VStack(spacing: 0) {
-            // 头部信息行 - 左对齐 Grid
-            jobInfoGrid
-
-            Divider()
-                .padding(.vertical, 8)
-
-            // 步骤行
-            HStack(spacing: 12) {
-                Text("Steps")
-                    .font(.caption2)
-                    .foregroundColor(.WorkflowTextSecondary)
-                    .frame(width: 50, alignment: .leading)
-
-                stepsView
-
-                Spacer()
-
-                HStack(spacing: 8) {
-                    Text(job.status)
-                        .font(.caption)
-                        .foregroundColor(jobStatusColor(job.status))
-
-                    Circle()
-                        .fill(healthStatus.color)
-                        .frame(width: 8, height: 8)
-
-                    if canPause {
-                        actionButton(title: "Pause", action: { Task { await viewModel.pauseJob(jobId: job.id) } })
-                    }
-                    if canResume {
-                        actionButton(title: "Resume", action: { Task { await viewModel.resumeJob(jobId: job.id) } })
-                    }
-                    if canCancel {
-                        actionButton(title: "Cancel", action: { Task { await viewModel.cancelJob(jobId: job.id) } })
-                    }
-                }
+        jobInfoGrid
+            .padding(12)
+            .cornerRadius(8)
+            .task {
+                await loadHealthData()
             }
-        }
-        .padding(12)
-        .background(isHovered ? Color.secondaryBackground : Color.clear)
-        .cornerRadius(8)
-        .onHover { hovering in
-            isHovered = hovering
-        }
-        .task {
-            await loadHealthData()
-        }
     }
 
     private var jobInfoGrid: some View {
         LazyVGrid(columns: [
-            GridItem(.fixed(140), alignment: .leading),
-            GridItem(.fixed(200), alignment: .leading),
-            GridItem(.fixed(100), alignment: .leading),
-            GridItem(.fixed(100), alignment: .leading),
-            GridItem(.fixed(80), alignment: .leading)
+            GridItem(.fixed(90), alignment: .leading),
+            GridItem(.flexible(), alignment: .leading),
+            GridItem(.flexible(), alignment: .leading),
+            GridItem(.fixed(80), alignment: .trailing),
+            GridItem(.fixed(70), alignment: .trailing),
+            GridItem(.fixed(90), alignment: .trailing),
+            GridItem(.fixed(100), alignment: .leading)
         ], spacing: 8) {
             // ID
-            VStack(alignment: .leading, spacing: 2) {
-                Text("ID")
-                    .font(.caption2)
-                    .foregroundColor(.WorkflowTextSecondary)
-                Text(String(job.id.prefix(8)))
-                    .font(.caption.monospaced())
-                    .foregroundColor(.secondary)
-            }
+            Text(String(job.id.prefix(8)))
+                .font(.caption.monospaced())
+                .foregroundColor(.secondary)
 
             // Target
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Target")
-                    .font(.caption2)
-                    .foregroundColor(.WorkflowTextSecondary)
-                Text(targetText)
-                    .font(.caption)
-                    .foregroundColor(.CardFrontground)
-                    .lineLimit(1)
-            }
+            Text(targetText)
+                .font(.caption)
+                .foregroundColor(.CardFrontground)
+                .lineLimit(1)
 
-            // Created At
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Created")
-                    .font(.caption2)
-                    .foregroundColor(.WorkflowTextSecondary)
-                Text(formatDate(job.createdAt))
+            // Steps
+            stepsView
+
+            // Status
+            HStack(spacing: 4) {
+                Circle()
+                    .fill(jobStatusColor(job.status))
+                    .frame(width: 6, height: 6)
+                Text(job.status)
                     .font(.caption)
-                    .foregroundColor(.CardFrontground)
+                    .foregroundColor(jobStatusColor(job.status))
             }
 
             // Duration
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Duration")
-                    .font(.caption2)
-                    .foregroundColor(.WorkflowTextSecondary)
-                Text(formatDuration)
-                    .font(.caption)
-                    .foregroundColor(.CardFrontground)
-            }
+            Text(formatDuration)
+                .font(.caption)
+                .foregroundColor(.CardFrontground)
 
-            // Status
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Status")
-                    .font(.caption2)
-                    .foregroundColor(.WorkflowTextSecondary)
-                HStack(spacing: 4) {
-                    Circle()
-                        .fill(jobStatusColor(job.status))
-                        .frame(width: 6, height: 6)
-                    Text(job.status)
-                        .font(.caption)
-                        .foregroundColor(jobStatusColor(job.status))
+            // Created
+            Text(formatCreatedAt)
+                .font(.caption)
+                .foregroundColor(.secondary)
+
+            // Actions
+            HStack(spacing: 8) {
+                if canPause {
+                    actionButton(title: "Pause", action: { Task { await viewModel.pauseJob(jobId: job.id) } })
+                }
+                if canResume {
+                    actionButton(title: "Resume", action: { Task { await viewModel.resumeJob(jobId: job.id) } })
+                }
+                if canCancel {
+                    actionButton(title: "Cancel", action: { Task { await viewModel.cancelJob(jobId: job.id) } })
                 }
             }
         }
@@ -160,8 +110,12 @@ struct JobRow: View {
     }
 
     private var formatDuration: String {
-        guard job.startAt > Date.distantPast else { return "-" }
-        let duration = job.finishAt.timeIntervalSince(job.startAt)
+        guard job.createdAt > Date.distantPast else { return "-" }
+
+        let isCompleted = job.status == "succeed" || job.status == "failed" || job.status == "canceled"
+        let endTime = isCompleted ? job.finishAt : Date()
+        let duration = endTime.timeIntervalSince(job.createdAt)
+
         if duration < 0 { return "-" }
         if duration < 60 {
             return String(format: "%.0fs", duration)
@@ -170,6 +124,14 @@ struct JobRow: View {
         } else {
             return String(format: "%.1fh", duration / 3600)
         }
+    }
+
+    private var formatCreatedAt: String {
+        guard job.createdAt > Date.distantPast else { return "-" }
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .short
+        return formatter.string(from: job.createdAt)
     }
 
     private func formatDate(_ date: Date) -> String {
@@ -233,9 +195,7 @@ struct JobRow: View {
         Button(action: action) {
             Text(title)
                 .font(.caption2)
-                .foregroundColor(.WorkflowPending)
         }
-        .buttonStyle(.plain)
     }
 
     private var canPause: Bool {

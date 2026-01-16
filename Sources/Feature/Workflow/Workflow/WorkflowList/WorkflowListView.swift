@@ -191,7 +191,7 @@ struct WorkflowListRow: View {
             }
         }
         .padding(12)
-        .background(isHovered ? Color.secondaryBackground : Color.clear)
+        .background(isHovered ? Color.primary.opacity(0.05): Color.clear)
         .cornerRadius(8)
         .onHover { hovering in
             isHovered = hovering
