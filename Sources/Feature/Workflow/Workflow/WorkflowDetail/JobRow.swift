@@ -67,12 +67,12 @@ struct JobRow: View {
 
             // Status
             HStack(spacing: 4) {
-                Circle()
-                    .fill(jobStatusColor(job.status))
-                    .frame(width: 6, height: 6)
                 Text(job.status.displayName)
                     .font(.caption)
                     .foregroundColor(jobStatusColor(job.status))
+                Circle()
+                    .fill(jobStatusColor(job.status))
+                    .frame(width: 6, height: 6)
             }
 
             // Duration

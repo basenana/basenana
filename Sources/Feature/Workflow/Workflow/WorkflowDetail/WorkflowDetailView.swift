@@ -67,6 +67,9 @@ public struct WorkflowDetailView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
+                    Text("Workflow")
+                        .font(.caption)
+                        .foregroundColor(.WorkflowTextSecondary)
                     HStack(spacing: 8) {
                         Text(workflow.name)
                             .font(.title2.bold())
@@ -76,10 +79,6 @@ public struct WorkflowDetailView: View {
                             .fill(workflow.enable ? Color.green : Color.gray)
                             .frame(width: 8, height: 8)
                     }
-
-                    Text("\(workflow.namespace)")
-                        .font(.caption)
-                        .foregroundColor(.WorkflowTextSecondary)
                 }
 
                 Spacer()
