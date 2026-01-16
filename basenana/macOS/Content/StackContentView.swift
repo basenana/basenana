@@ -13,16 +13,16 @@ import Feature
 
 struct StackContentView: View {
 
-    @State private var destinations: [Destination] = []
     @State private var container: DIContainer
+    @State private var destinations: [Destination]
     @State private var alertMessage: String = ""
     @State private var hasAlert: Bool = false
     @State private var searchContent: String = ""
     @State private var isSearchActive = false
 
-
     init() {
         self.container = DIContainer(state: .shared)
+        self._destinations = State(initialValue: StateStore.shared.destinations)
     }
 
     public var body: some View {
@@ -55,14 +55,16 @@ struct StackContentView: View {
                     }
             }
         }
-        .onReceive(NotificationCenter.default.publisher(for: .setDestination)) { [self] notification in
+        .onReceive(NotificationCenter.default.publisher(for: .setDestination)) { notification in
             if let ds = notification.object as? [Destination] {
                 destinations = ds
+                StateStore.shared.destinations = ds
             }
         }
-        .onReceive(NotificationCenter.default.publisher(for: .gotoDestination)) { [self] notification in
+        .onReceive(NotificationCenter.default.publisher(for: .gotoDestination)) { notification in
             if let dest = notification.object as? Destination {
                 destinations.append(dest)
+                StateStore.shared.destinations = destinations
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("alert"))) { [self] notification in
@@ -82,10 +84,13 @@ struct StackContentView: View {
         .searchable(text: $searchContent)
         .onSubmit(of: .search) {
             isSearchActive = true
-            destinations.append(.searchDocuments)
+            StateStore.shared.destinations.append(.searchDocuments)
         }
         .alert(alertMessage, isPresented: $hasAlert){
             Button("OK", role: .cancel) {}
+        }
+        .onChange(of: StateStore.shared.destinations) { _, newValue in
+            destinations = newValue
         }
     }
 }

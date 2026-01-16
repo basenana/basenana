@@ -47,7 +47,7 @@ public struct SidebarView: View {
         }
         .onChange(of: selection){
             if let s = selection{
-                resetDestination(s)
+                StateStore.shared.destinations = [s]
                 if case.groupList(let groupUri) = s {
                     viewModel.selectedGroupUri = groupUri
                     Self.logger.notice("[SidebarView] selected group \(groupUri)")
