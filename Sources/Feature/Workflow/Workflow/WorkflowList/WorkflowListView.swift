@@ -9,42 +9,6 @@ import SwiftUI
 import Domain
 import Styleguide
 
-enum JobStatus: String {
-    case initializing = "initializing"
-    case running = "running"
-    case pausing = "pausing"
-    case succeed = "succeed"
-    case failed = "failed"
-    case error = "error"
-    case paused = "paused"
-    case canceled = "canceled"
-
-    var color: Color {
-        switch self {
-        case .succeed: return .WorkflowSuccess
-        case .failed, .error: return .WorkflowFailed
-        case .running, .initializing, .pausing: return .WorkflowPending
-        case .paused, .canceled: return .gray
-        }
-    }
-
-    var displayName: String {
-        switch self {
-        case .initializing: return "Initializing"
-        case .running: return "Running"
-        case .pausing: return "Pausing"
-        case .succeed: return "Succeed"
-        case .failed: return "Failed"
-        case .error: return "Error"
-        case .paused: return "Paused"
-        case .canceled: return "Canceled"
-        }
-    }
-
-    var isSuccess: Bool {
-        self == .succeed
-    }
-}
 
 enum HealthStatus {
     case healthy, warning, critical, unknown
@@ -148,16 +112,24 @@ struct WorkflowListRow: View {
 
     @State private var healthStatus: HealthStatus = .unknown
     @State private var successRateText: String = "Loading..."
-    @State private var latestJobTriggerReason: String?
-    @State private var latestJobStatus: String?
-    @State private var latestJobCreatedAt: Date?
+    @State private var latestJob: JobItem?
     @State private var isHovered = false
 
+    private var healthStatusIcon: String {
+        switch healthStatus {
+        case .healthy: return "sun.max.fill"
+        case .warning: return "sun.rain.fill"
+        case .critical: return "cloud.bolt.rain.fill"
+        case .unknown: return "moon.fill"
+        }
+    }
+
     var body: some View {
-        HStack(spacing: 16) {
-            Circle()
-                .fill(healthStatus.color)
-                .frame(width: 10, height: 10)
+        HStack(spacing: 12) {
+            Image(systemName: healthStatusIcon)
+                .font(.system(size: 16))
+                .foregroundColor(healthStatus.color)
+                .frame(width: 18, height: 18)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(workflow.name)
@@ -165,12 +137,15 @@ struct WorkflowListRow: View {
                     .foregroundColor(.CardFrontground)
 
                 HStack(spacing: 4) {
-                    Text(latestJobTriggerReason ?? "Loading...")
-                        .foregroundColor(.WorkflowTextSecondary)
-                    if let status = latestJobStatus {
+                    if let target = latestJob?.target, target != "-" {
+                        Text(target)
+                            .foregroundColor(.WorkflowTextSecondary)
+                            .lineLimit(1)
+                    }
+                    if let status = latestJob?.status {
                         Text("•")
-                        Text(status)
-                            .foregroundColor(jobStatusColor(status))
+                        Text(status.displayName)
+                            .foregroundColor(status.color)
                     }
                 }
                 .font(.caption)
@@ -183,7 +158,7 @@ struct WorkflowListRow: View {
                     .font(.caption)
                     .foregroundColor(healthStatus.color)
 
-                if let createdAt = latestJobCreatedAt {
+                if let createdAt = latestJob?.createdAt {
                     Text(relativeTimeString(from: createdAt))
                         .font(.caption2)
                         .foregroundColor(.WorkflowTextSecondary)
@@ -222,15 +197,13 @@ struct WorkflowListRow: View {
         guard total > 0 else {
             healthStatus = .healthy
             successRateText = "No jobs"
+            latestJob = nil
             return
         }
 
-        let latestJob = jobs[0]
-        latestJobTriggerReason = latestJob.triggerReason
-        latestJobStatus = latestJob.status
-        latestJobCreatedAt = latestJob.createdAt
+        latestJob = jobs[0]
 
-        let successCount = jobs.filter { $0.status == "succeed" }.count
+        let successCount = jobs.filter { $0.status == .succeed }.count
         let successRate = Double(successCount) / Double(total)
         let rate = Int(successRate * 100)
         successRateText = "\(rate)%"
@@ -241,16 +214,6 @@ struct WorkflowListRow: View {
             healthStatus = .critical
         } else {
             healthStatus = .warning
-        }
-    }
-
-    private func jobStatusColor(_ status: String) -> Color {
-        switch status {
-        case "succeed": return .WorkflowSuccess
-        case "failed", "error": return .WorkflowFailed
-        case "running", "initializing", "pausing": return .WorkflowPending
-        case "paused", "canceled": return .gray
-        default: return .gray
         }
     }
 

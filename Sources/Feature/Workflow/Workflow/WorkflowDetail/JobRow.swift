@@ -70,7 +70,7 @@ struct JobRow: View {
                 Circle()
                     .fill(jobStatusColor(job.status))
                     .frame(width: 6, height: 6)
-                Text(job.status)
+                Text(job.status.displayName)
                     .font(.caption)
                     .foregroundColor(jobStatusColor(job.status))
             }
@@ -112,7 +112,7 @@ struct JobRow: View {
     private var formatDuration: String {
         guard job.createdAt > Date.distantPast else { return "-" }
 
-        let isCompleted = job.status == "succeed" || job.status == "failed" || job.status == "canceled"
+        let isCompleted = job.status == .succeed || job.status == .failed || job.status == .canceled
         let endTime = isCompleted ? job.finishAt : Date()
         let duration = endTime.timeIntervalSince(job.createdAt)
 
@@ -183,10 +183,10 @@ struct JobRow: View {
         }
     }
 
-    private func stepStatusIcon(_ status: String) -> String {
+    private func stepStatusIcon(_ status: JobStepStatus) -> String {
         switch status {
-        case "succeed": return "checkmark.circle.fill"
-        case "failed", "error": return "xmark.circle.fill"
+        case .succeed: return "checkmark.circle.fill"
+        case .failed, .error: return "xmark.circle.fill"
         default: return "circle.fill"
         }
     }
@@ -199,32 +199,32 @@ struct JobRow: View {
     }
 
     private var canPause: Bool {
-        job.status == "running" || job.status == "initializing"
+        job.status == .running || job.status == .initializing
     }
 
     private var canResume: Bool {
-        job.status == "pausing" || job.status == "paused"
+        job.status == .pausing || job.status == .paused
     }
 
     private var canCancel: Bool {
-        job.status == "running" || job.status == "initializing" || job.status == "pausing" || job.status == "paused"
+        job.status == .running || job.status == .initializing ||
+        job.status == .pausing || job.status == .paused
     }
 
-    private func stepColor(_ status: String) -> Color {
+    private func stepColor(_ status: JobStepStatus) -> Color {
         switch status {
-        case "succeed": return .WorkflowSuccess
-        case "failed", "error": return .WorkflowFailed
+        case .succeed: return .WorkflowSuccess
+        case .failed, .error: return .WorkflowFailed
         default: return .gray
         }
     }
 
-    private func jobStatusColor(_ status: String) -> Color {
+    private func jobStatusColor(_ status: JobStatus) -> Color {
         switch status {
-        case "succeed": return .WorkflowSuccess
-        case "failed", "error": return .WorkflowFailed
-        case "running", "initializing", "pausing": return .WorkflowPending
-        case "paused", "canceled": return .gray
-        default: return .gray
+        case .succeed: return .WorkflowSuccess
+        case .failed: return .WorkflowFailed
+        case .running, .initializing, .pausing: return .WorkflowPending
+        case .paused, .canceled: return .gray
         }
     }
 
@@ -251,7 +251,7 @@ struct JobRow: View {
             return
         }
 
-        let successCount = jobs.filter { $0.status == "succeed" }.count
+        let successCount = jobs.filter { $0.status == .succeed }.count
         let successRate = Double(successCount) / Double(total)
 
         if successRate > 0.7 {
