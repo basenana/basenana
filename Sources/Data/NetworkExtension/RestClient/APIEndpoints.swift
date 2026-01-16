@@ -33,7 +33,7 @@ public enum APIEndpoint {
     case messagesRead
     case workflows(page: Int64?, pageSize: Int64?, sort: String?, order: String?)
     case workflow(id: String)
-    case workflowJobs(id: String, page: Int64?, pageSize: Int64?, sort: String?, order: String?)
+    case workflowJobs(id: String, status: [String]?, page: Int64?, pageSize: Int64?, sort: String?, order: String?)
     case workflowJob(id: String, jobId: String)
     case workflowJobPause(id: String, jobId: String)
     case workflowJobResume(id: String, jobId: String)
@@ -85,7 +85,7 @@ public enum APIEndpoint {
             return "/api/v1/workflows"
         case .workflow(let id):
             return "/api/v1/workflows/\(id)"
-        case .workflowJobs(let id, _, _, _, _):
+        case .workflowJobs(let id, _, _, _, _, _):
             return "/api/v1/workflows/\(id)/jobs"
         case .workflowJob(let id, let jobId):
             return "/api/v1/workflows/\(id)/jobs/\(jobId)"
@@ -169,7 +169,10 @@ public enum APIEndpoint {
             if let sort = sort { items.append(URLQueryItem(name: "sort", value: sort)) }
             if let order = order { items.append(URLQueryItem(name: "order", value: order)) }
 
-        case .workflowJobs(_, let page, let pageSize, let sort, let order):
+        case .workflowJobs(_, let status, let page, let pageSize, let sort, let order):
+            if let status = status, !status.isEmpty {
+                items.append(URLQueryItem(name: "status", value: status.joined(separator: ",")))
+            }
             if let page = page { items.append(URLQueryItem(name: "page", value: String(page))) }
             if let pageSize = pageSize { items.append(URLQueryItem(name: "page_size", value: String(pageSize))) }
             if let sort = sort { items.append(URLQueryItem(name: "sort", value: sort)) }

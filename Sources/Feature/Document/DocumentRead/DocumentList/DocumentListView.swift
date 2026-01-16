@@ -100,6 +100,7 @@ struct LoadingView: View {
                 .padding(.vertical)
                 .onAppear{
                     Task {
+                        print("loading more documents")
                         await viewModel?.loadNextPage()
                         await viewModel?.setAllAppearedDocumentRead()
                     }

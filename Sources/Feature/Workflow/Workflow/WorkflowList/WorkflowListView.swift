@@ -180,6 +180,7 @@ struct WorkflowListRow: View {
         do {
             let jobs = try await viewModel.usecase.listWorkflowJobs(
                 workflow: workflow.id,
+                status: [.succeed, .failed],
                 page: 1,
                 pageSize: 10,
                 sort: "created_at",

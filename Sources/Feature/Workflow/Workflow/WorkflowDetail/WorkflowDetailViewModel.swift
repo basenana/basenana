@@ -68,6 +68,7 @@ public class WorkflowDetailViewModel {
         do {
             let jobList = try await usecase.listWorkflowJobs(
                 workflow: workflowID,
+                status: nil,
                 page: currentPage,
                 pageSize: pageSize,
                 sort: "created_at",
@@ -120,6 +121,7 @@ public class WorkflowDetailViewModel {
         do {
             let jobData = try await usecase.listWorkflowJobs(
                 workflow: workflowID,
+                status: nil,
                 page: 1,
                 pageSize: 1,
                 sort: nil,

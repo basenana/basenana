@@ -25,9 +25,9 @@ public class WorkflowClient: WorkflowClientProtocol {
         return response.workflows.map { APIWorkflow(from: $0) }
     }
 
-    public func ListWorkflowJobs(workflow: String, page: Int64?, pageSize: Int64?, sort: String?, order: String?) async throws -> [APIWorkflowJob] {
+    public func ListWorkflowJobs(workflow: String, status: [String]?, page: Int64?, pageSize: Int64?, sort: String?, order: String?) async throws -> [APIWorkflowJob] {
         let response: WorkflowJobsResponse = try await apiClient.request(
-            .workflowJobs(id: workflow, page: page, pageSize: pageSize, sort: sort, order: order),
+            .workflowJobs(id: workflow, status: status, page: page, pageSize: pageSize, sort: sort, order: order),
             responseType: WorkflowJobsResponse.self
         )
 

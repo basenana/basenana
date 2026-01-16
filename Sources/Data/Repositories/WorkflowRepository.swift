@@ -27,8 +27,9 @@ public class WorkflowRepository: WorkflowRepositoryProtocol {
         return try await core.GetWorkflow(id: id)
     }
 
-    public func ListWorkflowJobs(workflow: String, page: Int64?, pageSize: Int64?, sort: String?, order: String?) async throws -> [any WorkflowJob] {
-        return try await core.ListWorkflowJobs(workflow: workflow, page: page, pageSize: pageSize, sort: sort, order: order)
+    public func ListWorkflowJobs(workflow: String, status: [WorkflowJobStatus]?, page: Int64?, pageSize: Int64?, sort: String?, order: String?) async throws -> [any WorkflowJob] {
+        let statusStrings = status?.map { $0.rawValue }
+        return try await core.ListWorkflowJobs(workflow: workflow, status: statusStrings, page: page, pageSize: pageSize, sort: sort, order: order)
     }
 
     public func TriggerWorkflow(workflow: String, option: WorkflowJobOption) async throws -> any WorkflowJob {
