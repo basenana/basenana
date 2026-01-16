@@ -149,7 +149,7 @@ public struct WorkflowDetailView: View {
             }
         }
         .padding(12)
-        .background(Color.secondaryBackground)
+        .background(Color.CardBackground)
         .cornerRadius(8)
     }
 
@@ -190,13 +190,6 @@ public struct WorkflowDetailView: View {
                     .cornerRadius(4)
             }
 
-            if let params = node.params, !params.isEmpty {
-                Text(params.map { "\($0.key): \($0.value)" }.joined(separator: ", "))
-                    .font(.caption2)
-                    .foregroundColor(.WorkflowTextSecondary)
-                    .lineLimit(2)
-            }
-
             if let next = node.next {
                 HStack(spacing: 4) {
                     Image(systemName: "arrow.right")
@@ -209,7 +202,7 @@ public struct WorkflowDetailView: View {
         }
         .padding(10)
         .frame(width: 180)
-        .background(Color.secondaryBackground)
+        .background(Color.CardBackground)
         .cornerRadius(8)
     }
 
