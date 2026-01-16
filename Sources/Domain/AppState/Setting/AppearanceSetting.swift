@@ -5,42 +5,116 @@
 //  Created by Hypo on 2024/12/8.
 //
 
-
 import Foundation
 import SwiftUI
+import Observation
 
+@Observable
 public class AppearanceSetting {
-    @AppStorage("org.basenana.appearance.appearance", store: UserDefaults.standard)
-    public var appearance: String = "auto" // light/dark/auto
-    
-    @AppStorage("org.basenana.appearance.language", store: UserDefaults.standard)
-    public var language: String = "english"
-    
-    @AppStorage("org.basenana.appearance.appFont", store: UserDefaults.standard)
-    public var appFont: String = "default"
-    @AppStorage("org.basenana.appearance.appFontSize", store: UserDefaults.standard)
-    public var appFontSize: Int = 1
-    
-    @AppStorage("org.basenana.appearance.document.unreadReadModel", store: UserDefaults.standard)
-    public var unreadReadModel: String = "masonry"
-    @AppStorage("org.basenana.appearance.document.markedReadModel", store: UserDefaults.standard)
-    public var markedReadModel: String = "navigation"
-    @AppStorage("org.basenana.appearance.document.imagePreview", store: UserDefaults.standard)
-    public var imagePreview: String = "large" // large/small/none
-    @AppStorage("org.basenana.appearance.document.contentPreview", store: UserDefaults.standard)
-    public var contentPreview: Bool = true
-    
-    public var overColorScheme: ColorScheme? {
-        switch appearance {
-        case "light":
-            return .light
-        case "dart":
-            return .dark
-        default:
-            return nil
+    public var appearance: String {
+        get {
+            access(keyPath: \.appearance)
+            return UserDefaults.standard.string(forKey: "org.basenana.appearance.appearance") ?? "auto"
+        }
+        set {
+            withMutation(keyPath: \.appearance) {
+                UserDefaults.standard.set(newValue, forKey: "org.basenana.appearance.appearance")
+            }
         }
     }
 
+    public var language: String {
+        get {
+            access(keyPath: \.language)
+            return UserDefaults.standard.string(forKey: "org.basenana.appearance.language") ?? "english"
+        }
+        set {
+            withMutation(keyPath: \.language) {
+                UserDefaults.standard.set(newValue, forKey: "org.basenana.appearance.language")
+            }
+        }
+    }
+
+    public var appFont: String {
+        get {
+            access(keyPath: \.appFont)
+            return UserDefaults.standard.string(forKey: "org.basenana.appearance.appFont") ?? "default"
+        }
+        set {
+            withMutation(keyPath: \.appFont) {
+                UserDefaults.standard.set(newValue, forKey: "org.basenana.appearance.appFont")
+            }
+        }
+    }
+
+    public var appFontSize: Int {
+        get {
+            access(keyPath: \.appFontSize)
+            return UserDefaults.standard.integer(forKey: "org.basenana.appearance.appFontSize")
+        }
+        set {
+            withMutation(keyPath: \.appFontSize) {
+                UserDefaults.standard.set(newValue, forKey: "org.basenana.appearance.appFontSize")
+            }
+        }
+    }
+
+    public var unreadReadModel: String {
+        get {
+            access(keyPath: \.unreadReadModel)
+            return UserDefaults.standard.string(forKey: "org.basenana.appearance.document.unreadReadModel") ?? "masonry"
+        }
+        set {
+            withMutation(keyPath: \.unreadReadModel) {
+                UserDefaults.standard.set(newValue, forKey: "org.basenana.appearance.document.unreadReadModel")
+            }
+        }
+    }
+
+    public var markedReadModel: String {
+        get {
+            access(keyPath: \.markedReadModel)
+            return UserDefaults.standard.string(forKey: "org.basenana.appearance.document.markedReadModel") ?? "navigation"
+        }
+        set {
+            withMutation(keyPath: \.markedReadModel) {
+                UserDefaults.standard.set(newValue, forKey: "org.basenana.appearance.document.markedReadModel")
+            }
+        }
+    }
+
+    public var imagePreview: String {
+        get {
+            access(keyPath: \.imagePreview)
+            return UserDefaults.standard.string(forKey: "org.basenana.appearance.document.imagePreview") ?? "large"
+        }
+        set {
+            withMutation(keyPath: \.imagePreview) {
+                UserDefaults.standard.set(newValue, forKey: "org.basenana.appearance.document.imagePreview")
+            }
+        }
+    }
+
+    public var contentPreview: Bool {
+        get {
+            access(keyPath: \.contentPreview)
+            return UserDefaults.standard.bool(forKey: "org.basenana.appearance.document.contentPreview")
+        }
+        set {
+            withMutation(keyPath: \.contentPreview) {
+                UserDefaults.standard.set(newValue, forKey: "org.basenana.appearance.document.contentPreview")
+            }
+        }
+    }
+
+    public var overColorScheme: ColorScheme? {
+        access(keyPath: \.overColorScheme)
+        switch appearance {
+        case "light": return .light
+        case "dark": return .dark
+        default: return nil
+        }
+    }
 
     init() {}
 }

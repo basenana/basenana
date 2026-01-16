@@ -5,25 +5,71 @@
 //  Created by Hypo on 2024/12/11.
 //
 
+import Foundation
 import SwiftUI
+import Observation
 
-
+@Observable
 public class DocumentSetting {
-    
-    @AppStorage("org.basenana.document.sortUnread", store: UserDefaults.standard)
-    public var sortUnread: String = "newest" // newest / oldest
-    
-    @AppStorage("org.basenana.document.groupBy", store: UserDefaults.standard)
-    public var groupBy: String = "date" // date / group
-    
-    @AppStorage("org.basenana.document.autoRead", store: UserDefaults.standard)
-    public var autoRead: Bool = true
-    
-    @AppStorage("org.basenana.document.autoTranslate", store: UserDefaults.standard)
-    public var autoTranslate: Bool = false
+    public var sortUnread: String {
+        get {
+            access(keyPath: \.sortUnread)
+            return UserDefaults.standard.string(forKey: "org.basenana.document.sortUnread") ?? "newest"
+        }
+        set {
+            withMutation(keyPath: \.sortUnread) {
+                UserDefaults.standard.set(newValue, forKey: "org.basenana.document.sortUnread")
+            }
+        }
+    }
 
-    @AppStorage("org.basenana.document.autoSummary", store: UserDefaults.standard)
-    public var autoSummary: Bool = false
-    
+    public var groupBy: String {
+        get {
+            access(keyPath: \.groupBy)
+            return UserDefaults.standard.string(forKey: "org.basenana.document.groupBy") ?? "date"
+        }
+        set {
+            withMutation(keyPath: \.groupBy) {
+                UserDefaults.standard.set(newValue, forKey: "org.basenana.document.groupBy")
+            }
+        }
+    }
+
+    public var autoRead: Bool {
+        get {
+            access(keyPath: \.autoRead)
+            return UserDefaults.standard.bool(forKey: "org.basenana.document.autoRead")
+        }
+        set {
+            withMutation(keyPath: \.autoRead) {
+                UserDefaults.standard.set(newValue, forKey: "org.basenana.document.autoRead")
+            }
+        }
+    }
+
+    public var autoTranslate: Bool {
+        get {
+            access(keyPath: \.autoTranslate)
+            return UserDefaults.standard.bool(forKey: "org.basenana.document.autoTranslate")
+        }
+        set {
+            withMutation(keyPath: \.autoTranslate) {
+                UserDefaults.standard.set(newValue, forKey: "org.basenana.document.autoTranslate")
+            }
+        }
+    }
+
+    public var autoSummary: Bool {
+        get {
+            access(keyPath: \.autoSummary)
+            return UserDefaults.standard.bool(forKey: "org.basenana.document.autoSummary")
+        }
+        set {
+            withMutation(keyPath: \.autoSummary) {
+                UserDefaults.standard.set(newValue, forKey: "org.basenana.document.autoSummary")
+            }
+        }
+    }
+
     init() {}
 }

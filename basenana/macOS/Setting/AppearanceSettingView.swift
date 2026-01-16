@@ -12,9 +12,6 @@ import Domain
 
 struct AppearanceSettingView: View {
     
-    @State var colorScheme: ColorSchemeSetting = .system
-    @State var bookMark: Bool = true
-    
     @State private var state = StateStore.shared
     @State private var appFontSize: Double = 1
     
