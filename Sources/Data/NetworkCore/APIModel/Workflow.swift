@@ -155,6 +155,12 @@ public struct APIWorkflowInputParameter: WorkflowInputParameter {
         self.describe = dto.describe
         self.required = dto.required
     }
+
+    init(from param: WorkflowInputParameter) {
+        self.name = param.name
+        self.describe = param.describe
+        self.required = param.required
+    }
 }
 
 public struct APIWorkflowNode: WorkflowNode {
@@ -355,13 +361,15 @@ public struct APICreateWorkflowOption {
     public var nodes: [any WorkflowNode]
     public var enable: Bool
     public var queueName: String?
+    public var inputParameters: [WorkflowInputParameter]?
 
-    public init(name: String, trigger: WorkflowTrigger?, nodes: [any WorkflowNode], enable: Bool = true, queueName: String? = nil) {
+    public init(name: String, trigger: WorkflowTrigger?, nodes: [any WorkflowNode], enable: Bool = true, queueName: String? = nil, inputParameters: [WorkflowInputParameter]? = nil) {
         self.name = name
         self.trigger = trigger
         self.nodes = nodes
         self.enable = enable
         self.queueName = queueName
+        self.inputParameters = inputParameters
     }
 
     init(from option: WorkflowCreationOption) {
@@ -370,5 +378,6 @@ public struct APICreateWorkflowOption {
         self.nodes = option.nodes
         self.enable = option.enable
         self.queueName = option.queueName
+        self.inputParameters = option.inputParameters
     }
 }

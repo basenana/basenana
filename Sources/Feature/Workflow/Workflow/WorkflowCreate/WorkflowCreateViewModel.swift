@@ -15,7 +15,9 @@ public class WorkflowCreateViewModel {
     // MARK: - Basic Info
     var name: String = ""
     var enable: Bool = true
-    var queueName: String = ""
+
+    // MARK: - Input Parameters
+    var inputParameters: [InputParamFormData] = []
 
     // MARK: - Nodes
     var nodes: [NodeFormData] = []
@@ -44,12 +46,14 @@ public class WorkflowCreateViewModel {
         var params: [KeyValueItem] = []  // For logic nodes (http, transform, etc.)
         var pluginParams: [String: String] = [:]  // For plugin nodes
 
+        // Matrix (for plugin nodes to support iteration over arrays)
+        var matrix: [KeyValueItem] = []
+
         // Control flow (only for condition/switch)
         var condition: String = ""
         var branches: [BranchItem] = []
         var cases: [CaseItem] = []
         var defaultNext: String = ""
-        var matrix: [KeyValueItem] = []
 
         /// Definition for logic nodes
         var logicDefinition: NodeTypeDefinition? {
@@ -63,6 +67,13 @@ public class WorkflowCreateViewModel {
         var pluginDefinition: WorkflowPlugin? {
             nil
         }
+    }
+
+    struct InputParamFormData: Identifiable {
+        var id: UUID = UUID()
+        var name: String = ""
+        var describe: String = ""
+        var required: Bool = true
     }
 
     // MARK: - Private
@@ -196,6 +207,16 @@ public class WorkflowCreateViewModel {
         nodes[nodeIndex].matrix.remove(atOffsets: offsets)
     }
 
+    // MARK: - Input Parameter Operations
+
+    func addInputParameter() {
+        inputParameters.append(InputParamFormData())
+    }
+
+    func removeInputParameter(at offsets: IndexSet) {
+        inputParameters.remove(atOffsets: offsets)
+    }
+
     // MARK: - Plugin Param Operations
 
     func updatePluginParam(for nodeIndex: Int, key: String, value: String) {
@@ -255,6 +276,10 @@ public class WorkflowCreateViewModel {
                 let isCondition = nodeType == "condition"
                 let isSwitch = nodeType == "switch"
 
+                // Matrix is supported for all plugin nodes (non-logic nodes)
+                let matrixData = nodeData.isLogicNode ? nil : dictFromKeyValues(nodeData.matrix)
+                let hasMatrix = !(matrixData?.isEmpty ?? true)
+
                 return APIWorkflowNode(
                     name: nodeData.name,
                     type: nodeType,
@@ -267,7 +292,16 @@ public class WorkflowCreateViewModel {
                         APIWorkflowNodeCase(value: $0.value, next: $0.nodeName)
                     } : nil,
                     defaultCase: isSwitch ? nodeData.defaultNext : nil,
-                    matrix: isSwitch || nodeType == "loop" ? APIWorkflowNodeMatrix(data: dictFromKeyValues(nodeData.matrix)) : nil
+                    matrix: hasMatrix ? APIWorkflowNodeMatrix(data: matrixData!) : nil
+                )
+            }
+
+            let inputParams = inputParameters.compactMap { param -> WorkflowInputParameter? in
+                guard !param.name.isEmpty else { return nil }
+                return WorkflowInputParameterStruct(
+                    name: param.name,
+                    describe: param.describe,
+                    required: param.required
                 )
             }
 
@@ -276,7 +310,7 @@ public class WorkflowCreateViewModel {
                 trigger: trigger,
                 nodes: workflowNodes,
                 enable: enable,
-                queueName: queueName.isEmpty ? nil : queueName
+                inputParameters: inputParams.isEmpty ? nil : inputParams
             )
 
             let workflow = try await usecase.createWorkflow(option: option)

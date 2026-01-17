@@ -23,6 +23,7 @@ public struct WorkflowCreateView: View {
 
             Form {
                 basicInfoSection
+                inputParametersSection
                 nodesSection
             }
             .formStyle(.grouped)
@@ -64,6 +65,44 @@ public struct WorkflowCreateView: View {
                 .textFieldStyle(.roundedBorder)
 
             Toggle("Enable", isOn: $viewModel.enable)
+        }
+    }
+
+    private var inputParametersSection: some View {
+        Section("Trigger Input Parameters (\(viewModel.inputParameters.count))") {
+            if viewModel.inputParameters.isEmpty {
+                Text("No input parameters defined. Add parameters to allow users to provide input when triggering the workflow.")
+                    .foregroundColor(.secondary)
+                    .font(.caption)
+            } else {
+                ForEach($viewModel.inputParameters) { $param in
+                    inputParamRow(for: $param)
+                }
+                .onDelete { offsets in
+                    viewModel.removeInputParameter(at: offsets)
+                }
+            }
+
+            Button {
+                viewModel.addInputParameter()
+            } label: {
+                Label("Add Parameter", systemImage: "plus.circle")
+            }
+        }
+    }
+
+    private func inputParamRow(for param: Binding<WorkflowCreateViewModel.InputParamFormData>) -> some View {
+        HStack(spacing: 12) {
+            TextField("Name", text: param.name)
+                .textFieldStyle(.roundedBorder)
+                .frame(width: 150)
+
+            TextField("Description", text: param.describe)
+                .textFieldStyle(.roundedBorder)
+
+            Toggle("Required", isOn: param.required)
+                .labelsHidden()
+                .frame(width: 60)
         }
     }
 

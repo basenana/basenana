@@ -79,6 +79,7 @@ struct NodeCardView: View {
                 paramsSection
             } else if !node.type.isEmpty {
                 pluginParamsSection
+                matrixSection
             }
 
             controlFlowSection
@@ -141,6 +142,56 @@ struct NodeCardView: View {
             if let plugin = nodeTypeInfo?.plugin {
                 ForEach(plugin.parameters, id: \.name) { param in
                     pluginParamField(for: param)
+                }
+            }
+        }
+    }
+
+    private var matrixSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("Matrix")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+
+                Text("- Iterate over array data")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                Spacer()
+
+                Button {
+                    node.matrix.append(NodeDefinition.KeyValueItem())
+                } label: {
+                    Label("Add Variable", systemImage: "plus.circle")
+                        .font(.caption)
+                }
+                .buttonStyle(.plain)
+            }
+
+            Text("Define variable mappings from array elements. Use $.nodeName.output.field.*.subfield syntax.")
+                .font(.caption2)
+                .foregroundColor(.secondary)
+
+            if !node.matrix.isEmpty {
+                ForEach($node.matrix) { $item in
+                    HStack(spacing: 8) {
+                        TextField("Variable Name", text: $item.key)
+                            .textFieldStyle(.roundedBorder)
+                            .frame(width: 120)
+
+                        TextField("CEL Expression", text: $item.value)
+                            .textFieldStyle(.roundedBorder)
+
+                        Button {
+                            node.matrix.removeAll { $0.id == item.id }
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundColor(.secondary)
+                                .font(.caption)
+                        }
+                        .buttonStyle(.plain)
+                    }
                 }
             }
         }

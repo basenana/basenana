@@ -76,30 +76,31 @@ public class WorkflowClient: WorkflowClientProtocol {
     }
 
     private func convertToCreateWorkflowRequest(_ option: APICreateWorkflowOption) -> CreateWorkflowRequest {
-        CreateWorkflowRequest(
+        let inputParamsDTO = option.inputParameters?.map { WorkflowInputParameterDTO(name: $0.name, describe: $0.describe, required: $0.required) }
+        return CreateWorkflowRequest(
             name: option.name,
-            trigger: convertTrigger(option.trigger),
+            trigger: convertTrigger(option.trigger, inputParameters: inputParamsDTO),
             nodes: option.nodes.map { convertNode($0) },
             enable: option.enable,
             queue_name: option.queueName
         )
     }
 
-    private func convertTrigger(_ trigger: WorkflowTrigger?) -> WorkflowTriggerDTO {
+    private func convertTrigger(_ trigger: WorkflowTrigger?, inputParameters: [WorkflowInputParameterDTO]?) -> WorkflowTriggerDTO {
         switch trigger {
         case .rss(let rss):
             return WorkflowTriggerDTO(
                 rss: WorkflowTriggerRSSDTO(feed: rss.feed, interval: rss.interval),
                 interval: nil,
                 local_file_watch: nil,
-                input_parameters: nil
+                input_parameters: inputParameters
             )
         case .interval(let interval):
             return WorkflowTriggerDTO(
                 rss: nil,
                 interval: interval.interval,
                 local_file_watch: nil,
-                input_parameters: nil
+                input_parameters: inputParameters
             )
         case .localFileWatch(let lfw):
             return WorkflowTriggerDTO(
@@ -114,10 +115,10 @@ public class WorkflowClient: WorkflowClientProtocol {
                     max_file_size: lfw.maxFileSize,
                     cel_pattern: lfw.celPattern
                 ),
-                input_parameters: nil
+                input_parameters: inputParameters
             )
         case .none:
-            return WorkflowTriggerDTO(rss: nil, interval: nil, local_file_watch: nil, input_parameters: nil)
+            return WorkflowTriggerDTO(rss: nil, interval: nil, local_file_watch: nil, input_parameters: inputParameters)
         }
     }
 

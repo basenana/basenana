@@ -205,12 +205,14 @@ public struct WorkflowCreationOption {
     public var nodes: [any WorkflowNode]
     public var enable: Bool
     public var queueName: String?
+    public var inputParameters: [WorkflowInputParameter]?
 
-    public init(name: String, trigger: WorkflowTrigger, nodes: [any WorkflowNode], enable: Bool = true, queueName: String? = nil) {
+    public init(name: String, trigger: WorkflowTrigger, nodes: [any WorkflowNode], enable: Bool = true, queueName: String? = nil, inputParameters: [WorkflowInputParameter]? = nil) {
         self.name = name
         self.trigger = trigger
         self.nodes = nodes
         self.enable = enable
         self.queueName = queueName
+        self.inputParameters = inputParameters
     }
 }
