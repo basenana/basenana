@@ -69,6 +69,7 @@
 		4F1AEFF4D7C163561A3ABA82 /* ReadingSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 537318CC6474A88FD72D2DDE /* ReadingSettingView.swift */; };
 		506261CC05107629BEA21898 /* DialogueClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F51C176F0506DBFA9D2EB62 /* DialogueClient.swift */; };
 		5263DF260E485CAF27B42A8E /* DocumentUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C33EB61FC902D233CE88FA /* DocumentUseCaseProtocol.swift */; };
+		565EDCEB43C199D76A6F6FE3 /* WorkflowPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79CAF1174F4A9190C064F9D1 /* WorkflowPlugin.swift */; };
 		5BA6F767377B08EE3970770F /* Fuzi in Frameworks */ = {isa = PBXBuildFile; productRef = 324084F9DF8E924B4233452C /* Fuzi */; };
 		5BDCBFDF9070D1C24B4FD55C /* SearchItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8D1738F93082E3620F9F3D /* SearchItemView.swift */; };
 		5DDEA137EC7DB0DC60BCC7BE /* ReadabilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54CA93CDEA64C794E1AE368 /* ReadabilityView.swift */; };
@@ -119,6 +120,7 @@
 		A173C59D4B29F022ADE5657F /* TreeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20BFF72E754E5A5B5B50339E /* TreeListView.swift */; };
 		A209EEA5E805D7C87BF60A08 /* FileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED5ED853F87EF090BB4ADB2 /* FileRepository.swift */; };
 		A2D53EB3C78730EA590BF63C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C39D688625B40A5838FF67 /* SettingsView.swift */; };
+		A2EB291ACD7A9039BC4B4EE0 /* NodeDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0056F40B6419F259AA57D1 /* NodeDefinition.swift */; };
 		A3B875E3247356150130FAFB /* NotifyUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6697571B10FCD4FBA8C374A2 /* NotifyUseCaseProtocol.swift */; };
 		A3EC148F3CA6122AE666B4FF /* Datetime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08E63667B92ACC2CA7505982 /* Datetime.swift */; };
 		A44D6937048BB4EE774A92C3 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9DD81CD1D0F5C77D73D2E1F /* SearchViewModel.swift */; };
@@ -176,6 +178,7 @@
 		E2D98972B31BEA0A69896CA4 /* DocumentUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5DD8AE639AADD61FE97F52 /* DocumentUseCase.swift */; };
 		E3892037419269360FFEFF75 /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA146D20BB65FAA36F3DD3D0 /* Container.swift */; };
 		E456A774372E93BBCD641991 /* WorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D0E13B84B85F0F13911C67 /* WorkflowTests.swift */; };
+		E4CADD990D04B53C3DE83AD2 /* WorkflowPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FBAFB3578207D09917309B6 /* WorkflowPlugin.swift */; };
 		E6F8E27057DB23BA027F9373 /* DialogueRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173F70BA80A4B1E7A3200D5C /* DialogueRepositoryProtocol.swift */; };
 		E8C27F20D657EAC7589690CD /* DocumentReadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5184E2296F6D98734F93D59 /* DocumentReadViewModel.swift */; };
 		E96603D8B587D41EEE6A5B6A /* SwiftUIMasonry in Frameworks */ = {isa = PBXBuildFile; productRef = 2A87D20D0696DD09FED6FAF7 /* SwiftUIMasonry */; };
@@ -195,6 +198,7 @@
 		FA11ED88F3A3C288AB503A71 /* WorkflowDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E442A0BBA0690922CB469040 /* WorkflowDetailViewModel.swift */; };
 		FC4B9CA76D77EA6DA05C2FD1 /* EntriesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1387F1B43725137ED23BCAA7 /* EntriesClient.swift */; };
 		FCC25A11AF2E4DD92FE4FB07 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDF9A1E7AE5C803E7D3D304 /* String.swift */; };
+		FE2F8A32D50DEC32152AF598 /* NodeCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C3352C5092DFE2B66E4AC6 /* NodeCardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -436,9 +440,11 @@
 		75C84246E75DD5D711441A37 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		76AD05156106343B8671FBFA /* JobRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobRow.swift; sourceTree = "<group>"; };
 		771407CCEDD36EDE63EA4876 /* InboxPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxPreviewView.swift; sourceTree = "<group>"; };
+		79CAF1174F4A9190C064F9D1 /* WorkflowPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowPlugin.swift; sourceTree = "<group>"; };
 		7A184825803DCAF18AE821E8 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		7AE55230991338FD14C8768C /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		7BB518B3FF6F514B49622455 /* PaperFlowUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperFlowUseCaseProtocol.swift; sourceTree = "<group>"; };
+		7FBAFB3578207D09917309B6 /* WorkflowPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowPlugin.swift; sourceTree = "<group>"; };
 		80180E2165BABA11EF06CB18 /* NotificationRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationRepositoryProtocol.swift; sourceTree = "<group>"; };
 		8658E5F8ADC932D7EE950C57 /* TreeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeViewModel.swift; sourceTree = "<group>"; };
 		868C70AE5A2AD6CCFD20F7D2 /* ConfigClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigClient.swift; sourceTree = "<group>"; };
@@ -454,6 +460,7 @@
 		96AE809D7B183AA65E8C02AA /* HTMLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLView.swift; sourceTree = "<group>"; };
 		96CC561062585BD86D3DCC11 /* WorkflowRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowRepositoryProtocol.swift; sourceTree = "<group>"; };
 		998BC25AD81DB5CC030DC0F3 /* NavigationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationListView.swift; sourceTree = "<group>"; };
+		9F0056F40B6419F259AA57D1 /* NodeDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeDefinition.swift; sourceTree = "<group>"; };
 		9F120F753825B0FA1F3AF9A8 /* NavigationItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationItemView.swift; sourceTree = "<group>"; };
 		9FA31E2DE283331DEF35B6CB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A035C7A0866B6E0833C68C62 /* GroupTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupTableView.swift; sourceTree = "<group>"; };
@@ -481,6 +488,7 @@
 		BFA8CD959D8ACDAAF77B7AE5 /* StackContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackContentView.swift; sourceTree = "<group>"; };
 		C00873FDCAF2D2BC65C363BF /* MasonryListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasonryListView.swift; sourceTree = "<group>"; };
 		C12BBAE785F7B59F71E8BC9D /* Entry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
+		C1C3352C5092DFE2B66E4AC6 /* NodeCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeCardView.swift; sourceTree = "<group>"; };
 		C4061BFBB0B267DE6AE13076 /* Dialogue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dialogue.swift; sourceTree = "<group>"; };
 		C41A94074C2CC8FC92D10FA6 /* JobStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobStatus.swift; sourceTree = "<group>"; };
 		C4701CC2E7DF688231B0D839 /* DocumentMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentMenuView.swift; sourceTree = "<group>"; };
@@ -673,6 +681,7 @@
 				CE087876A9A1155A65C9196C /* NotificationModel.swift */,
 				88EE3464AF97830E518EFE03 /* SearchModel.swift */,
 				503EFD50EE3C9B7C0412AA02 /* Workflow.swift */,
+				7FBAFB3578207D09917309B6 /* WorkflowPlugin.swift */,
 			);
 			path = APIModel;
 			sourceTree = "<group>";
@@ -861,6 +870,7 @@
 				26225BE00F26954CC8061BE1 /* Search.swift */,
 				BDD77677B427DAE46EEA8274 /* System.swift */,
 				D05024CEA7472755005E3028 /* Workflow.swift */,
+				79CAF1174F4A9190C064F9D1 /* WorkflowPlugin.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1048,6 +1058,8 @@
 		845C8F70E4C1B3E3E621705B /* WorkflowCreate */ = {
 			isa = PBXGroup;
 			children = (
+				C1C3352C5092DFE2B66E4AC6 /* NodeCardView.swift */,
+				9F0056F40B6419F259AA57D1 /* NodeDefinition.swift */,
 				62135E4C4BE05E6257E0F3AD /* WorkflowCreateView.swift */,
 				8F56D913C7E8B9B54FEDFF95 /* WorkflowCreateViewModel.swift */,
 			);
@@ -1694,6 +1706,7 @@
 				694ABD710F83BA0F1E2A09E9 /* URLSchema.swift in Sources */,
 				EAD94A4828986038CACB3970 /* Workflow.swift in Sources */,
 				F8B6E298B50E5DDCC616A5BA /* WorkflowJobStatus.swift in Sources */,
+				565EDCEB43C199D76A6F6FE3 /* WorkflowPlugin.swift in Sources */,
 				6B7A40928F9F08F969C36E40 /* WorkflowRepositoryProtocol.swift in Sources */,
 				E9FF9728074823EEBEFBC30F /* WorkflowUseCase.swift in Sources */,
 				EF4790076796D3CBF9280AC3 /* WorkflowUseCaseProtocol.swift in Sources */,
@@ -1749,6 +1762,8 @@
 				31512ED9945E9A68798C956B /* NavigationItemView.swift in Sources */,
 				8185C13241A383D3860B1C4B /* NavigationListView.swift in Sources */,
 				77BF6767A6638A326A8FCBAF /* NavigationSectionView.swift in Sources */,
+				FE2F8A32D50DEC32152AF598 /* NodeCardView.swift in Sources */,
+				A2EB291ACD7A9039BC4B4EE0 /* NodeDefinition.swift in Sources */,
 				BCCB3541AAF6A602158FA801 /* Notify.swift in Sources */,
 				4A43FA6DFDE9CECA95FC693B /* PDFDocumentView.swift in Sources */,
 				5DDEA137EC7DB0DC60BCC7BE /* ReadabilityView.swift in Sources */,
@@ -1807,6 +1822,7 @@
 				4C623B260482EAD59D31B149 /* Workflow.swift in Sources */,
 				C97F388FA18083CE8B812A27 /* WorkflowClient.swift in Sources */,
 				8782376B4951A30216801EBF /* WorkflowClientProtocol.swift in Sources */,
+				E4CADD990D04B53C3DE83AD2 /* WorkflowPlugin.swift in Sources */,
 				D97BD07C439A52E717A7D7A8 /* WorkflowRepository.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

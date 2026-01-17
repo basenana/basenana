@@ -7,6 +7,7 @@
 
 import Foundation
 import Domain
+import Data
 
 
 public protocol WorkflowClientProtocol {
@@ -21,4 +22,5 @@ public protocol WorkflowClientProtocol {
     func ResumeWorkflowJob(workflowId: String, jobId: String) async throws
     func CancelWorkflowJob(workflowId: String, jobId: String) async throws
     func TriggerWorkflow(workflow: String, option: WorkflowJobOption) async throws -> APIWorkflowJob
+    func ListWorkflowPlugins() async throws -> [APIWorkflowPlugin]
 }

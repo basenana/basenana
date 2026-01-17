@@ -18,4 +18,5 @@ public protocol WorkflowUseCaseProtocol {
     func pauseWorkflowJob(workflowId: String, jobId: String) async throws
     func resumeWorkflowJob(workflowId: String, jobId: String) async throws
     func cancelWorkflowJob(workflowId: String, jobId: String) async throws
+    func listWorkflowPlugins() async throws -> [WorkflowPlugin]
 }

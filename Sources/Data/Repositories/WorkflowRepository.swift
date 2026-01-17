@@ -52,4 +52,8 @@ public class WorkflowRepository: WorkflowRepositoryProtocol {
     public func CancelWorkflowJob(workflowId: String, jobId: String) async throws {
         try await core.CancelWorkflowJob(workflowId: workflowId, jobId: jobId)
     }
+
+    public func ListWorkflowPlugins() async throws -> [WorkflowPlugin] {
+        return try await core.ListWorkflowPlugins()
+    }
 }

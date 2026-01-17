@@ -40,6 +40,15 @@ public struct WorkflowListView: View {
         .task { await viewModel.initWorkflows() }
         .frame(minWidth: 900, minHeight: 600)
         .navigationTitle("Workflow")
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    showCreateWorkflow = true
+                } label: {
+                    Label("Create Workflow", systemImage: "plus")
+                }
+            }
+        }
         .sheet(isPresented: $showCreateWorkflow) {
             WorkflowCreateView(
                 viewModel: WorkflowCreateViewModel(
@@ -54,14 +63,6 @@ public struct WorkflowListView: View {
 
     private var toolbarView: some View {
         HStack {
-            Button {
-                showCreateWorkflow = true
-            } label: {
-                Label("Create Workflow", systemImage: "plus")
-                    .font(.subheadline)
-            }
-            .buttonStyle(.borderedProminent)
-
             Spacer()
         }
         .padding(.horizontal, 16)

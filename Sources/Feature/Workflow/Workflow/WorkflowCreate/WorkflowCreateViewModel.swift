@@ -12,51 +12,60 @@ import Data
 @Observable
 @MainActor
 public class WorkflowCreateViewModel {
-    // Basic info
+    // MARK: - Basic Info
     var name: String = ""
     var enable: Bool = true
     var queueName: String = ""
 
-    // Trigger config
-    var triggerType: TriggerType = .rss
-    var rssFeed: String = ""
-    var rssInterval: Int = 3600
-    var intervalSeconds: Int = 300
-    var fileWatchDirectory: String = ""
-    var fileWatchEvent: FileWatchEvent = .create
-    var fileWatchPattern: String = ""
-    var fileWatchFileTypes: String = ""
-    var fileWatchMinSize: Int?
-    var fileWatchMaxSize: Int?
-    var fileWatchCelPattern: String = ""
-
-    // Nodes
+    // MARK: - Nodes
     var nodes: [NodeFormData] = []
+    var expandedNodeIds: Set<UUID> = []
 
-    // Status
+    // MARK: - Plugins
+    var availablePlugins: [WorkflowPlugin] = []
+    var isLoadingPlugins: Bool = false
+
+    // MARK: - Status
     var isCreating: Bool = false
     var errorMessage: String?
     var dismiss: Bool = false
 
-    enum TriggerType: String, CaseIterable {
-        case rss = "RSS"
-        case interval = "Interval"
-        case localFileWatch = "File Watch"
-    }
-
-    enum FileWatchEvent: String, CaseIterable {
-        case create = "create"
-        case modify = "modify"
-        case delete = "delete"
-    }
+    // MARK: - Types (using NodeDefinition)
+    typealias KeyValueItem = NodeDefinition.KeyValueItem
+    typealias BranchItem = NodeDefinition.BranchItem
+    typealias CaseItem = NodeDefinition.CaseItem
 
     struct NodeFormData: Identifiable {
         var id: UUID = UUID()
         var name: String = ""
-        var type: String = ""
+        var type: String = ""  // Logic node types: "condition", "switch"; Plugin types: plugin.name
+        var isLogicNode: Bool = false  // true for condition/switch, false for plugins
         var next: String = ""
+        var params: [KeyValueItem] = []  // For logic nodes (http, transform, etc.)
+        var pluginParams: [String: String] = [:]  // For plugin nodes
+
+        // Control flow (only for condition/switch)
+        var condition: String = ""
+        var branches: [BranchItem] = []
+        var cases: [CaseItem] = []
+        var defaultNext: String = ""
+        var matrix: [KeyValueItem] = []
+
+        /// Definition for logic nodes
+        var logicDefinition: NodeTypeDefinition? {
+            guard isLogicNode, let nodeType = NodeDefinition.NodeType(rawValue: type) else {
+                return nil
+            }
+            return NodeDefinition.definition(for: nodeType)
+        }
+
+        /// Plugin definition (for plugin nodes)
+        var pluginDefinition: WorkflowPlugin? {
+            nil
+        }
     }
 
+    // MARK: - Private
     private let usecase: any WorkflowUseCaseProtocol
     private let onCreated: ((Workflow) -> Void)?
 
@@ -65,13 +74,142 @@ public class WorkflowCreateViewModel {
         self.onCreated = onCreated
     }
 
+    // MARK: - Plugin Loading
+
+    func loadPlugins() async {
+        isLoadingPlugins = true
+        do {
+            availablePlugins = try await usecase.listWorkflowPlugins()
+        } catch {
+            availablePlugins = []
+        }
+        isLoadingPlugins = false
+    }
+
+    // MARK: - Available Node Types
+
+    /// Logic node types (built-in)
+    var logicNodeTypes: [NodeTypeInfo] {
+        [
+            NodeTypeInfo(type: "condition", displayName: "Condition", description: "Branch based on CEL condition", icon: "arrow.triangle.branch", color: "orange"),
+            NodeTypeInfo(type: "switch", displayName: "Switch", description: "Branch based on value matching", icon: "point.topright.arrow.to.point.bottomleft.squareroot", color: "purple")
+        ]
+    }
+
+    /// All available node types (logic + plugins)
+    var allNodeTypes: [NodeTypeInfo] {
+        var types = logicNodeTypes
+        for plugin in availablePlugins {
+            types.append(NodeTypeInfo(
+                type: plugin.name,
+                displayName: plugin.name.capitalized,
+                description: "\(plugin.type) plugin v\(plugin.version)",
+                icon: "cube.box",
+                color: "blue",
+                isPlugin: true,
+                plugin: plugin
+            ))
+        }
+        return types
+    }
+
+    struct NodeTypeInfo: Identifiable, Equatable {
+        var id: String { type }
+        let type: String
+        let displayName: String
+        let description: String
+        let icon: String
+        let color: String
+        var isPlugin: Bool = false
+        var plugin: WorkflowPlugin?
+
+        static func == (lhs: NodeTypeInfo, rhs: NodeTypeInfo) -> Bool {
+            lhs.id == rhs.id
+        }
+    }
+
+    // MARK: - Node Operations
+
     func addNode() {
-        nodes.append(.init())
+        let node = NodeFormData()
+        nodes.append(node)
+        expandedNodeIds.insert(node.id)
     }
 
     func removeNode(at offsets: IndexSet) {
+        let idsToRemove = offsets.map { nodes[$0].id }
         nodes.remove(atOffsets: offsets)
+        expandedNodeIds.subtract(idsToRemove)
     }
+
+    func toggleNodeExpanded(_ nodeId: UUID) {
+        if expandedNodeIds.contains(nodeId) {
+            expandedNodeIds.remove(nodeId)
+        } else {
+            expandedNodeIds.insert(nodeId)
+        }
+    }
+
+    func isNodeExpanded(_ nodeId: UUID) -> Bool {
+        expandedNodeIds.contains(nodeId)
+    }
+
+    // MARK: - Key-Value Operations
+
+    func addParam(to nodeIndex: Int) {
+        guard nodes.indices.contains(nodeIndex) else { return }
+        nodes[nodeIndex].params.append(KeyValueItem())
+    }
+
+    func removeParam(from nodeIndex: Int, at offsets: IndexSet) {
+        guard nodes.indices.contains(nodeIndex) else { return }
+        nodes[nodeIndex].params.remove(atOffsets: offsets)
+    }
+
+    func addBranch(to nodeIndex: Int) {
+        guard nodes.indices.contains(nodeIndex) else { return }
+        nodes[nodeIndex].branches.append(BranchItem())
+    }
+
+    func removeBranch(from nodeIndex: Int, at offsets: IndexSet) {
+        guard nodes.indices.contains(nodeIndex) else { return }
+        nodes[nodeIndex].branches.remove(atOffsets: offsets)
+    }
+
+    func addCase(to nodeIndex: Int) {
+        guard nodes.indices.contains(nodeIndex) else { return }
+        nodes[nodeIndex].cases.append(CaseItem())
+    }
+
+    func removeCase(from nodeIndex: Int, at offsets: IndexSet) {
+        guard nodes.indices.contains(nodeIndex) else { return }
+        nodes[nodeIndex].cases.remove(atOffsets: offsets)
+    }
+
+    func addMatrixItem(to nodeIndex: Int) {
+        guard nodes.indices.contains(nodeIndex) else { return }
+        nodes[nodeIndex].matrix.append(KeyValueItem())
+    }
+
+    func removeMatrixItem(from nodeIndex: Int, at offsets: IndexSet) {
+        guard nodes.indices.contains(nodeIndex) else { return }
+        nodes[nodeIndex].matrix.remove(atOffsets: offsets)
+    }
+
+    // MARK: - Plugin Param Operations
+
+    func updatePluginParam(for nodeIndex: Int, key: String, value: String) {
+        guard nodes.indices.contains(nodeIndex) else { return }
+        nodes[nodeIndex].pluginParams[key] = value
+    }
+
+    // MARK: - Available Node Names
+
+    var availableNodeNames: [String] {
+        nodes.map { $0.name }.filter { !$0.isEmpty }
+    }
+
+    // MARK: - Create Workflow
 
     func createWorkflow() async {
         guard !name.isEmpty else {
@@ -84,23 +222,52 @@ public class WorkflowCreateViewModel {
             return
         }
 
+        for (index, node) in nodes.enumerated() {
+            if node.name.isEmpty {
+                errorMessage = "Node \(index + 1): Name is required"
+                return
+            }
+        }
+
         isCreating = true
         errorMessage = nil
 
         do {
-            let trigger = buildTrigger()
-            let workflowNodes = nodes.map { nodeData -> APIWorkflowNode in
-                APIWorkflowNode(
+            let trigger = buildDefaultTrigger()
+            let workflowNodes = nodes.enumerated().map { index, nodeData -> APIWorkflowNode in
+                var params: [APIWorkflowNodeParam] = []
+
+                if nodeData.isLogicNode {
+                    // Logic node: use params array
+                    params = nodeData.params.compactMap { item -> APIWorkflowNodeParam? in
+                        guard !item.key.isEmpty else { return nil }
+                        return APIWorkflowNodeParam(key: item.key, value: item.value)
+                    }
+                } else {
+                    // Plugin node: use pluginParams dictionary
+                    params = nodeData.pluginParams.compactMap { key, value -> APIWorkflowNodeParam? in
+                        guard !key.isEmpty else { return nil }
+                        return APIWorkflowNodeParam(key: key, value: value)
+                    }
+                }
+
+                let nodeType = nodeData.type
+                let isCondition = nodeType == "condition"
+                let isSwitch = nodeType == "switch"
+
+                return APIWorkflowNode(
                     name: nodeData.name,
-                    type: nodeData.type,
-                    params: nil,
+                    type: nodeType,
+                    params: params.isEmpty ? nil : params,
                     input: nil,
                     next: nodeData.next.isEmpty ? nil : nodeData.next,
-                    condition: nil,
-                    branches: nil,
-                    cases: nil,
-                    defaultCase: nil,
-                    matrix: nil
+                    condition: isCondition ? nodeData.condition : nil,
+                    branches: isCondition ? dictFromBranches(nodeData.branches) : nil,
+                    cases: isSwitch ? nodeData.cases.map {
+                        APIWorkflowNodeCase(value: $0.value, next: $0.nodeName)
+                    } : nil,
+                    defaultCase: isSwitch ? nodeData.defaultNext : nil,
+                    matrix: isSwitch || nodeType == "loop" ? APIWorkflowNodeMatrix(data: dictFromKeyValues(nodeData.matrix)) : nil
                 )
             }
 
@@ -122,27 +289,24 @@ public class WorkflowCreateViewModel {
         isCreating = false
     }
 
-    private func buildTrigger() -> WorkflowTrigger {
-        switch triggerType {
-        case .rss:
-            let rss = APIWorkflowTriggerRSS(feed: rssFeed, interval: rssInterval)
-            return .rss(rss)
+    // MARK: - Private Helpers
 
-        case .interval:
-            let interval = APIWorkflowTriggerInterval(interval: intervalSeconds)
-            return .interval(interval)
+    private func buildDefaultTrigger() -> WorkflowTrigger {
+        let rss = APIWorkflowTriggerRSS(feed: "", interval: 3600)
+        return .rss(rss)
+    }
 
-        case .localFileWatch:
-            let fileWatch = APIWorkflowTriggerLocalFileWatch(
-                directory: fileWatchDirectory,
-                event: fileWatchEvent.rawValue,
-                filePattern: fileWatchPattern.isEmpty ? nil : fileWatchPattern,
-                fileTypes: fileWatchFileTypes.isEmpty ? nil : fileWatchFileTypes,
-                minFileSize: fileWatchMinSize,
-                maxFileSize: fileWatchMaxSize,
-                celPattern: fileWatchCelPattern.isEmpty ? nil : fileWatchCelPattern
-            )
-            return .localFileWatch(fileWatch)
-        }
+    private func dictFromKeyValues(_ items: [KeyValueItem]) -> [String: String] {
+        Dictionary(uniqueKeysWithValues: items.compactMap { item in
+            guard !item.key.isEmpty else { return nil }
+            return (item.key, item.value)
+        })
+    }
+
+    private func dictFromBranches(_ branches: [BranchItem]) -> [String: String] {
+        Dictionary(uniqueKeysWithValues: branches.compactMap { branch in
+            guard !branch.branchName.isEmpty, !branch.nodeName.isEmpty else { return nil }
+            return (branch.branchName, branch.nodeName)
+        })
     }
 }

@@ -42,6 +42,7 @@ public enum APIEndpoint {
     case workflowTrigger(id: String)
     case workflowUpdate(id: String)
     case workflowDelete(id: String)
+    case workflowPlugins
     case configsGroup(group: String)
     case config(group: String, name: String)
     case configSet(group: String, name: String)
@@ -104,6 +105,8 @@ public enum APIEndpoint {
             return "/api/v1/workflows/\(id)"
         case .workflowDelete(let id):
             return "/api/v1/workflows/\(id)"
+        case .workflowPlugins:
+            return "/api/v1/workflows/plugins"
         case .configsGroup(let group):
             return "/api/v1/configs/\(group)"
         case .config(let group, let name):
@@ -117,7 +120,7 @@ public enum APIEndpoint {
 
     var method: HTTPMethod {
         switch self {
-        case .healthCheck, .entriesDetails, .groupsChildren, .groupsTree, .filesContent, .messages, .workflows, .workflow, .workflowJobs, .workflowJob, .configsGroup, .config:
+        case .healthCheck, .entriesDetails, .groupsChildren, .groupsTree, .filesContent, .messages, .workflows, .workflow, .workflowJobs, .workflowJob, .workflowPlugins, .configsGroup, .config:
             return .get
         case .filesUpload:
             return .post

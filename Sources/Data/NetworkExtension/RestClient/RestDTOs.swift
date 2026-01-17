@@ -479,6 +479,33 @@ struct FileUploadResponse: Decodable {
     let len: Int64
 }
 
+// MARK: - Workflow Plugin DTOs
+
+struct WorkflowPluginParamDTO: Codable {
+    let name: String
+    let required: Bool
+    let defaultValue: String?
+    let description: String?
+    let options: [String]?
+
+    enum CodingKeys: String, CodingKey {
+        case name, required, options
+        case defaultValue = "default"
+        case description
+    }
+}
+
+struct WorkflowPluginDTO: Codable {
+    let name: String
+    let version: String
+    let type: String
+    let parameters: [WorkflowPluginParamDTO]?
+}
+
+struct WorkflowPluginsResponse: Decodable {
+    let plugins: [WorkflowPluginDTO]
+}
+
 // MARK: - Empty Response
 
 struct VoidResponse: Decodable { }

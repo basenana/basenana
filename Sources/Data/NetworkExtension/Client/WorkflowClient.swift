@@ -197,4 +197,13 @@ public class WorkflowClient: WorkflowClientProtocol {
             responseType: VoidResponse.self
         )
     }
+
+    public func ListWorkflowPlugins() async throws -> [APIWorkflowPlugin] {
+        let response: WorkflowPluginsResponse = try await apiClient.request(
+            .workflowPlugins,
+            responseType: WorkflowPluginsResponse.self
+        )
+
+        return response.plugins.map { APIWorkflowPlugin(from: $0) }
+    }
 }

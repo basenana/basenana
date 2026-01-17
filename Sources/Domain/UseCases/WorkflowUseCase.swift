@@ -51,5 +51,9 @@ public class WorkflowUseCase: WorkflowUseCaseProtocol {
         try await repo.CancelWorkflowJob(workflowId: workflowId, jobId: jobId)
     }
 
+    public func listWorkflowPlugins() async throws -> [WorkflowPlugin] {
+        return try await repo.ListWorkflowPlugins()
+    }
+
 
 }

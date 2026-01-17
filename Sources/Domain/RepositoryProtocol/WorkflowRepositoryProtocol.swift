@@ -18,6 +18,7 @@ public protocol WorkflowRepositoryProtocol {
     func PauseWorkflowJob(workflowId: String, jobId: String) async throws
     func ResumeWorkflowJob(workflowId: String, jobId: String) async throws
     func CancelWorkflowJob(workflowId: String, jobId: String) async throws
+    func ListWorkflowPlugins() async throws -> [WorkflowPlugin]
 }
 
 

@@ -23,7 +23,6 @@ public struct WorkflowCreateView: View {
 
             Form {
                 basicInfoSection
-                triggerSection
                 nodesSection
             }
             .formStyle(.grouped)
@@ -32,7 +31,8 @@ public struct WorkflowCreateView: View {
 
             footerView
         }
-        .frame(minWidth: 650, minHeight: 550)
+        .frame(minWidth: 700, minHeight: 600)
+        .task { await viewModel.loadPlugins() }
         .onChange(of: viewModel.dismiss) { _, newValue in
             if newValue {
                 dismiss()
@@ -64,99 +64,29 @@ public struct WorkflowCreateView: View {
                 .textFieldStyle(.roundedBorder)
 
             Toggle("Enable", isOn: $viewModel.enable)
-
-            TextField("Queue Name (optional)", text: $viewModel.queueName)
-                .textFieldStyle(.roundedBorder)
-        }
-    }
-
-    private var triggerSection: some View {
-        Section("Trigger") {
-            Picker("Type", selection: $viewModel.triggerType) {
-                ForEach(WorkflowCreateViewModel.TriggerType.allCases, id: \.self) { type in
-                    Text(type.rawValue).tag(type)
-                }
-            }
-            .pickerStyle(.segmented)
-
-            triggerConfigFields
-        }
-    }
-
-    @ViewBuilder
-    private var triggerConfigFields: some View {
-        switch viewModel.triggerType {
-        case .rss:
-            VStack(alignment: .leading, spacing: 8) {
-                TextField("Feed URL", text: $viewModel.rssFeed)
-                    .textFieldStyle(.roundedBorder)
-
-                HStack {
-                    Text("Interval (seconds)")
-                    Spacer()
-                    TextField("3600", value: $viewModel.rssInterval, format: .number)
-                        .textFieldStyle(.roundedBorder)
-                        .frame(width: 100)
-                }
-            }
-
-        case .interval:
-            HStack {
-                Text("Interval (seconds)")
-                Spacer()
-                TextField("300", value: $viewModel.intervalSeconds, format: .number)
-                    .textFieldStyle(.roundedBorder)
-                    .frame(width: 100)
-            }
-
-        case .localFileWatch:
-            VStack(alignment: .leading, spacing: 8) {
-                TextField("Directory", text: $viewModel.fileWatchDirectory)
-                    .textFieldStyle(.roundedBorder)
-
-                Picker("Event", selection: $viewModel.fileWatchEvent) {
-                    ForEach(WorkflowCreateViewModel.FileWatchEvent.allCases, id: \.self) { event in
-                        Text(event.rawValue).tag(event)
-                    }
-                }
-
-                TextField("File Pattern (optional)", text: $viewModel.fileWatchPattern)
-                    .textFieldStyle(.roundedBorder)
-
-                TextField("File Types (optional, e.g., .pdf,.doc)", text: $viewModel.fileWatchFileTypes)
-                    .textFieldStyle(.roundedBorder)
-
-                HStack {
-                    Text("Min Size (bytes)")
-                    Spacer()
-                    TextField("optional", value: $viewModel.fileWatchMinSize, format: .number)
-                        .textFieldStyle(.roundedBorder)
-                        .frame(width: 120)
-                }
-
-                HStack {
-                    Text("Max Size (bytes)")
-                    Spacer()
-                    TextField("optional", value: $viewModel.fileWatchMaxSize, format: .number)
-                        .textFieldStyle(.roundedBorder)
-                        .frame(width: 120)
-                }
-
-                TextField("CEL Pattern (optional)", text: $viewModel.fileWatchCelPattern)
-                    .textFieldStyle(.roundedBorder)
-            }
         }
     }
 
     private var nodesSection: some View {
         Section("Nodes (\(viewModel.nodes.count))") {
             if viewModel.nodes.isEmpty {
-                Text("No nodes added")
+                Text("No nodes added. Click 'Add Node' to start building your workflow.")
                     .foregroundColor(.secondary)
-                    .italic()
             } else {
-                ForEach($viewModel.nodes) { $node in
-                    nodeRow(node: $node)
+                ForEach(Array($viewModel.nodes.enumerated()), id: \.element.id) { index, $node in
+                    NodeCardView(
+                        nodeIndex: index,
+                        node: $node,
+                        isExpanded: viewModel.isNodeExpanded(node.id),
+                        onToggleExpanded: {
+                            viewModel.toggleNodeExpanded(node.id)
+                        },
+                        onRemove: {
+                            viewModel.removeNode(at: IndexSet(integer: index))
+                        },
+                        availableNodeNames: viewModel.availableNodeNames,
+                        availableNodeTypes: viewModel.allNodeTypes
+                    )
                 }
                 .onDelete { offsets in
                     viewModel.removeNode(at: offsets)
@@ -168,22 +98,6 @@ public struct WorkflowCreateView: View {
             } label: {
                 Label("Add Node", systemImage: "plus.circle")
             }
-        }
-    }
-
-    @ViewBuilder
-    private func nodeRow(node: Binding<WorkflowCreateViewModel.NodeFormData>) -> some View {
-        HStack(spacing: 12) {
-            TextField("Name", text: node.name)
-                .textFieldStyle(.roundedBorder)
-                .frame(width: 120)
-
-            TextField("Type", text: node.type)
-                .textFieldStyle(.roundedBorder)
-                .frame(width: 100)
-
-            TextField("Next (optional)", text: node.next)
-                .textFieldStyle(.roundedBorder)
         }
     }
 
@@ -266,5 +180,9 @@ private class MockWorkflowUseCase: WorkflowUseCaseProtocol {
 
     func cancelWorkflowJob(workflowId: String, jobId: String) async throws {
         fatalError()
+    }
+
+    func listWorkflowPlugins() async throws -> [any Domain.WorkflowPlugin] {
+        []
     }
 }
