@@ -79,7 +79,8 @@ struct WorkflowCreateNodeCard: View {
             if node.isLogicNode {
                 paramsSection
             } else if !node.type.isEmpty {
-                pluginParamsSection
+                initParamsSection
+                inputParamsSection
                 matrixSection
             }
 
@@ -131,16 +132,59 @@ struct WorkflowCreateNodeCard: View {
         }
     }
 
-    private var pluginParamsSection: some View {
+    private var initParamsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Plugin Parameters")
-                .font(.caption)
-                .fontWeight(.medium)
-                .foregroundColor(.secondary)
+            HStack {
+                Text("Init Parameters")
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundColor(.secondary)
+
+                Text("- Plugin initialization config")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+
+                Spacer()
+            }
 
             if let plugin = nodeTypeInfo?.plugin {
-                ForEach(plugin.parameters, id: \.name) { param in
-                    pluginParamField(for: param)
+                if plugin.initParameters.isEmpty {
+                    Text("No init parameters")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                } else {
+                    ForEach(plugin.initParameters, id: \.name) { param in
+                        pluginParamField(for: param, params: $node.initParams)
+                    }
+                }
+            }
+        }
+    }
+
+    private var inputParamsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Input Parameters")
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundColor(.secondary)
+
+                Text("- Runtime input for plugin")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+
+                Spacer()
+            }
+
+            if let plugin = nodeTypeInfo?.plugin {
+                if plugin.parameters.isEmpty {
+                    Text("No input parameters")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                } else {
+                    ForEach(plugin.parameters, id: \.name) { param in
+                        pluginParamField(for: param, params: $node.inputParams)
+                    }
                 }
             }
         }
@@ -197,7 +241,7 @@ struct WorkflowCreateNodeCard: View {
         }
     }
 
-    private func pluginParamField(for param: WorkflowPluginParameter) -> some View {
+    private func pluginParamField(for param: WorkflowPluginParameter, params: Binding<[String: String]>) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
                 Text(param.name)
@@ -218,8 +262,8 @@ struct WorkflowCreateNodeCard: View {
 
             if let options = param.options, !options.isEmpty {
                 Picker(param.name, selection: Binding(
-                    get: { node.pluginParams[param.name] ?? param.defaultValue ?? "" },
-                    set: { node.pluginParams[param.name] = $0 }
+                    get: { params.wrappedValue[param.name] ?? param.defaultValue ?? "" },
+                    set: { params.wrappedValue[param.name] = $0 }
                 )) {
                     Text("Select").tag("")
                     ForEach(options, id: \.self) { option in
@@ -230,8 +274,8 @@ struct WorkflowCreateNodeCard: View {
                 .textFieldStyle(.roundedBorder)
             } else {
                 TextField(param.name, text: Binding(
-                    get: { node.pluginParams[param.name] ?? param.defaultValue ?? "" },
-                    set: { node.pluginParams[param.name] = $0 }
+                    get: { params.wrappedValue[param.name] ?? param.defaultValue ?? "" },
+                    set: { params.wrappedValue[param.name] = $0 }
                 ))
                 .textFieldStyle(.roundedBorder)
             }
@@ -266,13 +310,20 @@ struct WorkflowCreateNodeCard: View {
                     node.type = typeInfo.type
                     node.isLogicNode = !typeInfo.isPlugin
                     if typeInfo.isPlugin, let plugin = typeInfo.plugin {
-                        var params: [String: String] = [:]
-                        for param in plugin.parameters {
+                        var initParams: [String: String] = [:]
+                        var inputParams: [String: String] = [:]
+                        for param in plugin.initParameters {
                             if let defaultValue = param.defaultValue {
-                                params[param.name] = defaultValue
+                                initParams[param.name] = defaultValue
                             }
                         }
-                        node.pluginParams = params
+                        for param in plugin.parameters {
+                            if let defaultValue = param.defaultValue {
+                                inputParams[param.name] = defaultValue
+                            }
+                        }
+                        node.initParams = initParams
+                        node.inputParams = inputParams
                     }
                 } label: {
                     Label(typeInfo.displayName, systemImage: typeInfo.icon)

@@ -44,7 +44,8 @@ public class WorkflowCreateViewModel {
         var isLogicNode: Bool = false  // true for condition/switch, false for plugins
         var next: String = ""
         var params: [KeyValueItem] = []  // For logic nodes (http, transform, etc.)
-        var pluginParams: [String: String] = [:]  // For plugin nodes
+        var initParams: [String: String] = [:]  // For plugin nodes: init_parameters → node.params
+        var inputParams: [String: String] = [:]  // For plugin nodes: parameters → node.input
 
         // Matrix (for plugin nodes to support iteration over arrays)
         var matrix: [KeyValueItem] = []
@@ -219,9 +220,14 @@ public class WorkflowCreateViewModel {
 
     // MARK: - Plugin Param Operations
 
-    func updatePluginParam(for nodeIndex: Int, key: String, value: String) {
+    func updateInitParam(for nodeIndex: Int, key: String, value: String) {
         guard nodes.indices.contains(nodeIndex) else { return }
-        nodes[nodeIndex].pluginParams[key] = value
+        nodes[nodeIndex].initParams[key] = value
+    }
+
+    func updateInputParam(for nodeIndex: Int, key: String, value: String) {
+        guard nodes.indices.contains(nodeIndex) else { return }
+        nodes[nodeIndex].inputParams[key] = value
     }
 
     // MARK: - Available Node Names
@@ -257,6 +263,7 @@ public class WorkflowCreateViewModel {
             let trigger = buildDefaultTrigger()
             let workflowNodes = nodes.enumerated().map { index, nodeData -> APIWorkflowNode in
                 var params: [APIWorkflowNodeParam] = []
+                var inputDict: [String: String] = [:]
 
                 if nodeData.isLogicNode {
                     // Logic node: use params array
@@ -265,11 +272,12 @@ public class WorkflowCreateViewModel {
                         return APIWorkflowNodeParam(key: item.key, value: item.value)
                     }
                 } else {
-                    // Plugin node: use pluginParams dictionary
-                    params = nodeData.pluginParams.compactMap { key, value -> APIWorkflowNodeParam? in
+                    // Plugin node: use initParams for params, inputParams for input
+                    params = nodeData.initParams.compactMap { key, value -> APIWorkflowNodeParam? in
                         guard !key.isEmpty else { return nil }
                         return APIWorkflowNodeParam(key: key, value: value)
                     }
+                    inputDict = nodeData.inputParams
                 }
 
                 let nodeType = nodeData.type
@@ -284,7 +292,7 @@ public class WorkflowCreateViewModel {
                     name: nodeData.name,
                     type: nodeType,
                     params: params.isEmpty ? nil : params,
-                    input: nil,
+                    input: inputDict.isEmpty ? nil : APIWorkflowNodeInput(dict: inputDict),
                     next: nodeData.next.isEmpty ? nil : nodeData.next,
                     condition: isCondition ? nodeData.condition : nil,
                     branches: isCondition ? dictFromBranches(nodeData.branches) : nil,

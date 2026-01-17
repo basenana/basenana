@@ -272,8 +272,33 @@ struct WorkflowNodeInputDTO: Codable {
     let url: String?
     let document: String?
     let parent_uri: String?
-
     private var otherFields: [String: String]?
+
+    init() {
+        self.source = nil
+        self.feed = nil
+        self.file_path = nil
+        self.site_name = nil
+        self.site_url = nil
+        self.title = nil
+        self.url = nil
+        self.document = nil
+        self.parent_uri = nil
+        self.otherFields = nil
+    }
+
+    init(from input: APIWorkflowNodeInput) {
+        self.source = input.source
+        self.feed = input.feed
+        self.file_path = input.file_path
+        self.site_name = input.site_name
+        self.site_url = input.site_url
+        self.title = input.title
+        self.url = input.url
+        self.document = input.document
+        self.parent_uri = input.parent_uri
+        self.otherFields = input.otherFields
+    }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -289,11 +314,13 @@ struct WorkflowNodeInputDTO: Codable {
 
         var otherFields: [String: String] = [:]
         for key in container.allKeys {
-            if let value = try? container.decodeIfPresent(String.self, forKey: key) {
-                otherFields[key.stringValue] = value
+            if CodingKeys(stringValue: key.stringValue) == nil {
+                if let value = try? container.decodeIfPresent(String.self, forKey: key) {
+                    otherFields[key.stringValue] = value
+                }
             }
         }
-        self.otherFields = otherFields
+        self.otherFields = otherFields.isEmpty ? nil : otherFields
     }
 
     func encode(to encoder: Encoder) throws {
@@ -307,6 +334,12 @@ struct WorkflowNodeInputDTO: Codable {
         try container.encodeIfPresent(url, forKey: .url)
         try container.encodeIfPresent(document, forKey: .document)
         try container.encodeIfPresent(parent_uri, forKey: .parent_uri)
+
+        if let otherFields = otherFields {
+            for (key, value) in otherFields {
+                try container.encode(value, forKey: CodingKeys(stringValue: key)!)
+            }
+        }
     }
 
     func getValue(forKey key: String) -> String? {
@@ -320,7 +353,7 @@ struct WorkflowNodeInputDTO: Codable {
         case "url": return url
         case "document": return document
         case "parent_uri": return parent_uri
-        default: return nil
+        default: return otherFields?[key]
         }
     }
 
@@ -335,7 +368,7 @@ struct WorkflowNodeInputDTO: Codable {
         case "url": return url
         case "document": return document
         case "parent_uri": return parent_uri
-        default: return nil
+        default: return otherFields?[key]
         }
     }
 
@@ -499,7 +532,14 @@ struct WorkflowPluginDTO: Codable {
     let name: String
     let version: String
     let type: String
+    let initParameters: [WorkflowPluginParamDTO]?
     let parameters: [WorkflowPluginParamDTO]?
+
+    enum CodingKeys: String, CodingKey {
+        case name, version, type
+        case initParameters = "init_parameters"
+        case parameters
+    }
 }
 
 struct WorkflowPluginsResponse: Decodable {

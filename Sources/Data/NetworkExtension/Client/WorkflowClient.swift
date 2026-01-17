@@ -123,17 +123,32 @@ public class WorkflowClient: WorkflowClientProtocol {
     }
 
     private func convertNode(_ node: any WorkflowNode) -> WorkflowNodeDTO {
-        WorkflowNodeDTO(
+        var paramsDict: [String: String]?
+        if let nodeParams = node.params {
+            paramsDict = [:]
+            for param in nodeParams {
+                paramsDict?[param.key] = param.value
+            }
+        }
+
+        let inputDTO = node.input.map { input -> WorkflowNodeInputDTO in
+            if let apiInput = input as? APIWorkflowNodeInput {
+                return WorkflowNodeInputDTO(from: apiInput)
+            }
+            return WorkflowNodeInputDTO()
+        }
+
+        return WorkflowNodeDTO(
             name: node.name,
             type: node.type,
-            params: nil,
-            input: nil,
+            params: paramsDict,
+            input: inputDTO,
             next: node.next,
             condition: node.condition,
             branches: node.branches,
             cases: node.cases?.map { WorkflowNodeCaseDTO(value: $0.value, next: $0.next) },
             default: node.defaultCase,
-            matrix: nil
+            matrix: node.matrix.map { WorkflowNodeMatrixDTO(data: $0.data) }
         )
     }
 

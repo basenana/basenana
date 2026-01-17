@@ -100,12 +100,14 @@ final class WorkflowCreateViewModelTests: XCTestCase {
             name: "archive-node",
             type: "archive",
             isLogicNode: false,
-            pluginParams: ["action": "compress"]
+            initParams: ["driver": "filesystem"],
+            inputParams: ["action": "compress"]
         )
         XCTAssertEqual(node.name, "archive-node")
         XCTAssertEqual(node.type, "archive")
         XCTAssertFalse(node.isLogicNode)
-        XCTAssertEqual(node.pluginParams["action"], "compress")
+        XCTAssertEqual(node.initParams["driver"], "filesystem")
+        XCTAssertEqual(node.inputParams["action"], "compress")
     }
 
     func testNodeFormDataIdentifiable() {
@@ -232,5 +234,6 @@ private class MockWorkflowPlugin: WorkflowPlugin {
     var name: String = "archive"
     var version: String = "1.0"
     var type: String = "process"
+    var initParameters: [WorkflowPluginParameter] = []
     var parameters: [WorkflowPluginParameter] = []
 }

@@ -28,20 +28,20 @@ public struct WorkflowCreateView: View {
             ScrollView {
                 VStack(spacing: 0) {
                     basicInfoSection
-                        .padding(.horizontal, 20)
+                        .padding(.vertical, 20)
                         .padding(.top, 16)
 
                     Divider()
                         .padding(.vertical, 16)
 
                     inputParametersSection
-                        .padding(.horizontal, 20)
+                        .padding(.vertical, 20)
 
                     Divider()
                         .padding(.vertical, 16)
 
                     nodesSection
-                        .padding(.horizontal, 20)
+                        .padding(.vertical, 20)
                         .padding(.bottom, 80)
                 }
             }

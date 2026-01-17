@@ -12,6 +12,7 @@ public protocol WorkflowPlugin {
     var name: String { get }
     var version: String { get }
     var type: String { get }
+    var initParameters: [WorkflowPluginParameter] { get }
     var parameters: [WorkflowPluginParameter] { get }
 }
 

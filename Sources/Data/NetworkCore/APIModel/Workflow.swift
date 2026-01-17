@@ -86,6 +86,7 @@ public struct APIWorkflowNodeInput: WorkflowNodeInput {
     public var url: String?
     public var document: String?
     public var parent_uri: String?
+    public var otherFields: [String: String]?
 
     public init(source: String) {
         self.source = source
@@ -97,6 +98,31 @@ public struct APIWorkflowNodeInput: WorkflowNodeInput {
         self.url = nil
         self.document = nil
         self.parent_uri = nil
+        self.otherFields = nil
+    }
+
+    public init(dict: [String: String]) {
+        self.source = dict["source"] ?? ""
+        self.feed = dict["feed"]
+        self.file_path = dict["file_path"]
+        self.site_name = dict["site_name"]
+        self.site_url = dict["site_url"]
+        self.title = dict["title"]
+        self.url = dict["url"]
+        self.document = dict["document"]
+        self.parent_uri = dict["parent_uri"]
+
+        var otherFields = dict
+        otherFields.removeValue(forKey: "source")
+        otherFields.removeValue(forKey: "feed")
+        otherFields.removeValue(forKey: "file_path")
+        otherFields.removeValue(forKey: "site_name")
+        otherFields.removeValue(forKey: "site_url")
+        otherFields.removeValue(forKey: "title")
+        otherFields.removeValue(forKey: "url")
+        otherFields.removeValue(forKey: "document")
+        otherFields.removeValue(forKey: "parent_uri")
+        self.otherFields = otherFields.isEmpty ? nil : otherFields
     }
 
     init(from dto: WorkflowNodeInputDTO?) {
@@ -109,6 +135,7 @@ public struct APIWorkflowNodeInput: WorkflowNodeInput {
         self.url = dto?.url
         self.document = dto?.document
         self.parent_uri = dto?.parent_uri
+        self.otherFields = nil
     }
 }
 
