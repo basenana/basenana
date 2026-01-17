@@ -27,6 +27,7 @@ public class DocumentListViewModel {
     var unreadDocumentsAppeared: [String: AppearedDocument] = [:]  // URI -> AppearedDocument
 
     var isLoading: Bool = false
+    var isLoadingMore: Bool = false
     var page: Int = 1
     var pageSize: Int = 10
     var hasMore = true
@@ -180,6 +181,7 @@ public class DocumentListViewModel {
         self.page = 1
         self.hasMore = true
         self.isLoading = false
+        self.isLoadingMore = false
         Self.logger.info("reinit main documents: current cached \(self.sectionDocuments.count)")
         sectionDocuments.removeAll()
         documentsSectionMap.removeAll()
@@ -189,10 +191,11 @@ public class DocumentListViewModel {
     }
 
     func loadNextPage() async {
-        guard !isLoading && hasMore else { return }
+        guard !isLoading && hasMore && !isLoadingMore else { return }
 
         Self.logger.info("load next page, page=\(self.page)")
         isLoading = true
+        isLoadingMore = true
 
         let nextPage = await listNextPage()
         Self.logger.info("list document len \(nextPage.count)")
@@ -202,6 +205,7 @@ public class DocumentListViewModel {
         }
 
         isLoading = false
+        isLoadingMore = false
     }
 
     func listNextPage() async -> [EntryInfo] {

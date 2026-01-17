@@ -15,25 +15,37 @@ import Domain
 public struct NavigationListView: View {
     @State var viewModel: DocumentListViewModel
     @State var selection: DocumentItem?
-    
+    @State private var loadingId: Int = 0
+
     public init(viewModel: DocumentListViewModel) {
         self.viewModel = viewModel
     }
-    
+
     public var body: some View {
         NavigationView() {
             List(selection: $selection) {
-                ForEach(viewModel.sectionDocuments){ section in
+                ForEach(viewModel.sectionDocuments) { section in
                     DocumentListSectionView(section: section, viewModel: viewModel)
                 }
+
                 if viewModel.hasMore {
-                    LoadingView()
-                        .environment(\.documentListViewModel, viewModel)
+                    ProgressView()
+                        .padding(.vertical)
+                        .id(loadingId)
+                        .scaleEffect(0.8)
+                        .frame(maxWidth: .infinity)
+                        .onAppear {
+                            Task {
+                                await viewModel.loadNextPage()
+                                await viewModel.setAllAppearedDocumentRead()
+                                loadingId += 1
+                            }
+                        }
                 }
             }
             .frame(minWidth: 300)
             .toolbar(removing: .sidebarToggle)
-            
+
             if let doc = selection {
                 DocumentReadView(viewModel: DocumentReadViewModel(
                     uri: doc.uri,

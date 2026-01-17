@@ -14,22 +14,34 @@ import Domain
 
 public struct MasonryListView: View {
     @State var viewModel: DocumentListViewModel
-    
+    @State private var loadingId: Int = 0
+
     public init(viewModel: DocumentListViewModel) {
         self.viewModel = viewModel
     }
-    
+
     public var body: some View {
         VStack {
             ScrollView(.vertical) {
-                ForEach(viewModel.sectionDocuments){ section in
-                    MasonrySectionView(section: section, viewModel: viewModel)
-                        .padding(.horizontal, 20)
-                }
                 LazyVStack {
+                    ForEach(viewModel.sectionDocuments) { section in
+                        MasonrySectionView(section: section, viewModel: viewModel)
+                            .padding(.horizontal, 20)
+                    }
+
                     if viewModel.hasMore {
-                        LoadingView()
-                            .environment(\.documentListViewModel, viewModel)
+                        ProgressView()
+                            .padding(.vertical)
+                            .id(loadingId)
+                            .scaleEffect(0.8)
+                            .frame(maxWidth: .infinity)
+                            .onAppear {
+                                Task {
+                                    await viewModel.loadNextPage()
+                                    await viewModel.setAllAppearedDocumentRead()
+                                    loadingId += 1
+                                }
+                            }
                     } else {
                         MasonryListReadAllView(viewModel: viewModel)
                     }

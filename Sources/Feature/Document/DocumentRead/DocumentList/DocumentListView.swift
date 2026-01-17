@@ -90,27 +90,6 @@ extension EnvironmentValues {
     }
 }
 
-struct LoadingView: View {
-    @Environment(\.documentListViewModel) var viewModel
-
-    var body: some View {
-        HStack(alignment: .center){
-            Spacer()
-            Text("☁️Loading ...")
-                .padding(.vertical)
-                .onAppear{
-                    Task {
-                        print("loading more documents")
-                        await viewModel?.loadNextPage()
-                        await viewModel?.setAllAppearedDocumentRead()
-                    }
-                }
-            Spacer()
-        }
-    }
-}
-
-
 enum ListViewKind {
     case Masonry
     case Navigation
