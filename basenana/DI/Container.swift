@@ -69,6 +69,9 @@ class DIContainer {
         self.c.register(WorkflowDetailViewModel.self) { r, wfID in
             WorkflowDetailViewModel(workflow: wfID, store: state, usecase: r.resolve(WorkflowUseCaseProtocol.self)!)
         }
+        self.c.register(WorkflowCreateViewModel.self) { r in
+            WorkflowCreateViewModel(usecase: r.resolve(WorkflowUseCaseProtocol.self)!)
+        }
         self.c.register(SearchViewModel.self) { r in
             SearchViewModel(store: state, usecase: r.resolve(DocumentUseCaseProtocol.self)!)
         }

@@ -32,6 +32,7 @@ public enum Destination: Identifiable, Hashable {
     case groupList(groupUri: String)
     case workflowDashboard
     case workflowDetail(workflow: String)
+    case workflowCreate
     case fridayChat
     case searchDocuments
 
@@ -47,6 +48,8 @@ public enum Destination: Identifiable, Hashable {
             return "workflowDashboard"
         case .workflowDetail(workflow: let workflow):
             return "workflowDetail_\(workflow)"
+        case .workflowCreate:
+            return "workflowCreate"
         case .fridayChat:
             return "fridayChat"
         case .searchDocuments:

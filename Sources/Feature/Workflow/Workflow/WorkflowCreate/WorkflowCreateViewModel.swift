@@ -80,7 +80,7 @@ public class WorkflowCreateViewModel {
     private let usecase: any WorkflowUseCaseProtocol
     private let onCreated: ((Workflow) -> Void)?
 
-    init(usecase: any WorkflowUseCaseProtocol, onCreated: ((Workflow) -> Void)? = nil) {
+    public init(usecase: any WorkflowUseCaseProtocol, onCreated: ((Workflow) -> Void)? = nil) {
         self.usecase = usecase
         self.onCreated = onCreated
     }

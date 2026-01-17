@@ -47,6 +47,8 @@ struct StackContentView: View {
                             WorkflowListView(viewModel: container.c.resolve(WorkflowListViewModel.self)!)
                         case .workflowDetail(workflow: let workflow):
                             WorkflowDetailView(viewModel: container.c.resolve(WorkflowDetailViewModel.self, argument: workflow)!).id(workflow)
+                        case .workflowCreate:
+                            WorkflowCreateView(viewModel: container.c.resolve(WorkflowCreateViewModel.self)!)
                         case .searchDocuments:
                             SearchView(search: searchContent, viewModel: container.c.resolve(SearchViewModel.self)!)
                         default:

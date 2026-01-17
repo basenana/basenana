@@ -25,7 +25,6 @@ enum HealthStatus {
 
 public struct WorkflowListView: View {
     @State private var viewModel: WorkflowListViewModel
-    @State private var showCreateWorkflow: Bool = false
 
     public init(viewModel: WorkflowListViewModel) {
         self.viewModel = viewModel
@@ -43,21 +42,11 @@ public struct WorkflowListView: View {
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button {
-                    showCreateWorkflow = true
+                    gotoDestination(.workflowCreate)
                 } label: {
                     Label("Create Workflow", systemImage: "plus")
                 }
             }
-        }
-        .sheet(isPresented: $showCreateWorkflow) {
-            WorkflowCreateView(
-                viewModel: WorkflowCreateViewModel(
-                    usecase: viewModel.usecase,
-                    onCreated: { _ in
-                        Task { await viewModel.initWorkflows() }
-                    }
-                )
-            )
         }
     }
 

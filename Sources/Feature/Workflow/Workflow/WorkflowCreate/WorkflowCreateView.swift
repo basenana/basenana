@@ -1,6 +1,6 @@
 //
 //  WorkflowCreateView.swift
-//  Workflow
+//  Feature
 //
 //  Created by Hypo on 2025/1/17.
 //
@@ -12,74 +12,118 @@ import Styleguide
 public struct WorkflowCreateView: View {
     @State private var viewModel: WorkflowCreateViewModel
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.colorScheme) private var colorScheme
 
-    public init(viewModel: WorkflowCreateViewModel) {
+    private let onCreated: (() -> Void)?
+
+    public init(viewModel: WorkflowCreateViewModel, onCreated: (() -> Void)? = nil) {
         self.viewModel = viewModel
+        self.onCreated = onCreated
     }
 
     public var body: some View {
         VStack(spacing: 0) {
             headerView
 
-            Form {
-                basicInfoSection
-                inputParametersSection
-                nodesSection
+            ScrollView {
+                VStack(spacing: 0) {
+                    basicInfoSection
+                        .padding(.horizontal, 20)
+                        .padding(.top, 16)
+
+                    Divider()
+                        .padding(.vertical, 16)
+
+                    inputParametersSection
+                        .padding(.horizontal, 20)
+
+                    Divider()
+                        .padding(.vertical, 16)
+
+                    nodesSection
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 80)
+                }
             }
-            .formStyle(.grouped)
 
             Divider()
 
             footerView
+                .padding(.horizontal, 20)
+                .padding(.vertical, 12)
+                .background(colorScheme == .dark ? Color(white: 0.12) : Color(white: 0.95))
         }
-        .frame(minWidth: 700, minHeight: 600)
+        .frame(minWidth: 800, minHeight: 700)
+        .navigationTitle("Create Workflow")
         .task { await viewModel.loadPlugins() }
         .onChange(of: viewModel.dismiss) { _, newValue in
             if newValue {
-                dismiss()
+                onCreated?()
+                dismiss.callAsFunction()
             }
         }
     }
 
     private var headerView: some View {
         HStack {
-            Text("Create Workflow")
-                .font(.headline)
-
-            Spacer()
-
             Button {
                 dismiss()
             } label: {
-                Image(systemName: "xmark.circle.fill")
-                    .foregroundColor(.secondary)
+                Label("Back", systemImage: "chevron.left")
+                    .font(.subheadline)
             }
             .buttonStyle(.plain)
+
+            Spacer()
         }
-        .padding()
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(colorScheme == .dark ? Color(white: 0.15) : Color.white)
     }
 
     private var basicInfoSection: some View {
-        Section("Basic Info") {
-            TextField("Name", text: $viewModel.name)
-                .textFieldStyle(.roundedBorder)
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Basic Info")
+                .font(.headline)
 
-            Toggle("Enable", isOn: $viewModel.enable)
+            HStack(spacing: 16) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Name")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    TextField("Workflow Name", text: $viewModel.name)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(width: 300)
+                }
+
+                Toggle("Enable", isOn: $viewModel.enable)
+                    .padding(.top, 22)
+            }
         }
     }
 
     private var inputParametersSection: some View {
-        Section("Trigger Input Parameters (\(viewModel.inputParameters.count))") {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Trigger Input Parameters")
+                    .font(.headline)
+
+                Text("(\(viewModel.inputParameters.count))")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+
             if viewModel.inputParameters.isEmpty {
                 Text("No input parameters defined. Add parameters to allow users to provide input when triggering the workflow.")
-                    .foregroundColor(.secondary)
                     .font(.caption)
+                    .foregroundColor(.secondary)
+                    .padding(.vertical, 8)
             } else {
-                ForEach($viewModel.inputParameters) { $param in
-                    inputParamRow(for: $param)
-                }
-                .onDelete { offsets in
-                    viewModel.removeInputParameter(at: offsets)
+                VStack(spacing: 8) {
+                    ForEach($viewModel.inputParameters) { $param in
+                        inputParamRow(for: $param)
+                    }
                 }
             }
 
@@ -87,7 +131,9 @@ public struct WorkflowCreateView: View {
                 viewModel.addInputParameter()
             } label: {
                 Label("Add Parameter", systemImage: "plus.circle")
+                    .font(.subheadline)
             }
+            .padding(.top, 4)
         }
     }
 
@@ -103,39 +149,69 @@ public struct WorkflowCreateView: View {
             Toggle("Required", isOn: param.required)
                 .labelsHidden()
                 .frame(width: 60)
+
+            Button {
+                if let index = viewModel.inputParameters.firstIndex(where: { $0.id == param.id.wrappedValue }) {
+                    viewModel.removeInputParameter(at: IndexSet(integer: index))
+                }
+            } label: {
+                Image(systemName: "trash")
+                    .foregroundColor(.red)
+            }
+            .buttonStyle(.plain)
         }
     }
 
     private var nodesSection: some View {
-        Section("Nodes (\(viewModel.nodes.count))") {
-            if viewModel.nodes.isEmpty {
-                Text("No nodes added. Click 'Add Node' to start building your workflow.")
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Nodes")
+                    .font(.headline)
+
+                Text("(\(viewModel.nodes.count))")
+                    .font(.subheadline)
                     .foregroundColor(.secondary)
-            } else {
-                ForEach(Array($viewModel.nodes.enumerated()), id: \.element.id) { index, $node in
-                    NodeCardView(
-                        nodeIndex: index,
-                        node: $node,
-                        isExpanded: viewModel.isNodeExpanded(node.id),
-                        onToggleExpanded: {
-                            viewModel.toggleNodeExpanded(node.id)
-                        },
-                        onRemove: {
-                            viewModel.removeNode(at: IndexSet(integer: index))
-                        },
-                        availableNodeNames: viewModel.availableNodeNames,
-                        availableNodeTypes: viewModel.allNodeTypes
-                    )
-                }
-                .onDelete { offsets in
-                    viewModel.removeNode(at: offsets)
-                }
             }
 
-            Button {
-                viewModel.addNode()
-            } label: {
-                Label("Add Node", systemImage: "plus.circle")
+            if viewModel.nodes.isEmpty {
+                VStack(spacing: 8) {
+                    Text("No nodes added")
+                        .foregroundColor(.secondary)
+
+                    Button {
+                        viewModel.addNode()
+                    } label: {
+                        Label("Add Node", systemImage: "plus.circle")
+                            .font(.subheadline)
+                    }
+                }
+                .padding(.vertical, 16)
+            } else {
+                VStack(spacing: 12) {
+                    ForEach(Array($viewModel.nodes.enumerated()), id: \.element.id) { index, $node in
+                        WorkflowCreateNodeCard(
+                            nodeIndex: index,
+                            node: $node,
+                            isExpanded: viewModel.isNodeExpanded(node.id),
+                            onToggleExpanded: {
+                                viewModel.toggleNodeExpanded(node.id)
+                            },
+                            onRemove: {
+                                viewModel.removeNode(at: IndexSet(integer: index))
+                            },
+                            availableNodeNames: viewModel.availableNodeNames,
+                            availableNodeTypes: viewModel.allNodeTypes
+                        )
+                    }
+                }
+
+                Button {
+                    viewModel.addNode()
+                } label: {
+                    Label("Add Node", systemImage: "plus.circle")
+                        .font(.subheadline)
+                        .padding(.top, 8)
+                }
             }
         }
     }
@@ -155,7 +231,6 @@ public struct WorkflowCreateView: View {
             } label: {
                 Text("Cancel")
             }
-            .keyboardShortcut(.escape)
 
             Button {
                 Task {
@@ -171,57 +246,31 @@ public struct WorkflowCreateView: View {
             }
             .buttonStyle(.borderedProminent)
             .disabled(viewModel.isCreating)
-            .keyboardShortcut(.return, modifiers: [.command])
         }
-        .padding()
     }
 }
 
 #Preview {
-    WorkflowCreateView(
-        viewModel: WorkflowCreateViewModel(
-            usecase: MockWorkflowUseCase(),
-            onCreated: nil
+    NavigationStack {
+        WorkflowCreateView(
+            viewModel: WorkflowCreateViewModel(
+                usecase: MockWorkflowUseCase(),
+                onCreated: nil
+            )
         )
-    )
+    }
 }
 
 // MARK: - Mock UseCase for Preview
 
 private class MockWorkflowUseCase: WorkflowUseCaseProtocol {
-    func listWorkflows(page: Int64?, pageSize: Int64?, sort: String?, order: String?) async throws -> [any Domain.Workflow] {
-        []
-    }
-
-    func getWorkflow(id: String) async throws -> Domain.Workflow {
-        fatalError()
-    }
-
-    func createWorkflow(option: Domain.WorkflowCreationOption) async throws -> Domain.Workflow {
-        fatalError()
-    }
-
-    func listWorkflowJobs(workflow: String, status: [Domain.WorkflowJobStatus]?, page: Int64?, pageSize: Int64?, sort: String?, order: String?) async throws -> [any Domain.WorkflowJob] {
-        []
-    }
-
-    func triggerWorkflow(_ workflow: String, option: Domain.WorkflowJobOption) async throws -> Domain.WorkflowJob {
-        fatalError()
-    }
-
-    func pauseWorkflowJob(workflowId: String, jobId: String) async throws {
-        fatalError()
-    }
-
-    func resumeWorkflowJob(workflowId: String, jobId: String) async throws {
-        fatalError()
-    }
-
-    func cancelWorkflowJob(workflowId: String, jobId: String) async throws {
-        fatalError()
-    }
-
-    func listWorkflowPlugins() async throws -> [any Domain.WorkflowPlugin] {
-        []
-    }
+    func listWorkflows(page: Int64?, pageSize: Int64?, sort: String?, order: String?) async throws -> [Workflow] { [] }
+    func getWorkflow(id: String) async throws -> Workflow { fatalError() }
+    func createWorkflow(option: WorkflowCreationOption) async throws -> Workflow { fatalError() }
+    func listWorkflowJobs(workflow: String, status: [WorkflowJobStatus]?, page: Int64?, pageSize: Int64?, sort: String?, order: String?) async throws -> [WorkflowJob] { [] }
+    func triggerWorkflow(_ workflow: String, option: WorkflowJobOption) async throws -> WorkflowJob { fatalError() }
+    func pauseWorkflowJob(workflowId: String, jobId: String) async throws {}
+    func resumeWorkflowJob(workflowId: String, jobId: String) async throws {}
+    func cancelWorkflowJob(workflowId: String, jobId: String) async throws {}
+    func listWorkflowPlugins() async throws -> [WorkflowPlugin] { [] }
 }
