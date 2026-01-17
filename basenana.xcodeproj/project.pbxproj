@@ -112,6 +112,7 @@
 		90D801535A21EDB321D987E4 /* WebPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28323CD95D5898C23118BDB2 /* WebPage.swift */; };
 		923378394A21AFE1705E95E0 /* PaperFlowUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121C7856F4715764CB85C8FE /* PaperFlowUseCase.swift */; };
 		9569A312F9C6775FEDCAF359 /* WorkflowListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64CF059CD92240EC9DEE1C3 /* WorkflowListViewModel.swift */; };
+		9A322A2AC3715F1B31A8D42D /* WorkflowCreateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F56D913C7E8B9B54FEDFF95 /* WorkflowCreateViewModel.swift */; };
 		9B01911ABE00CAC7FE57E5AF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0340577D9E86441750464F8 /* Preview Assets.xcassets */; };
 		9C840D9D559E890C6ECF4B73 /* EntriesClientProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3895003917E3C728B53E2A /* EntriesClientProtocol.swift */; };
 		A0A8A78148E4396081F51908 /* StackContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA8CD959D8ACDAAF77B7AE5 /* StackContentView.swift */; };
@@ -125,6 +126,7 @@
 		A542B8436AFA0B2CA77CF49F /* Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648150261D2E0A4C570E467E /* Job.swift */; };
 		A55232ED4094C1C4007B6CA0 /* ConfigClientProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E20681B3D94F6A16885835 /* ConfigClientProtocol.swift */; };
 		A6740F0B85747E2FC8466379 /* Feature.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 319551FAA79DEFE5AF5AB595 /* Feature.framework */; };
+		A7794E2A9A2491228058577C /* WorkflowCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62135E4C4BE05E6257E0F3AD /* WorkflowCreateView.swift */; };
 		A79CAFD33DACCA3921B7814F /* RestAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4102A3A954C732955F4E109A /* RestAPIClient.swift */; };
 		AABF08671B126D6B9122503F /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AC6B9C9CD95D2E1D3AF31DA /* WebArchiver.swift */; };
 		AB5A1F3D1E0FD0FEF579FF40 /* EntryRenameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F3B7EB3BF06DB063D8B6D2 /* EntryRenameView.swift */; };
@@ -188,6 +190,7 @@
 		EFAF947A70DDCBA03F8F2772 /* DocumentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12FCBE010D7E95D1638C2F4 /* DocumentListViewModel.swift */; };
 		F4F1D4220EA4688A8B6F0091 /* Workflow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F76088500B33FC10D8BB6F /* Workflow.swift */; };
 		F5ED763A16F877FFC8E913A5 /* TreeMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 290D734607762564CAE0E07F /* TreeMenuView.swift */; };
+		F83B353EB04A3BC0C23D7566 /* WorkflowCreateViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC309E08BF93114E8F98810 /* WorkflowCreateViewModelTests.swift */; };
 		F8B6E298B50E5DDCC616A5BA /* WorkflowJobStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B71DE558168EEBBC9EF98D5 /* WorkflowJobStatus.swift */; };
 		FA11ED88F3A3C288AB503A71 /* WorkflowDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E442A0BBA0690922CB469040 /* WorkflowDetailViewModel.swift */; };
 		FC4B9CA76D77EA6DA05C2FD1 /* EntriesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1387F1B43725137ED23BCAA7 /* EntriesClient.swift */; };
@@ -346,6 +349,7 @@
 		06386DF72A2AEA378B29253B /* WebHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebHelper.swift; sourceTree = "<group>"; };
 		08E63667B92ACC2CA7505982 /* Datetime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Datetime.swift; sourceTree = "<group>"; };
 		0A05E8FD2F80AAB23C669140 /* URLSchema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSchema.swift; sourceTree = "<group>"; };
+		0AC309E08BF93114E8F98810 /* WorkflowCreateViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowCreateViewModelTests.swift; sourceTree = "<group>"; };
 		0BA6FB97F8CD1AB40782C5FD /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		0C47D6DE38AF89FE862B68A1 /* EntryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryRepository.swift; sourceTree = "<group>"; };
 		0C85CEF539C22675CD463EF2 /* WorkflowUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowUseCaseProtocol.swift; sourceTree = "<group>"; };
@@ -413,6 +417,7 @@
 		5E92A0F052FAE0CBDE42F703 /* EntryMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryMenuView.swift; sourceTree = "<group>"; };
 		5F8CAE33B64B9B4816CF1958 /* NotifyClientProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifyClientProtocol.swift; sourceTree = "<group>"; };
 		61C39D688625B40A5838FF67 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		62135E4C4BE05E6257E0F3AD /* WorkflowCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowCreateView.swift; sourceTree = "<group>"; };
 		62E20681B3D94F6A16885835 /* ConfigClientProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigClientProtocol.swift; sourceTree = "<group>"; };
 		648150261D2E0A4C570E467E /* Job.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Job.swift; sourceTree = "<group>"; };
 		6697571B10FCD4FBA8C374A2 /* NotifyUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifyUseCaseProtocol.swift; sourceTree = "<group>"; };
@@ -442,6 +447,7 @@
 		897186F752E5F04AF99AA48D /* GroupTableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupTableViewModel.swift; sourceTree = "<group>"; };
 		899AC46E70E64BA9EF848E6C /* readability_initialization.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = readability_initialization.js; sourceTree = "<group>"; };
 		8C0EDBD874FD5179F523977C /* Setting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setting.swift; sourceTree = "<group>"; };
+		8F56D913C7E8B9B54FEDFF95 /* WorkflowCreateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowCreateViewModel.swift; sourceTree = "<group>"; };
 		8F60A6A34F384CBB1EFA8F6C /* NavigationSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSectionView.swift; sourceTree = "<group>"; };
 		903DB521758241DD19BFD5EF /* WorkflowListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowListView.swift; sourceTree = "<group>"; };
 		910F0020EB464D1A284B8C21 /* SettingCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCategory.swift; sourceTree = "<group>"; };
@@ -1039,6 +1045,15 @@
 			path = ContentWrap;
 			sourceTree = "<group>";
 		};
+		845C8F70E4C1B3E3E621705B /* WorkflowCreate */ = {
+			isa = PBXGroup;
+			children = (
+				62135E4C4BE05E6257E0F3AD /* WorkflowCreateView.swift */,
+				8F56D913C7E8B9B54FEDFF95 /* WorkflowCreateViewModel.swift */,
+			);
+			path = WorkflowCreate;
+			sourceTree = "<group>";
+		};
 		892A0911232050E22BBBA721 /* ClientProtocol */ = {
 			isa = PBXGroup;
 			children = (
@@ -1143,6 +1158,7 @@
 			isa = PBXGroup;
 			children = (
 				27B5DA1B36300CAF87C65BD7 /* Entities */,
+				845C8F70E4C1B3E3E621705B /* WorkflowCreate */,
 				756753D2E6A80F1E321058A1 /* WorkflowDetail */,
 				5A96528CC90B8F81B5A1F5E3 /* WorkflowList */,
 			);
@@ -1231,6 +1247,7 @@
 			isa = PBXGroup;
 			children = (
 				0F1AF8F4EA3DAE41E0E7B67B /* Info.plist */,
+				0AC309E08BF93114E8F98810 /* WorkflowCreateViewModelTests.swift */,
 				2FE26F186529B5466BEC3441 /* DocumentTests */,
 				08BC1A9A5051180BDEAE548E /* EntryTests */,
 				F110286EE6F03B4CD05098C6 /* WorkflowTests */,
@@ -1621,6 +1638,7 @@
 			files = (
 				B0B57AA45AD1ED2FCAAAA6EC /* DocumentTests.swift in Sources */,
 				CBE85F2F5D003B5DD1502323 /* EntryTests.swift in Sources */,
+				F83B353EB04A3BC0C23D7566 /* WorkflowCreateViewModelTests.swift in Sources */,
 				E456A774372E93BBCD641991 /* WorkflowTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1750,6 +1768,8 @@
 				06A8BB1AE6C2B7EAA3A92091 /* WebPackInboxView.swift in Sources */,
 				90D801535A21EDB321D987E4 /* WebPage.swift in Sources */,
 				F4F1D4220EA4688A8B6F0091 /* Workflow.swift in Sources */,
+				A7794E2A9A2491228058577C /* WorkflowCreateView.swift in Sources */,
+				9A322A2AC3715F1B31A8D42D /* WorkflowCreateViewModel.swift in Sources */,
 				386B3E10311EA519A98FF357 /* WorkflowDetailView.swift in Sources */,
 				FA11ED88F3A3C288AB503A71 /* WorkflowDetailViewModel.swift in Sources */,
 				419125E5ADDC1442B9AD1483 /* WorkflowListView.swift in Sources */,
