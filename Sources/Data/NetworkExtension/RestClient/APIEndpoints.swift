@@ -25,6 +25,7 @@ public enum APIEndpoint {
     case entriesProperty(uri: String?, id: Int64?)
     case entriesDocument(uri: String?, id: Int64?)
     case entriesSearch
+    case entriesFriday(uri: String?, id: Int64?)
     case groupsChildren(uri: String?, id: Int64?, page: Int64?, pageSize: Int64?, sort: String?, order: String?)
     case groupsTree
     case filesContent(uri: String?, id: Int64?)
@@ -58,14 +59,18 @@ public enum APIEndpoint {
             return "/api/v1/entries"
         case .entriesSearch:
             return "/api/v1/entries/search"
-        case .entriesUpdate, .entriesDelete:
+        case .entriesUpdate:
             return "/api/v1/entries"
+        case .entriesDelete:
+            return "/api/v1/entries/delete"
         case .entriesParent:
             return "/api/v1/entries/parent"
         case .entriesProperty:
             return "/api/v1/entries/property"
         case .entriesDocument:
             return "/api/v1/entries/document"
+        case .entriesFriday:
+            return "/api/v1/entries/friday"
         case .entriesBatchDelete:
             return "/api/v1/entries/batch-delete"
         case .groupsChildren:
@@ -75,7 +80,7 @@ public enum APIEndpoint {
         case .filesContent:
             return "/api/v1/files/content"
         case .filesUpload:
-            return "/api/v1/files/content"
+            return "/api/v1/files/content/write"
         case .messages(let all):
             if all == true {
                 return "/api/v1/messages?all=true"
@@ -120,15 +125,15 @@ public enum APIEndpoint {
 
     var method: HTTPMethod {
         switch self {
-        case .healthCheck, .entriesDetails, .groupsChildren, .groupsTree, .filesContent, .messages, .workflows, .workflow, .workflowJobs, .workflowJob, .workflowPlugins, .configsGroup, .config:
+        case .healthCheck, .groupsTree, .messages, .workflows, .workflow, .workflowJobs, .workflowJob, .workflowPlugins, .configsGroup, .config:
             return .get
-        case .filesUpload:
+        case .entriesDetails, .entriesProperty, .entriesFriday, .groupsChildren, .filesContent:
             return .post
-        case .entriesCreate, .entriesBatchDelete, .entriesSearch, .messagesRead, .workflowTrigger, .workflowCreate:
+        case .filesUpload, .entriesDelete, .entriesCreate, .entriesBatchDelete, .entriesSearch, .messagesRead, .workflowTrigger, .workflowCreate:
             return .post
-        case .entriesUpdate, .entriesParent, .entriesProperty, .entriesDocument, .workflowUpdate, .configSet:
+        case .entriesUpdate, .entriesParent, .entriesDocument, .workflowUpdate, .configSet:
             return .put
-        case .entriesDelete, .workflowDelete, .configDelete:
+        case .workflowDelete, .configDelete:
             return .delete
         case .workflowJobPause, .workflowJobResume, .workflowJobCancel:
             return .post
@@ -139,32 +144,15 @@ public enum APIEndpoint {
         var items: [URLQueryItem] = []
 
         switch self {
-        case .entriesDetails(let uri, let id), .entriesUpdate(let uri, let id), .entriesDelete(let uri, let id):
-            if let uri = uri { items.append(URLQueryItem(name: "uri", value: encodeURI(uri))) }
-            if let id = id { items.append(URLQueryItem(name: "id", value: String(id))) }
-
-        case .entriesParent(let uri, let id, _):
-            if let uri = uri { items.append(URLQueryItem(name: "uri", value: encodeURI(uri))) }
-            if let id = id { items.append(URLQueryItem(name: "id", value: String(id))) }
-
-        case .entriesProperty(let uri, let id), .entriesDocument(let uri, let id):
-            if let uri = uri { items.append(URLQueryItem(name: "uri", value: encodeURI(uri))) }
-            if let id = id { items.append(URLQueryItem(name: "id", value: String(id))) }
-
         case .entriesSearch:
             break
 
-        case .groupsChildren(let uri, let id, let page, let pageSize, let sort, let order):
-            if let uri = uri { items.append(URLQueryItem(name: "uri", value: encodeURI(uri))) }
-            if let id = id { items.append(URLQueryItem(name: "id", value: String(id))) }
+        case .groupsChildren(_, _, let page, let pageSize, let sort, let order):
+            // uri/id now in body, only pagination params in query
             if let page = page { items.append(URLQueryItem(name: "page", value: String(page))) }
             if let pageSize = pageSize { items.append(URLQueryItem(name: "page_size", value: String(pageSize))) }
             if let sort = sort { items.append(URLQueryItem(name: "sort", value: sort)) }
             if let order = order { items.append(URLQueryItem(name: "order", value: order)) }
-
-        case .filesContent(let uri, let id), .filesUpload(let uri, let id):
-            if let uri = uri { items.append(URLQueryItem(name: "uri", value: encodeURI(uri))) }
-            if let id = id { items.append(URLQueryItem(name: "id", value: String(id))) }
 
         case .messages(let all):
             items.append(URLQueryItem(name: "all", value: String(all)))

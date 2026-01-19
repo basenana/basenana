@@ -41,8 +41,16 @@ struct PropertyWrapperDTO: Decodable {
     let properties: [String: String]?
 }
 
+struct FridayPropertyDTO: Decodable {
+    let summary: String?
+}
+
 struct PropertiesResponse<T: Decodable>: Decodable {
     let properties: T
+}
+
+struct FridayPropertyResponse: Decodable {
+    let property: FridayPropertyDTO
 }
 
 struct DocumentWrapperDTO: Decodable {
@@ -95,7 +103,7 @@ struct CreateEntryRequest: Encodable {
     let kind: String?
     let rss: RSSConfigRequest?
     let filter: FilterRequest?
-    let properties: PropertyRequest?
+    let properties: EntryPropertiesRequest?
     let document: DocumentCreateRequest?
 }
 
@@ -122,11 +130,6 @@ struct DocumentCreateRequest: Encodable {
     let header_image: String?
 }
 
-struct UpdateEntryRequest: Encodable {
-    let name: String?
-    let aliases: String?
-}
-
 struct BatchDeleteRequest: Encodable {
     let uri_list: [String]
 }
@@ -143,12 +146,108 @@ struct ChangeParentRequest: Encodable {
     let exchange: Bool?
 }
 
-struct PropertyRequest: Encodable {
-    let tags: [String]?
-    let properties: [String: String]?
+// MARK: - Entry Selector (for uri/id selection)
+
+public struct EntrySelectorRequest: Encodable {
+    public let uri: String?
+    public let id: Int64?
+
+    public init(uri: String? = nil, id: Int64? = nil) {
+        self.uri = uri
+        self.id = id
+    }
+}
+
+public struct EntryDetailRequest: Encodable {
+    public let uri: String?
+    public let id: Int64?
+
+    public init(uri: String? = nil, id: Int64? = nil) {
+        self.uri = uri
+        self.id = id
+    }
+}
+
+public struct DeleteEntryRequest: Encodable {
+    public let uri: String?
+    public let id: Int64?
+
+    public init(uri: String? = nil, id: Int64? = nil) {
+        self.uri = uri
+        self.id = id
+    }
+}
+
+public struct GroupChildrenRequest: Encodable {
+    public let uri: String?
+    public let id: Int64?
+    public let page: Int64?
+    public let pageSize: Int64?
+    public let sort: String?
+    public let order: String?
+
+    public init(uri: String? = nil, id: Int64? = nil, page: Int64? = nil, pageSize: Int64? = nil, sort: String? = nil, order: String? = nil) {
+        self.uri = uri
+        self.id = id
+        self.page = page
+        self.pageSize = pageSize
+        self.sort = sort
+        self.order = order
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case uri, id, page, sort, order
+        case pageSize = "page_size"
+    }
+}
+
+public struct FileContentRequest: Encodable {
+    public let uri: String?
+    public let id: Int64?
+
+    public init(uri: String? = nil, id: Int64? = nil) {
+        self.uri = uri
+        self.id = id
+    }
+}
+
+public struct FridayPropertyRequest: Encodable {
+    public let uri: String?
+    public let id: Int64?
+
+    public init(uri: String? = nil, id: Int64? = nil) {
+        self.uri = uri
+        self.id = id
+    }
+}
+
+public struct PropertyRequest: Encodable {
+    public let uri: String?
+    public let id: Int64?
+    public let tags: [String]?
+    public let properties: [String: String]?
+}
+
+public struct EntryPropertiesRequest: Encodable {
+    public let tags: [String]?
+    public let properties: [String: String]?
+}
+
+public struct UpdateEntryRequest: Encodable {
+    public let uri: String?
+    public let name: String?
+    public let aliases: String?
+
+    public init(uri: String? = nil, name: String? = nil, aliases: String? = nil) {
+        self.uri = uri
+        self.name = name
+        self.aliases = aliases
+    }
 }
 
 struct DocumentRequest: Encodable {
+    let uri: String?
+    let id: Int64?
     let title: String?
     let author: String?
     let year: String?
@@ -163,11 +262,6 @@ struct DocumentRequest: Encodable {
     let unread: Bool?
     let marked: Bool?
     let publish_at: Int64?
-
-    enum CodingKeys: String, CodingKey {
-        case title, author, year, source, abstract, notes, keywords,
-             url, site_name, site_url, header_image, unread, marked, publish_at
-    }
 }
 
 struct SearchRequest: Encodable {

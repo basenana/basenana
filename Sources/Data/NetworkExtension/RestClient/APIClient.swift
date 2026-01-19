@@ -113,7 +113,26 @@ final public class APIClient {
         return data
     }
 
-    func uploadFile(_ endpoint: APIEndpoint, fileData: Data, fileName: String, mimeType: String) async throws -> Data {
+    public func requestData<B: Encodable>(_ endpoint: APIEndpoint, body: B) async throws -> Data {
+        var request = try buildRequest(endpoint)
+        request.httpBody = try JSONEncoder.encodeWithNilOmit(body)
+        let (data, response) = try await performRequestWithTimeout(request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            Self.logger.error("invalid response type")
+            throw APIError.networkError(NSError(domain: "APIClient", code: -1))
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            let message = String(data: data, encoding: .utf8) ?? "nil"
+            Self.logger.error("HTTP \(httpResponse.statusCode): \(message)")
+            throw APIError.httpError(statusCode: httpResponse.statusCode, message: message)
+        }
+
+        return data
+    }
+
+    func uploadFile(_ endpoint: APIEndpoint, fileData: Data, fileName: String, mimeType: String, uri: String? = nil, id: Int64? = nil) async throws -> Data {
         var request = try buildRequest(endpoint)
 
         let boundary = UUID().uuidString
@@ -124,7 +143,23 @@ final public class APIClient {
         body.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
         body.append("Content-Type: \(mimeType)\r\n\r\n".data(using: .utf8)!)
         body.append(fileData)
-        body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+        body.append("\r\n".data(using: .utf8)!)
+
+        // Add uri as form field
+        if let uri = uri {
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"uri\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(uri)\r\n".data(using: .utf8)!)
+        }
+
+        // Add id as form field
+        if let id = id {
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"id\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(id)\r\n".data(using: .utf8)!)
+        }
+
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
 
         request.httpBody = body
 

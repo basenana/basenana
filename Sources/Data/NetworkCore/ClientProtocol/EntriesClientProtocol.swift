@@ -24,6 +24,7 @@ public protocol EntriesClientProtocol {
 
     // entry properties
     func SetProperties(entry: Int64, tags: [String]?, properties: [String: String]?) async throws
+    func GetFridayProperty(uri: String) async throws -> String
 
     // document operations
     func SearchEntries(celPattern: String, page: Int?, pageSize: Int?, sort: String?, order: String?) async throws -> [any EntryInfo]

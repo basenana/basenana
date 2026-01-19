@@ -86,8 +86,10 @@ struct LoginView: View {
             restAPIClient!.apiClient.requestTimeout = 30
 
             // Get fsInfo by querying root entry
+            let request = EntryDetailRequest(uri: "/", id: nil)
             let rootResponse: RootEntryResponse = try await restAPIClient!.apiClient.request(
-                .entriesDetails(uri: "/", id: nil),
+                .entriesDetails(uri: nil, id: nil),
+                body: request,
                 responseType: RootEntryResponse.self
             )
 

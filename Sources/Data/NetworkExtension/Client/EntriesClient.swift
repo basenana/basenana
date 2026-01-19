@@ -22,8 +22,10 @@ public class EntriesClient: EntriesClientProtocol {
     }
 
     public func RootEntry() async throws -> APIEntryDetail {
+        let request = EntryDetailRequest(uri: "/", id: nil)
         let response: EntryDetailResponse = try await apiClient.request(
-            .entriesDetails(uri: "/", id: nil),
+            .entriesDetails(uri: nil, id: nil),
+            body: request,
             responseType: EntryDetailResponse.self
         )
         return response.entry.toAPIEntryDetail()
@@ -31,16 +33,20 @@ public class EntriesClient: EntriesClientProtocol {
 
     public func FindEntry(parentUri: String, name: String) async throws -> APIEntryDetail {
         let uri = "\(parentUri)/\(name)"
+        let request = EntryDetailRequest(uri: uri, id: nil)
         let response: EntryDetailResponse = try await apiClient.request(
-            .entriesDetails(uri: uri, id: nil),
+            .entriesDetails(uri: nil, id: nil),
+            body: request,
             responseType: EntryDetailResponse.self
         )
         return response.entry.toAPIEntryDetail()
     }
 
     public func GetEntryDetail(uri: String) async throws -> APIEntryDetail {
+        let request = EntryDetailRequest(uri: uri, id: nil)
         let response: EntryDetailResponse = try await apiClient.request(
-            .entriesDetails(uri: uri, id: nil),
+            .entriesDetails(uri: nil, id: nil),
+            body: request,
             responseType: EntryDetailResponse.self
         )
         return response.entry.toAPIEntryDetail()
@@ -57,7 +63,7 @@ public class EntriesClient: EntriesClientProtocol {
                 file_type: $0.fileType.option()
             )},
             filter: nil,
-            properties: PropertyRequest(tags: entry.tags, properties: entry.properties),
+            properties: EntryPropertiesRequest(tags: entry.tags, properties: entry.properties),
             document: entry.document.map { DocumentCreateRequest(
                 title: $0.title,
                 author: $0.author,
@@ -80,10 +86,10 @@ public class EntriesClient: EntriesClientProtocol {
     }
 
     public func UpdateEntry(uri: String, name: String?) async throws -> APIEntryDetail {
-        let request = UpdateEntryRequest(name: name, aliases: nil)
+        let request = UpdateEntryRequest(uri: uri, name: name, aliases: nil)
 
         let response: EntryDetailResponse = try await apiClient.request(
-            .entriesUpdate(uri: uri, id: nil),
+            .entriesUpdate(uri: nil, id: nil),
             body: request,
             responseType: EntryDetailResponse.self
         )
@@ -100,15 +106,17 @@ public class EntriesClient: EntriesClientProtocol {
     }
 
     public func ListGroupChildren(parentUri: String, page: Int?, pageSize: Int?, sort: String?, order: String?) async throws -> [any EntryInfo] {
+        let request = GroupChildrenRequest(
+            uri: parentUri,
+            id: nil,
+            page: page.map { Int64($0) },
+            pageSize: pageSize.map { Int64($0) },
+            sort: sort,
+            order: order
+        )
         let response: EntriesResponse = try await apiClient.request(
-            .groupsChildren(
-                uri: parentUri,
-                id: nil,
-                page: page.map { Int64($0) },
-                pageSize: pageSize.map { Int64($0) },
-                sort: sort,
-                order: order
-            ),
+            .groupsChildren(uri: nil, id: nil, page: nil, pageSize: nil, sort: nil, order: nil),
+            body: request,
             responseType: EntriesResponse.self
         )
 
@@ -124,16 +132,21 @@ public class EntriesClient: EntriesClientProtocol {
         )
 
         _ = try await apiClient.request(
-            .entriesParent(uri: uri, id: nil, newUri: newEntryUri),
+            .entriesParent(uri: nil, id: nil, newUri: newEntryUri),
             body: request,
             responseType: EntryDetailResponse.self
         )
     }
 
     public func SetProperties(entry: Int64, tags: [String]?, properties: [String: String]?) async throws {
-        let request = PropertyRequest(tags: tags, properties: properties)
+        let request = PropertyRequest(
+            uri: nil,
+            id: entry,
+            tags: tags,
+            properties: properties
+        )
         _ = try await apiClient.request(
-            .entriesProperty(uri: nil, id: entry),
+            .entriesProperty(uri: nil, id: nil),
             body: request,
             responseType: PropertiesResponse<PropertyWrapperDTO>.self
         )
@@ -159,6 +172,8 @@ public class EntriesClient: EntriesClientProtocol {
 
     public func UpdateDocumentByURI(uri: String, update: DocumentUpdate) async throws {
         let request = DocumentRequest(
+            uri: uri,
+            id: nil,
             title: update.title,
             author: update.author,
             year: update.year,
@@ -175,10 +190,20 @@ public class EntriesClient: EntriesClientProtocol {
             publish_at: nil
         )
         _ = try await apiClient.request(
-            .entriesDocument(uri: uri, id: nil),
+            .entriesDocument(uri: nil, id: nil),
             body: request,
             responseType: PropertiesResponse<DocumentWrapperDTO>.self
         )
+    }
+
+    public func GetFridayProperty(uri: String) async throws -> String {
+        let request = FridayPropertyRequest(uri: uri, id: nil)
+        let response: FridayPropertyResponse = try await apiClient.request(
+            .entriesFriday(uri: nil, id: nil),
+            body: request,
+            responseType: FridayPropertyResponse.self
+        )
+        return response.property.summary ?? ""
     }
 
     // MARK: - Private Helpers
