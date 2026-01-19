@@ -23,8 +23,10 @@ public struct DocumentReadView: View {
     public var body: some View {
         VStack {
             if viewModel.isLoading {
-                Text("Loading")
+                Text("downloading...")
                     .font(.title)
+                    .fontWeight(.thin)
+                    .foregroundColor(.gray)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if let fileURL = viewModel.cachedFileURL {
                 switch viewModel.fileType {

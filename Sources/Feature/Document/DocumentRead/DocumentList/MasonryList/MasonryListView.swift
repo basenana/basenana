@@ -23,12 +23,12 @@ public struct MasonryListView: View {
     public var body: some View {
         VStack {
             ScrollView(.vertical) {
-                LazyVStack {
-                    ForEach(viewModel.sectionDocuments) { section in
-                        MasonrySectionView(section: section, viewModel: viewModel)
-                            .padding(.horizontal, 20)
-                    }
+                ForEach(viewModel.sectionDocuments) { section in
+                    MasonrySectionView(section: section, viewModel: viewModel)
+                        .padding(.horizontal, 20)
+                }
 
+                LazyVStack{
                     if viewModel.hasMore {
                         ProgressView()
                             .padding(.vertical)
