@@ -51,7 +51,7 @@ public class SearchViewModel {
         Self.logger.info("ready to list next page document, page=\(self.page)")
         var nextPageList: [DocumentSearchItem] = []
         do {
-            let nextDocuments = try await usecase.searchDocuments(search: search, page: page, pageSize: pageSize)
+            let nextDocuments = try await usecase.filterDocuments(search: search, page: page, pageSize: pageSize)
 
             if nextDocuments.isEmpty || pageSize > nextDocuments.count {
                 Self.logger.info("no more documents, page=\(self.page)")

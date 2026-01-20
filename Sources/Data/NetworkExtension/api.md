@@ -217,7 +217,7 @@ Create a new entry.
 }
 ```
 
-#### POST /api/v1/entries/search
+#### POST /api/v1/entries/filter
 
 Filter entries using CEL (Common Expression Language) patterns.
 

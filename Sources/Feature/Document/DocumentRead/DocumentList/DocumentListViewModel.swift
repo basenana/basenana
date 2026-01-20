@@ -162,6 +162,14 @@ public class DocumentListViewModel {
         }
     }
 
+    func setAllDocumentRead() async {
+        for section in sectionDocuments {
+            for document in section.documents where document.isUnread {
+                await setDocumentReadStatus(uri: document.uri, isUnread: false)
+            }
+        }
+    }
+
     // MARK: document hook
 
     func disableHooks() {

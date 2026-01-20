@@ -24,7 +24,7 @@ public enum APIEndpoint {
     case entriesParent(uri: String?, id: Int64?, newUri: String)
     case entriesProperty(uri: String?, id: Int64?)
     case entriesDocument(uri: String?, id: Int64?)
-    case entriesSearch
+    case entriesFilter
     case entriesFriday(uri: String?, id: Int64?)
     case groupsChildren(uri: String?, id: Int64?, page: Int64?, pageSize: Int64?, sort: String?, order: String?)
     case groupsTree
@@ -57,8 +57,8 @@ public enum APIEndpoint {
             return "/api/v1/entries/details"
         case .entriesCreate:
             return "/api/v1/entries"
-        case .entriesSearch:
-            return "/api/v1/entries/search"
+        case .entriesFilter:
+            return "/api/v1/entries/filter"
         case .entriesUpdate:
             return "/api/v1/entries"
         case .entriesDelete:
@@ -129,7 +129,7 @@ public enum APIEndpoint {
             return .get
         case .entriesDetails, .entriesProperty, .entriesFriday, .groupsChildren, .filesContent:
             return .post
-        case .filesUpload, .entriesDelete, .entriesCreate, .entriesBatchDelete, .entriesSearch, .messagesRead, .workflowTrigger, .workflowCreate:
+        case .filesUpload, .entriesDelete, .entriesCreate, .entriesBatchDelete, .entriesFilter, .messagesRead, .workflowTrigger, .workflowCreate:
             return .post
         case .entriesUpdate, .entriesParent, .entriesDocument, .workflowUpdate, .configSet:
             return .put
@@ -144,7 +144,7 @@ public enum APIEndpoint {
         var items: [URLQueryItem] = []
 
         switch self {
-        case .entriesSearch:
+        case .entriesFilter:
             break
 
         case .groupsChildren(_, _, let page, let pageSize, let sort, let order):

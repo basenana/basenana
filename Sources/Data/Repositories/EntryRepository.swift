@@ -84,7 +84,7 @@ public class EntryRepository: EntryRepositoryProtocol {
         }()
         let order = filter.orderDesc == true ? "desc" : "asc"
 
-        return try await core.SearchEntries(celPattern: pattern, page: page, pageSize: pageSize, sort: sort, order: order)
+        return try await core.FilterEntries(celPattern: pattern, page: page, pageSize: pageSize, sort: sort, order: order)
     }
 
     public func UpdateDocument(uri: String, update: DocumentUpdate) async throws {

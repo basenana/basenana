@@ -154,7 +154,7 @@ public class EntriesClient: EntriesClientProtocol {
 
     // MARK: - Document Operations
 
-    public func SearchEntries(celPattern: String, page: Int?, pageSize: Int?, sort: String?, order: String?) async throws -> [any EntryInfo] {
+    public func FilterEntries(celPattern: String, page: Int?, pageSize: Int?, sort: String?, order: String?) async throws -> [any EntryInfo] {
         let request = SearchRequest(
             cel_pattern: celPattern,
             page: page.map { Int64($0) },
@@ -163,7 +163,7 @@ public class EntriesClient: EntriesClientProtocol {
             order: order
         )
         let response: EntriesResponse = try await apiClient.request(
-            .entriesSearch,
+            .entriesFilter,
             body: request,
             responseType: EntriesResponse.self
         )

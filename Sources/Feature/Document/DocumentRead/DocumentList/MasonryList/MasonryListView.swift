@@ -22,28 +22,40 @@ public struct MasonryListView: View {
 
     public var body: some View {
         VStack {
-            ScrollView(.vertical) {
-                ForEach(viewModel.sectionDocuments) { section in
-                    MasonrySectionView(section: section, viewModel: viewModel)
-                        .padding(.horizontal, 20)
+            if viewModel.sectionDocuments.isEmpty && !viewModel.isLoading {
+                VStack(spacing: 12) {
+                    Image(systemName: "text.below.folder")
+                        .font(.system(size: 48))
+                        .foregroundStyle(.secondary)
+                    Text("No documents.")
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                ScrollView(.vertical) {
+                    ForEach(viewModel.sectionDocuments) { section in
+                        MasonrySectionView(section: section, viewModel: viewModel)
+                            .padding(.horizontal, 20)
+                    }
 
-                LazyVStack{
-                    if viewModel.hasMore {
-                        ProgressView()
-                            .padding(.vertical)
-                            .id(loadingId)
-                            .scaleEffect(0.8)
-                            .frame(maxWidth: .infinity)
-                            .onAppear {
-                                Task {
-                                    await viewModel.loadNextPage()
-                                    await viewModel.setAllAppearedDocumentRead()
-                                    loadingId += 1
+                    LazyVStack{
+                        if viewModel.hasMore {
+                            ProgressView()
+                                .padding(.vertical)
+                                .id(loadingId)
+                                .scaleEffect(0.8)
+                                .frame(maxWidth: .infinity)
+                                .onAppear {
+                                    Task {
+                                        await viewModel.loadNextPage()
+                                        await viewModel.setAllAppearedDocumentRead()
+                                        loadingId += 1
+                                    }
                                 }
-                            }
-                    } else {
-                        MasonryListReadAllView(viewModel: viewModel)
+                        } else {
+                            MasonryListReadAllView(viewModel: viewModel)
+                        }
                     }
                 }
             }
@@ -56,12 +68,17 @@ public struct MasonryListView: View {
 
 struct MasonryListReadAllView: View {
     @State var viewModel: DocumentListViewModel
-    @State var hasUnread: Bool = false
-    
+
+    var hasUnread: Bool {
+        viewModel.sectionDocuments.contains { section in
+            section.documents.contains { $0.isUnread }
+        }
+    }
+
     public init(viewModel: DocumentListViewModel) {
         self.viewModel = viewModel
     }
-    
+
     var body: some View {
         Divider()
         HStack(alignment: .center){
@@ -69,8 +86,7 @@ struct MasonryListReadAllView: View {
                 Spacer()
                 Button(action: {
                     Task {
-                        await viewModel.setAllAppearedDocumentRead(before: 0, isAuto: false)
-                        hasUnread = false
+                        await viewModel.setAllDocumentRead()
                     }
                 }, label: {
                     Label("Make All as Read", systemImage: "checkmark.rectangle.stack")
@@ -78,15 +94,6 @@ struct MasonryListReadAllView: View {
                 .buttonStyle(.borderless)
                 .padding(.vertical)
                 Spacer()
-            }
-        }
-        .task {
-            for sectionDocument in viewModel.sectionDocuments.reversed() {
-                for document in sectionDocument.documents {
-                    if document.isUnread {
-                        hasUnread = true
-                    }
-                }
             }
         }
     }

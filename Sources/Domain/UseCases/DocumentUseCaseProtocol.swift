@@ -12,7 +12,7 @@ import Foundation
 public protocol DocumentUseCaseProtocol {
     func listUnreadDocuments(page: Int, pageSize: Int) async throws -> [EntryInfo]
     func listMarkedDocuments(page: Int, pageSize: Int) async throws -> [EntryInfo]
-    func searchDocuments(search: String,page: Int, pageSize: Int) async throws -> [EntryInfo]
+    func filterDocuments(search: String,page: Int, pageSize: Int) async throws -> [EntryInfo]
 
     func getDocumentDetails(uri: String) async throws -> EntryDetail
 

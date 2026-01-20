@@ -43,7 +43,7 @@ public class DocumentUseCase: DocumentUseCaseProtocol {
         }
     }
 
-    public func searchDocuments(search: String, page: Int, pageSize: Int) async throws -> [any EntryInfo] {
+    public func filterDocuments(search: String, page: Int, pageSize: Int) async throws -> [any EntryInfo] {
         var filter = DocumentFilter()
         filter.page = Pagination()
         filter.page!.page = Int64(page)
