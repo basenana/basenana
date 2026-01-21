@@ -22,7 +22,7 @@ public struct MasonryListView: View {
 
     public var body: some View {
         VStack {
-            if viewModel.sectionDocuments.isEmpty && !viewModel.isLoading {
+            if viewModel.sectionDocuments.isEmpty && loadingId > 0 {
                 VStack(spacing: 12) {
                     Image(systemName: "text.below.folder")
                         .font(.system(size: 48))
