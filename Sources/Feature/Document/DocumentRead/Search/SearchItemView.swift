@@ -32,7 +32,7 @@ struct SearchItemView: View {
                 VStack(alignment: .leading) {
 
                     HStack(){
-                        HighlightedTitle(title: self.docTitle, key: self.searchModel.search)
+                        HighlightedTitle(title: self.docTitle, key: self.searchModel.searchQuery)
                         Spacer()
                         Text(self.docTime)
                             .font(.caption)

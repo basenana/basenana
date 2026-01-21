@@ -73,7 +73,7 @@ class DIContainer {
             WorkflowCreateViewModel(usecase: r.resolve(WorkflowUseCaseProtocol.self)!)
         }
         self.c.register(SearchViewModel.self) { r in
-            SearchViewModel(store: state, usecase: r.resolve(DocumentUseCaseProtocol.self)!)
+            SearchViewModel(store: state, searchUseCase: r.resolve(SearchUseCaseProtocol.self)!)
         }
 
         // UseCases
@@ -82,6 +82,9 @@ class DIContainer {
         }.inObjectScope(.container)
         self.c.register(DocumentUseCaseProtocol.self) { r in
             DocumentUseCase(entryRepo: r.resolve(EntryRepositoryProtocol.self)!)
+        }.inObjectScope(.container)
+        self.c.register(SearchUseCaseProtocol.self) { r in
+            SearchUseCase(entryRepo: r.resolve(EntryRepositoryProtocol.self)!)
         }.inObjectScope(.container)
         self.c.register(WorkflowUseCaseProtocol.self) { r in
             WorkflowUseCase(repo: r.resolve(WorkflowRepositoryProtocol.self)!, entryRepo: r.resolve(EntryRepositoryProtocol.self)!)

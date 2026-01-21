@@ -123,3 +123,33 @@ struct DocumentSearchItem: Identifiable, Hashable, Equatable {
         return lhs.uri == rhs.uri
     }
 }
+
+struct SearchResultItem: Identifiable, Hashable {
+    var id: String { result.uri }
+    let result: SearchResult
+    let searchQuery: String
+
+    var title: String { result.title }
+    var content: String { result.content }
+    var uri: String { result.uri }
+    var date: Date { result.changedAt }
+
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter
+    }()
+
+    var dateString: String {
+        dateFormatter.string(from: date)
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(uri)
+    }
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.uri == rhs.uri
+    }
+}
