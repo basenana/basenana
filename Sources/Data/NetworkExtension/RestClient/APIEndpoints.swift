@@ -25,6 +25,7 @@ public enum APIEndpoint {
     case entriesProperty(uri: String?, id: Int64?)
     case entriesDocument(uri: String?, id: Int64?)
     case entriesFilter
+    case entriesSearch
     case entriesFriday(uri: String?, id: Int64?)
     case groupsChildren(uri: String?, id: Int64?, page: Int64?, pageSize: Int64?, sort: String?, order: String?)
     case groupsTree
@@ -59,6 +60,8 @@ public enum APIEndpoint {
             return "/api/v1/entries"
         case .entriesFilter:
             return "/api/v1/entries/filter"
+        case .entriesSearch:
+            return "/api/v1/entries/search"
         case .entriesUpdate:
             return "/api/v1/entries"
         case .entriesDelete:
@@ -129,7 +132,7 @@ public enum APIEndpoint {
             return .get
         case .entriesDetails, .entriesProperty, .entriesFriday, .groupsChildren, .filesContent:
             return .post
-        case .filesUpload, .entriesDelete, .entriesCreate, .entriesBatchDelete, .entriesFilter, .messagesRead, .workflowTrigger, .workflowCreate:
+        case .filesUpload, .entriesDelete, .entriesCreate, .entriesBatchDelete, .entriesFilter, .entriesSearch, .messagesRead, .workflowTrigger, .workflowCreate:
             return .post
         case .entriesUpdate, .entriesParent, .entriesDocument, .workflowUpdate, .configSet:
             return .put

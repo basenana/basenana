@@ -170,6 +170,20 @@ public class EntriesClient: EntriesClientProtocol {
         return response.entries.map { $0.toAPIEntryInfo() }
     }
 
+    public func SearchEntries(query: String, page: Int?, pageSize: Int?) async throws -> [SearchResult] {
+        let request = FullTextSearchRequest(
+            query: query,
+            page: page.map { Int64($0) },
+            page_size: pageSize.map { Int64($0) }
+        )
+        let response: SearchResponse = try await apiClient.request(
+            .entriesSearch,
+            body: request,
+            responseType: SearchResponse.self
+        )
+        return response.documents.map { $0.toSearchResult() }
+    }
+
     public func UpdateDocumentByURI(uri: String, update: DocumentUpdate) async throws {
         let request = DocumentRequest(
             uri: uri,
@@ -281,6 +295,25 @@ extension EntryInfoDTO {
             modifiedAt: self.modified_at ?? Date.distantPast,
             accessAt: self.access_at ?? Date.distantPast,
             document: DocumentInfo(from: self.document)
+        )
+    }
+}
+
+extension SearchDocumentDTO {
+    private static let dateFormatter: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter
+    }()
+
+    func toSearchResult() -> SearchResult {
+        SearchResult(
+            id: self.id,
+            uri: self.uri,
+            title: self.title ?? "",
+            content: self.content ?? "",
+            createdAt: Self.dateFormatter.date(from: self.create_at ?? "") ?? Date.distantPast,
+            changedAt: Self.dateFormatter.date(from: self.changed_at ?? "") ?? Date.distantPast
         )
     }
 }

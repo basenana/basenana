@@ -26,6 +26,7 @@ public protocol EntryRepositoryProtocol {
 
     // document operations
     func ListDocuments(filter: DocumentFilter) async throws -> [EntryInfo]
+    func Search(query: String, page: Int?, pageSize: Int?) async throws -> [SearchResult]
     func UpdateDocument(uri: String, update: DocumentUpdate) async throws
 }
 

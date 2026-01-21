@@ -95,7 +95,7 @@ public protocol WorkflowNodeInput {
 }
 
 public protocol WorkflowNodeMatrix {
-    var data: [String: String] { get }
+    var data: [String: Any] { get }
 }
 
 public struct WorkflowNodeParamStruct: WorkflowNodeParam {
@@ -117,9 +117,9 @@ public struct WorkflowNodeInputStruct: WorkflowNodeInput {
 }
 
 public struct WorkflowNodeMatrixStruct: WorkflowNodeMatrix {
-    public var data: [String: String]
+    public var data: [String: Any]
 
-    public init(data: [String: String]) {
+    public init(data: [String: Any]) {
         self.data = data
     }
 }

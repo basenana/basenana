@@ -15,6 +15,19 @@ http://localhost:8080/api/v1
 
 Currently, authentication is handled via middleware. Refer to configuration for authentication settings.
 
+### Date Format
+
+All timestamps in API responses use RFC3339 format with timezone (e.g., `2024-01-01T00:00:00Z`).
+
+**Example:**
+
+```json
+{
+  "created_at": "2024-01-01T00:00:00Z",
+  "changed_at": "2024-01-02T00:00:00Z"
+}
+```
+
 ---
 
 ## Endpoints
@@ -239,7 +252,7 @@ Filter entries using CEL (Common Expression Language) patterns.
 |---------------|--------|----------|------------------------------------------------------------------|
 | `cel_pattern` | string | yes      | CEL expression to filter entries                                 |
 | `page`        | int64  | no       | Page number (default: 1)                                         |
-| `page_size`   | int64  | no       | Number of items per page (default: all)                          |
+| `page_size`   | int64  | no       | Number of items per page (default: 50)                           |
 | `sort`        | string | no       | Sort field: `created_at`, `changed_at`, `name` (default: `name`) |
 | `order`       | string | no       | Sort order: `asc`, `desc` (default: `asc`)                       |
 
@@ -276,6 +289,49 @@ Filter entries using CEL (Common Expression Language) patterns.
       "changed_at": "2024-01-01T00:00:00Z",
       "modified_at": "2024-01-01T00:00:00Z",
       "access_at": "2024-01-01T00:00:00Z"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "page_size": 10
+  }
+}
+```
+
+#### POST /api/v1/entries/search
+
+Search documents using full-text search.
+
+**Request Body:**
+
+```json
+{
+  "query": "golang tutorial",
+  "page": 1,
+  "page_size": 10
+}
+```
+
+**Fields:**
+
+| Field       | Type   | Required | Description                            |
+|-------------|--------|----------|----------------------------------------|
+| `query`     | string | yes      | Search keywords                        |
+| `page`      | int64  | no       | Page number (default: 1)               |
+| `page_size` | int64  | no       | Number of items per page (default: 20) |
+
+**Response:**
+
+```json
+{
+  "documents": [
+    {
+      "id": 1001,
+      "uri": "/inbox/docs/article-001",
+      "title": "Golang Tutorial",
+      "content": "This is a tutorial about Go programming language...",
+      "create_at": "2024-01-01T00:00:00Z",
+      "changed_at": "2024-01-02T00:00:00Z"
     }
   ],
   "pagination": {
@@ -433,7 +489,10 @@ Update tags and custom properties for an entry.
 ```json
 {
   "uri": "/inbox/tasks/task-001",
-  "tags": ["important", "review"],
+  "tags": [
+    "important",
+    "review"
+  ],
   "properties": {
     "priority": "high",
     "due_date": "2024-01-15"
@@ -446,7 +505,9 @@ Or by ID:
 ```json
 {
   "id": 1001,
-  "tags": ["important"],
+  "tags": [
+    "important"
+  ],
   "properties": {
     "priority": "high"
   }
@@ -552,7 +613,7 @@ Update document-specific properties. Supports `?uri=` or `?id=` query parameters
   "header_image": "https://example.com/image.jpg",
   "unread": true,
   "marked": false,
-  "publish_at": 1704067200
+  "publish_at": "2024-01-01T00:00:00Z"
 }
 ```
 
@@ -570,10 +631,10 @@ Update document-specific properties. Supports `?uri=` or `?id=` query parameters
 | `url`          | string | Article URL              |
 | `site_name`    | string | Website name             |
 | `site_url`     | string | Website URL              |
-| `header_image` | string | Header image URL         |
-| `unread`       | bool   | Mark as unread           |
-| `marked`       | bool   | Mark as starred          |
-| `publish_at`   | int64  | Publish timestamp (Unix) |
+| `header_image` | string | Header image URL            |
+| `unread`       | bool   | Mark as unread             |
+| `marked`       | bool   | Mark as starred            |
+| `publish_at`   | string | Publish timestamp (RFC3339) |
 
 **Response:**
 

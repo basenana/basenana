@@ -10,5 +10,5 @@ import Foundation
 
 
 public protocol SearchUseCaseProtocol {
-    
+    func Search(query: String, page: Int?, pageSize: Int?) async throws -> [SearchResult]
 }

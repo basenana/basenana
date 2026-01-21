@@ -87,6 +87,10 @@ public class EntryRepository: EntryRepositoryProtocol {
         return try await core.FilterEntries(celPattern: pattern, page: page, pageSize: pageSize, sort: sort, order: order)
     }
 
+    public func Search(query: String, page: Int?, pageSize: Int?) async throws -> [SearchResult] {
+        return try await core.SearchEntries(query: query, page: page, pageSize: pageSize)
+    }
+
     public func UpdateDocument(uri: String, update: DocumentUpdate) async throws {
         try await core.UpdateDocumentByURI(uri: uri, update: update)
     }

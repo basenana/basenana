@@ -140,9 +140,9 @@ public struct APIWorkflowNodeInput: WorkflowNodeInput {
 }
 
 public struct APIWorkflowNodeMatrix: WorkflowNodeMatrix {
-    public var data: [String: String]
+    public var data: [String: Any]
 
-    public init(data: [String: String]) {
+    public init(data: [String: Any]) {
         self.data = data
     }
 

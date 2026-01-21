@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Domain
 
 // MARK: - Entry DTOs
 
@@ -261,7 +262,7 @@ struct DocumentRequest: Encodable {
     let header_image: String?
     let unread: Bool?
     let marked: Bool?
-    let publish_at: Int64?
+    let publish_at: String?
 }
 
 struct SearchRequest: Encodable {
@@ -273,6 +274,32 @@ struct SearchRequest: Encodable {
 
     enum CodingKeys: String, CodingKey {
         case cel_pattern, page, page_size, sort, order
+    }
+}
+
+// MARK: - Search DTOs
+
+struct SearchDocumentDTO: Decodable {
+    let id: Int64
+    let uri: String
+    let title: String?
+    let content: String?
+    let create_at: String?
+    let changed_at: String?
+}
+
+struct SearchResponse: Decodable {
+    let documents: [SearchDocumentDTO]
+    let pagination: EntriesPagination
+}
+
+struct FullTextSearchRequest: Encodable {
+    let query: String
+    let page: Int64?
+    let page_size: Int64?
+
+    enum CodingKeys: String, CodingKey {
+        case query, page, page_size
     }
 }
 
@@ -472,7 +499,35 @@ struct WorkflowNodeInputDTO: Codable {
 }
 
 struct WorkflowNodeMatrixDTO: Codable {
-    let data: [String: String]?
+    let data: [String: Any]?
+
+    enum CodingKeys: String, CodingKey {
+        case data
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if container.contains(.data) {
+            data = try container.decodeAnyForKey(.data)
+        } else {
+            data = nil
+        }
+    }
+
+    init(matrix: any WorkflowNodeMatrix) {
+        self.data = matrix.data
+    }
+
+    init(data: [String: Any]?) {
+        self.data = data
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        if let data = data {
+            try container.encodeAny(data, forKey: .data)
+        }
+    }
 }
 
 struct WorkflowNodeCaseDTO: Codable {
@@ -643,3 +698,82 @@ struct WorkflowPluginsResponse: Decodable {
 // MARK: - Empty Response
 
 struct VoidResponse: Decodable { }
+
+// MARK: - Any Codable Extension
+
+extension KeyedDecodingContainer {
+    func decodeAnyForKey(_ key: K) throws -> [String: Any]? {
+        guard contains(key) else { return nil }
+        let value = try decode(DynamicAnyValue.self, forKey: key)
+        return value.dictionary
+    }
+}
+
+extension KeyedEncodingContainer {
+    mutating func encodeAny(_ value: [String: Any], forKey key: K) throws {
+        try encode(DynamicAnyValue(value), forKey: key)
+    }
+}
+
+struct DynamicAnyValue {
+    let dictionary: [String: Any]
+
+    init(_ dictionary: [String: Any]) {
+        self.dictionary = dictionary
+    }
+}
+
+extension DynamicAnyValue: Decodable {
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: DynamicCodingKeys.self)
+        var dict: [String: Any] = [:]
+        for key in container.allKeys {
+            if let value = try? container.decode(Bool.self, forKey: key) {
+                dict[key.stringValue] = value
+            } else if let value = try? container.decode(Int64.self, forKey: key) {
+                dict[key.stringValue] = value
+            } else if let value = try? container.decode(Double.self, forKey: key) {
+                dict[key.stringValue] = value
+            } else if let value = try? container.decode(String.self, forKey: key) {
+                dict[key.stringValue] = value
+            }
+        }
+        self.dictionary = dict
+    }
+}
+
+extension DynamicAnyValue: Encodable {
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: DynamicCodingKeys.self)
+        for (key, value) in dictionary {
+            let codingKey = DynamicCodingKeys(stringValue: key)!
+            switch value {
+            case let v as Bool:
+                try container.encode(v, forKey: codingKey)
+            case let v as Int64:
+                try container.encode(v, forKey: codingKey)
+            case let v as Double:
+                try container.encode(v, forKey: codingKey)
+            case let v as String:
+                try container.encode(v, forKey: codingKey)
+            default:
+                break
+            }
+        }
+    }
+}
+
+struct DynamicCodingKeys: CodingKey {
+    var stringValue: String
+    var intValue: Int?
+
+    init?(stringValue: String) {
+        self.stringValue = stringValue
+        self.intValue = nil
+    }
+
+    init?(intValue: Int) {
+        self.stringValue = String(intValue)
+        self.intValue = intValue
+    }
+}

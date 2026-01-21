@@ -148,7 +148,7 @@ public class WorkflowClient: WorkflowClientProtocol {
             branches: node.branches,
             cases: node.cases?.map { WorkflowNodeCaseDTO(value: $0.value, next: $0.next) },
             default: node.defaultCase,
-            matrix: node.matrix.map { WorkflowNodeMatrixDTO(data: $0.data) }
+            matrix: node.matrix.map { WorkflowNodeMatrixDTO(matrix: $0) }
         )
     }
 

@@ -261,6 +261,7 @@ private struct GroupTableContentView: View {
                 ProgressView()
                     .padding()
                     .id(viewModel.children.count)
+                    .scaleEffect(0.8)
                     .onAppear {
                         Task {
                             await viewModel.loadNextPage()
