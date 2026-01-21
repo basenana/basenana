@@ -19,25 +19,23 @@ public class Readability {
         self.page = page
         webView = WKWebView(frame: CGRect.zero, configuration: WKWebViewConfiguration())
         webView.configuration.suppressesIncrementalRendering = true
-        addReadabilityUserScript()
     }
 
     init(page: WebPageInfo, webView: WKWebView){
         self.page = page
         self.webView = webView
         self.webView.configuration.suppressesIncrementalRendering = true
-        addReadabilityUserScript()
     }
-    
+
     public func getWebView() -> WKWebView {
         return self.webView
     }
-    
-    private func addReadabilityUserScript() {
+
+    fileprivate func addReadabilityUserScript() {
         let script = ReadabilityUserScript()
         webView.configuration.userContentController.addUserScript(script)
     }
-    
+
     private func renderHTML(readabilityContent: String) -> String {
         var content = htmlTemplate.replacingOccurrences(of: "{TITLE}", with: self.page.title)
         content = content.replacingOccurrences(of: "{HOST}", with: self.page.url.host() ?? "")
@@ -109,6 +107,7 @@ public struct ReadabilityView: NSViewRepresentable {
     
     public func makeNSView(context: Context) -> WKWebView {
         let webView = self.readability.getWebView()
+        self.readability.addReadabilityUserScript()
         webView.navigationDelegate = context.coordinator
         return webView
     }
