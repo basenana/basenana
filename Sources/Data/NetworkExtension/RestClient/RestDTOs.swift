@@ -284,6 +284,8 @@ struct SearchDocumentDTO: Decodable {
     let uri: String
     let title: String?
     let content: String?
+    let highlight_title: String?
+    let highlight_content: String?
     let create_at: String?
     let changed_at: String?
 }

@@ -76,14 +76,16 @@ public struct SearchView: View {
 
     private var resultsList: some View {
         ScrollView {
-            LazyVStack(spacing: 8) {
+            LazyVStack(spacing: 0) {
                 if viewModel.searchResults.isEmpty && !viewModel.isSearching && !viewModel.searchQuery.isEmpty {
                     emptyStateView
                 } else if viewModel.searchResults.isEmpty && viewModel.searchQuery.isEmpty {
                     promptView
                 } else {
-                    ForEach(viewModel.searchResults) { item in
+                    ForEach(Array(viewModel.searchResults.enumerated()), id: \.element.id) { index, item in
                         SearchResultCardView(item: item)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 16)
                             .onAppear {
                                 if item.id == viewModel.searchResults.last?.id {
                                     Task {
@@ -91,6 +93,11 @@ public struct SearchView: View {
                                     }
                                 }
                             }
+
+                        if index < viewModel.searchResults.count - 1 {
+                            Divider()
+                                .padding(.leading, 16)
+                        }
                     }
 
                     if viewModel.isLoadingMore {
@@ -101,7 +108,6 @@ public struct SearchView: View {
                     }
                 }
             }
-            .padding(.horizontal, 12)
             .padding(.vertical, 8)
         }
     }
@@ -158,46 +164,91 @@ public struct SearchView: View {
 
 struct SearchResultCardView: View {
     let item: SearchResultItem
+    @State private var isHovered = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack {
-                        HighlightedTitle(title: item.title, key: item.searchQuery)
-                            .font(.headline)
-                            .foregroundColor(.primary)
+                let title = item.highlightTitle.isEmpty ? item.title : item.highlightTitle
+                highlightedTitle(title)
+                    .font(.title2)
+                    .foregroundColor(.primary)
 
-                        Spacer()
+                Spacer()
 
-                        Text(item.dateString)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-
-                    Text(item.uri)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .lineLimit(1)
-
-                    if !item.content.isEmpty {
-                        HighlightedText(content: item.content)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                            .lineLimit(2)
-                    }
-                }
+                Text(item.dateString)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
+
+            if !item.highlightContent.isEmpty {
+                highlightedContent(item.highlightContent)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            } else if !item.content.isEmpty {
+                Text(item.content)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .lineLimit(2)
+            }
         }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.CardBackground)
-        .cornerRadius(6)
-        .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
+        .background(isHovered ? Color.secondary.opacity(0.1) : Color.clear)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
         .contentShape(Rectangle())
+        .onHover { hovering in
+            isHovered = hovering
+        }
         .onTapGesture {
             gotoDestination(.readDocument(uri: item.uri))
         }
+    }
+
+    @ViewBuilder
+    private func highlightedTitle(_ content: String) -> some View {
+        let components = parseHTML(content)
+        components.reduce(Text("")) { (result, component) in
+            result + (component.isHighlight ? Text(component.text).bold() : Text(component.text))
+        }
+    }
+
+    @ViewBuilder
+    private func highlightedContent(_ content: String) -> some View {
+        let components = parseHTML(content)
+        components.reduce(Text("")) { (result, component) in
+            result + (component.isHighlight ? Text(component.text).bold() : Text(component.text))
+        }
+    }
+
+    struct TextComponent {
+        let text: String
+        let isHighlight: Bool
+    }
+
+    func parseHTML(_ html: String) -> [TextComponent] {
+        var components: [TextComponent] = []
+        var currentIndex = html.startIndex
+
+        while let startRange = html.range(of: "<mark>", range: currentIndex..<html.endIndex),
+              let endRange = html.range(of: "</mark>", range: startRange.upperBound..<html.endIndex) {
+            if currentIndex < startRange.lowerBound {
+                let normalText = String(html[currentIndex..<startRange.lowerBound])
+                components.append(TextComponent(text: normalText, isHighlight: false))
+            }
+
+            let highlightText = String(html[startRange.upperBound..<endRange.lowerBound])
+            components.append(TextComponent(text: highlightText, isHighlight: true))
+
+            currentIndex = endRange.upperBound
+        }
+
+        if currentIndex < html.endIndex {
+            let normalText = String(html[currentIndex..<html.endIndex])
+            components.append(TextComponent(text: normalText, isHighlight: false))
+        }
+
+        return components
     }
 }

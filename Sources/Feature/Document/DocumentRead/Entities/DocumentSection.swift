@@ -131,6 +131,8 @@ struct SearchResultItem: Identifiable, Hashable {
 
     var title: String { result.title }
     var content: String { result.content }
+    var highlightTitle: String { result.highlightTitle }
+    var highlightContent: String { result.highlightContent }
     var uri: String { result.uri }
     var date: Date { result.changedAt }
 

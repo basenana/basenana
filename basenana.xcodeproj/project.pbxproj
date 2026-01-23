@@ -31,7 +31,6 @@
 		1B46D364DDC55F5158236998 /* SysHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86B516CAC64BB000E0F74AA /* SysHelper.swift */; };
 		1BFC8F6BA4A41EFA0E0AC05A /* WorkflowCreateNodeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6AB50923DFB88639F412B1E /* WorkflowCreateNodeCard.swift */; };
 		1D2E828C6EF98DEF50DCE822 /* Styleguide.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 72723282C662EEDA42C4AD5E /* Styleguide.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		1FE00CF8C79EDD613638BC4A /* SearchItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5463F87CFC54BDBD58F5630E /* SearchItemView.swift */; };
 		20E572DC62660C0030552B42 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA6FB97F8CD1AB40782C5FD /* NotificationView.swift */; };
 		2149A99C62D76BB395282FA5 /* GeneralSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A5B51964F931C72C6A500D /* GeneralSettingView.swift */; };
 		22B44767C9B0F334AEAD63AF /* EntryUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC65650A6CABC8FD330EAFA0 /* EntryUseCaseProtocol.swift */; };
@@ -417,7 +416,6 @@
 		522D2E1564C02E1EFCB7A607 /* MasonrySectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasonrySectionView.swift; sourceTree = "<group>"; };
 		52BEF39ADA32A121B0ADAE75 /* AuthInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthInterceptor.swift; sourceTree = "<group>"; };
 		537318CC6474A88FD72D2DDE /* ReadingSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingSettingView.swift; sourceTree = "<group>"; };
-		5463F87CFC54BDBD58F5630E /* SearchItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchItemView.swift; sourceTree = "<group>"; };
 		55F76088500B33FC10D8BB6F /* Workflow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workflow.swift; sourceTree = "<group>"; };
 		59BF3414BD34EA823F1FE836 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		5AE65E40F6E01219CDA9BB58 /* DocumentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentTests.swift; sourceTree = "<group>"; };
@@ -988,7 +986,6 @@
 		6DB319839A278FE8D0448B17 /* Search */ = {
 			isa = PBXGroup;
 			children = (
-				5463F87CFC54BDBD58F5630E /* SearchItemView.swift */,
 				80B0320669014DA8F456B87B /* SearchMenuView.swift */,
 				F04284A4AE55F0BBB71CC177 /* SearchView.swift */,
 				2832EA04327077D554DD288E /* SearchViewModel.swift */,
@@ -1778,7 +1775,6 @@
 				BCCB3541AAF6A602158FA801 /* Notify.swift in Sources */,
 				4A43FA6DFDE9CECA95FC693B /* PDFDocumentView.swift in Sources */,
 				5DDEA137EC7DB0DC60BCC7BE /* ReadabilityView.swift in Sources */,
-				1FE00CF8C79EDD613638BC4A /* SearchItemView.swift in Sources */,
 				E3CC7476EC7A7AB7B9BEA1EE /* SearchMenuView.swift in Sources */,
 				758FE796BAA565F7B94609C8 /* SearchView.swift in Sources */,
 				0347EE246E532B1D173508C5 /* SearchViewModel.swift in Sources */,

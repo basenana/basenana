@@ -312,6 +312,8 @@ extension SearchDocumentDTO {
             uri: self.uri,
             title: self.title ?? "",
             content: self.content ?? "",
+            highlightTitle: self.highlight_title ?? "",
+            highlightContent: self.highlight_content ?? "",
             createdAt: Self.dateFormatter.date(from: self.create_at ?? "") ?? Date.distantPast,
             changedAt: Self.dateFormatter.date(from: self.changed_at ?? "") ?? Date.distantPast
         )

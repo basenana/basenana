@@ -56,17 +56,17 @@ final public class APIClient {
     )
 
     /// Default timeout for requests (in seconds)
-    public var requestTimeout: TimeInterval = 10
+    public var requestTimeout: TimeInterval = 300
 
     private init() {
         let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = 10
+        configuration.timeoutIntervalForRequest = 300
         configuration.timeoutIntervalForResource = 300
         self.session = URLSession(configuration: configuration)
         self.baseURL = ""
     }
 
-    init(baseURL: String, token: String, timeout: TimeInterval = 10) {
+    init(baseURL: String, token: String, timeout: TimeInterval = 300) {
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = timeout
         configuration.timeoutIntervalForResource = 300
