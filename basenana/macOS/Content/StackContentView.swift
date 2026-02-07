@@ -18,7 +18,7 @@ struct StackContentView: View {
     @State private var alertMessage: String = ""
     @State private var hasAlert: Bool = false
     @State private var searchContent: String = ""
-    @State private var isSearchActive = false
+    @State private var isSearchActive: Bool = false
 
     init() {
         self.container = DIContainer(state: .shared)
@@ -28,8 +28,8 @@ struct StackContentView: View {
     public var body: some View {
         NavigationSplitView {
             SidebarView(viewModel: container.c.resolve(TreeViewModel.self)!)
-                .frame(minWidth: 180,idealWidth: 200)
-        }detail: {
+                .frame(minWidth: 180, idealWidth: 200)
+        } detail: {
             NavigationStack(path: $destinations) {
                 StackBannerView()
                     .navigationDestination(for: Destination.self) { destination in
@@ -42,7 +42,7 @@ struct StackContentView: View {
                             DocumentListView(viewModel: container.c.resolve(DocumentListViewModel.self, name: prespective.Title)!).id(prespective).navigationTitle(prespective.Title)
                         case .readDocument(uri: let uri):
                             DocumentReadView(viewModel: container.c.resolve(DocumentReadViewModel.self, argument: uri)!).id(uri)
-                            
+
                         case .workflowDashboard:
                             WorkflowListView(viewModel: container.c.resolve(WorkflowListViewModel.self)!)
                         case .workflowDetail(workflow: let workflow):
@@ -75,20 +75,19 @@ struct StackContentView: View {
                 hasAlert = true
             }
         }
-        .toolbar{
-            ToolbarItemGroup(placement: .principal){
+        .toolbar {
+            ToolbarItemGroup(placement: .principal) {
                 BackgroundJobView(state: .shared)
                 NotificationView(state: .shared)
                 Spacer()
             }
-
         }
         .searchable(text: $searchContent)
         .onSubmit(of: .search) {
             isSearchActive = true
             StateStore.shared.destinations.append(.searchDocuments)
         }
-        .alert(alertMessage, isPresented: $hasAlert){
+        .alert(alertMessage, isPresented: $hasAlert) {
             Button("OK", role: .cancel) {}
         }
         .onChange(of: StateStore.shared.destinations) { _, newValue in
@@ -99,7 +98,7 @@ struct StackContentView: View {
 
 struct StackBannerView: View {
     public var body: some View {
-        VStackLayout(alignment: .leading){
+        VStackLayout(alignment: .leading) {
             Text(" _")
             Text("//\\")
             Text("V  \\")

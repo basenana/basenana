@@ -16,13 +16,28 @@ import Domain
 @MainActor
 public class GroupTableViewModel: BaseViewModel {
 
-    var group: EntryDetail? = nil
-    var children: [EntryRow] = []
+    // MARK: - State from Store
+    var group: EntryDetail? {
+        get { _group }
+        set {
+            if _group?.uri != newValue?.uri {
+                _group = newValue
+                store.resetChildren()
+                resetPagination()
+            }
+        }
+    }
 
+    var children: [EntryRow] {
+        store.childrenList.map { EntryRow(from: $0) }
+    }
+
+    // MARK: - Local State
     var page: Int = 1
     var pageSize: Int = 50
     var hasMore: Bool = true
     var isLoading: Bool = false
+    private var _group: EntryDetail? = nil
 
     // Internal selection storage
     private var _selection: Set<EntryRow.ID> = [] {
@@ -85,13 +100,28 @@ public class GroupTableViewModel: BaseViewModel {
         store.selectedEntryUri = entry.uri
     }
 
+    // MARK: - Pagination Helper
+    private func resetPagination() {
+        page = 1
+        hasMore = true
+    }
+
+    // MARK: - Child Access Helpers
+    private func child(at id: EntryRow.ID) -> EntryRow? {
+        children.first { $0.id == id }
+    }
+
+    private func index(of id: EntryRow.ID) -> Int? {
+        children.firstIndex { $0.id == id }
+    }
+
     func loadSelectedEntryDetail() async {
         guard selection.count == 1, let id = selection.first else {
             selectedEntryDetail = nil
             return
         }
 
-        guard let entry = children.first(where: { $0.id == id }) else {
+        guard let entry = child(at: id) else {
             selectedEntryDetail = nil
             return
         }
@@ -110,9 +140,8 @@ public class GroupTableViewModel: BaseViewModel {
     }
 
     func reset() {
-        self.page = 1
-        self.hasMore = true
-        self.children = []
+        resetPagination()
+        store.resetChildren()
     }
 
     func loadNextPage() async {
@@ -127,9 +156,8 @@ public class GroupTableViewModel: BaseViewModel {
                 return
             }
 
-            for child in newChildren {
-                self.children.append(EntryRow(info: child))
-            }
+            let rows = newChildren.map { CachedEntry(from: $0) }
+            store.appendChildren(rows)
 
             if newChildren.count < pageSize {
                 hasMore = false
@@ -146,15 +174,17 @@ public class GroupTableViewModel: BaseViewModel {
 
     func openGroup(uri: String) async {
         do {
-            group = try await entryUsecase.getEntryDetails(uri: uri)
-            if group == nil || !group!.isGroup {
+            let detail = try await entryUsecase.getEntryDetails(uri: uri)
+            if !detail.isGroup {
                 throw BizError.notGroup
             }
 
-            // Sync with global navigation state
+            // Sync with global navigation state and Store
             store.currentGroupUri = uri
+            group = detail
 
-            reset()
+            resetPagination()
+            store.resetChildren()
             await loadNextPage()
         } catch let error as UseCaseError where error == .canceled {
             // do nothing
@@ -166,21 +196,51 @@ public class GroupTableViewModel: BaseViewModel {
     // MARK: - Synchronous Update Methods
 
     func updateChild(id: Int64, newName: String, newUri: String) {
-        if let index = children.firstIndex(where: { $0.id == id }) {
-            children[index].name = newName
-            children[index].uri = newUri
+        // Rebuild the list with updated entry
+        var updated = store.childrenList
+        if let index = updated.firstIndex(where: { $0.id == id }) {
+            let entry = updated[index]
+            // Create a new entry with updated name/uri
+            let newEntry = CachedEntry(
+                id: entry.id,
+                uri: newUri,
+                name: newName,
+                kind: entry.kind,
+                isGroup: entry.isGroup,
+                size: entry.size,
+                parentID: entry.parentID,
+                createdAt: entry.createdAt,
+                changedAt: entry.changedAt,
+                modifiedAt: entry.modifiedAt,
+                accessAt: entry.accessAt
+            )
+            updated[index] = newEntry
         }
+        store.resetChildren()
+        store.appendChildren(updated)
     }
 
     func removeChildren(ids: [Int64]) {
-        children.removeAll { ids.contains($0.id) }
+        let uris = store.childrenList.filter { ids.contains($0.id) }.map { $0.uri }
+        store.removeChildren(uris: uris)
+    }
+
+    func sortChildren(by comparators: [KeyPathComparator<EntryRow>]) {
+        // For now, just sort by name ascending as a simple implementation
+        let sorted = store.childrenList.sorted { lhs, rhs in
+            return lhs.name.localizedCaseInsensitiveCompare(rhs.name) == .orderedAscending
+        }
+        store.resetChildren()
+        store.appendChildren(sorted)
     }
 
     func addChildren(infos: [EntryInfo]) {
-        for info in infos {
-            children.append(EntryRow(info: info))
-        }
-        children.sort { $0.name < $1.name }
+        let rows = infos.map { CachedEntry(from: $0) }
+        var updated = store.childrenList
+        updated.append(contentsOf: rows)
+        updated.sort { $0.name < $1.name }
+        store.resetChildren()
+        store.appendChildren(updated)
     }
 
     // MARK: - Wrapper Methods
@@ -188,7 +248,7 @@ public class GroupTableViewModel: BaseViewModel {
     func moveChildrenToGroup(entryUris: [String], newParentUri: String) async -> Bool {
         let success = await moveEntriesToGroup(entryUris: entryUris, newParentUri: newParentUri)
         if success {
-            children.removeAll { entryUris.contains($0.uri) }
+            store.removeChildren(uris: entryUris)
         }
         return success
     }
@@ -261,10 +321,10 @@ public class GroupTableViewModel: BaseViewModel {
         let uris = entries.map { $0.uri }
         let vm = CreateDeleteViewModel(store: store, entryUsecase: entryUsecase)
 
-        children.removeAll { uris.contains($0.uri) }
+        store.removeChildren(uris: uris)
 
         await vm.deleteEntries(entries: entries) { deletedUris in
-            // Already removed from children above
+            // Already removed from Store above
         }
     }
 

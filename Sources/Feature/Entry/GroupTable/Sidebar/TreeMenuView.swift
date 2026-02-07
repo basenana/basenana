@@ -11,7 +11,7 @@ import Domain
 
 
 struct TreeMenuView: View {
-    @Bindable var groupTree = GroupTree.shared
+    @Environment(\.stateStore) private var store
     @State private var target: EntryGroup
     @State private var targetDetail: EntryDetail?
     @State private var viewModel: TreeViewModel
@@ -63,7 +63,7 @@ struct TreeMenuView: View {
 
                 Section{
                     Menu("Move To") {
-                        ForEach(groupTree.children ?? []){ childGroup in
+                        ForEach(store?.treeChildren ?? []){ childGroup in
                             GroupDestinationView(
                                 group: childGroup,
                                 childKeyPath: \.children,
@@ -82,7 +82,7 @@ struct TreeMenuView: View {
     }
 
     func canBeEdit() -> Bool {
-        return target.id != groupTree.root.id && !isInternalFile(target)
+        return target.id != store?.rootGroup?.id && !isInternalFile(target)
     }
 
     func moveEntriesToGroup(newParentUri: String) {

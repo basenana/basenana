@@ -319,9 +319,9 @@ private struct GroupTableContentView: View {
                 }
             }
         }
-        .onChange(of: order) {
+        .onChange(of: order) { newOrder in
             withAnimation {
-                viewModel.children.sort(using: order)
+                viewModel.sortChildren(by: newOrder)
             }
         }
     }

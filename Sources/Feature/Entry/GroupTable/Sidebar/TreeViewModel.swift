@@ -30,7 +30,8 @@ public class TreeViewModel: BaseViewModel {
     func resetGroupTree() async {
         Self.logger.info("[resetGroupTree] load and reset group root")
         do {
-            self.groupTree.reset(root: try await entryUsecase.getTreeRoot())
+            let root = try await entryUsecase.getTreeRoot()
+            store.resetTree(root: root)
         } catch {
             sentAlert("load group tree failed: \(error)")
         }

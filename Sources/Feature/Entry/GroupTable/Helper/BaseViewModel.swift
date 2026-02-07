@@ -13,10 +13,6 @@ import Domain
 @Observable
 @MainActor
 public class BaseViewModel {
-
-    // tree store
-    var groupTree = GroupTree.shared
-
     var store: StateStore
     var entryUsecase: any EntryUseCaseProtocol
 
@@ -99,12 +95,6 @@ public class BaseViewModel {
         do {
             try await entryUsecase.changeParent(uris: entryUris, newParentUri: newParentUri) { target, parent in
                 assert(Thread.isMainThread)
-                if target.isGroup {
-                    if let grp = GroupTree.shared.getGroup(uri: target.uri) {
-                        GroupTree.shared.removeChildGroup(parentUri: "/\(target.parent)", childUri: target.uri)
-                        GroupTree.shared.addChildGroup(parentUri: parent.uri, child: grp.group, grandChildren: grp.children)
-                    }
-                }
                 NotificationCenter.default.post(name: .reopenGroup, object: [target.uri, parent.uri])
             }
         } catch {
@@ -112,7 +102,7 @@ public class BaseViewModel {
             return false
         }
 
-        return false
+        return true
     }
 
     func replicateEntryToGroup(entryUris: [String], newParentUri: String) async {

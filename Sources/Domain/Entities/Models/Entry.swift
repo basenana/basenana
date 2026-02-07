@@ -325,3 +325,79 @@ extension EntryDetail {
     public var documentSiteURL: String? { nil }
     public var content: String { "" }
 }
+
+
+// MARK: - Cached Entry (for Store children cache)
+
+public struct CachedEntry: Hashable, Identifiable {
+    public var id: Int64
+    public var uri: String
+    public var name: String
+    public var kind: String
+    public var isGroup: Bool
+    public var size: Int64
+    public var parentID: Int64
+    public var createdAt: Date
+    public var changedAt: Date
+    public var modifiedAt: Date
+    public var accessAt: Date
+
+    public init(from info: EntryInfo) {
+        self.id = info.id
+        self.uri = info.uri
+        self.name = info.name
+        self.kind = info.kind
+        self.isGroup = info.isGroup
+        self.size = info.size
+        self.parentID = info.parentID
+        self.createdAt = info.createdAt
+        self.changedAt = info.changedAt
+        self.modifiedAt = info.modifiedAt
+        self.accessAt = info.accessAt
+    }
+
+    public init(
+        id: Int64,
+        uri: String,
+        name: String,
+        kind: String,
+        isGroup: Bool,
+        size: Int64,
+        parentID: Int64,
+        createdAt: Date,
+        changedAt: Date,
+        modifiedAt: Date,
+        accessAt: Date
+    ) {
+        self.id = id
+        self.uri = uri
+        self.name = name
+        self.kind = kind
+        self.isGroup = isGroup
+        self.size = size
+        self.parentID = parentID
+        self.createdAt = createdAt
+        self.changedAt = changedAt
+        self.modifiedAt = modifiedAt
+        self.accessAt = accessAt
+    }
+
+    public var readableSize: String {
+        let kilobyte: Int64 = 1024
+        let megabyte = kilobyte * 1024
+        let gigabyte = megabyte * 1024
+        let terabyte = gigabyte * 1024
+
+        if size < kilobyte {
+            return "\(size) B"
+        } else if size < megabyte {
+            return String(format: "%.2f KB", Double(size) / Double(kilobyte))
+        } else if size < gigabyte {
+            return String(format: "%.2f MB", Double(size) / Double(megabyte))
+        } else if size < terabyte {
+            return String(format: "%.2f GB", Double(size) / Double(gigabyte))
+        } else {
+            return String(format: "%.2f TB", Double(size) / Double(terabyte))
+        }
+    }
+}

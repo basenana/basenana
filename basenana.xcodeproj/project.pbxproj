@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		00054ED637786E9735275444 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = E129AC77BE06437558F9454C /* SwiftSoup */; };
 		00587F1FA94CD26266221F66 /* QuickInboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7257EE79946767B8BBD73CD2 /* QuickInboxView.swift */; };
-		006BBB77D42F6F23B9CEA481 /* GroupTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF540F402250197D49D56EB /* GroupTree.swift */; };
 		029D1CAA82079A50F0440937 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16275B3C664652B6D8BC2044 /* Error.swift */; };
 		0347EE246E532B1D173508C5 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2832EA04327077D554DD288E /* SearchViewModel.swift */; };
 		0420B26731DF415C0D70A541 /* MasonryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00873FDCAF2D2BC65C363BF /* MasonryListView.swift */; };
@@ -43,6 +42,7 @@
 		27CDABEA6CDC448B827B2BE2 /* Notify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363A937A2C2C7A0D6FEDBD9B /* Notify.swift */; };
 		2847E35C8A9AB24654F99AC8 /* Readability.js in Resources */ = {isa = PBXBuildFile; fileRef = BDF07E3D881B358359FBDFC1 /* Readability.js */; };
 		2DE1C43AD25A4FB362735644 /* EntryRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33AD384F08E8BE192821742E /* EntryRepositoryProtocol.swift */; };
+		2F7F117A188C7AC509D2D1F2 /* TreeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAEA25FCDB2D6BA0CA12EDB1 /* TreeNode.swift */; };
 		31512ED9945E9A68798C956B /* NavigationItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F120F753825B0FA1F3AF9A8 /* NavigationItemView.swift */; };
 		31594ACDA28566CA18A4F8A9 /* Data.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F15865D42BC03D76D6F2E26B /* Data.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3444FDDF27C530128CCC8555 /* NotifyClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D3221A83D41229A6222ECBA /* NotifyClient.swift */; };
@@ -515,13 +515,13 @@
 		D54FA6D9B2D2FFB9A5F1474A /* InboxViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxViewModel.swift; sourceTree = "<group>"; };
 		D64CF059CD92240EC9DEE1C3 /* WorkflowListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowListViewModel.swift; sourceTree = "<group>"; };
 		DA146D20BB65FAA36F3DD3D0 /* Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Container.swift; sourceTree = "<group>"; };
+		DAEA25FCDB2D6BA0CA12EDB1 /* TreeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNode.swift; sourceTree = "<group>"; };
 		DBC62200B275E6454BC28967 /* SidebarButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarButtonView.swift; sourceTree = "<group>"; };
 		DC24EB0E13B6E98F2E940B83 /* AppearanceSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingView.swift; sourceTree = "<group>"; };
 		DCD1DF713CCB1414EFCFC231 /* Domain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Domain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCDF9A1E7AE5C803E7D3D304 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		DCFE1377C110706E1E5794C1 /* APIEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIEndpoints.swift; sourceTree = "<group>"; };
 		DD57A8C2C54BDD7D7B0DE2CF /* AutoRead.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoRead.swift; sourceTree = "<group>"; };
-		DDF540F402250197D49D56EB /* GroupTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupTree.swift; sourceTree = "<group>"; };
 		E442A0BBA0690922CB469040 /* WorkflowDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowDetailViewModel.swift; sourceTree = "<group>"; };
 		E5D0E13B84B85F0F13911C67 /* WorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowTests.swift; sourceTree = "<group>"; };
 		E60181F40D68B12613E8B51E /* WorkflowUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkflowUseCase.swift; sourceTree = "<group>"; };
@@ -876,6 +876,7 @@
 				37179859C84D53147DA31E76 /* EntryGroup.swift */,
 				26225BE00F26954CC8061BE1 /* Search.swift */,
 				BDD77677B427DAE46EEA8274 /* System.swift */,
+				DAEA25FCDB2D6BA0CA12EDB1 /* TreeNode.swift */,
 				D05024CEA7472755005E3028 /* Workflow.swift */,
 				79CAF1174F4A9190C064F9D1 /* WorkflowPlugin.swift */,
 			);
@@ -1031,7 +1032,6 @@
 			children = (
 				15B242B03786264025EB983E /* EntryRow.swift */,
 				7A184825803DCAF18AE821E8 /* Group.swift */,
-				DDF540F402250197D49D56EB /* GroupTree.swift */,
 				A1090BB8D7E305BBBB0F9187 /* Notify.swift */,
 			);
 			path = Entities;
@@ -1724,6 +1724,7 @@
 				48FDB114DCBEAA932B179CE6 /* Store.swift in Sources */,
 				FCC25A11AF2E4DD92FE4FB07 /* String.swift in Sources */,
 				866CB1584579624FB3401C66 /* System.swift in Sources */,
+				2F7F117A188C7AC509D2D1F2 /* TreeNode.swift in Sources */,
 				694ABD710F83BA0F1E2A09E9 /* URLSchema.swift in Sources */,
 				EAD94A4828986038CACB3970 /* Workflow.swift in Sources */,
 				F8B6E298B50E5DDCC616A5BA /* WorkflowJobStatus.swift in Sources */,
@@ -1770,7 +1771,6 @@
 				370C05F52B5D968B01C7B8BA /* GroupCreateView.swift in Sources */,
 				BE5A8D786C256883FB680BAD /* GroupTableView.swift in Sources */,
 				172507A5E9A5A8932442D038 /* GroupTableViewModel.swift in Sources */,
-				006BBB77D42F6F23B9CEA481 /* GroupTree.swift in Sources */,
 				6790FC2B8B5C7E407CC063A9 /* HTMLView.swift in Sources */,
 				5F78672F8DF126A42C65058C /* InboxPreviewView.swift in Sources */,
 				BD20DBD4EBA43FCCBDEBDF6D /* InboxViewModel.swift in Sources */,

@@ -26,6 +26,7 @@ public struct ContentView: View {
             }
         }
         .preferredColorScheme(state.setting.appearance.overColorScheme)
+        .environment(\.stateStore, state)
     }
 }
 

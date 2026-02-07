@@ -12,7 +12,7 @@ import Styleguide
 
 struct SidebarButtonView: View {
     @State private var viewModel: TreeViewModel
-    @Bindable var groupTree = GroupTree.shared
+    @Environment(\.stateStore) private var store
 
     @State private var showCreateGroup: Bool = false
     @State private var createGroupInParentUri: String = ""
@@ -40,19 +40,19 @@ struct SidebarButtonView: View {
 
             Menu {
                 Button("EntryGroup", action: {
-                    let parentUri = viewModel.selectedGroupUri ?? groupTree.root.uri
+                    let parentUri = viewModel.selectedGroupUri ?? (store?.rootGroup?.children?.first?.uri ?? "")
                     NotificationCenter.default.post(
                         name: NSNotification.Name.createGroupInTree,
                         object: NewGroupRequest(parentUri: parentUri, groupType: .standard))
                 })
                 Button("RSS Feed", action: {
-                    let parentUri = viewModel.selectedGroupUri ?? groupTree.root.uri
+                    let parentUri = viewModel.selectedGroupUri ?? (store?.rootGroup?.children?.first?.uri ?? "")
                     NotificationCenter.default.post(
                         name: NSNotification.Name.createGroupInTree,
                         object: NewGroupRequest(parentUri: parentUri, groupType: .feed))
                 })
                 Button("Dynamic EntryGroup", action: {
-                    let parentUri = viewModel.selectedGroupUri ?? groupTree.root.uri
+                    let parentUri = viewModel.selectedGroupUri ?? (store?.rootGroup?.children?.first?.uri ?? "")
                     NotificationCenter.default.post(
                         name: NSNotification.Name.createGroupInTree,
                         object: NewGroupRequest(parentUri: parentUri, groupType: .dynamic))

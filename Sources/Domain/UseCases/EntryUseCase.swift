@@ -11,20 +11,22 @@ import Foundation
 
 
 public class EntryUseCase: EntryUseCaseProtocol {
-    
+
     private var entryRepo: EntryRepositoryProtocol
     private var fileRepo: FileRepositoryProtocol
-    
+    private var store: StateStore
+
     private static let logger = Logger(
             subsystem: Bundle.main.bundleIdentifier!,
             category: String(describing: EntryUseCase.self)
         )
-    
-    public init(entryRepo: EntryRepositoryProtocol, fileRepo: FileRepositoryProtocol) {
+
+    public init(entryRepo: EntryRepositoryProtocol, fileRepo: FileRepositoryProtocol, store: StateStore = .shared) {
         self.entryRepo = entryRepo
         self.fileRepo = fileRepo
+        self.store = store
     }
-    
+
     public func getEntryDetails(uri: String) async throws -> any  EntryDetail {
         do {
             return try await entryRepo.GetEntryDetail(uri: uri)
@@ -69,8 +71,18 @@ public class EntryUseCase: EntryUseCaseProtocol {
         for uri in uris {
             try await deleteEntry(uri: uri)
         }
+
+        // 更新 Children 缓存
+        store.removeChildren(uris: uris)
+
+        // 更新 Tree 缓存 (如果是文件夹)
+        for uri in uris {
+            if let node = store.getTreeGroup(uri: uri) {
+                store.removeTreeChildGroup(parentUri: node.parentUri, childUri: uri)
+            }
+        }
     }
-    
+
     public func getTreeRoot() async throws -> any  EntryGroup {
         do {
             return try await entryRepo.GroupTree()
@@ -78,7 +90,7 @@ public class EntryUseCase: EntryUseCaseProtocol {
             throw UseCaseError.canceled
         }
     }
-    
+
     public func listChildren(uri: String, page: Int?, pageSize: Int?, sort: String?, order: String?) async throws -> [any  EntryInfo] {
         do {
             return try await entryRepo.ListGroupChildren(parentUri: uri, page: page, pageSize: pageSize, sort: sort, order: order)
@@ -98,6 +110,14 @@ public class EntryUseCase: EntryUseCaseProtocol {
                 let entry = try await getEntryDetails(uri: uri)
                 let newEntryUri = newParentUri + "/" + entry.name
                 try await entryRepo.ChangeParent(uri: uri, newEntryUri: newEntryUri, option: ChangeParentOption())
+
+                // 更新 Tree 缓存
+                if entry.isGroup {
+                    if let node = store.getTreeGroup(uri: uri) {
+                        store.changeTreeParent(uri: uri, newParentUri: newParentUri)
+                    }
+                }
+
                 DispatchQueue.main.async {
                     finisher(entry, parent)
                 }
@@ -119,7 +139,21 @@ public class EntryUseCase: EntryUseCaseProtocol {
             document: option.document
         )
         do {
-            return try await entryRepo.CreateEntry(entry: entry)
+            let newEntry = try await entryRepo.CreateEntry(entry: entry)
+
+            // 更新 Tree 缓存
+            if let groupDetail = newEntry as? EntryDetail,
+               let group = groupDetail.toGroup() {
+                store.addTreeChildGroup(parentUri: parentUri, child: group, grandChildren: nil)
+            }
+
+            // 更新 Children 缓存 (如果当前在父目录下)
+            if store.currentGroupUri == parentUri {
+                let cached = CachedEntry(from: newEntry)
+                store.appendChildren([cached])
+            }
+
+            return newEntry
         } catch RepositoryError.canceled {
             throw UseCaseError.canceled
         }
@@ -149,9 +183,16 @@ public class EntryUseCase: EntryUseCaseProtocol {
         Self.logger.info("create entry \(entry.id) for upload")
 
         try await fileRepo.UploadFile(entry: entry.id, fileHandle: fileHandle)
+
+        // 更新 Children 缓存 (如果当前在父目录下)
+        if store.currentGroupUri == parentUri {
+            let cached = CachedEntry(from: entry)
+            store.appendChildren([cached])
+        }
+
         return entry
     }
-    
+
     public func DownloadFile(entry: Int64, dirPath: String) async throws -> String {
         throw UseCaseError.unimplement
     }

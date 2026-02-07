@@ -13,7 +13,7 @@ import Styleguide
 
 
 public struct EntryMenuView: View {
-    @State private var groupTree = GroupTree.shared
+    @Environment(\.stateStore) private var store
     @State private var viewModel: GroupTableViewModel
 
     public init(viewModel: GroupTableViewModel) {
@@ -58,7 +58,7 @@ public struct EntryMenuView: View {
 
                 Section{
                     Menu("Move To") {
-                        ForEach(groupTree.children ?? []){ childGroup in
+                        ForEach(store?.treeChildren ?? []){ childGroup in
                             GroupDestinationView(
                                 group: childGroup,
                                 childKeyPath: \.children,
@@ -67,7 +67,7 @@ public struct EntryMenuView: View {
                         }
                     }
                     Menu("Replicate To") {
-                        ForEach(groupTree.children ?? []){ childGroup in
+                        ForEach(store?.treeChildren ?? []){ childGroup in
                             GroupDestinationView(
                                 group: childGroup,
                                 childKeyPath: \.children,
@@ -119,7 +119,7 @@ public struct EntryMenuView: View {
             return false
         }
         if let target = targets.first {
-            return target.isGroup && target.id != groupTree.root.id
+            return target.isGroup && target.id != store?.rootGroup?.id
         }
         return false
     }
@@ -136,7 +136,7 @@ public struct EntryMenuView: View {
             return false
         }
         for target in targets {
-            if  target.id == groupTree.root.id || isInternalFile(target){
+            if  target.id == store?.rootGroup?.id || isInternalFile(target){
                 return false
             }
         }
@@ -158,10 +158,10 @@ public struct EntryMenuView: View {
 
 
 struct GroupDestinationView: View {
-    let group: GroupLeaf
-    let childKeyPath: KeyPath<GroupLeaf, [GroupLeaf]?>
-    let action: (_: GroupLeaf) async -> Void
-    
+    let group: TreeNode
+    let childKeyPath: KeyPath<TreeNode, [TreeNode]?>
+    let action: (_: TreeNode) async -> Void
+
     var body: some View {
         if group[keyPath: childKeyPath] != nil {
             DisclosureGroup(

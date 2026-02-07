@@ -15,8 +15,6 @@ import Domain
 @Observable
 @MainActor
 public class CreateDeleteViewModel {
-    var groupTree = GroupTree.shared
-
     var store: StateStore
     var entryUsecase: any EntryUseCaseProtocol
 
@@ -29,7 +27,7 @@ public class CreateDeleteViewModel {
         self.store = store
         self.entryUsecase = entryUsecase
     }
-    
+
     func describeEntry(uri: String) async -> EntryDetail? {
         do {
             return try await entryUsecase.getEntryDetails(uri: uri)
@@ -45,15 +43,14 @@ public class CreateDeleteViewModel {
         let isRoot = parentUri.isEmpty || parentUri == EntryURI.root
         let effectiveParentUri = isRoot ? "" : parentUri
 
-        guard isRoot || groupTree.getGroup(uri: parentUri) != nil else {
+        guard isRoot || store.getTreeGroup(uri: parentUri) != nil else {
             sentAlert("create group failed: parent \(parentUri) not exist")
             return
         }
 
         do {
             let newGroup = try await entryUsecase.createGroups(parentUri: effectiveParentUri, option: option)
-            groupTree.addChildGroup(parentUri: effectiveParentUri, child: newGroup.toGroup()!, grandChildren: nil)
-
+            // UseCase 已经更新了 Store 缓存
             onCreated?(newGroup)
             NotificationCenter.default.post(name: .reopenGroup, object: [effectiveParentUri])
         } catch {
@@ -62,9 +59,9 @@ public class CreateDeleteViewModel {
         }
     }
 
-    func deleteEntries(entries: [EntryInfo], onDeleted: (([Int64]) -> Void)? = nil) async {
+    func deleteEntries(entries: [EntryInfo], onDeleted: (([Int64]) -> Void)? = nil) {
         let uc = entryUsecase
-        let gt = groupTree
+        let st = store
         let ids = entries.map { $0.id }
 
         for entry in entries {
@@ -79,12 +76,13 @@ public class CreateDeleteViewModel {
                     }
                 },
                 complete: {
-                    for entry in entries {
-                        if entry.isGroup {
-                            gt.removeChildGroup(parentUri: entry.uri, childUri: entry.uri)
-                        }
-                        NotificationCenter.default.post(name: .reopenGroup, object: [entry.uri])
+                    // 从 Tree 缓存中移除
+                    if entry.isGroup {
+                        st.removeTreeChildGroup(parentUri: entry.uri, childUri: entry.uri)
                     }
+                    // 从 Children 缓存中移除
+                    st.removeChildren(uris: [entry.uri])
+                    NotificationCenter.default.post(name: .reopenGroup, object: [entry.uri])
                 }
             )
         }

@@ -15,8 +15,6 @@ import Domain
 @Observable
 @MainActor
 public class EntryDetailViewModel {
-    var groupTree = GroupTree.shared
-
     var store: StateStore
     var entryUsecase: any EntryUseCaseProtocol
 
@@ -31,7 +29,7 @@ public class EntryDetailViewModel {
         self.store = store
         self.entryUsecase = entryUsecase
     }
-    
+
     func describeEntry(uri: String) async -> EntryDetail? {
         do {
             return try await entryUsecase.getEntryDetails(uri: uri)
@@ -59,9 +57,12 @@ public class EntryDetailViewModel {
             let newDetail = try await entryUsecase.renameEntry(uri: entry.uri, newName: validName)
 
             if entry.isGroup {
-                if let grp = groupTree.getGroup(uri: entry.uri) {
-                    groupTree.removeChildGroup(parentUri: grp.parentUri, childUri: entry.uri)
-                    groupTree.addChildGroup(parentUri: grp.parentUri, child: newDetail.toGroup()!, grandChildren: grp.children)
+                // 从 Tree 中移除旧节点，添加新节点
+                if let node = store.getTreeGroup(uri: entry.uri) {
+                    store.removeTreeChildGroup(parentUri: node.parentUri, childUri: entry.uri)
+                    if let group = newDetail.toGroup() {
+                        store.addTreeChildGroup(parentUri: node.parentUri, child: group, grandChildren: node.children)
+                    }
                 }
             }
 

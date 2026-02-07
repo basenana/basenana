@@ -38,22 +38,37 @@ struct EntryRow: Hashable, Identifiable {
         self.accessAt = info.accessAt
         self.info = info
     }
-    
+
+    init(from cached: CachedEntry) {
+        self.id = cached.id
+        self.uri = cached.uri
+        self.name = cached.name
+        self.kind = cached.kind
+        self.isGroup = cached.isGroup
+        self.size = cached.size
+        self.parentID = cached.parentID
+        self.createdAt = cached.createdAt
+        self.changedAt = cached.changedAt
+        self.modifiedAt = cached.modifiedAt
+        self.accessAt = cached.accessAt
+        self.info = CachedEntryInfo(cached: cached)
+    }
+
     func hash(into hasher: inout Hasher) {
-        hasher.combine(info.id)
+        hasher.combine(id)
     }
-    
+
     static func == (lhs: EntryRow, rhs: EntryRow) -> Bool {
-        return lhs.info.id == rhs.info.id
+        return lhs.id == rhs.id
     }
-    
+
     var readableSize: String {
         get {
             let kilobyte: Int64 = 1024
             let megabyte = kilobyte * 1024
             let gigabyte = megabyte * 1024
             let terabyte = gigabyte * 1024
-            
+
             let bytes = size
             if bytes < kilobyte {
                 return "\(bytes) B"
@@ -68,4 +83,25 @@ struct EntryRow: Hashable, Identifiable {
             }
         }
     }
+}
+
+
+// MARK: - CachedEntryInfo (implements EntryInfo from CachedEntry)
+
+private struct CachedEntryInfo: EntryInfo {
+    let cached: CachedEntry
+
+    var id: Int64 { cached.id }
+    var uri: String { cached.uri }
+    var name: String { cached.name }
+    var kind: String { cached.kind }
+    var isGroup: Bool { cached.isGroup }
+    var size: Int64 { cached.size }
+    var parentID: Int64 { cached.parentID }
+    var createdAt: Date { cached.createdAt }
+    var changedAt: Date { cached.changedAt }
+    var modifiedAt: Date { cached.modifiedAt }
+    var accessAt: Date { cached.accessAt }
+
+    func toGroup() -> EntryGroup? { nil }
 }

@@ -12,15 +12,15 @@ import SwiftData
 
 
 struct TreeListView: View {
-    @Bindable var groupTree = GroupTree.shared
     @State private var viewModel: TreeViewModel
-    
+    @Environment(\.stateStore) private var store
+
     public init(viewModel: TreeViewModel) {
         self.viewModel = viewModel
     }
-    
+
     public var body: some View {
-        OutlineGroup(groupTree.children ?? [], children: \.children){ child in
+        OutlineGroup(store?.treeChildren ?? [], children: \.children){ child in
             NavigationLink(value: Destination.groupList(groupUri: child.uri), label: {
                 HStack{
                     Image(systemName: "folder")

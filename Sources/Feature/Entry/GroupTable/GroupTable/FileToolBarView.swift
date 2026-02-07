@@ -12,7 +12,6 @@ import Styleguide
 
 
 struct FileToolBarView: View {
-    @State private var groupTree = GroupTree.shared
     @State private var viewModel: GroupTableViewModel
 
     @State private var targetDetail: EntryDetail? = nil
