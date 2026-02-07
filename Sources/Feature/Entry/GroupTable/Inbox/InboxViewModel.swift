@@ -32,15 +32,13 @@ public class InboxViewModel: BaseViewModel {
         store.newBackgroundJob(
             name: "Fetching \(url)",
             job: {
-                Task {
-                    do {
-                        _ = try await useCase.execute(url: url, title: title)
-                        Self.logger.info("fetch completed: \(url)")
-                    } catch {
-                        Self.logger.error("fetch failed: \(error)")
-                        Task { @MainActor in
-                            sentAlert("Fetch failed: \(error)")
-                        }
+                do {
+                    _ = try await useCase.execute(url: url, title: title)
+                    Self.logger.info("fetch completed: \(url)")
+                } catch {
+                    Self.logger.error("fetch failed: \(error)")
+                    Task { @MainActor in
+                        sentAlert("Fetch failed: \(error)")
                     }
                 }
             },
