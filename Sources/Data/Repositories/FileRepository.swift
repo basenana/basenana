@@ -25,6 +25,7 @@ public class FileRepository: FileRepositoryProtocol {
     }
     
     public func UploadFile(entry: Int64, fileHandle: FileHandle) async throws {
+        Self.logger.info("FileRepository.UploadFile called for entry \(entry)")
         return try await core.UploadFile(entry: entry, fileHandle: fileHandle)
     }
     

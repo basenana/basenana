@@ -89,6 +89,9 @@ class DIContainer {
         self.c.register(WorkflowUseCaseProtocol.self) { r in
             WorkflowUseCase(repo: r.resolve(WorkflowRepositoryProtocol.self)!, entryRepo: r.resolve(EntryRepositoryProtocol.self)!)
         }.inObjectScope(.container)
+        self.c.register(FetchWebPageUseCaseProtocol.self) { r in
+            FetchWebPageUseCase(entryUsecase: r.resolve(EntryUseCaseProtocol.self)!, setting: GeneralSetting())
+        }.inObjectScope(.container)
 
         // Repositories
         self.c.register(EntryRepositoryProtocol.self) { r in

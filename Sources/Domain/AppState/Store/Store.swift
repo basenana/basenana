@@ -20,7 +20,7 @@ public class StateStore {
 
     // Global panel visibility states
     public var showInspector: Bool = false
-    public var showDocumentView: Bool = true
+    public var showDocumentView: Bool = false
 
     // Navigation state
     public var destinations: [Destination] = []

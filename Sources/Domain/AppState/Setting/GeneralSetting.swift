@@ -23,5 +23,5 @@ public class GeneralSetting {
         }
     }
 
-    init () {}
+    public init () {}
 }

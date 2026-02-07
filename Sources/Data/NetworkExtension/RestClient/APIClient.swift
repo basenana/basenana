@@ -162,8 +162,16 @@ final public class APIClient {
         body.append("--\(boundary)--\r\n".data(using: .utf8)!)
 
         request.httpBody = body
+        request.setValue("\(body.count)", forHTTPHeaderField: "Content-Length")
+
+        Self.logger.info("uploadFile: body.count=\(body.count), fileData.count=\(fileData.count)")
 
         let (data, response) = try await performRequest(request)
+
+        if let httpResponse = response as? HTTPURLResponse {
+            Self.logger.info("uploadFile response: status=\(httpResponse.statusCode)")
+        }
+
         return data
     }
 

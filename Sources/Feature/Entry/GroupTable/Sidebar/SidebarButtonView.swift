@@ -117,7 +117,7 @@ struct SidebarButtonView: View {
         }
         .onChange(of: self.renameEntryUri){}
         .sheet(isPresented: $showQuickInbox){
-            WebPackInboxView(viewModel: InboxViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase), showInboxView: $showQuickInbox)
+            QuickInboxView(viewModel: InboxViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase), showInboxView: $showQuickInbox)
         }
         .padding(5)
         .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/,alignment: .leading)

@@ -125,11 +125,6 @@ public class EntryUseCase: EntryUseCaseProtocol {
         }
     }
 
-    private func sanitizeFileName(_ name: String) -> String {
-        let illegalCharacters = CharacterSet(charactersIn: "|:\\?*<\"\">/")
-        return name.components(separatedBy: illegalCharacters).joined()
-    }
-
     public func UploadFile(
         parentUri: String,
         file: URL,
@@ -142,10 +137,9 @@ public class EntryUseCase: EntryUseCaseProtocol {
             fileHandle.closeFile()
         }
 
-        let sanitizedName = sanitizeFileName(file.lastPathComponent)
         let option = EntryCreate(
             parentUri: parentUri,
-            name: sanitizedName,
+            name: file.lastPathComponent,
             kind: "raw",
             properties: properties,
             tags: tags,

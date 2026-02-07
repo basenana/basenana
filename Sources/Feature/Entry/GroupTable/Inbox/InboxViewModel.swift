@@ -26,7 +26,30 @@ public class InboxViewModel: BaseViewModel {
     override public init(store: StateStore, entryUsecase: EntryUseCaseProtocol) {
         super.init(store: store, entryUsecase: entryUsecase)
     }
-    
+
+    func fetchAndUpload(url: String, title: String? = nil) {
+        let useCase = FetchWebPageUseCase(entryUsecase: entryUsecase, setting: store.setting.general)
+        store.newBackgroundJob(
+            name: "Fetching \(url)",
+            job: {
+                Task {
+                    do {
+                        _ = try await useCase.execute(url: url, title: title)
+                        Self.logger.info("fetch completed: \(url)")
+                    } catch {
+                        Self.logger.error("fetch failed: \(error)")
+                        Task { @MainActor in
+                            sentAlert("Fetch failed: \(error)")
+                        }
+                    }
+                }
+            },
+            complete: {
+                NotificationCenter.default.post(name: .reopenGroup, object: [EntryURI.inbox])
+            }
+        )
+    }
+
     func packingWebPage(url: String, title: String, webView: WKWebView) async -> (String, Bool) {
         
         guard let u = URL(string: url) else {
