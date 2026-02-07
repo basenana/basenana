@@ -25,7 +25,16 @@ class GroupTree {
             category: String(describing: InboxViewModel.self)
         )
 
-    private init() {}
+    private init() {
+        // Register self with StateStore for focus state binding
+        setupFocusStateBinding()
+    }
+
+    private func setupFocusStateBinding() {
+        StateStore.shared.currentGroupUriDidChange = { [weak self] uri in
+            // Can be used for cross-view sync if needed
+        }
+    }
 
     func reset(root: EntryGroup) {
         self.root = root
@@ -198,7 +207,7 @@ class GroupLeaf: Identifiable, Hashable {
 class TreeUpdate {
     var oldLeaf: GroupLeaf
     var newLeaf: GroupLeaf?
-    
+
     init(oldLeaf: GroupLeaf, newLeaf: GroupLeaf? = nil) {
         self.oldLeaf = oldLeaf
         self.newLeaf = newLeaf

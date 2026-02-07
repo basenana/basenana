@@ -25,6 +25,34 @@ public class StateStore {
     // Navigation state
     public var destinations: [Destination] = []
 
+    // MARK: - Navigation Focus State
+    public private(set) var _currentGroupUri: String? = nil
+    public private(set) var _selectedEntryUri: String? = nil
+
+    public var currentGroupUri: String? {
+        get { _currentGroupUri }
+        set {
+            if _currentGroupUri != newValue {
+                _currentGroupUri = newValue
+                currentGroupUriDidChange?(newValue)
+            }
+        }
+    }
+
+    public var selectedEntryUri: String? {
+        get { _selectedEntryUri }
+        set {
+            if _selectedEntryUri != newValue {
+                _selectedEntryUri = newValue
+                selectedEntryUriDidChange?(newValue)
+            }
+        }
+    }
+
+    // Callbacks for external binding
+    public var currentGroupUriDidChange: ((String?) -> Void)?
+    public var selectedEntryUriDidChange: ((String?) -> Void)?
+
     private init(){ }
 }
 

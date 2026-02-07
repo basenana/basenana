@@ -24,7 +24,19 @@ public class GroupTableViewModel: BaseViewModel {
     var hasMore: Bool = true
     var isLoading: Bool = false
 
-    var selection: Set<EntryRow.ID> = []
+    // Internal selection storage
+    private var _selection: Set<EntryRow.ID> = [] {
+        didSet {
+            updateSelectionState()
+        }
+    }
+
+    // Exposed selection property
+    var selection: Set<EntryRow.ID> {
+        get { _selection }
+        set { _selection = newValue }
+    }
+
     var selectedDocument: EntryDetail? = nil
 
     // Panel visibility states (from global StateStore)
@@ -61,6 +73,16 @@ public class GroupTableViewModel: BaseViewModel {
             }
             return !entry.isGroup
         }()
+    }
+
+    // MARK: - Selection Change Handler
+    private func updateSelectionState() {
+        guard selection.count == 1, let id = selection.first,
+              let entry = children.first(where: { $0.id == id }) else {
+            store.selectedEntryUri = nil
+            return
+        }
+        store.selectedEntryUri = entry.uri
     }
 
     func loadSelectedEntryDetail() async {
@@ -128,6 +150,9 @@ public class GroupTableViewModel: BaseViewModel {
             if group == nil || !group!.isGroup {
                 throw BizError.notGroup
             }
+
+            // Sync with global navigation state
+            store.currentGroupUri = uri
 
             reset()
             await loadNextPage()
