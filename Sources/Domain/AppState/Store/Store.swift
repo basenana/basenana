@@ -223,6 +223,29 @@ public class StateStore {
         _treeAllGroups[uri]
     }
 
+    /// Get all visible groups as a flat list for parent selection
+    /// - Returns: Array of (uri, name, indentLevel) tuples
+    public func getVisibleGroupsForParentSelection() -> [(uri: String, name: String, indent: Int)] {
+        var result: [(uri: String, name: String, indent: Int)] = []
+
+        // Add root option
+        result.append((uri: "/", name: "Root", indent: 0))
+
+        // Recursively add visible groups
+        addVisibleGroups(from: _treeChildren, indent: 0, into: &result)
+
+        return result
+    }
+
+    private func addVisibleGroups(from nodes: [TreeNode], indent: Int, into result: inout [(uri: String, name: String, indent: Int)]) {
+        for node in nodes {
+            result.append((uri: node.uri, name: node.name, indent: indent))
+            if let children = node.children, !children.isEmpty {
+                addVisibleGroups(from: children, indent: indent + 1, into: &result)
+            }
+        }
+    }
+
     // MARK: - Tree Node Update Operations
 
     /// Update node name and URI after rename

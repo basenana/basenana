@@ -32,7 +32,7 @@ public struct QuickInboxView: View {
                 Text("URL")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                TextField("Web URL", text: $urlInput)
+                TextField("https://...", text: $urlInput)
                     .textFieldStyle(.squareBorder)
             }
 

@@ -84,4 +84,27 @@ public class TreeViewModel: BaseViewModel {
         expandedNodes.remove(uri)
     }
 
+    /// Get all visible groups as a flat list with indentation for parent selection
+    /// - Returns: Array of (uri, name, indentLevel) tuples
+    func getVisibleGroupsForParentSelection() -> [(uri: String, name: String, indent: Int)] {
+        var result: [(uri: String, name: String, indent: Int)] = []
+
+        // Add root option
+        result.append((uri: "/", name: "Root", indent: 0))
+
+        // Recursively add visible groups
+        addVisibleGroups(from: store.treeChildren, indent: 0, into: &result)
+
+        return result
+    }
+
+    private func addVisibleGroups(from nodes: [TreeNode], indent: Int, into result: inout [(uri: String, name: String, indent: Int)]) {
+        for node in nodes {
+            result.append((uri: node.uri, name: node.name, indent: indent))
+            if let children = node.children, !children.isEmpty {
+                addVisibleGroups(from: children, indent: indent + 1, into: &result)
+            }
+        }
+    }
+
 }

@@ -117,6 +117,7 @@ private struct GroupTableWithSheetView: View {
                     parentUri: createGroupInParentUri,
                     groupType: createGroupType,
                     viewModel: CreateDeleteViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase),
+                    store: viewModel.store,
                     showCreateGroup: $showCreateGroup,
                     onCreated: viewModel.group?.uri == createGroupInParentUri ? { info in
                         viewModel.addChildren(infos: [info])

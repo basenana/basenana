@@ -30,16 +30,8 @@ public struct EntryMenuView: View {
 
             if canCreateGroup(){
                 Section{
-                    Menu("New") {
-                        Button("Group", action: {
-                            NotificationCenter.default.post(name: .createGroup, object: NewGroupRequest(parentUri: viewModel.group?.uri ?? "", groupType: .standard))
-                        })
-                        Button("RSS Feed", action: {
-                            NotificationCenter.default.post(name: .createGroup, object: NewGroupRequest(parentUri: viewModel.group?.uri ?? "", groupType: .feed))
-                        })
-                        Button("Dynamic Group", action: {
-                            NotificationCenter.default.post(name: .createGroup, object: NewGroupRequest(parentUri: viewModel.group?.uri ?? "", groupType: .dynamic))
-                        })
+                    Button("New Group") {
+                        NotificationCenter.default.post(name: .createGroup, object: NewGroupRequest(parentUri: viewModel.group?.uri ?? "", groupType: .standard))
                     }
                 }
             }

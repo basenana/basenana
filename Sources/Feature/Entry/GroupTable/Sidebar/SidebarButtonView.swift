@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Domain
-import Domain
 import Styleguide
 
 struct SidebarButtonView: View {
@@ -15,8 +14,7 @@ struct SidebarButtonView: View {
     @Environment(\.stateStore) private var store
 
     @State private var showCreateGroup: Bool = false
-    @State private var createGroupInParentUri: String = ""
-    @State private var createGroupType: GroupType = .standard
+    @State private var createGroupParentUri: String = ""
 
     @State private var showQuickInbox: Bool = false
     @State private var showDeleteConfirm: Bool = false
@@ -38,30 +36,12 @@ struct SidebarButtonView: View {
             })
             .buttonStyle(.accessoryBar)
 
-            Menu {
-                Button("EntryGroup", action: {
-                    let parentUri = viewModel.selectedGroupUri ?? (store?.rootGroup?.children?.first?.uri ?? "")
-                    NotificationCenter.default.post(
-                        name: NSNotification.Name.createGroupInTree,
-                        object: NewGroupRequest(parentUri: parentUri, groupType: .standard))
-                })
-                Button("RSS Feed", action: {
-                    let parentUri = viewModel.selectedGroupUri ?? (store?.rootGroup?.children?.first?.uri ?? "")
-                    NotificationCenter.default.post(
-                        name: NSNotification.Name.createGroupInTree,
-                        object: NewGroupRequest(parentUri: parentUri, groupType: .feed))
-                })
-                Button("Dynamic EntryGroup", action: {
-                    let parentUri = viewModel.selectedGroupUri ?? (store?.rootGroup?.children?.first?.uri ?? "")
-                    NotificationCenter.default.post(
-                        name: NSNotification.Name.createGroupInTree,
-                        object: NewGroupRequest(parentUri: parentUri, groupType: .dynamic))
-                })
-            } label: {
+            Button(action: {
+                createGroupParentUri = defaultParentUri
+                showCreateGroup.toggle()
+            }, label: {
                 Image(systemName: "folder.badge.plus")
-            }
-            .menuIndicator(.hidden)
-            .menuStyle(.button)
+            })
             .buttonStyle(.accessoryBar)
 
             Spacer()
@@ -75,20 +55,12 @@ struct SidebarButtonView: View {
         })
         .sheet(isPresented: $showCreateGroup){
             GroupCreateView(
-                parentUri: self.createGroupInParentUri,
-                groupType: createGroupType,
+                parentUri: createGroupParentUri,
+                groupType: .standard,
                 viewModel: CreateDeleteViewModel(store: viewModel.store, entryUsecase: viewModel.entryUsecase),
+                store: viewModel.store,
                 showCreateGroup: $showCreateGroup)
         }
-        .onReceive(NotificationCenter.default.publisher(for: .createGroupInTree)) { [self] notification in
-            if let req = notification.object as? NewGroupRequest {
-                self.createGroupInParentUri = req.parentUri
-                self.createGroupType = req.groupType
-                self.showCreateGroup.toggle()
-            }
-        }
-        .onChange(of: self.createGroupInParentUri){}
-        .onChange(of: self.createGroupType){}
         .sheet(isPresented: $showDeleteConfirm){
             DeleteEntriesView(
                 entryUris: self.needDeletedEnties,
@@ -122,5 +94,24 @@ struct SidebarButtonView: View {
         .padding(5)
         .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/,alignment: .leading)
     }
-}
 
+    /// Calculate the default parent URI for new group creation
+    /// - If selected group is a hidden folder (starts with "."), use root
+    /// - Otherwise use the selected group URI
+    /// - If nothing is selected, use the first visible child of root
+    private var defaultParentUri: String {
+        if let selected = viewModel.selectedGroupUri {
+            // Check if selected group is hidden (starts with ".")
+            let groupName = selected.split(separator: "/").last.map(String.init) ?? ""
+            if groupName.hasPrefix(".") {
+                return EntryURI.root
+            }
+            return selected
+        }
+
+        // No selection: use first visible child of root
+        return store?.rootGroup?.children?
+            .first(where: { !$0.groupName.hasPrefix(".") })?
+            .uri ?? ""
+    }
+}
