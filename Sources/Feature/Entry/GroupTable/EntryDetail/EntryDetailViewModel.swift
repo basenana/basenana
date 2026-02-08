@@ -47,14 +47,8 @@ public class EntryDetailViewModel {
             return true
         }
 
-        let validName = sanitizeFileName(newName)
-        if validName != newName {
-            errorMessage = "\(newName) is invalid"
-            return false
-        }
-
         do {
-            let newDetail = try await entryUsecase.renameEntry(uri: entry.uri, newName: validName)
+            let newDetail = try await entryUsecase.renameEntry(uri: entry.uri, newName: newName)
 
             if entry.isGroup {
                 // Remove old node from Tree, add new node

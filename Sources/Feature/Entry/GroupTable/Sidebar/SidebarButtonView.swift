@@ -74,6 +74,12 @@ struct SidebarButtonView: View {
             }
         }
         .onChange(of: self.needDeletedEnties){}
+        .onReceive(NotificationCenter.default.publisher(for: .createGroupInTree)) { [self] notification in
+            if let req = notification.object as? NewGroupRequest {
+                self.createGroupParentUri = req.parentUri
+                self.showCreateGroup.toggle()
+            }
+        }
         .sheet(isPresented: $showRenameEntry){
             EntryRenameView(
                 entryUri: renameEntryUri,

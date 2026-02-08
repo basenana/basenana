@@ -190,8 +190,6 @@ struct GroupCreateView: View {
                 .keyboardShortcut(.return, modifiers: [])
                 .buttonStyle(.borderedProminent)
                 .disabled(!canCreate)
-
-                Spacer()
             }
         }
         .padding(30)
