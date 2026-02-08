@@ -67,10 +67,12 @@ public class GroupTableViewModel: BaseViewModel {
     // Dependencies
     var fileRepository: FileRepositoryProtocol
     var documentUsecase: any DocumentUseCaseProtocol
+    private var syncUseCase: EntrySyncUseCase
 
-    public init(store: StateStore, entryUsecase: any EntryUseCaseProtocol, fileRepository: FileRepositoryProtocol, documentUsecase: any DocumentUseCaseProtocol) {
+    public init(store: StateStore, entryUsecase: any EntryUseCaseProtocol, fileRepository: FileRepositoryProtocol, documentUsecase: any DocumentUseCaseProtocol, syncUseCase: EntrySyncUseCase) {
         self.fileRepository = fileRepository
         self.documentUsecase = documentUsecase
+        self.syncUseCase = syncUseCase
         super.init(store: store, entryUsecase: entryUsecase)
     }
 
@@ -196,51 +198,24 @@ public class GroupTableViewModel: BaseViewModel {
     // MARK: - Synchronous Update Methods
 
     func updateChild(id: Int64, newName: String, newUri: String) {
-        // Rebuild the list with updated entry
-        var updated = store.childrenList
-        if let index = updated.firstIndex(where: { $0.id == id }) {
-            let entry = updated[index]
-            // Create a new entry with updated name/uri
-            let newEntry = CachedEntry(
-                id: entry.id,
-                uri: newUri,
-                name: newName,
-                kind: entry.kind,
-                isGroup: entry.isGroup,
-                size: entry.size,
-                parentID: entry.parentID,
-                createdAt: entry.createdAt,
-                changedAt: entry.changedAt,
-                modifiedAt: entry.modifiedAt,
-                accessAt: entry.accessAt
-            )
-            updated[index] = newEntry
-        }
-        store.resetChildren()
-        store.appendChildren(updated)
+        syncUseCase.syncChildrenAfterRename(id: id, newName: newName, newUri: newUri)
     }
 
     func removeChildren(ids: [Int64]) {
         let uris = store.childrenList.filter { ids.contains($0.id) }.map { $0.uri }
-        store.removeChildren(uris: uris)
+        syncUseCase.syncChildrenAfterDelete(parentUri: nil, uris: uris)
     }
 
     func sortChildren(by comparators: [KeyPathComparator<EntryRow>]) {
-        // For now, just sort by name ascending as a simple implementation
-        let sorted = store.childrenList.sorted { lhs, rhs in
+        // Sort in-place without triggering reset
+        store.sortChildren { lhs, rhs in
             return lhs.name.localizedCaseInsensitiveCompare(rhs.name) == .orderedAscending
         }
-        store.resetChildren()
-        store.appendChildren(sorted)
     }
 
     func addChildren(infos: [EntryInfo]) {
-        let rows = infos.map { CachedEntry(from: $0) }
-        var updated = store.childrenList
-        updated.append(contentsOf: rows)
-        updated.sort { $0.name < $1.name }
-        store.resetChildren()
-        store.appendChildren(updated)
+        let parentUri = group?.uri ?? store.currentGroupUri
+        syncUseCase.syncChildrenAfterCreate(parentUri: parentUri ?? "", entries: infos)
     }
 
     // MARK: - Wrapper Methods
@@ -248,7 +223,7 @@ public class GroupTableViewModel: BaseViewModel {
     func moveChildrenToGroup(entryUris: [String], newParentUri: String) async -> Bool {
         let success = await moveEntriesToGroup(entryUris: entryUris, newParentUri: newParentUri)
         if success {
-            store.removeChildren(uris: entryUris)
+            syncUseCase.syncChildrenAfterMove(uris: entryUris, fromParent: group?.uri ?? "", toParent: newParentUri)
         }
         return success
     }
@@ -321,10 +296,11 @@ public class GroupTableViewModel: BaseViewModel {
         let uris = entries.map { $0.uri }
         let vm = CreateDeleteViewModel(store: store, entryUsecase: entryUsecase)
 
-        store.removeChildren(uris: uris)
+        // Pre-delete, API completion will trigger another sync
+        syncUseCase.syncChildrenAfterDelete(parentUri: nil, uris: uris)
 
         await vm.deleteEntries(entries: entries) { deletedUris in
-            // Already removed from Store above
+            // Synced again by EntryUseCase after API completion
         }
     }
 

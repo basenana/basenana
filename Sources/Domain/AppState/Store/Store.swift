@@ -49,7 +49,7 @@ public class StateStore {
         }
     }
 
-    // MARK: - Children Cache (使用 CachedEntry 类型)
+    // MARK: - Children Cache
     public private(set) var _childrenList: [CachedEntry] = []
 
     public var childrenList: [CachedEntry] {
@@ -67,6 +67,11 @@ public class StateStore {
 
     public func resetChildren() {
         _childrenList = []
+    }
+
+    /// Sort children in-place without triggering reset
+    public func sortChildren(by areInIncreasingOrder: (CachedEntry, CachedEntry) -> Bool) {
+        _childrenList.sort(by: areInIncreasingOrder)
     }
 
     // Callbacks for external binding
@@ -160,7 +165,7 @@ public class StateStore {
 
         if node.parentUri == newParentUri { return }
 
-        // 防止循环引用：不能将父节点移动到其子节点中
+        // Prevent circular reference
         if isInLoop(uri: uri, newParentUri: newParentUri) { return }
 
         if let newParent = _treeAllGroups[newParentUri] {
@@ -170,7 +175,39 @@ public class StateStore {
         }
 
         removeTreeChildGroup(parentUri: node.parentUri, childUri: uri)
-        addTreeChildGroup(parentUri: newParentUri, child: node.group, grandChildren: node.children)
+
+        let movedNode = TreeNode(group: node.group, children: node.children)
+        movedNode.updateName(node.name)
+
+        if let newParent = _treeAllGroups[newParentUri] {
+            if newParent.children == nil {
+                newParent.children = [movedNode]
+            } else {
+                newParent.children?.append(movedNode)
+            }
+        } else {
+            _treeChildren.append(movedNode)
+        }
+
+        _treeAllGroups[newParentUri + "/" + node.name] = movedNode
+        _treeAllGroups[uri] = nil
+
+        updateDescendantUris(node: movedNode, oldParentUri: uri, newParentUri: newParentUri)
+    }
+
+    /// Update descendant URIs after parent change
+    private func updateDescendantUris(node: TreeNode, oldParentUri: String, newParentUri: String) {
+        guard let children = node.children else { return }
+
+        for child in children {
+            let oldChildUri = child.uri
+            let newChildUri = newParentUri + "/" + child.name
+
+            _treeAllGroups[newChildUri] = child
+            _treeAllGroups[oldChildUri] = nil
+
+            updateDescendantUris(node: child, oldParentUri: oldChildUri, newParentUri: newChildUri)
+        }
     }
 
     private func isInLoop(uri: String, newParentUri: String) -> Bool {
@@ -184,6 +221,110 @@ public class StateStore {
 
     public func getTreeGroup(uri: String) -> TreeNode? {
         _treeAllGroups[uri]
+    }
+
+    // MARK: - Tree Node Update Operations
+
+    /// Update node name and URI after rename
+    public func updateTreeNode(uri: String, newName: String, newUri: String) {
+        guard let node = _treeAllGroups[uri] else { return }
+
+        let nodeChildren = node.children
+
+        let newNode = TreeNode(group: node.group, children: nodeChildren)
+        newNode.updateName(newName)
+
+        if let children = newNode.children {
+            for child in children {
+                updateDescendantUrisForRename(node: child, oldBaseUri: uri, newBaseUri: newUri)
+            }
+        }
+
+        _treeAllGroups[newUri] = newNode
+        _treeAllGroups[uri] = nil
+
+        if node.parentUri != "/" && node.parentUri != "" {
+            if let parentNode = _treeAllGroups[node.parentUri] {
+                if let index = parentNode.children?.firstIndex(where: { $0.uri == uri }) {
+                    parentNode.children?[index] = newNode
+                }
+            }
+        } else {
+            if let index = _treeChildren.firstIndex(where: { $0.uri == uri }) {
+                _treeChildren[index] = newNode
+            }
+        }
+    }
+
+    /// Update descendant URIs after rename
+    private func updateDescendantUrisForRename(node: TreeNode, oldBaseUri: String, newBaseUri: String) {
+        let oldUri = node.uri
+        let newUri = newBaseUri + "/" + node.name
+
+        _treeAllGroups[newUri] = node
+        _treeAllGroups[oldUri] = nil
+
+        if let children = node.children {
+            for child in children {
+                updateDescendantUrisForRename(node: child, oldBaseUri: oldUri, newBaseUri: newUri)
+            }
+        }
+    }
+
+    // MARK: - Children Cache Update Operations
+
+    /// Remove children entries and all their descendants
+    public func removeChildrenRecursively(uris: [String]) {
+        var allUrisToRemove = Set(uris)
+
+        for uri in uris {
+            if let node = _treeAllGroups[uri] {
+                collectAllDescendantUris(from: node, into: &allUrisToRemove)
+            }
+        }
+
+        _childrenList.removeAll { allUrisToRemove.contains($0.uri) }
+    }
+
+    private func collectAllDescendantUris(from node: TreeNode, into set: inout Set<String>) {
+        set.insert(node.uri)
+        guard let children = node.children else { return }
+        for child in children {
+            collectAllDescendantUris(from: child, into: &set)
+        }
+    }
+
+    /// Update a single CachedEntry after rename
+    public func updateCachedEntry(id: Int64, newName: String, newUri: String) {
+        if let index = _childrenList.firstIndex(where: { $0.id == id }) {
+            let entry = _childrenList[index]
+            let newEntry = CachedEntry(
+                id: entry.id,
+                uri: newUri,
+                name: newName,
+                kind: entry.kind,
+                isGroup: entry.isGroup,
+                size: entry.size,
+                parentID: entry.parentID,
+                createdAt: entry.createdAt,
+                changedAt: entry.changedAt,
+                modifiedAt: entry.modifiedAt,
+                accessAt: entry.accessAt
+            )
+            _childrenList[index] = newEntry
+        }
+    }
+
+    /// Remove children entries when moving (target directory loads separately)
+    public func moveChildrenRecursively(uris: [String], fromParent: String, toParent: String) {
+        var allUrisToMove = Set(uris)
+        for uri in uris {
+            if let node = _treeAllGroups[uri] {
+                collectAllDescendantUris(from: node, into: &allUrisToMove)
+            }
+        }
+
+        _childrenList.removeAll { allUrisToMove.contains($0.uri) }
     }
 
     private init(){ }

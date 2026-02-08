@@ -57,7 +57,7 @@ public class EntryDetailViewModel {
             let newDetail = try await entryUsecase.renameEntry(uri: entry.uri, newName: validName)
 
             if entry.isGroup {
-                // 从 Tree 中移除旧节点，添加新节点
+                // Remove old node from Tree, add new node
                 if let node = store.getTreeGroup(uri: entry.uri) {
                     store.removeTreeChildGroup(parentUri: node.parentUri, childUri: entry.uri)
                     if let group = newDetail.toGroup() {

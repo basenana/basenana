@@ -15,16 +15,18 @@ public class EntryUseCase: EntryUseCaseProtocol {
     private var entryRepo: EntryRepositoryProtocol
     private var fileRepo: FileRepositoryProtocol
     private var store: StateStore
+    private let syncUseCase: EntrySyncUseCaseProtocol
 
     private static let logger = Logger(
             subsystem: Bundle.main.bundleIdentifier!,
             category: String(describing: EntryUseCase.self)
         )
 
-    public init(entryRepo: EntryRepositoryProtocol, fileRepo: FileRepositoryProtocol, store: StateStore = .shared) {
+    public init(entryRepo: EntryRepositoryProtocol, fileRepo: FileRepositoryProtocol, syncUseCase: EntrySyncUseCaseProtocol, store: StateStore = .shared) {
         self.entryRepo = entryRepo
         self.fileRepo = fileRepo
         self.store = store
+        self.syncUseCase = syncUseCase
     }
 
     public func getEntryDetails(uri: String) async throws -> any  EntryDetail {
@@ -40,7 +42,16 @@ public class EntryUseCase: EntryUseCaseProtocol {
             let newUri = parentUri(of: uri) + "/" + newName
             let opt = ChangeParentOption()
             try await entryRepo.ChangeParent(uri: uri, newEntryUri: newUri, option: opt)
-            return try await getEntryDetails(uri: newUri)
+            let newEntry = try await getEntryDetails(uri: newUri)
+
+            // Sync cache
+            syncUseCase.syncTreeAfterRename(uri: uri, newName: newName, newUri: newUri)
+
+            if let detail = newEntry as? EntryDetail {
+                syncUseCase.syncChildrenAfterRename(id: detail.id, newName: newName, newUri: newUri)
+            }
+
+            return newEntry
         } catch RepositoryError.canceled {
             throw UseCaseError.canceled
         }
@@ -72,15 +83,9 @@ public class EntryUseCase: EntryUseCaseProtocol {
             try await deleteEntry(uri: uri)
         }
 
-        // 更新 Children 缓存
-        store.removeChildren(uris: uris)
-
-        // 更新 Tree 缓存 (如果是文件夹)
-        for uri in uris {
-            if let node = store.getTreeGroup(uri: uri) {
-                store.removeTreeChildGroup(parentUri: node.parentUri, childUri: uri)
-            }
-        }
+        // Sync cache - recursively delete all child nodes
+        syncUseCase.syncChildrenAfterDelete(parentUri: nil, uris: uris)
+        syncUseCase.syncTreeAfterDelete(uris: uris)
     }
 
     public func getTreeRoot() async throws -> any  EntryGroup {
@@ -108,15 +113,15 @@ public class EntryUseCase: EntryUseCaseProtocol {
 
             for uri in uris {
                 let entry = try await getEntryDetails(uri: uri)
+                let oldParentUri = parentUri(of: uri)
                 let newEntryUri = newParentUri + "/" + entry.name
                 try await entryRepo.ChangeParent(uri: uri, newEntryUri: newEntryUri, option: ChangeParentOption())
 
-                // 更新 Tree 缓存
+                // Sync cache
                 if entry.isGroup {
-                    if let node = store.getTreeGroup(uri: uri) {
-                        store.changeTreeParent(uri: uri, newParentUri: newParentUri)
-                    }
+                    syncUseCase.syncTreeAfterMove(uri: uri, newParentUri: newParentUri)
                 }
+                syncUseCase.syncChildrenAfterMove(uris: [uri], fromParent: oldParentUri, toParent: newParentUri)
 
                 DispatchQueue.main.async {
                     finisher(entry, parent)
@@ -141,17 +146,12 @@ public class EntryUseCase: EntryUseCaseProtocol {
         do {
             let newEntry = try await entryRepo.CreateEntry(entry: entry)
 
-            // 更新 Tree 缓存
+            // Sync cache
             if let groupDetail = newEntry as? EntryDetail,
                let group = groupDetail.toGroup() {
-                store.addTreeChildGroup(parentUri: parentUri, child: group, grandChildren: nil)
+                syncUseCase.syncTreeAfterCreate(parentUri: parentUri, group: group)
             }
-
-            // 更新 Children 缓存 (如果当前在父目录下)
-            if store.currentGroupUri == parentUri {
-                let cached = CachedEntry(from: newEntry)
-                store.appendChildren([cached])
-            }
+            syncUseCase.syncChildrenAfterCreate(parentUri: parentUri, entry: newEntry)
 
             return newEntry
         } catch RepositoryError.canceled {
@@ -184,11 +184,8 @@ public class EntryUseCase: EntryUseCaseProtocol {
 
         try await fileRepo.UploadFile(entry: entry.id, fileHandle: fileHandle)
 
-        // 更新 Children 缓存 (如果当前在父目录下)
-        if store.currentGroupUri == parentUri {
-            let cached = CachedEntry(from: entry)
-            store.appendChildren([cached])
-        }
+        // Sync cache
+        syncUseCase.syncChildrenAfterCreate(parentUri: parentUri, entry: entry)
 
         return entry
     }

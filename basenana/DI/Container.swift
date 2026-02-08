@@ -36,7 +36,8 @@ class DIContainer {
                 store: state,
                 entryUsecase: r.resolve(EntryUseCaseProtocol.self)!,
                 fileRepository: r.resolve(FileRepositoryProtocol.self)!,
-                documentUsecase: r.resolve(DocumentUseCaseProtocol.self)!
+                documentUsecase: r.resolve(DocumentUseCaseProtocol.self)!,
+                syncUseCase: r.resolve(EntrySyncUseCase.self)!
             )
         }
         self.c.register(DocumentListViewModel.self, name: DocumentPrespective.marked.Title){ r in
@@ -77,8 +78,15 @@ class DIContainer {
         }
 
         // UseCases
+        self.c.register(EntrySyncUseCase.self) { r in
+            EntrySyncUseCase(store: state)
+        }.inObjectScope(.container)
         self.c.register(EntryUseCaseProtocol.self) { r in
-            EntryUseCase(entryRepo: r.resolve(EntryRepositoryProtocol.self)!, fileRepo: r.resolve(FileRepositoryProtocol.self)!)
+            EntryUseCase(
+                entryRepo: r.resolve(EntryRepositoryProtocol.self)!,
+                fileRepo: r.resolve(FileRepositoryProtocol.self)!,
+                syncUseCase: r.resolve(EntrySyncUseCase.self)!
+            )
         }.inObjectScope(.container)
         self.c.register(DocumentUseCaseProtocol.self) { r in
             DocumentUseCase(entryRepo: r.resolve(EntryRepositoryProtocol.self)!)

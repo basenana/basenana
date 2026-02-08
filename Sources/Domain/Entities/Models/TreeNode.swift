@@ -11,7 +11,7 @@ import Foundation
 public final class TreeNode: Identifiable, Hashable {
     public let id: String
     public let uri: String
-    public let name: String
+    public private(set) var name: String
     public let parentUri: String
     public var group: EntryGroup
     public var children: [TreeNode]?
@@ -36,6 +36,11 @@ public final class TreeNode: Identifiable, Hashable {
         } else {
             self.parentUri = ""
         }
+    }
+
+    /// 更新显示名称（用于重命名场景）
+    public func updateName(_ newName: String) {
+        name = newName
     }
 
     public func hash(into hasher: inout Hasher) {

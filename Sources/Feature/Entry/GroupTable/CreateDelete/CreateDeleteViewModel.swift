@@ -50,7 +50,7 @@ public class CreateDeleteViewModel {
 
         do {
             let newGroup = try await entryUsecase.createGroups(parentUri: effectiveParentUri, option: option)
-            // UseCase 已经更新了 Store 缓存
+            // UseCase has already updated Store cache
             onCreated?(newGroup)
             NotificationCenter.default.post(name: .reopenGroup, object: [effectiveParentUri])
         } catch {
@@ -76,11 +76,11 @@ public class CreateDeleteViewModel {
                     }
                 },
                 complete: {
-                    // 从 Tree 缓存中移除
+                    // Remove from Tree cache
                     if entry.isGroup {
                         st.removeTreeChildGroup(parentUri: entry.uri, childUri: entry.uri)
                     }
-                    // 从 Children 缓存中移除
+                    // Remove from Children cache
                     st.removeChildren(uris: [entry.uri])
                     NotificationCenter.default.post(name: .reopenGroup, object: [entry.uri])
                 }
