@@ -54,6 +54,9 @@ public class GroupTableViewModel: BaseViewModel {
     var isLoading: Bool = false
     private var _group: EntryDetail? = nil
 
+    // Local currentGroupUri to avoid relying on global Store state
+    var currentGroupUri: String = ""
+
     // Internal selection storage
     private var _selection: Set<EntryRow.ID> = [] {
         didSet {
@@ -220,8 +223,8 @@ public class GroupTableViewModel: BaseViewModel {
                 throw BizError.notGroup
             }
 
-            // Sync with global navigation state and Store
-            store.currentGroupUri = uri
+            // Sync with local state
+            currentGroupUri = uri
             group = detail
 
             resetPagination()
@@ -253,8 +256,8 @@ public class GroupTableViewModel: BaseViewModel {
     }
 
     func addChildren(infos: [EntryInfo]) {
-        let parentUri = group?.uri ?? store.currentGroupUri
-        syncUseCase.syncChildrenAfterCreate(parentUri: parentUri ?? "", entries: infos)
+        let parentUri = group?.uri ?? currentGroupUri
+        syncUseCase.syncChildrenAfterCreate(parentUri: parentUri, entries: infos)
     }
 
     // MARK: - Wrapper Methods
@@ -262,7 +265,12 @@ public class GroupTableViewModel: BaseViewModel {
     func moveChildrenToGroup(entryUris: [String], newParentUri: String) async -> Bool {
         let success = await moveEntriesToGroup(entryUris: entryUris, newParentUri: newParentUri)
         if success {
-            syncUseCase.syncChildrenAfterMove(uris: entryUris, fromParent: group?.uri ?? "", toParent: newParentUri)
+            syncUseCase.syncChildrenAfterMove(
+                uris: entryUris,
+                fromParent: group?.uri ?? currentGroupUri,
+                toParent: newParentUri,
+                currentGroupUri: currentGroupUri
+            )
         }
         return success
     }
@@ -458,7 +466,8 @@ public class GroupTableViewModel: BaseViewModel {
     // MARK: - Group Config Methods
 
     func refreshChildren() async {
-        guard let groupUri = group?.uri else { return }
+        guard !currentGroupUri.isEmpty else { return }
+        resetPagination()
         resetChildren()
         await loadNextPage()
     }

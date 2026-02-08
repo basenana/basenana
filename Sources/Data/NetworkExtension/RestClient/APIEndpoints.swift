@@ -140,8 +140,10 @@ public enum APIEndpoint {
             return .post
         case .filesUpload, .entriesDelete, .entriesCreate, .entriesBatchDelete, .entriesFilter, .entriesSearch, .messagesRead, .workflowTrigger, .workflowCreate:
             return .post
-        case .entriesUpdate, .entriesParent, .entriesDocument, .workflowUpdate, .configSet, .groupsConfigsUpdate:
+        case .entriesUpdate, .entriesParent, .entriesDocument, .workflowUpdate, .configSet:
             return .put
+        case .groupsConfigsUpdate:
+            return .post
         case .workflowDelete, .configDelete:
             return .delete
         case .workflowJobPause, .workflowJobResume, .workflowJobCancel:

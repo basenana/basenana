@@ -104,15 +104,12 @@ public class EntryUseCase: EntryUseCaseProtocol {
         }
     }
 
-    public func changeParent(uris: [String], newParentUri: String, finisher: @escaping (EntryDetail, EntryDetail) -> Void) async throws {
+    public func changeParent(uris: [String], newParentUri: String, finisher: @escaping (EntryDetail, String) -> Void) async throws {
         do {
             // Handle root level (empty string as parentUri)
-            var parent: EntryDetail?
-            if newParentUri.isEmpty {
-                parent = nil
-            } else {
-                parent = try await getEntryDetails(uri: newParentUri)
-                if !parent!.isGroup {
+            if !newParentUri.isEmpty {
+                let parent = try await getEntryDetails(uri: newParentUri)
+                if !parent.isGroup {
                     throw BizError.notGroup
                 }
             }
@@ -127,10 +124,12 @@ public class EntryUseCase: EntryUseCaseProtocol {
                 if entry.isGroup {
                     syncUseCase.syncTreeAfterMove(uri: uri, newParentUri: newParentUri)
                 }
-                syncUseCase.syncChildrenAfterMove(uris: [uri], fromParent: oldParentUri, toParent: newParentUri)
+                // Pass nil for currentGroupUri since this is a lower-level use case without view context
+                // The reopen logic in finisher callback handles reopening the view
+                syncUseCase.syncChildrenAfterMove(uris: [uri], fromParent: oldParentUri, toParent: newParentUri, currentGroupUri: nil)
 
                 DispatchQueue.main.async {
-                    finisher(entry, parent ?? entry) // Pass dummy parent for root level
+                    finisher(entry, newParentUri)
                 }
             }
 

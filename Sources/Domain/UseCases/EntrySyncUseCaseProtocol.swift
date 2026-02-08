@@ -22,7 +22,7 @@ public protocol EntrySyncUseCaseProtocol {
     func syncChildrenAfterCreate(parentUri: String, entries: [EntryInfo])
     func syncChildrenAfterCreate(parentUri: String, entry: EntryInfo)
     func syncChildrenAfterDelete(parentUri: String?, uris: [String])
-    func syncChildrenAfterMove(uris: [String], fromParent: String, toParent: String)
+    func syncChildrenAfterMove(uris: [String], fromParent: String, toParent: String, currentGroupUri: String?)
     func syncChildrenAfterRename(id: Int64, newName: String, newUri: String)
 
     // MARK: - Full Reset

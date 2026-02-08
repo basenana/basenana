@@ -93,16 +93,16 @@ public class BaseViewModel {
 
     func moveEntriesToGroup(entryUris: [String], newParentUri: String) async -> Bool {
         do {
-            try await entryUsecase.changeParent(uris: entryUris, newParentUri: newParentUri) { target, parent in
+            try await entryUsecase.changeParent(uris: entryUris, newParentUri: newParentUri) { target, newParentUri in
                 assert(Thread.isMainThread)
-                NotificationCenter.default.post(name: .reopenGroup, object: [target.uri, parent.uri])
+                let newUri = newParentUri.isEmpty ? "/" + target.name : newParentUri + "/" + target.name
+                NotificationCenter.default.post(name: .reopenGroup, object: [target.uri, newUri])
             }
+            return true
         } catch {
             sentAlert("move entry failed \(error)")
             return false
         }
-
-        return true
     }
 
     func replicateEntryToGroup(entryUris: [String], newParentUri: String) async {

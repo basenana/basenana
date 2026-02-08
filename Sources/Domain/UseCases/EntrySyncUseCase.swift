@@ -83,29 +83,61 @@ public final class EntrySyncUseCase: EntrySyncUseCaseProtocol {
         )
     }
 
-    public func syncChildrenAfterMove(uris: [String], fromParent: String, toParent: String) {
+    public func syncChildrenAfterMove(uris: [String], fromParent: String, toParent: String, currentGroupUri: String?) {
         // Notify that children changed in the source parent
         NotificationCenter.default.post(
             name: .childrenChanged,
             object: ChildrenChange(parentUri: fromParent, changeType: .move)
         )
 
-        // Detect if the currently opened group was moved
+        // Notify that children changed in the destination parent
+        NotificationCenter.default.post(
+            name: .childrenChanged,
+            object: ChildrenChange(parentUri: toParent, changeType: .create)
+        )
+
+        // Notify that children changed in the moved groups themselves
+        // This is needed when the currently opened group was moved - it needs to refresh its children
         for uri in uris {
-            let newUri = newUri(for: uri, from: fromParent, to: toParent)
-            if store.currentGroupUri == uri && newUri != nil {
-                // Update store first, then notify with OLD uri so views can identify themselves
-                let oldUri = store.currentGroupUri
-                store.currentGroupUri = newUri!
-                // Send old URI so views can match and update to new URI
-                NotificationCenter.default.post(name: Notification.Name("reopenGroup"), object: [oldUri, newUri!])
+            NotificationCenter.default.post(
+                name: .childrenChanged,
+                object: ChildrenChange(parentUri: uri, changeType: .move)
+            )
+        }
+
+        // Detect if the currently opened group was moved
+        guard let currentUri = currentGroupUri else { return }
+
+        for uri in uris {
+            let calculatedNewUri = newUri(for: uri, from: fromParent, to: toParent, currentGroupUri: currentGroupUri)
+            // Only reopen if the moved URI matches the current opened group exactly
+            if currentUri == uri && calculatedNewUri != nil {
+                // Send notification so views can update to the new URI
+                NotificationCenter.default.post(name: Notification.Name("reopenGroup"), object: [uri, calculatedNewUri!])
             }
         }
     }
 
-    private func newUri(for uri: String, from: String, to: String) -> String? {
+    private func newUri(for uri: String, from: String, to: String, currentGroupUri: String? = nil) -> String? {
         guard uri.hasPrefix(from) else { return nil }
+
         let suffix = String(uri.dropFirst(from.count))
+
+        // Only valid if suffix starts with "/" (direct child) or is empty (moving the folder itself)
+        // Otherwise, from is just a path prefix, not the direct parent
+        if !suffix.isEmpty && !suffix.hasPrefix("/") {
+            return nil
+        }
+
+        // Prevent moving a parent folder into its own descendant's path
+        // e.g., currentGroupUri = "/A/B", moving "/A" to "/A/B/X" should not trigger reopen
+        if let current = currentGroupUri, !current.isEmpty {
+            let potentialNewUri = (to.isEmpty ? "" : to) + suffix
+            if current.hasPrefix(potentialNewUri) && current != potentialNewUri {
+                return nil
+            }
+        }
+
         let newParent = to.isEmpty ? "" : to
         return newParent + suffix
     }

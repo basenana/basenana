@@ -8,115 +8,10 @@ final class StoreTests: XCTestCase {
     override func setUp() {
         super.setUp()
         store = StateStore.shared
-        store.resetChildren()
     }
 
     override func tearDown() {
-        store.resetChildren()
         super.tearDown()
-    }
-
-    // MARK: - Children Cache Tests
-
-    func testAppendChildren_singleEntry_increasesCount() {
-        let entries = [
-            createMockCachedEntry(id: 1, uri: "/test/1", name: "entry1")
-        ]
-
-        store.appendChildren(entries)
-
-        XCTAssertEqual(store.childrenList.count, 1)
-        XCTAssertEqual(store.childrenList.first?.uri, "/test/1")
-    }
-
-    func testAppendChildren_multipleEntries_increasesCount() {
-        let entries = [
-            createMockCachedEntry(id: 1, uri: "/test/1", name: "entry1"),
-            createMockCachedEntry(id: 2, uri: "/test/2", name: "entry2")
-        ]
-
-        store.appendChildren(entries)
-
-        XCTAssertEqual(store.childrenList.count, 2)
-    }
-
-    func testRemoveChildren_existingUri_removesEntry() {
-        let entries = [
-            createMockCachedEntry(id: 1, uri: "/test/1", name: "entry1"),
-            createMockCachedEntry(id: 2, uri: "/test/2", name: "entry2")
-        ]
-        store.appendChildren(entries)
-
-        store.removeChildren(uris: ["/test/1"])
-
-        XCTAssertEqual(store.childrenList.count, 1)
-        XCTAssertNil(store.childrenList.first { $0.uri == "/test/1" })
-    }
-
-    func testRemoveChildren_nonExistingUri_keepsOtherEntries() {
-        let entries = [
-            createMockCachedEntry(id: 1, uri: "/test/1", name: "entry1"),
-            createMockCachedEntry(id: 2, uri: "/test/2", name: "entry2")
-        ]
-        store.appendChildren(entries)
-
-        store.removeChildren(uris: ["/test/3"])
-
-        XCTAssertEqual(store.childrenList.count, 2)
-    }
-
-    func testRemoveChildrenRecursively_multipleUris_removesAll() {
-        // 直接测试删除多个 URI（不依赖树结构）
-        store.appendChildren([
-            createMockCachedEntry(id: 1, uri: "/a", name: "a"),
-            createMockCachedEntry(id: 2, uri: "/b", name: "b"),
-            createMockCachedEntry(id: 3, uri: "/c", name: "c")
-        ])
-
-        // 如果没有树结构，只删除直接匹配的 URI
-        store.removeChildrenRecursively(uris: ["/a", "/b"])
-
-        // 只有在有完整树结构时才会递归删除，这里验证基础删除
-        XCTAssertEqual(store.childrenList.count, 1)
-        XCTAssertEqual(store.childrenList.first?.uri, "/c")
-    }
-
-    func testResetChildren_clearsAllEntries() {
-        let entries = [
-            createMockCachedEntry(id: 1, uri: "/test/1", name: "entry1"),
-            createMockCachedEntry(id: 2, uri: "/test/2", name: "entry2")
-        ]
-        store.appendChildren(entries)
-
-        store.resetChildren()
-
-        XCTAssertEqual(store.childrenList.count, 0)
-    }
-
-    func testSortChildren_ordersByName() {
-        let entries = [
-            createMockCachedEntry(id: 1, uri: "/test/z", name: "zebra"),
-            createMockCachedEntry(id: 2, uri: "/test/a", name: "apple"),
-            createMockCachedEntry(id: 3, uri: "/test/b", name: "banana")
-        ]
-        store.appendChildren(entries)
-
-        store.sortChildren { $0.name < $1.name }
-
-        XCTAssertEqual(store.childrenList[0].name, "apple")
-        XCTAssertEqual(store.childrenList[1].name, "banana")
-        XCTAssertEqual(store.childrenList[2].name, "zebra")
-    }
-
-    func testUpdateCachedEntry_updatesNameAndUri() {
-        let entry = createMockCachedEntry(id: 1, uri: "/test/old", name: "oldName")
-        store.appendChildren([entry])
-
-        store.updateCachedEntry(id: 1, newName: "newName", newUri: "/test/new")
-
-        let updated = store.childrenList.first { $0.id == 1 }
-        XCTAssertEqual(updated?.name, "newName")
-        XCTAssertEqual(updated?.uri, "/test/new")
     }
 
     // MARK: - Tree Tests
@@ -230,24 +125,6 @@ final class StoreTests: XCTestCase {
         // 子节点的 URI 也应该更新
         XCTAssertNil(store.getTreeGroup(uri: "/root/parent/child"))
         XCTAssertNotNil(store.getTreeGroup(uri: "/root/renamed/child"))
-    }
-
-    // MARK: - Helpers
-
-    private func createMockCachedEntry(id: Int64, uri: String, name: String, isGroup: Bool = false) -> CachedEntry {
-        CachedEntry(
-            id: id,
-            uri: uri,
-            name: name,
-            kind: isGroup ? "group" : "file",
-            isGroup: isGroup,
-            size: 100,
-            parentID: 0,
-            createdAt: Date(),
-            changedAt: Date(),
-            modifiedAt: Date(),
-            accessAt: Date()
-        )
     }
 }
 

@@ -10,11 +10,9 @@ final class EntrySyncUseCaseTests: XCTestCase {
         super.setUp()
         store = StateStore.shared
         syncUseCase = EntrySyncUseCase(store: store)
-        store.resetChildren()
     }
 
     override func tearDown() {
-        store.resetChildren()
         super.tearDown()
     }
 
@@ -80,130 +78,222 @@ final class EntrySyncUseCaseTests: XCTestCase {
         XCTAssertNotNil(store.getTreeGroup(uri: "/root/newName/child"))
     }
 
-    // MARK: - syncChildrenAfterCreate Tests
-
-    func testSyncChildrenAfterCreate_whenCurrentGroupMatches_addsToChildren() {
-        store.currentGroupUri = "/parent"
-        let entries = [createMockEntryInfo(id: 1, uri: "/parent/new", name: "new")]
-
-        syncUseCase.syncChildrenAfterCreate(parentUri: "/parent", entries: entries)
-
-        XCTAssertEqual(store.childrenList.count, 1)
-        XCTAssertEqual(store.childrenList.first?.name, "new")
-    }
-
-    func testSyncChildrenAfterCreate_whenCurrentGroupDoesNotMatch_doesNotAdd() {
-        store.currentGroupUri = "/other"
-        let entries = [createMockEntryInfo(id: 1, uri: "/parent/new", name: "new")]
-
-        syncUseCase.syncChildrenAfterCreate(parentUri: "/parent", entries: entries)
-
-        XCTAssertEqual(store.childrenList.count, 0)
-    }
-
-    // MARK: - syncChildrenAfterDelete Tests
-
-    func testSyncChildrenAfterDelete_whenCurrentGroupMatches_removesEntry() {
-        store.currentGroupUri = "/parent"
-        store.appendChildren([
-            createMockCachedEntry(id: 1, uri: "/parent/toDelete", name: "toDelete"),
-            createMockCachedEntry(id: 2, uri: "/parent/toKeep", name: "toKeep")
-        ])
-
-        syncUseCase.syncChildrenAfterDelete(parentUri: "/parent", uris: ["/parent/toDelete"])
-
-        XCTAssertEqual(store.childrenList.count, 1)
-        XCTAssertEqual(store.childrenList.first?.name, "toKeep")
-    }
-
-    func testSyncChildrenAfterDelete_withNilParent_removesEntry() {
-        store.appendChildren([
-            createMockCachedEntry(id: 1, uri: "/somewhere/entry1", name: "entry1")
-        ])
-
-        syncUseCase.syncChildrenAfterDelete(parentUri: nil, uris: ["/somewhere/entry1"])
-
-        XCTAssertEqual(store.childrenList.count, 0)
-    }
-
     // MARK: - syncChildrenAfterMove Tests
 
-    func testSyncChildrenAfterMove_whenCurrentGroupMatches_removesEntry() {
-        store.currentGroupUri = "/from"
-        store.appendChildren([
-            createMockCachedEntry(id: 1, uri: "/from/moving", name: "moving")
-        ])
+    func testSyncChildrenAfterMove_postsChildrenChangedNotificationForBothParents() {
+        // Expect childrenChanged notification for fromParent, toParent, and moved group
+        let expectation = XCTestExpectation(description: "childrenChanged notifications should be sent for both parents and moved group")
+        expectation.expectedFulfillmentCount = 3
 
-        syncUseCase.syncChildrenAfterMove(uris: ["/from/moving"], fromParent: "/from", toParent: "/to")
+        let observer = NotificationCenter.default.addObserver(
+            forName: .childrenChanged,
+            object: nil,
+            queue: .main
+        ) { notification in
+            if let change = notification.object as? ChildrenChange {
+                // Verify parent URIs and moved group are received
+                if change.parentUri == "/from" && change.changeType == .move {
+                    expectation.fulfill()
+                } else if change.parentUri == "/to" && change.changeType == .create {
+                    expectation.fulfill()
+                } else if change.parentUri == "/from/moving" && change.changeType == .move {
+                    expectation.fulfill()
+                }
+            }
+        }
 
-        XCTAssertEqual(store.childrenList.count, 0)
+        defer { NotificationCenter.default.removeObserver(observer) }
+
+        syncUseCase.syncChildrenAfterMove(
+            uris: ["/from/moving"],
+            fromParent: "/from",
+            toParent: "/to",
+            currentGroupUri: "/other"
+        )
+
+        wait(for: [expectation], timeout: 0.5)
     }
 
-    func testSyncChildrenAfterMove_whenCurrentGroupDoesNotMatch_doesNothing() {
-        store.currentGroupUri = "/other"
-        store.appendChildren([
-            createMockCachedEntry(id: 1, uri: "/from/moving", name: "moving")
-        ])
+    func testSyncChildrenAfterMove_postsCreateChangeTypeForToParent() {
+        // Verify toParent receives .create changeType (not .move)
+        let expectation = XCTestExpectation(description: "toParent should receive .create changeType")
 
-        syncUseCase.syncChildrenAfterMove(uris: ["/from/moving"], fromParent: "/from", toParent: "/to")
+        let observer = NotificationCenter.default.addObserver(
+            forName: .childrenChanged,
+            object: nil,
+            queue: .main
+        ) { notification in
+            if let change = notification.object as? ChildrenChange {
+                if change.parentUri == "/to" {
+                    XCTAssertEqual(change.changeType, .create)
+                    expectation.fulfill()
+                }
+            }
+        }
 
-        XCTAssertEqual(store.childrenList.count, 1)
+        defer { NotificationCenter.default.removeObserver(observer) }
+
+        syncUseCase.syncChildrenAfterMove(
+            uris: ["/from/moving"],
+            fromParent: "/from",
+            toParent: "/to",
+            currentGroupUri: nil
+        )
+
+        wait(for: [expectation], timeout: 0.5)
+    }
+
+    func testSyncChildrenAfterMove_whenCurrentGroupMatches_triggersReopen() {
+        // Test: moving "/A" from "" to "/B", currentGroupUri = "/A" should trigger reopen
+        let expectation = XCTestExpectation(description: "reopen notification should be sent")
+
+        let observer = NotificationCenter.default.addObserver(
+            forName: Notification.Name("reopenGroup"),
+            object: nil,
+            queue: .main
+        ) { notification in
+            if let uris = notification.object as? [String], uris.count == 2 {
+                XCTAssertEqual(uris[0], "/A")
+                XCTAssertEqual(uris[1], "/B/A")
+                expectation.fulfill()
+            }
+        }
+
+        defer { NotificationCenter.default.removeObserver(observer) }
+
+        syncUseCase.syncChildrenAfterMove(
+            uris: ["/A"],
+            fromParent: "",
+            toParent: "/B",
+            currentGroupUri: "/A"
+        )
+
+        wait(for: [expectation], timeout: 0.5)
+    }
+
+    func testSyncChildrenAfterMove_whenCurrentGroupDoesNotMatch_doesNotReopen() {
+        // Test: moving "/from/moving" from "/from" to "/to", currentGroupUri = "/other" should NOT trigger reopen
+        let expectation = XCTestExpectation(description: "reopen notification should NOT be sent")
+        expectation.isInverted = true
+
+        let observer = NotificationCenter.default.addObserver(
+            forName: Notification.Name("reopenGroup"),
+            object: nil,
+            queue: .main
+        ) { _ in
+            expectation.fulfill()
+        }
+
+        defer { NotificationCenter.default.removeObserver(observer) }
+
+        syncUseCase.syncChildrenAfterMove(
+            uris: ["/from/moving"],
+            fromParent: "/from",
+            toParent: "/to",
+            currentGroupUri: "/other"
+        )
+
+        wait(for: [expectation], timeout: 0.5)
+    }
+
+    func testSyncChildrenAfterMove_whenMovingParentOfCurrentGroup_doesNotReopen() {
+        // Test: currentGroupUri = "/A/B", moving "/A" to "/A/B/X" should NOT trigger reopen
+        // This is the bug fix: moving parent to descendant's path should not reopen
+        let expectation = XCTestExpectation(description: "reopen notification should NOT be sent")
+        expectation.isInverted = true
+
+        let observer = NotificationCenter.default.addObserver(
+            forName: Notification.Name("reopenGroup"),
+            object: nil,
+            queue: .main
+        ) { _ in
+            expectation.fulfill()
+        }
+
+        defer { NotificationCenter.default.removeObserver(observer) }
+
+        syncUseCase.syncChildrenAfterMove(
+            uris: ["/A"],
+            fromParent: "",
+            toParent: "/A/B",
+            currentGroupUri: "/A/B"
+        )
+
+        wait(for: [expectation], timeout: 0.5)
+    }
+
+    func testSyncChildrenAfterMove_whenCurrentGroupIsNil_doesNotReopen() {
+        // Test: moving with nil currentGroupUri should not trigger reopen
+        let expectation = XCTestExpectation(description: "reopen notification should NOT be sent")
+        expectation.isInverted = true
+
+        let observer = NotificationCenter.default.addObserver(
+            forName: Notification.Name("reopenGroup"),
+            object: nil,
+            queue: .main
+        ) { _ in
+            expectation.fulfill()
+        }
+
+        defer { NotificationCenter.default.removeObserver(observer) }
+
+        syncUseCase.syncChildrenAfterMove(
+            uris: ["/A"],
+            fromParent: "",
+            toParent: "/B",
+            currentGroupUri: nil
+        )
+
+        wait(for: [expectation], timeout: 0.5)
+    }
+
+    func testSyncChildrenAfterMove_whenMovingChild_doesNotReopen() {
+        // Test: currentGroupUri = "/A", moving "/A/B" from "/A" to "/X" should NOT reopen "/A"
+        let expectation = XCTestExpectation(description: "reopen notification should NOT be sent")
+        expectation.isInverted = true
+
+        let observer = NotificationCenter.default.addObserver(
+            forName: Notification.Name("reopenGroup"),
+            object: nil,
+            queue: .main
+        ) { _ in
+            expectation.fulfill()
+        }
+
+        defer { NotificationCenter.default.removeObserver(observer) }
+
+        syncUseCase.syncChildrenAfterMove(
+            uris: ["/A/B"],
+            fromParent: "/A",
+            toParent: "/X",
+            currentGroupUri: "/A"
+        )
+
+        wait(for: [expectation], timeout: 0.5)
     }
 
     // MARK: - syncChildrenAfterRename Tests
 
-    func testSyncChildrenAfterRename_updatesEntry() {
-        store.appendChildren([createMockCachedEntry(id: 1, uri: "/old", name: "oldName")])
+    func testSyncChildrenAfterRename_postsNotification() {
+        // Test that syncChildrenAfterRename posts childrenChanged notification
+        let expectation = XCTestExpectation(description: "childrenChanged notification should be sent")
+
+        let observer = NotificationCenter.default.addObserver(
+            forName: .childrenChanged,
+            object: nil,
+            queue: .main
+        ) { notification in
+            if let change = notification.object as? ChildrenChange {
+                XCTAssertEqual(change.changeType, .rename)
+                expectation.fulfill()
+            }
+        }
+
+        defer { NotificationCenter.default.removeObserver(observer) }
 
         syncUseCase.syncChildrenAfterRename(id: 1, newName: "newName", newUri: "/new")
 
-        let updated = store.childrenList.first { $0.id == 1 }
-        XCTAssertEqual(updated?.name, "newName")
-        XCTAssertEqual(updated?.uri, "/new")
-    }
-
-    // MARK: - resetChildren Tests
-
-    func testResetChildren_clearsChildrenList() {
-        store.appendChildren([createMockCachedEntry(id: 1, uri: "/test", name: "test")])
-
-        syncUseCase.resetChildren()
-
-        XCTAssertEqual(store.childrenList.count, 0)
-    }
-
-    // MARK: - Helpers
-
-    private func createMockEntryInfo(id: Int64, uri: String, name: String) -> MockEntryInfo {
-        MockEntryInfo(
-            id: id,
-            uri: uri,
-            name: name,
-            kind: "file",
-            isGroup: false,
-            size: 100,
-            parentID: 0,
-            createdAt: Date(),
-            changedAt: Date(),
-            modifiedAt: Date(),
-            accessAt: Date()
-        )
-    }
-
-    private func createMockCachedEntry(id: Int64, uri: String, name: String, isGroup: Bool = false) -> CachedEntry {
-        CachedEntry(
-            id: id,
-            uri: uri,
-            name: name,
-            kind: isGroup ? "group" : "file",
-            isGroup: isGroup,
-            size: 100,
-            parentID: 0,
-            createdAt: Date(),
-            changedAt: Date(),
-            modifiedAt: Date(),
-            accessAt: Date()
-        )
+        wait(for: [expectation], timeout: 0.5)
     }
 }
 

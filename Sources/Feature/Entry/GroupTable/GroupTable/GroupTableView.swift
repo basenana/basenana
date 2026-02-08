@@ -36,12 +36,14 @@ public struct GroupTableView: View {
         .onReceive(NotificationCenter.default.publisher(for: .reopenGroup)) { [self] notification in
             if let uris = notification.object as? [String] {
                 var needReopen = false
-                var newUri: String?
 
                 if uris.count == 2 {
                     // Move notification: [oldUri, newUri]
-                    if uris[0] == groupUri {
-                        newUri = uris[1]
+                    let currentUri = groupUri
+                    let movedFrom = uris[0]
+                    let movedTo = uris[1]
+                    // Check if oldUri or newUri has the current groupUri as prefix
+                    if movedFrom.hasPrefix(currentUri) || movedTo.hasPrefix(currentUri) {
                         needReopen = true
                     }
                 } else {
@@ -57,11 +59,7 @@ public struct GroupTableView: View {
 
                 if needReopen {
                     Task {
-                        let uriToOpen = newUri ?? groupUri
-                        if let new = newUri {
-                            groupUri = new
-                        }
-                        await viewModel.openGroup(uri: uriToOpen)
+                        await viewModel.openGroup(uri: groupUri)
                     }
                 }
             }
@@ -83,7 +81,7 @@ public struct GroupTableView: View {
         .onReceive(NotificationCenter.default.publisher(for: .childrenChanged)) { notification in
             if let change = notification.object as? ChildrenChange {
                 // Only refresh if the change is for the current group's children
-                if change.parentUri == groupUri || change.parentUri.isEmpty {
+                if change.parentUri == viewModel.currentGroupUri || change.parentUri.isEmpty {
                     Task {
                         await viewModel.refreshChildren()
                     }
