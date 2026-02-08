@@ -50,20 +50,19 @@ public struct EntryMenuView: View {
 
                 Section{
                     Menu("Move To") {
-                        ForEach(store?.treeChildren ?? []){ childGroup in
-                            GroupDestinationView(
-                                group: childGroup,
-                                childKeyPath: \.children,
-                                action: { moveEntriesToGroup(newParentUri: $0.uri ) }
-                            )
-                        }
+                        GroupDestinationList(
+                            childKeyPath: \.children,
+                            isGroup: allSelectedAreGroups(),
+                            action: { await moveEntriesToGroup(newParentUri: $0) }
+                        )
                     }
-                    Menu("Replicate To") {
-                        ForEach(store?.treeChildren ?? []){ childGroup in
-                            GroupDestinationView(
-                                group: childGroup,
+
+                    if canReplicate() {
+                        Menu("Replicate To") {
+                            GroupDestinationList(
                                 childKeyPath: \.children,
-                                action: { replicateEntryToGroup(newParentUri: $0.uri) }
+                                isGroup: false,
+                                action: { await replicateEntryToGroup(newParentUri: $0) }
                             )
                         }
                     }
@@ -95,15 +94,19 @@ public struct EntryMenuView: View {
         return targets.count == 1
     }
 
+    func allSelectedAreGroups() -> Bool {
+        return targets.allSatisfy { $0.isGroup }
+    }
+
     func isFileTarget() -> Bool {
         guard !onlyOneSelected() else {
             return false
         }
+        return targets.allSatisfy { !$0.isGroup }
+    }
 
-        if let target = targets.first {
-            return !target.isGroup
-        }
-        return false
+    func canReplicate() -> Bool {
+        return targets.allSatisfy { !$0.isGroup }
     }
 
     func canBeOpen() -> Bool {
@@ -149,28 +152,61 @@ public struct EntryMenuView: View {
 }
 
 
+/// Root directory selection list, automatically fetches treeChildren from store and displays Root option
+struct GroupDestinationList: View {
+    @Environment(\.stateStore) private var store
+
+    let childKeyPath: KeyPath<TreeNode, [TreeNode]?>
+    let isGroup: Bool
+    let action: (String) async -> Void
+
+    var body: some View {
+        if isGroup && store?.rootGroup != nil {
+            Button("📁 Root") {
+                Task { await action("/") }
+            }
+            Divider()
+        }
+        ForEach(store?.treeChildren ?? []) { childGroup in
+            GroupDestinationView(
+                group: childGroup,
+                childKeyPath: childKeyPath,
+                isGroup: isGroup,
+                action: action
+            )
+        }
+    }
+}
+
+/// Single directory target view, recursively displays child directories
 struct GroupDestinationView: View {
     let group: TreeNode
     let childKeyPath: KeyPath<TreeNode, [TreeNode]?>
-    let action: (_: TreeNode) async -> Void
+    let isGroup: Bool
+    let action: (String) async -> Void
 
     var body: some View {
         if group[keyPath: childKeyPath] != nil {
             DisclosureGroup(
-                isExpanded: /*@START_MENU_TOKEN@*/.constant(true)/*@END_MENU_TOKEN@*/,
+                isExpanded: .constant(true),
                 content: {
                     Menu(group.groupName) {
-                        Button("\(group.groupName) 👈🏻", action: { Task { await action(group) }})
+                        Button("📁 \(group.groupName)", action: { Task { await action(group.uri) }})
                         Divider()
                         ForEach(group[keyPath: childKeyPath] ?? []) { childGroup in
-                            GroupDestinationView(group: childGroup, childKeyPath: childKeyPath, action: action)
+                            GroupDestinationView(
+                                group: childGroup,
+                                childKeyPath: childKeyPath,
+                                isGroup: isGroup,
+                                action: action
+                            )
                         }
                     }
                 },
                 label: {}
             ).disclosureGroupStyle(GroupDestDisclosureStyle())
         } else {
-            Button(group.groupName, action: { Task { await action(group) }})
+            Button(group.groupName, action: { Task { await action(group.uri) }})
         }
     }
 }

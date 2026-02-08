@@ -47,13 +47,11 @@ struct TreeMenuView: View {
 
             Section{
                 Menu("Move To") {
-                    ForEach(store?.treeChildren ?? []){ childGroup in
-                        GroupDestinationView(
-                            group: childGroup,
-                            childKeyPath: \.children,
-                            action: { moveEntriesToGroup(newParentUri: $0.uri ) }
-                        )
-                    }
+                    GroupDestinationList(
+                        childKeyPath: \.children,
+                        isGroup: true,
+                        action: { await moveEntriesToGroup(newParentUri: $0) }
+                    )
                 }
             }
 

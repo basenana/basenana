@@ -106,15 +106,21 @@ public class EntryUseCase: EntryUseCaseProtocol {
 
     public func changeParent(uris: [String], newParentUri: String, finisher: @escaping (EntryDetail, EntryDetail) -> Void) async throws {
         do {
-            let parent = try await getEntryDetails(uri: newParentUri)
-            if !parent.isGroup {
-                throw BizError.notGroup
+            // Handle root level (empty string as parentUri)
+            var parent: EntryDetail?
+            if newParentUri.isEmpty {
+                parent = nil
+            } else {
+                parent = try await getEntryDetails(uri: newParentUri)
+                if !parent!.isGroup {
+                    throw BizError.notGroup
+                }
             }
 
             for uri in uris {
                 let entry = try await getEntryDetails(uri: uri)
                 let oldParentUri = parentUri(of: uri)
-                let newEntryUri = newParentUri + "/" + entry.name
+                let newEntryUri = newParentUri == "/" ? "/" + entry.name : newParentUri + "/" + entry.name
                 try await entryRepo.ChangeParent(uri: uri, newEntryUri: newEntryUri, option: ChangeParentOption())
 
                 // Sync cache
@@ -124,7 +130,7 @@ public class EntryUseCase: EntryUseCaseProtocol {
                 syncUseCase.syncChildrenAfterMove(uris: [uri], fromParent: oldParentUri, toParent: newParentUri)
 
                 DispatchQueue.main.async {
-                    finisher(entry, parent)
+                    finisher(entry, parent ?? entry) // Pass dummy parent for root level
                 }
             }
 

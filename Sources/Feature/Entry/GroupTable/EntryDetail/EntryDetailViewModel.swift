@@ -60,7 +60,7 @@ public class EntryDetailViewModel {
                 }
             }
 
-            onRenamed?(entry.id, validName, newDetail.uri)
+            onRenamed?(entry.id, newName, newDetail.uri)
             NotificationCenter.default.post(name: .reopenGroup, object: [parentUri(of: newDetail.uri)])
         } catch {
             errorMessage = "rename failed \(error)"
