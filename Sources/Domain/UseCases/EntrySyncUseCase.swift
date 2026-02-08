@@ -61,6 +61,24 @@ public final class EntrySyncUseCase: EntrySyncUseCaseProtocol {
         if store.currentGroupUri == fromParent {
             store.removeChildrenRecursively(uris: uris)
         }
+        // Detect if the currently opened group was moved
+        for uri in uris {
+            let newUri = newUri(for: uri, from: fromParent, to: toParent)
+            if store.currentGroupUri == uri && newUri != nil {
+                // Update store first, then notify with OLD uri so views can identify themselves
+                let oldUri = store.currentGroupUri
+                store.currentGroupUri = newUri!
+                // Send old URI so views can match and update to new URI
+                NotificationCenter.default.post(name: Notification.Name("reopenGroup"), object: [oldUri, newUri!])
+            }
+        }
+    }
+
+    private func newUri(for uri: String, from: String, to: String) -> String? {
+        guard uri.hasPrefix(from) else { return nil }
+        let suffix = String(uri.dropFirst(from.count))
+        let newParent = to.isEmpty ? "" : to
+        return newParent + suffix
     }
 
     public func syncChildrenAfterRename(id: Int64, newName: String, newUri: String) {

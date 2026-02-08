@@ -10,3 +10,7 @@ import Foundation
 public func sentAlert(_ msg: String){
     NotificationCenter.default.post(name: NSNotification.Name("alert"), object: msg)
 }
+
+public extension NSNotification.Name {
+    static let reopenGroup = NSNotification.Name("reopenGroup")
+}

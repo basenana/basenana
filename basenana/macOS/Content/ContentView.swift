@@ -8,6 +8,7 @@
 import SwiftUI
 import Swinject
 import Domain
+import Feature
 
 
 @MainActor
@@ -27,6 +28,17 @@ public struct ContentView: View {
         }
         .preferredColorScheme(state.setting.appearance.overColorScheme)
         .environment(\.stateStore, state)
+    }
+}
+
+struct DocumentWindowView: View {
+    let uri: String
+
+    @State private var container = DIContainer(state: .shared)
+
+    var body: some View {
+        DocumentReadView(viewModel: container.c.resolve(DocumentReadViewModel.self, argument: uri)!)
+            .id(uri)
     }
 }
 

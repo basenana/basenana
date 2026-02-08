@@ -36,18 +36,32 @@ public struct GroupTableView: View {
         .onReceive(NotificationCenter.default.publisher(for: .reopenGroup)) { [self] notification in
             if let uris = notification.object as? [String] {
                 var needReopen = false
-                for u in uris {
-                    if u != groupUri {
-                        continue
+                var newUri: String?
+
+                if uris.count == 2 {
+                    // Move notification: [oldUri, newUri]
+                    if uris[0] == groupUri {
+                        newUri = uris[1]
+                        needReopen = true
                     }
-                    needReopen = true
-                    break
+                } else {
+                    // Simple reopen notification
+                    for u in uris {
+                        if u != groupUri {
+                            continue
+                        }
+                        needReopen = true
+                        break
+                    }
                 }
 
                 if needReopen {
                     Task {
-                        // reopen
-                        await viewModel.openGroup(uri: groupUri)
+                        let uriToOpen = newUri ?? groupUri
+                        if let new = newUri {
+                            groupUri = new
+                        }
+                        await viewModel.openGroup(uri: uriToOpen)
                     }
                 }
             }
@@ -231,10 +245,14 @@ private struct GroupTableContentView: View {
     }
 
     public var body: some View {
+        @Environment(\.openWindow) var openWindowAction
+
         VStack(spacing: 0) {
             HStack(spacing: 0) {
                 VStack(spacing: 0) {
-                    tableContent
+                    tableContent(openWindow: { uri in
+                        openWindowAction(value: uri)
+                    })
 
                     if viewModel.showDocumentView {
                         documentViewSection
@@ -277,13 +295,20 @@ private struct GroupTableContentView: View {
         }
     }
 
-    private var tableContent: some View {
+    @ViewBuilder
+    private func tableContent(openWindow: @escaping (String) -> Void) -> some View {
         Table(of: EntryRow.self, selection: $viewModel.selection, sortOrder: $order) {
             TableColumn("Name", value: \.name) { entry in
                 HStack {
                     Image(systemName: entry.isGroup ? "folder" : "doc.text")
                         .frame(width: 12, alignment: .center)
                     Text("\(entry.name)")
+                }
+                .contentShape(Rectangle())
+                .onTapGesture(count: 2) {
+                    if !entry.isGroup {
+                        openWindow(entry.uri)
+                    }
                 }
             }
             TableColumn("Kind", value: \.kind)
