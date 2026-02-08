@@ -80,8 +80,8 @@ public class CreateDeleteViewModel {
                     if entry.isGroup {
                         st.removeTreeChildGroup(parentUri: entry.uri, childUri: entry.uri)
                     }
-                    // Remove from Children cache
-                    st.removeChildren(uris: [entry.uri])
+                    // Notify views to refresh children
+                    NotificationCenter.default.post(name: .childrenChanged, object: ChildrenChange(parentUri: "", changeType: .delete))
                     NotificationCenter.default.post(name: .reopenGroup, object: [entry.uri])
                 }
             )

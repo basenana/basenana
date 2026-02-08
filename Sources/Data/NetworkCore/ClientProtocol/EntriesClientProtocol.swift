@@ -31,6 +31,10 @@ public protocol EntriesClientProtocol {
     func FilterEntries(celPattern: String, page: Int?, pageSize: Int?, sort: String?, order: String?) async throws -> [any EntryInfo]
     func SearchEntries(query: String, page: Int?, pageSize: Int?) async throws -> [SearchResult]
     func UpdateDocumentByURI(uri: String, update: DocumentUpdate) async throws
+
+    // group configs
+    func GroupConfigs(uri: String) async throws -> GroupConfig
+    func UpdateGroupConfig(uri: String, rss: RSSConfig?, filter: FilterConfig?) async throws -> GroupConfig
 }
 
 

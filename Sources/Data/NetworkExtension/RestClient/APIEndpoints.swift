@@ -29,6 +29,8 @@ public enum APIEndpoint {
     case entriesFriday(uri: String?, id: Int64?)
     case groupsChildren(uri: String?, id: Int64?, page: Int64?, pageSize: Int64?, sort: String?, order: String?)
     case groupsTree
+    case groupsConfigs(uri: String?, id: Int64?)
+    case groupsConfigsUpdate(uri: String?, id: Int64?)
     case filesContent(uri: String?, id: Int64?)
     case filesUpload(uri: String?, id: Int64?)
     case messages(all: Bool)
@@ -80,6 +82,10 @@ public enum APIEndpoint {
             return "/api/v1/groups/children"
         case .groupsTree:
             return "/api/v1/groups/tree"
+        case .groupsConfigs:
+            return "/api/v1/groups/configs"
+        case .groupsConfigsUpdate:
+            return "/api/v1/groups/configs/update"
         case .filesContent:
             return "/api/v1/files/content"
         case .filesUpload:
@@ -130,11 +136,11 @@ public enum APIEndpoint {
         switch self {
         case .healthCheck, .groupsTree, .messages, .workflows, .workflow, .workflowJobs, .workflowJob, .workflowPlugins, .configsGroup, .config:
             return .get
-        case .entriesDetails, .entriesProperty, .entriesFriday, .groupsChildren, .filesContent:
+        case .entriesDetails, .entriesProperty, .entriesFriday, .groupsChildren, .filesContent, .groupsConfigs:
             return .post
         case .filesUpload, .entriesDelete, .entriesCreate, .entriesBatchDelete, .entriesFilter, .entriesSearch, .messagesRead, .workflowTrigger, .workflowCreate:
             return .post
-        case .entriesUpdate, .entriesParent, .entriesDocument, .workflowUpdate, .configSet:
+        case .entriesUpdate, .entriesParent, .entriesDocument, .workflowUpdate, .configSet, .groupsConfigsUpdate:
             return .put
         case .workflowDelete, .configDelete:
             return .delete

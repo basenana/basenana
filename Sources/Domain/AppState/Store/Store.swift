@@ -49,31 +49,6 @@ public class StateStore {
         }
     }
 
-    // MARK: - Children Cache
-    public private(set) var _childrenList: [CachedEntry] = []
-
-    public var childrenList: [CachedEntry] {
-        get { _childrenList }
-    }
-
-    // MARK: - Children Cache Operations
-    public func appendChildren(_ items: [CachedEntry]) {
-        _childrenList.append(contentsOf: items)
-    }
-
-    public func removeChildren(uris: [String]) {
-        _childrenList.removeAll { uris.contains($0.uri) }
-    }
-
-    public func resetChildren() {
-        _childrenList = []
-    }
-
-    /// Sort children in-place without triggering reset
-    public func sortChildren(by areInIncreasingOrder: (CachedEntry, CachedEntry) -> Bool) {
-        _childrenList.sort(by: areInIncreasingOrder)
-    }
-
     // Callbacks for external binding
     public var currentGroupUriDidChange: ((String?) -> Void)?
     public var selectedEntryUriDidChange: ((String?) -> Void)?
@@ -292,62 +267,6 @@ public class StateStore {
                 updateDescendantUrisForRename(node: child, oldBaseUri: oldUri, newBaseUri: newUri)
             }
         }
-    }
-
-    // MARK: - Children Cache Update Operations
-
-    /// Remove children entries and all their descendants
-    public func removeChildrenRecursively(uris: [String]) {
-        var allUrisToRemove = Set(uris)
-
-        for uri in uris {
-            if let node = _treeAllGroups[uri] {
-                collectAllDescendantUris(from: node, into: &allUrisToRemove)
-            }
-        }
-
-        _childrenList.removeAll { allUrisToRemove.contains($0.uri) }
-    }
-
-    private func collectAllDescendantUris(from node: TreeNode, into set: inout Set<String>) {
-        set.insert(node.uri)
-        guard let children = node.children else { return }
-        for child in children {
-            collectAllDescendantUris(from: child, into: &set)
-        }
-    }
-
-    /// Update a single CachedEntry after rename
-    public func updateCachedEntry(id: Int64, newName: String, newUri: String) {
-        if let index = _childrenList.firstIndex(where: { $0.id == id }) {
-            let entry = _childrenList[index]
-            let newEntry = CachedEntry(
-                id: entry.id,
-                uri: newUri,
-                name: newName,
-                kind: entry.kind,
-                isGroup: entry.isGroup,
-                size: entry.size,
-                parentID: entry.parentID,
-                createdAt: entry.createdAt,
-                changedAt: entry.changedAt,
-                modifiedAt: entry.modifiedAt,
-                accessAt: entry.accessAt
-            )
-            _childrenList[index] = newEntry
-        }
-    }
-
-    /// Remove children entries when moving (target directory loads separately)
-    public func moveChildrenRecursively(uris: [String], fromParent: String, toParent: String) {
-        var allUrisToMove = Set(uris)
-        for uri in uris {
-            if let node = _treeAllGroups[uri] {
-                collectAllDescendantUris(from: node, into: &allUrisToMove)
-            }
-        }
-
-        _childrenList.removeAll { allUrisToMove.contains($0.uri) }
     }
 
     private init(){ }

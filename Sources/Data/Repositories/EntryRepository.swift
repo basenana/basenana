@@ -95,5 +95,15 @@ public class EntryRepository: EntryRepositoryProtocol {
         try await core.UpdateDocumentByURI(uri: uri, update: update)
     }
 
+    // MARK: - Group Config Operations
+
+    public func GetGroupConfig(uri: String) async throws -> GroupConfig {
+        return try await core.GroupConfigs(uri: uri)
+    }
+
+    public func UpdateGroupConfig(uri: String, rss: RSSConfig?, filter: FilterConfig?) async throws -> GroupConfig {
+        return try await core.UpdateGroupConfig(uri: uri, rss: rss, filter: filter)
+    }
+
 }
 

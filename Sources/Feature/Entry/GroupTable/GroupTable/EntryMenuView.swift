@@ -14,6 +14,7 @@ import Styleguide
 
 public struct EntryMenuView: View {
     @Environment(\.stateStore) private var store
+    @Environment(\.openWindow) private var openWindow
     @State private var viewModel: GroupTableViewModel
 
     public init(viewModel: GroupTableViewModel) {
@@ -22,9 +23,17 @@ public struct EntryMenuView: View {
 
     public var body: some View {
         VStack {
-            if canBeOpen() {
+            if canOpenAsGroup() {
                 Section{
-                    Button("Open", action: { gotoDestination(.groupList(groupUri: targets.first!.uri)) })
+                    Button("Open") {
+                        gotoDestination(.groupList(groupUri: targets.first!.uri))
+                    }
+                }
+            } else if canOpenAsDocument() {
+                Section{
+                    Button("Open") {
+                        openWindow(value: targets.first!.uri)
+                    }
                 }
             }
 
@@ -109,12 +118,22 @@ public struct EntryMenuView: View {
         return targets.allSatisfy { !$0.isGroup }
     }
 
-    func canBeOpen() -> Bool {
+    func canOpenAsGroup() -> Bool {
         guard onlyOneSelected() else {
             return false
         }
         if let target = targets.first {
             return target.isGroup && target.id != store?.rootGroup?.id
+        }
+        return false
+    }
+
+    func canOpenAsDocument() -> Bool {
+        guard onlyOneSelected() else {
+            return false
+        }
+        if let target = targets.first {
+            return !target.isGroup
         }
         return false
     }

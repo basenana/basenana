@@ -220,6 +220,56 @@ public class EntriesClient: EntriesClientProtocol {
         return response.property.summary ?? ""
     }
 
+    // MARK: - Group Config Operations
+
+    public func GroupConfigs(uri: String) async throws -> GroupConfig {
+        let request = GroupConfigsRequest(uri: uri, id: nil)
+        let response: GroupConfigsResponse = try await apiClient.request(
+            .groupsConfigs(uri: nil, id: nil),
+            body: request,
+            responseType: GroupConfigsResponse.self
+        )
+        return GroupConfig(
+            source: response.source,
+            rss: response.rss.map { RSSConfig(
+                feed: $0.feed ?? "",
+                siteName: $0.site_name ?? "",
+                siteURL: $0.site_url ?? "",
+                fileType: FileType(rawValue: $0.file_type ?? "webarchive") ?? .webarchive
+            )},
+            filter: response.filter.map { FilterConfig(celPattern: $0.cel_pattern ?? "") }
+        )
+    }
+
+    public func UpdateGroupConfig(uri: String, rss: RSSConfig?, filter: FilterConfig?) async throws -> GroupConfig {
+        let request = GroupConfigsUpdateRequest(
+            uri: uri,
+            id: nil,
+            rss: rss.map { RSSConfigDTO(
+                feed: $0.feed,
+                site_name: $0.siteName,
+                site_url: $0.siteURL,
+                file_type: $0.fileType.rawValue
+            )},
+            filter: filter.map { FilterConfigDTO(cel_pattern: $0.celPattern) }
+        )
+        let response: GroupConfigsResponse = try await apiClient.request(
+            .groupsConfigsUpdate(uri: nil, id: nil),
+            body: request,
+            responseType: GroupConfigsResponse.self
+        )
+        return GroupConfig(
+            source: response.source,
+            rss: response.rss.map { RSSConfig(
+                feed: $0.feed ?? "",
+                siteName: $0.site_name ?? "",
+                siteURL: $0.site_url ?? "",
+                fileType: FileType(rawValue: $0.file_type ?? "webarchive") ?? .webarchive
+            )},
+            filter: response.filter.map { FilterConfig(celPattern: $0.cel_pattern ?? "") }
+        )
+    }
+
     // MARK: - Private Helpers
 
     private func parseGroupTree(node: GroupTreeNodeDTO) -> APIGroup {

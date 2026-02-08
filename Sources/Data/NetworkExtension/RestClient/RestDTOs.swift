@@ -317,6 +317,42 @@ struct GroupTreeResponse: Decodable {
     let root: GroupTreeNodeDTO
 }
 
+// MARK: - Group Config DTOs
+
+struct GroupConfigsRequest: Encodable {
+    let uri: String?
+    let id: Int64?
+
+    init(uri: String? = nil, id: Int64? = nil) {
+        self.uri = uri
+        self.id = id
+    }
+}
+
+struct RSSConfigDTO: Decodable, Encodable {
+    let feed: String?
+    let site_name: String?
+    let site_url: String?
+    let file_type: String?
+}
+
+struct FilterConfigDTO: Decodable, Encodable {
+    let cel_pattern: String?
+}
+
+struct GroupConfigsResponse: Decodable {
+    let source: String?
+    let rss: RSSConfigDTO?
+    let filter: FilterConfigDTO?
+}
+
+struct GroupConfigsUpdateRequest: Encodable {
+    let uri: String?
+    let id: Int64?
+    let rss: RSSConfigDTO?
+    let filter: FilterConfigDTO?
+}
+
 // MARK: - Messages DTOs
 
 struct MessageDTO: Decodable {

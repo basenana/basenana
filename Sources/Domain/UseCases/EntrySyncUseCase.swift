@@ -7,6 +7,29 @@
 
 import Foundation
 
+/// Notification names for children cache sync
+public extension Notification.Name {
+    static let childrenChanged = Notification.Name("childrenChanged")
+}
+
+/// Payload for childrenChanged notification
+public struct ChildrenChange {
+    public var parentUri: String
+    public var changeType: ChangeType
+
+    public enum ChangeType {
+        case create
+        case delete
+        case move
+        case rename
+    }
+
+    public init(parentUri: String, changeType: ChangeType) {
+        self.parentUri = parentUri
+        self.changeType = changeType
+    }
+}
+
 /// Unified cache synchronization for Entry operations
 public final class EntrySyncUseCase: EntrySyncUseCaseProtocol {
 
@@ -43,9 +66,10 @@ public final class EntrySyncUseCase: EntrySyncUseCaseProtocol {
     // MARK: - Children Operations
 
     public func syncChildrenAfterCreate(parentUri: String, entries: [EntryInfo]) {
-        guard store.currentGroupUri == parentUri else { return }
-        let cachedEntries = entries.map { CachedEntry(from: $0) }
-        store.appendChildren(cachedEntries)
+        NotificationCenter.default.post(
+            name: .childrenChanged,
+            object: ChildrenChange(parentUri: parentUri, changeType: .create)
+        )
     }
 
     public func syncChildrenAfterCreate(parentUri: String, entry: EntryInfo) {
@@ -53,14 +77,19 @@ public final class EntrySyncUseCase: EntrySyncUseCaseProtocol {
     }
 
     public func syncChildrenAfterDelete(parentUri: String?, uris: [String]) {
-        if let parent = parentUri, store.currentGroupUri != parent { return }
-        store.removeChildrenRecursively(uris: uris)
+        NotificationCenter.default.post(
+            name: .childrenChanged,
+            object: ChildrenChange(parentUri: parentUri ?? "", changeType: .delete)
+        )
     }
 
     public func syncChildrenAfterMove(uris: [String], fromParent: String, toParent: String) {
-        if store.currentGroupUri == fromParent {
-            store.removeChildrenRecursively(uris: uris)
-        }
+        // Notify that children changed in the source parent
+        NotificationCenter.default.post(
+            name: .childrenChanged,
+            object: ChildrenChange(parentUri: fromParent, changeType: .move)
+        )
+
         // Detect if the currently opened group was moved
         for uri in uris {
             let newUri = newUri(for: uri, from: fromParent, to: toParent)
@@ -82,7 +111,10 @@ public final class EntrySyncUseCase: EntrySyncUseCaseProtocol {
     }
 
     public func syncChildrenAfterRename(id: Int64, newName: String, newUri: String) {
-        store.updateCachedEntry(id: id, newName: newName, newUri: newUri)
+        NotificationCenter.default.post(
+            name: .childrenChanged,
+            object: ChildrenChange(parentUri: "", changeType: .rename)
+        )
     }
 
     // MARK: - Full Reset
@@ -92,6 +124,9 @@ public final class EntrySyncUseCase: EntrySyncUseCaseProtocol {
     }
 
     public func resetChildren() {
-        store.resetChildren()
+        NotificationCenter.default.post(
+            name: .childrenChanged,
+            object: ChildrenChange(parentUri: "", changeType: .delete)
+        )
     }
 }

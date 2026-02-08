@@ -199,4 +199,20 @@ public class EntryUseCase: EntryUseCaseProtocol {
     public func DownloadFile(entry: Int64, dirPath: String) async throws -> String {
         throw UseCaseError.unimplement
     }
+
+    public func getGroupConfig(uri: String) async throws -> GroupConfig {
+        do {
+            return try await entryRepo.GetGroupConfig(uri: uri)
+        } catch RepositoryError.canceled {
+            throw UseCaseError.canceled
+        }
+    }
+
+    public func updateGroupConfig(uri: String, rss: RSSConfig?, filter: FilterConfig?) async throws -> GroupConfig {
+        do {
+            return try await entryRepo.UpdateGroupConfig(uri: uri, rss: rss, filter: filter)
+        } catch RepositoryError.canceled {
+            throw UseCaseError.canceled
+        }
+    }
 }

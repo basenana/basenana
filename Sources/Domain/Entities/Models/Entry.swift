@@ -192,6 +192,7 @@ public struct DocumentUpdate {
 }
 
 public enum FileType: String {
+    case html
     case xml
     case json
     case markdown
@@ -211,12 +212,32 @@ public struct RSSConfig {
     public var siteName: String
     public var siteURL: String
     public var fileType: FileType
-    
+
     public init(feed: String, siteName: String, siteURL: String, fileType: FileType) {
         self.feed = feed
         self.siteName = siteName
         self.siteURL = siteURL
         self.fileType = fileType
+    }
+}
+
+public struct FilterConfig {
+    public var celPattern: String
+
+    public init(celPattern: String) {
+        self.celPattern = celPattern
+    }
+}
+
+public struct GroupConfig {
+    public var source: String?
+    public var rss: RSSConfig?
+    public var filter: FilterConfig?
+
+    public init(source: String?, rss: RSSConfig?, filter: FilterConfig?) {
+        self.source = source
+        self.rss = rss
+        self.filter = filter
     }
 }
 

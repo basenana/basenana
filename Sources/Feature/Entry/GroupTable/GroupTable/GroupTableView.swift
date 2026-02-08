@@ -66,15 +66,27 @@ public struct GroupTableView: View {
                 }
             }
         }
-        .task {
-            Self.logger.notice("open group \(groupUri)")
-            await viewModel.openGroup(uri: groupUri)
+        .onAppear {
+            Self.logger.notice("onAppear group \(groupUri)")
+            Task {
+                await viewModel.openGroup(uri: groupUri)
+            }
 
             if let opg = viewModel.group {
                 if opg.name == ".inbox" {
                     groupName = "Inbox"
                 } else {
                     groupName = opg.name
+                }
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .childrenChanged)) { notification in
+            if let change = notification.object as? ChildrenChange {
+                // Only refresh if the change is for the current group's children
+                if change.parentUri == groupUri || change.parentUri.isEmpty {
+                    Task {
+                        await viewModel.refreshChildren()
+                    }
                 }
             }
         }
@@ -218,16 +230,21 @@ private struct GroupTableWithMenuView: View {
     }
 
     public var body: some View {
-        GroupTableContentView(groupUri: groupUri, viewModel: viewModel)
+        @Environment(\.openWindow) var openWindow
+
+        return GroupTableContentView(groupUri: groupUri, viewModel: viewModel)
             .contextMenu{
                 EntryMenuView(viewModel: viewModel)
             }
             .contextMenu(forSelectionType: EntryRow.ID.self) { items in
                 EntryMenuView(viewModel: viewModel)
             } primaryAction: { items in
-                if  items.count == 1 {
-                    if let grp = viewModel.children.filter({$0.id == items.first! && $0.isGroup}).first{
-                        gotoDestination(.groupList(groupUri: grp.uri))
+                if  items.count == 1,
+                   let item = viewModel.children.first(where: { $0.id == items.first }) {
+                    if item.isGroup {
+                        gotoDestination(.groupList(groupUri: item.uri))
+                    } else {
+                        openWindow(value: item.uri)
                     }
                 }
             }
@@ -245,14 +262,10 @@ private struct GroupTableContentView: View {
     }
 
     public var body: some View {
-        @Environment(\.openWindow) var openWindowAction
-
         VStack(spacing: 0) {
             HStack(spacing: 0) {
                 VStack(spacing: 0) {
-                    tableContent(openWindow: { uri in
-                        openWindowAction(value: uri)
-                    })
+                    tableContent
 
                     if viewModel.showDocumentView {
                         documentViewSection
@@ -267,6 +280,11 @@ private struct GroupTableContentView: View {
             loadMoreTrigger
         }
         .onChange(of: viewModel.selection) { _, _ in
+            Task {
+                await viewModel.loadSelectedEntryDetail()
+            }
+        }
+        .onChange(of: viewModel.group?.uri) { _, _ in
             Task {
                 await viewModel.loadSelectedEntryDetail()
             }
@@ -296,19 +314,13 @@ private struct GroupTableContentView: View {
     }
 
     @ViewBuilder
-    private func tableContent(openWindow: @escaping (String) -> Void) -> some View {
+    private var tableContent: some View {
         Table(of: EntryRow.self, selection: $viewModel.selection, sortOrder: $order) {
             TableColumn("Name", value: \.name) { entry in
                 HStack {
                     Image(systemName: entry.isGroup ? "folder" : "doc.text")
                         .frame(width: 12, alignment: .center)
                     Text("\(entry.name)")
-                }
-                .contentShape(Rectangle())
-                .onTapGesture(count: 2) {
-                    if !entry.isGroup {
-                        openWindow(entry.uri)
-                    }
                 }
             }
             TableColumn("Kind", value: \.kind)
@@ -354,7 +366,7 @@ private struct GroupTableContentView: View {
 
     @ViewBuilder
     private var inspectorSection: some View {
-        if let entry = viewModel.selectedEntryDetail {
+        if let entry = viewModel.inspectorEntryDetail {
             Divider()
             InspectorView(entry: entry, viewModel: viewModel)
                 .frame(width: 280)
@@ -502,10 +514,19 @@ private struct InspectorView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 basicInfoSection
-                Divider()
-                documentInfoSection
-                Divider()
-                propertiesSection
+
+                if entry.isGroup {
+                    Divider()
+                    groupConfigSection
+                }
+
+                if !entry.isGroup {
+                    Divider()
+                    documentInfoSection
+                    Divider()
+                    propertiesSection
+                }
+
                 Divider()
                 timeInfoSection
 
@@ -528,6 +549,140 @@ private struct InspectorView: View {
             InspectorPropertyRow(label: "Size", value: bytesToHumanReadableString(bytes: entry.size), isReadOnly: true)
             InspectorPropertyRow(label: "URI", value: entry.uri, isReadOnly: true)
         }
+    }
+
+    private var groupConfigSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("Group Config")
+                    .font(.headline)
+                    .foregroundColor(.secondary)
+                Spacer()
+                if isEditingGroupConfig {
+                    Button("Save") {
+                        saveGroupConfig()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.small)
+                    Button("Cancel") {
+                        cancelGroupConfigEditing()
+                    }
+                    .controlSize(.small)
+                } else {
+                    Button("Edit") {
+                        loadGroupConfigEditingValues()
+                        isEditingGroupConfig = true
+                    }
+                    .controlSize(.small)
+                }
+            }
+
+            if let config = viewModel.inspectorGroupConfig {
+                if config.source == "rss", let rss = config.rss {
+                    rssConfigContent(rss: rss)
+                } else if let filter = config.filter {
+                    filterConfigContent(filter: filter)
+                } else {
+                    Text("No configuration")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            } else if viewModel.group != nil {
+                Text("Loading...")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+        }
+        .onChange(of: entry.uri) { _, _ in
+            isEditingGroupConfig = false
+        }
+    }
+
+    private func rssConfigContent(rss: RSSConfig) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            if isEditingGroupConfig {
+                EditablePropertyRow(label: "Feed", value: $editedRSSFeed, isEditing: isEditingGroupConfig, isReadOnly: false)
+                EditablePropertyRow(label: "Site Name", value: $editedRSSSiteName, isEditing: isEditingGroupConfig, isReadOnly: false)
+                EditablePropertyRow(label: "Site URL", value: $editedRSSSiteURL, isEditing: isEditingGroupConfig, isReadOnly: false)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("File Type")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Picker("File Type", selection: $editedRSSFileType) {
+                        Text("HTML").tag("html")
+                        Text("WebArchive").tag("webarchive")
+                    }
+                    .pickerStyle(.menu)
+                    .controlSize(.small)
+                }
+            } else {
+                InspectorPropertyRow(label: "Feed", value: rss.feed, isReadOnly: true)
+                InspectorPropertyRow(label: "Site Name", value: rss.siteName, isReadOnly: true)
+                InspectorPropertyRow(label: "Site URL", value: rss.siteURL, isReadOnly: true)
+                InspectorPropertyRow(label: "File Type", value: rss.fileType.rawValue, isReadOnly: true)
+            }
+        }
+    }
+
+    private func filterConfigContent(filter: FilterConfig) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text("CEL Pattern")
+                .font(.caption)
+                .foregroundColor(.secondary)
+            if isEditingGroupConfig {
+                TextEditor(text: $editedFilterPattern)
+                    .font(.caption)
+                    .frame(height: 80)
+                    .scrollContentBackground(.hidden)
+                    .background(Color(NSColor.textBackgroundColor))
+            } else {
+                Text(filter.celPattern)
+                    .font(.caption)
+                    .textSelection(.enabled)
+            }
+        }
+    }
+
+    private func loadGroupConfigEditingValues() {
+        guard let config = viewModel.selectedGroupConfig else { return }
+
+        if config.source == "rss", let rss = config.rss {
+            editedRSSFeed = rss.feed
+            editedRSSSiteName = rss.siteName
+            editedRSSSiteURL = rss.siteURL
+            editedRSSFileType = rss.fileType.rawValue
+        } else if let filter = config.filter {
+            editedFilterPattern = filter.celPattern
+        }
+    }
+
+    private func cancelGroupConfigEditing() {
+        isEditingGroupConfig = false
+        loadGroupConfigEditingValues()
+    }
+
+    private func saveGroupConfig() {
+        guard let config = viewModel.selectedGroupConfig else { return }
+
+        if config.source == "rss" {
+            let rss = RSSConfig(
+                feed: editedRSSFeed,
+                siteName: editedRSSSiteName,
+                siteURL: editedRSSSiteURL,
+                fileType: FileType(rawValue: editedRSSFileType) ?? .html
+            )
+            Task {
+                await viewModel.updateGroupConfig(uri: entry.uri, rss: rss, filter: nil)
+            }
+        } else if config.filter != nil {
+            let filter = FilterConfig(celPattern: editedFilterPattern)
+            Task {
+                await viewModel.updateGroupConfig(uri: entry.uri, rss: nil, filter: filter)
+            }
+        }
+
+        isEditingGroupConfig = false
     }
 
     private var timeInfoSection: some View {
@@ -560,6 +715,14 @@ private struct InspectorView: View {
     @State private var editingPropertyKey: String = ""
     @State private var editingPropertyValue: String = ""
     @State private var isEditingProperties: Bool = false
+
+    // Group Config editing state
+    @State private var isEditingGroupConfig: Bool = false
+    @State private var editedRSSFeed: String = ""
+    @State private var editedRSSSiteName: String = ""
+    @State private var editedRSSSiteURL: String = ""
+    @State private var editedRSSFileType: String = ""
+    @State private var editedFilterPattern: String = ""
 
     private var documentInfoSection: some View {
         VStack(alignment: .leading, spacing: 8) {

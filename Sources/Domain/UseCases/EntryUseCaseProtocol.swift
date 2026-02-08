@@ -28,4 +28,7 @@ public protocol EntryUseCaseProtocol {
         document: DocumentCreate?
     ) async throws -> EntryInfo
     func DownloadFile(entry: Int64, dirPath: String) async throws -> String
+
+    func getGroupConfig(uri: String) async throws -> GroupConfig
+    func updateGroupConfig(uri: String, rss: RSSConfig?, filter: FilterConfig?) async throws -> GroupConfig
 }

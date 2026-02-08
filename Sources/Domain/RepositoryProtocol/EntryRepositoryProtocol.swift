@@ -28,5 +28,9 @@ public protocol EntryRepositoryProtocol {
     func ListDocuments(filter: DocumentFilter) async throws -> [EntryInfo]
     func Search(query: String, page: Int?, pageSize: Int?) async throws -> [SearchResult]
     func UpdateDocument(uri: String, update: DocumentUpdate) async throws
+
+    // group config operations
+    func GetGroupConfig(uri: String) async throws -> GroupConfig
+    func UpdateGroupConfig(uri: String, rss: RSSConfig?, filter: FilterConfig?) async throws -> GroupConfig
 }
 

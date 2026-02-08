@@ -16,20 +16,35 @@ import Domain
 @MainActor
 public class GroupTableViewModel: BaseViewModel {
 
+    // MARK: - Local Children Cache
+    private var _children: [CachedEntry] = []
+
+    var children: [EntryRow] {
+        _children.map { EntryRow(from: $0) }
+    }
+
+    func resetChildren() {
+        _children = []
+    }
+
+    func appendChildren(_ items: [CachedEntry]) {
+        _children.append(contentsOf: items)
+    }
+
+    func sortChildrenInternal(by areInIncreasingOrder: (CachedEntry, CachedEntry) -> Bool) {
+        _children.sort(by: areInIncreasingOrder)
+    }
+
     // MARK: - State from Store
     var group: EntryDetail? {
         get { _group }
         set {
             if _group?.uri != newValue?.uri {
                 _group = newValue
-                store.resetChildren()
+                resetChildren()
                 resetPagination()
             }
         }
-    }
-
-    var children: [EntryRow] {
-        store.childrenList.map { EntryRow(from: $0) }
     }
 
     // MARK: - Local State
@@ -58,6 +73,20 @@ public class GroupTableViewModel: BaseViewModel {
     var showInspector: Bool { store.showInspector }
     var showDocumentView: Bool { store.showDocumentView }
     var selectedEntryDetail: EntryDetail? = nil
+    var selectedGroupConfig: GroupConfig? = nil
+
+    // Inspector displays either selected entry detail or current group detail
+    var inspectorEntryDetail: EntryDetail? {
+        selectedEntryDetail ?? group
+    }
+
+    // Inspector displays either selected entry's group config or current group's config
+    var inspectorGroupConfig: GroupConfig? {
+        if selectedEntryDetail != nil {
+            return selectedGroupConfig
+        }
+        return group.map { _ in selectedGroupConfig } ?? nil
+    }
 
     // Document view height (resizable)
     var documentViewHeight: CGFloat = 500
@@ -118,32 +147,42 @@ public class GroupTableViewModel: BaseViewModel {
     }
 
     func loadSelectedEntryDetail() async {
+        // When nothing is selected, load current group's config for inspector
         guard selection.count == 1, let id = selection.first else {
             selectedEntryDetail = nil
+            // Still load current group's config if available
+            if let currentGroupUri = group?.uri {
+                await loadGroupConfig(uri: currentGroupUri)
+            } else {
+                selectedGroupConfig = nil
+            }
             return
         }
 
         guard let entry = child(at: id) else {
             selectedEntryDetail = nil
-            return
-        }
-
-        if entry.isGroup {
-            selectedEntryDetail = nil
+            selectedGroupConfig = nil
             return
         }
 
         do {
             selectedEntryDetail = try await entryUsecase.getEntryDetails(uri: entry.uri)
+            // Load group config if it's a group
+            if entry.isGroup {
+                await loadGroupConfig(uri: entry.uri)
+            } else {
+                selectedGroupConfig = nil
+            }
         } catch {
             sentAlert("load entry detail failed: \(error)")
             selectedEntryDetail = nil
+            selectedGroupConfig = nil
         }
     }
 
     func reset() {
         resetPagination()
-        store.resetChildren()
+        resetChildren()
     }
 
     func loadNextPage() async {
@@ -159,7 +198,7 @@ public class GroupTableViewModel: BaseViewModel {
             }
 
             let rows = newChildren.map { CachedEntry(from: $0) }
-            store.appendChildren(rows)
+            appendChildren(rows)
 
             if newChildren.count < pageSize {
                 hasMore = false
@@ -186,7 +225,7 @@ public class GroupTableViewModel: BaseViewModel {
             group = detail
 
             resetPagination()
-            store.resetChildren()
+            resetChildren()
             await loadNextPage()
         } catch let error as UseCaseError where error == .canceled {
             // do nothing
@@ -202,13 +241,13 @@ public class GroupTableViewModel: BaseViewModel {
     }
 
     func removeChildren(ids: [Int64]) {
-        let uris = store.childrenList.filter { ids.contains($0.id) }.map { $0.uri }
+        let uris = _children.filter { ids.contains($0.id) }.map { $0.uri }
         syncUseCase.syncChildrenAfterDelete(parentUri: nil, uris: uris)
     }
 
     func sortChildren(by comparators: [KeyPathComparator<EntryRow>]) {
         // Sort in-place without triggering reset
-        store.sortChildren { lhs, rhs in
+        sortChildrenInternal { lhs, rhs in
             return lhs.name.localizedCaseInsensitiveCompare(rhs.name) == .orderedAscending
         }
     }
@@ -413,6 +452,31 @@ public class GroupTableViewModel: BaseViewModel {
             selectedEntryDetail = try await entryUsecase.getEntryDetails(uri: entry.uri)
         } catch {
             sentAlert("refresh entry detail failed: \(error)")
+        }
+    }
+
+    // MARK: - Group Config Methods
+
+    func refreshChildren() async {
+        guard let groupUri = group?.uri else { return }
+        resetChildren()
+        await loadNextPage()
+    }
+
+    func loadGroupConfig(uri: String) async {
+        do {
+            selectedGroupConfig = try await entryUsecase.getGroupConfig(uri: uri)
+        } catch {
+            sentAlert("load group config failed: \(error)")
+            selectedGroupConfig = nil
+        }
+    }
+
+    func updateGroupConfig(uri: String, rss: RSSConfig?, filter: FilterConfig?) async {
+        do {
+            selectedGroupConfig = try await entryUsecase.updateGroupConfig(uri: uri, rss: rss, filter: filter)
+        } catch {
+            sentAlert("update group config failed: \(error)")
         }
     }
 }
