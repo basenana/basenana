@@ -58,14 +58,6 @@ public struct EntryMenuView: View {
                 }
 
                 Section{
-                    Menu("Move To") {
-                        GroupDestinationList(
-                            childKeyPath: \.children,
-                            isGroup: allSelectedAreGroups(),
-                            action: { await moveEntriesToGroup(newParentUri: $0) }
-                        )
-                    }
-
                     if canReplicate() {
                         Menu("Replicate To") {
                             GroupDestinationList(
@@ -74,6 +66,14 @@ public struct EntryMenuView: View {
                                 action: { await replicateEntryToGroup(newParentUri: $0) }
                             )
                         }
+                    }
+
+                    Menu("Move To") {
+                        GroupDestinationList(
+                            childKeyPath: \.children,
+                            isGroup: allSelectedAreGroups(),
+                            action: { await moveEntriesToGroup(newParentUri: $0) }
+                        )
                     }
                 }
             }
@@ -139,10 +139,7 @@ public struct EntryMenuView: View {
     }
 
     func canCreateGroup() -> Bool {
-        if let grp = viewModel.group {
-            return !isInternalFile(grp.toInfo()!)
-        }
-        return false
+        return viewModel.group != nil
     }
 
     func canBeEdit() -> Bool {
@@ -150,7 +147,7 @@ public struct EntryMenuView: View {
             return false
         }
         for target in targets {
-            if  target.id == store?.rootGroup?.id || isInternalFile(target){
+            if target.id == store?.rootGroup?.id {
                 return false
             }
         }

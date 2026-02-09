@@ -22,39 +22,32 @@ struct TreeMenuView: View {
     }
 
     public var body: some View {
-        VStack {
-            Section{
-                Button("New Group") {
-                    // show create group form
-                    NotificationCenter.default.post(
-                        name: NSNotification.Name.createGroupInTree,
-                        object: NewGroupRequest(parentUri: target.uri, groupType: .standard))
-                }
-            }
+        Button("New Group") {
+            // show create group form
+            NotificationCenter.default.post(
+                name: NSNotification.Name.createGroupInTree,
+                object: NewGroupRequest(parentUri: target.uri, groupType: .standard))
+        }
 
-            Section{
-                Button("Rename", action: {
-                    NotificationCenter.default.post(
-                        name: NSNotification.Name.renameGroupInTree,
-                        object: target.uri)
-                })
-                Button("Delete", action: {
-                    NotificationCenter.default.post(
-                        name: NSNotification.Name.deleteGroupInTree,
-                        object: [target.uri])
-                })
-            }
+        Button("Rename", action: {
+            NotificationCenter.default.post(
+                name: NSNotification.Name.renameGroupInTree,
+                object: target.uri)
+        })
+        Button("Delete", action: {
+            NotificationCenter.default.post(
+                name: NSNotification.Name.deleteGroupInTree,
+                object: [target.uri])
+        })
 
-            Section{
-                Menu("Move To") {
-                    GroupDestinationList(
-                        childKeyPath: \.children,
-                        isGroup: true,
-                        action: { await moveEntriesToGroup(newParentUri: $0) }
-                    )
-                }
-            }
+        Divider()
 
+        Menu("Move To") {
+            GroupDestinationList(
+                childKeyPath: \.children,
+                isGroup: true,
+                action: { await moveEntriesToGroup(newParentUri: $0) }
+            )
         }
     }
 

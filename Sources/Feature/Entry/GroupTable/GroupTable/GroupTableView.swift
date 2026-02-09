@@ -432,7 +432,7 @@ private struct ResizableDocumentView: View {
     private var documentContent: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("Document: \(entry.documentTitle ?? entry.name)")
+                Text("\(entry.documentTitle ?? entry.name)")
                     .font(.headline)
                 Spacer()
             }
@@ -442,12 +442,13 @@ private struct ResizableDocumentView: View {
 
             Divider()
 
-            if let uri = viewModel.selectedEntryDetail?.uri {
-                DocumentReadContainerView(entryUri: uri, store: viewModel.store, fileRepository: viewModel.fileRepository, documentUsecase: viewModel.documentUsecase)
-                    .id(uri)
+            if entry.isGroup || viewModel.selectedEntryDetail?.uri == nil {
+                Text("No document selected")
+                    .foregroundColor(.gray)
                     .frame(maxHeight: .infinity)
             } else {
-                Text("No document selected")
+                DocumentReadContainerView(entryUri: viewModel.selectedEntryDetail!.uri, store: viewModel.store, fileRepository: viewModel.fileRepository, documentUsecase: viewModel.documentUsecase)
+                    .id(viewModel.selectedEntryDetail!.uri)
                     .frame(maxHeight: .infinity)
             }
         }
