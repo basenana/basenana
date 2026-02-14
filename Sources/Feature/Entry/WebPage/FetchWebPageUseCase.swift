@@ -40,6 +40,22 @@ public final class FetchWebPageUseCase: FetchWebPageUseCaseProtocol {
             return try await saveHTML(url: urlObj, title: finalTitle, html: readabilityResult.content)
         }
     }
+    
+    public func execute(url: String, title: String?, html: String) async throws -> EntryInfo {
+        guard let urlObj = URL(string: url) else {
+            throw WebError.InvalidUrl(url)
+        }
+
+        // Use Readability-style extraction
+        let readabilityResult = try readability.parse(html: html, url: url)
+        let finalTitle = title ?? readabilityResult.title
+
+        if setting.inboxFileType == "webarchive" {
+            return try await saveWebArchive(url: urlObj, title: finalTitle, html: readabilityResult.content)
+        } else {
+            return try await saveHTML(url: urlObj, title: finalTitle, html: readabilityResult.content)
+        }
+    }
 
     private func saveWebArchive(url: URL, title: String, html: String) async throws -> EntryInfo {
         let tempDir = FileManager.default.temporaryDirectory

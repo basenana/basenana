@@ -32,7 +32,7 @@ public struct EntryMenuView: View {
             } else if canOpenAsDocument() {
                 Section{
                     Button("Open") {
-                        openWindow(value: targets.first!.uri)
+                        openWindow(value: "document:" + targets.first!.uri)
                     }
                 }
             }

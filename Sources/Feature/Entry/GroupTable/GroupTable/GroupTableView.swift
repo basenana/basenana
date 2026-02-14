@@ -242,7 +242,7 @@ private struct GroupTableWithMenuView: View {
                     if item.isGroup {
                         gotoDestination(.groupList(groupUri: item.uri))
                     } else {
-                        openWindow(value: item.uri)
+                        openWindow(value: "document:" + item.uri)
                     }
                 }
             }

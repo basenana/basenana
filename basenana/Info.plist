@@ -14,6 +14,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>entry</string>
+				<string>basenana</string>
 			</array>
 		</dict>
 		<dict/>

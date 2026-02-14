@@ -17,12 +17,14 @@ import Domain
 @Observable
 @MainActor
 public class InboxViewModel: BaseViewModel {
-    
+
+    public var onUploadSuccess: (() -> Void)?
+
     private static let logger = Logger(
             subsystem: Bundle.main.bundleIdentifier!,
             category: String(describing: InboxViewModel.self)
         )
-    
+
     override public init(store: StateStore, entryUsecase: EntryUseCaseProtocol) {
         super.init(store: store, entryUsecase: entryUsecase)
     }
@@ -84,7 +86,7 @@ public class InboxViewModel: BaseViewModel {
                             return
                         }
                         DispatchQueue.main.async {
-                            self.uploadWebarchive(url: url, title: title, file: temporaryFileURL)
+                            self.uploadWebArchive(url: url, title: title, file: temporaryFileURL)
                         }
                     }
                 } catch {
@@ -96,8 +98,8 @@ public class InboxViewModel: BaseViewModel {
         )
         
     }
-    
-    func uploadWebarchive(url: URL, title: String, file: URL)  {
+
+    func uploadWebArchive(url: URL, title: String, file: URL)  {
         assert(Thread.isMainThread)
 
         let document = DocumentCreate(title: title, url: url.absoluteString)
@@ -125,6 +127,9 @@ public class InboxViewModel: BaseViewModel {
             },
             complete: {
                 NotificationCenter.default.post(name: .reopenGroup, object: [EntryURI.inbox])
+                Task { @MainActor in
+                    self.onUploadSuccess?()
+                }
             }
         )
     }
