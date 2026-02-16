@@ -100,6 +100,9 @@ class DIContainer {
         self.c.register(FetchWebPageUseCaseProtocol.self) { r in
             FetchWebPageUseCase(entryUsecase: r.resolve(EntryUseCaseProtocol.self)!, setting: GeneralSetting())
         }.inObjectScope(.container)
+        self.c.register(FridayUseCaseProtocol.self) { r in
+            FridayUseCase(repository: r.resolve(FridayRepositoryProtocol.self)!)
+        }.inObjectScope(.container)
 
         // Repositories
         self.c.register(EntryRepositoryProtocol.self) { r in
@@ -111,6 +114,9 @@ class DIContainer {
         self.c.register(WorkflowRepositoryProtocol.self) { r in
             WorkflowRepository(core: r.resolve(WorkflowClientProtocol.self)!)
         }.inObjectScope(.container)
+        self.c.register(FridayRepositoryProtocol.self) { r in
+            FridayRepository(client: r.resolve(FridayClientProtocol.self)!)
+        }.inObjectScope(.container)
 
         // Clients
         self.c.register(EntriesClientProtocol.self) { r in
@@ -121,6 +127,9 @@ class DIContainer {
         }.inObjectScope(.container)
         self.c.register(WorkflowClientProtocol.self) { r in
             WorkflowClient(apiClient: self.environment.restAPIClient!.apiClient)
+        }.inObjectScope(.container)
+        self.c.register(FridayClientProtocol.self) { r in
+            FridayClient(apiClient: self.environment.restAPIClient!.apiClient)
         }.inObjectScope(.container)
     }
 }

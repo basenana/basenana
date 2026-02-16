@@ -46,9 +46,9 @@ public enum APIError: Error, LocalizedError {
 final public class APIClient {
     public static let shared = APIClient()
 
-    private let session: URLSession
-    private let baseURL: String
-    private var authInterceptor: AuthInterceptor?
+    let session: URLSession
+    public let baseURL: String
+    var authInterceptor: AuthInterceptor?
 
     private static let logger = Logger(
         subsystem: Bundle.main.bundleIdentifier!,

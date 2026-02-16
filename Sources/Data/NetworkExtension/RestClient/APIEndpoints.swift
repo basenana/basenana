@@ -51,6 +51,7 @@ public enum APIEndpoint {
     case config(group: String, name: String)
     case configSet(group: String, name: String)
     case configDelete(group: String, name: String)
+    case chat
 
     var path: String {
         switch self {
@@ -129,6 +130,8 @@ public enum APIEndpoint {
             return "/api/v1/configs/\(group)/\(name)"
         case .configDelete(let group, let name):
             return "/api/v1/configs/\(group)/\(name)"
+        case .chat:
+            return "/api/v1/friday/chat"
         }
     }
 
@@ -147,6 +150,8 @@ public enum APIEndpoint {
         case .workflowDelete, .configDelete:
             return .delete
         case .workflowJobPause, .workflowJobResume, .workflowJobCancel:
+            return .post
+        case .chat:
             return .post
         }
     }

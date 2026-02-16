@@ -9,6 +9,7 @@ import SwiftUI
 import Foundation
 import Domain
 import Feature
+import Factory
 
 
 struct StackContentView: View {
@@ -97,23 +98,73 @@ struct StackContentView: View {
 }
 
 struct StackBannerView: View {
+    @StateObject private var chatViewModel: FridayChatViewModel
+
+    init() {
+        let container = DIContainer(state: .shared)
+        let useCase = container.c.resolve(FridayUseCaseProtocol.self)!
+        self._chatViewModel = StateObject(wrappedValue: FridayChatViewModel(fridayUseCase: useCase))
+    }
+
     public var body: some View {
-        VStackLayout(alignment: .leading) {
-            Text(" _")
-            Text("//\\")
-            Text("V  \\")
-            Text(" \\  \\_")
-            Text("  \\,'.`-.")
-            Text("   |\\ `. `.")
-            Text("   ( \\  `. `-.                        _,.-:\\")
-            Text("    \\ \\   `.  `-._             __..--' ,-';/")
-            Text("     \\ `.   `-.   `-..___..---'   _.--' ,'/")
-            Text("      `. `.    `-._        __..--'    ,' /")
-            Text("        `. `-_     ``--..''       _.-' ,'")
-            Text("          `-_ `-.___        __,--'   ,'")
-            Text("             `-.__  `----\"\"\"    __.-'")
-            Text("                  `--..____..--'")
+        if chatViewModel.showChat {
+            FridayChatView(viewModel: chatViewModel)
+        } else {
+            VStack(spacing: 20) {
+                Spacer()
+                
+                VStackLayout(alignment: .leading) {
+                    Text(" _")
+                    Text("//\\")
+                    Text("V  \\")
+                    Text(" \\  \\_")
+                    Text("  \\,'.`-.")
+                    Text("   |\\ `. `.")
+                    Text("   ( \\  `. `-.                        _,.-:\\")
+                    Text("    \\ \\   `.  `-._             __..--' ,-';/")
+                    Text("     \\ `.   `-.   `-..___..---'   _.--' ,'/")
+                    Text("      `. `.    `-._        __..--'    ,' /")
+                    Text("        `. `-_     ``--..''       _.-' ,'")
+                    Text("          `-_ `-.___        __,--'   ,'")
+                    Text("             `-.__  `----\"\"\"    __.-'")
+                    Text("                  `--..____..--'")
+                }
+                .font(.system(size: 14, weight: .thin, design: .monospaced))
+                .foregroundColor(.gray)
+
+                Spacer()
+
+                FridayPromptLabelView {
+                    chatViewModel.showChat = true
+                }
+                .padding(.bottom, 20)
+            }
         }
-        .font(.system(size: 14, weight: .thin, design: .monospaced)).foregroundColor(.gray)
+    }
+}
+
+struct FridayPromptLabelView: View {
+    let onTap: () -> Void
+
+    init(onTap: @escaping () -> Void) {
+        self.onTap = onTap
+    }
+
+    var body: some View {
+        Button {
+            onTap()
+        } label: {
+            HStack(spacing: 10) {
+                Image(systemName: "sparkles")
+                Text("Ask Friday anything...")
+            }
+            .padding(.vertical, 10)
+            .padding(.horizontal, 16)
+            .font(.callout)
+            .foregroundStyle(.blue)
+            .background(Color.blue.opacity(0.1))
+            .clipShape(RoundedRectangle(cornerRadius: 20))
+        }
+        .buttonStyle(.plain)
     }
 }
