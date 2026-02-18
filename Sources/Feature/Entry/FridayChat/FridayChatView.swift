@@ -32,16 +32,16 @@ public struct FridayChatView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 0) {
+                    let isLastAssistantMessage = viewModel.messages.last?.role == .assistant
                     ForEach(Array(viewModel.messages.enumerated()), id: \.element.id) { index, message in
-                        ChatBubbleView(message: message)
+                        let showStreaming = isLastAssistantMessage &&
+                                          index == viewModel.messages.count - 1 &&
+                                          viewModel.isStreaming
+                        ChatBubbleView(message: message, isStreaming: showStreaming)
                             .id(message.id)
                         if index != viewModel.messages.count - 1 {
                             Divider()
                         }
-                    }
-
-                    if viewModel.isStreaming && !viewModel.messages.isEmpty {
-                        StreamingIndicatorView()
                     }
                 }
                 .padding()
@@ -69,6 +69,38 @@ public struct FridayChatView: View {
 
     private var inputArea: some View {
         HStack(spacing: 12) {
+            HStack(spacing: 8) {
+                TextField("Ask Friday anything...", text: $viewModel.inputText, axis: .vertical)
+                    .textFieldStyle(.plain)
+                    .lineLimit(5)
+                    .focused($isInputFocused)
+                    .onSubmit {
+                        Task {
+                            await viewModel.sendMessage()
+                        }
+                    }
+
+                Button {
+                    Task {
+                        await viewModel.sendMessage()
+                    }
+                } label: {
+                    Image(systemName: "paperplane.fill")
+                        .font(.body)
+                        .foregroundColor(viewModel.inputText.isEmpty ? Color.secondary : Color.accentColor)
+                }
+                .buttonStyle(.plain)
+                .disabled(viewModel.inputText.isEmpty || viewModel.isStreaming)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(Color(NSColor.textBackgroundColor))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
+            )
+
             Button {
                 viewModel.closeChat()
             } label: {
@@ -77,54 +109,37 @@ public struct FridayChatView: View {
                     .foregroundStyle(.secondary)
             }
             .buttonStyle(.plain)
-
-            TextField("Ask Friday anything...", text: $viewModel.inputText, axis: .vertical)
-                .textFieldStyle(.plain)
-                .lineLimit(1...5)
-                .focused($isInputFocused)
-                .onSubmit {
-                    Task {
-                        await viewModel.sendMessage()
-                    }
-                }
-
-            Button {
-                Task {
-                    await viewModel.sendMessage()
-                }
-            } label: {
-                Image(systemName: "paperplane.fill")
-                    .font(.body)
-                    .foregroundColor(viewModel.inputText.isEmpty ? Color.secondary : Color.blue)
-            }
-            .buttonStyle(.plain)
-            .disabled(viewModel.inputText.isEmpty || viewModel.isStreaming)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
-        .background(Color(NSColor.windowBackgroundColor))
     }
 }
 
 public struct ChatBubbleView: View {
     @ObservedObject public var message: ChatMessage
+    public var isStreaming: Bool
 
-    public init(message: ChatMessage) {
+    public init(message: ChatMessage, isStreaming: Bool = false) {
         self.message = message
+        self.isStreaming = isStreaming
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            if !message.content.isEmpty {
-                HStack(alignment: .top, spacing: 8) {
-                    senderName
-                    Markdown(message.content)
-                }
-                .textSelection(.enabled)
+        HStack(alignment: .top, spacing: 8) {
+            VStack(alignment: .leading, spacing: 4) {
+                senderName
+                Text(formatTime(message.timestamp))
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
             }
-            Text(formatTime(message.timestamp))
-                .font(.caption2)
-                .foregroundColor(.secondary)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Markdown(message.content)
+                if isStreaming {
+                    StreamingIndicatorView()
+                } 
+            }
+            .textSelection(.enabled)
         }
         .padding(.vertical, 12)
     }
@@ -161,7 +176,6 @@ public struct StreamingIndicatorView: View {
                     .opacity(animationPhase == index ? 1.0 : 0.3)
             }
         }
-        .padding(.leading, 36)
         .padding(.top, 4)
         .onAppear {
             withAnimation(.easeInOut(duration: 0.6).repeatForever(autoreverses: false)) {

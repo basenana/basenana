@@ -53,27 +53,21 @@ public class FridayChatViewModel: ObservableObject {
         do {
             try await fridayUseCase.chat(message: userMessage) { [weak self] event in
                 guard let self = self else { return }
-                print("FridayChatViewModel received event: \(event)")
                 Task { @MainActor in
                     switch event {
                     case .message(let message):
-                        print("FridayChatViewModel received message: reasoning=\(message.reasoning ?? "nil"), content=\(message.content ?? "nil")")
                         self.updateLastAssistantMessage(
                             reasoning: message.reasoning,
                             content: message.content
                         )
                     case .event(let event):
-                        print("FridayChatViewModel received event: \(event)")
                         self.handleEvent(event)
                     case .done:
-                        print("FridayChatViewModel received done")
                         self.isStreaming = false
                     }
                 }
             }
-            print("FridayChatViewModel chat completed")
         } catch {
-            print("Friday chat error: \(error.localizedDescription)")
             isStreaming = false
             errorMessage = error.localizedDescription
             addErrorMessage(error: error)
@@ -81,26 +75,17 @@ public class FridayChatViewModel: ObservableObject {
     }
 
     private func updateLastAssistantMessage(reasoning: String?, content: String?) {
-        print("updateLastAssistantMessage called: reasoning=\(reasoning ?? "nil"), content=\(content ?? "nil")")
-        guard !messages.isEmpty else {
-            print("messages is empty, skipping update")
-            return
-        }
+        guard !messages.isEmpty else { return }
 
         if let reasoning = reasoning {
             currentReasoning = reasoning
         }
 
-        guard let content = content, !content.isEmpty else {
-            print("content is empty, skipping update")
-            return
-        }
+        guard let content = content, !content.isEmpty else { return }
 
-        // 追加内容到最后一个助手消息
         let lastIndex = messages.count - 1
         if messages[lastIndex].role == .assistant {
             messages[lastIndex].appendContent(content)
-            print("Updated bubble with content: \(content), total: \(messages[lastIndex].content)")
         }
     }
 

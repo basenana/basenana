@@ -77,10 +77,9 @@ struct StackContentView: View {
             }
         }
         .toolbar {
-            ToolbarItemGroup(placement: .principal) {
+            ToolbarItemGroup(placement: .status) {
                 BackgroundJobView(state: .shared)
                 NotificationView(state: .shared)
-                Spacer()
             }
         }
         .searchable(text: $searchContent)

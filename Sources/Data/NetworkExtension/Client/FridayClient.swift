@@ -33,35 +33,27 @@ public class FridayClient: FridayClientProtocol {
         var eventData = ""
 
         for try await line in bytes.lines {
-            print("FridayClient raw line: \(line)")
             if line.hasPrefix("event:") {
                 // Dispatch previous event if exists
                 if !eventType.isEmpty && !eventData.isEmpty {
-                    print("FridayClient dispatching event: type=\(eventType)")
                     let event = parseEvent(type: eventType, data: eventData)
                     await handler(event)
                 }
                 eventType = String(line.dropFirst(6)).trimmingCharacters(in: .whitespaces)
-                print("FridayClient eventType: \(eventType)")
                 eventData = ""
             } else if line.hasPrefix("data:") {
                 eventData = String(line.dropFirst(5)).trimmingCharacters(in: .whitespaces)
-                print("FridayClient eventData: \(eventData)")
             } else if line.isEmpty && !eventType.isEmpty && !eventData.isEmpty {
                 // Empty line indicates end of event
-                print("FridayClient dispatching event: type=\(eventType)")
                 let event = parseEvent(type: eventType, data: eventData)
                 await handler(event)
                 eventType = ""
                 eventData = ""
-            } else {
-                print("FridayClient other line: \(line)")
             }
         }
 
         // Handle last event if exists
         if !eventType.isEmpty && !eventData.isEmpty {
-            print("FridayClient dispatching last event: type=\(eventType)")
             let event = parseEvent(type: eventType, data: eventData)
             await handler(event)
         }
