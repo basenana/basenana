@@ -14,7 +14,6 @@ public class FridayChatViewModel: ObservableObject {
     @Published public var messages: [ChatMessage] = []
     @Published public var inputText: String = ""
     @Published public var isStreaming: Bool = false
-    @Published public var showChat: Bool = false
     @Published public var currentReasoning: String = ""
     @Published public var errorMessage: String?
 
@@ -114,12 +113,8 @@ public class FridayChatViewModel: ObservableObject {
         inputText = ""
         isStreaming = false
         currentReasoning = ""
-        showChat = false
     }
 
-    func closeChat() {
-        showChat = false
-    }
 }
 
 public class ChatMessage: Identifiable, ObservableObject {

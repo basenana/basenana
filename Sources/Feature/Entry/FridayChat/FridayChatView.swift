@@ -19,7 +19,34 @@ public struct FridayChatView: View {
 
     public var body: some View {
         VStack(spacing: 0) {
-            chatMessagesView
+            if viewModel.messages.isEmpty {
+                VStack(spacing: 20) {
+                    Spacer()
+                    
+                    VStackLayout(alignment: .leading) {
+                        Text(" _")
+                        Text("//\\")
+                        Text("V  \\")
+                        Text(" \\  \\_")
+                        Text("  \\,'.`-.")
+                        Text("   |\\ `. `.")
+                        Text("   ( \\  `. `-.                        _,.-:\\")
+                        Text("    \\ \\   `.  `-._             __..--' ,-';/")
+                        Text("     \\ `.   `-.   `-..___..---'   _.--' ,'/")
+                        Text("      `. `.    `-._        __..--'    ,' /")
+                        Text("        `. `-_     ``--..''       _.-' ,'")
+                        Text("          `-_ `-.___        __,--'   ,'")
+                        Text("             `-.__  `----\"\"\"    __.-'")
+                        Text("                  `--..____..--'")
+                    }
+                    .font(.system(size: 14, weight: .thin, design: .monospaced))
+                    .foregroundColor(.gray)
+
+                    Spacer()
+                }
+            }else{
+                chatMessagesView
+            }
 
             inputArea
         }
@@ -100,15 +127,6 @@ public struct FridayChatView: View {
                 RoundedRectangle(cornerRadius: 12)
                     .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
             )
-
-            Button {
-                viewModel.closeChat()
-            } label: {
-                Image(systemName: "chevron.down.circle.fill")
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
-            }
-            .buttonStyle(.plain)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
@@ -125,23 +143,43 @@ public struct ChatBubbleView: View {
     }
 
     public var body: some View {
-        HStack(alignment: .top, spacing: 8) {
-            VStack(alignment: .leading, spacing: 4) {
-                senderName
-                Text(formatTime(message.timestamp))
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-            }
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(alignment: .top, spacing: 8) {
+                VStack(alignment: .leading, spacing: 4) {
+                    senderName
+                    Text(formatTime(message.timestamp))
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                }
 
-            VStack(alignment: .leading, spacing: 4) {
-                Markdown(message.content)
-                if isStreaming {
-                    StreamingIndicatorView()
-                } 
+                VStack(alignment: .leading, spacing: 4) {
+                    Markdown(message.content)
+
+                    if isStreaming {
+                        StreamingIndicatorView()
+                    }
+
+                    HStack(alignment: .bottom, spacing: 4) {
+                        Spacer()
+                        Button {
+                            copyToClipboard()
+                        } label: {
+                            Image(systemName: "doc.on.doc")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .textSelection(.enabled)
             }
-            .textSelection(.enabled)
         }
         .padding(.vertical, 12)
+    }
+
+    private func copyToClipboard() {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(message.content, forType: .string)
     }
 
     private var senderName: some View {

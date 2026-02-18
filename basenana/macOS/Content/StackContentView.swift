@@ -106,39 +106,7 @@ struct StackBannerView: View {
     }
 
     public var body: some View {
-        if chatViewModel.showChat {
-            FridayChatView(viewModel: chatViewModel)
-        } else {
-            VStack(spacing: 20) {
-                Spacer()
-                
-                VStackLayout(alignment: .leading) {
-                    Text(" _")
-                    Text("//\\")
-                    Text("V  \\")
-                    Text(" \\  \\_")
-                    Text("  \\,'.`-.")
-                    Text("   |\\ `. `.")
-                    Text("   ( \\  `. `-.                        _,.-:\\")
-                    Text("    \\ \\   `.  `-._             __..--' ,-';/")
-                    Text("     \\ `.   `-.   `-..___..---'   _.--' ,'/")
-                    Text("      `. `.    `-._        __..--'    ,' /")
-                    Text("        `. `-_     ``--..''       _.-' ,'")
-                    Text("          `-_ `-.___        __,--'   ,'")
-                    Text("             `-.__  `----\"\"\"    __.-'")
-                    Text("                  `--..____..--'")
-                }
-                .font(.system(size: 14, weight: .thin, design: .monospaced))
-                .foregroundColor(.gray)
-
-                Spacer()
-
-                FridayPromptLabelView {
-                    chatViewModel.showChat = true
-                }
-                .padding(.bottom, 20)
-            }
-        }
+        FridayChatView(viewModel: chatViewModel)
     }
 }
 
