@@ -102,6 +102,7 @@ public struct FridayChatView: View {
                     .lineLimit(5)
                     .focused($isInputFocused)
                     .onSubmit {
+                        guard !viewModel.isStreaming else { return }
                         Task {
                             await viewModel.sendMessage()
                         }

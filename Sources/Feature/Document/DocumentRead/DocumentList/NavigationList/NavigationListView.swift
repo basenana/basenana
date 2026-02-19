@@ -51,7 +51,8 @@ public struct NavigationListView: View {
                     uri: doc.uri,
                     store: viewModel.store,
                     usecase: viewModel.usecase,
-                    fileRepository: viewModel.fileRepository
+                    fileRepository: viewModel.fileRepository,
+                    fridayUseCase: viewModel.fridayUseCase
                 ))
                     .task {
                         if doc.isUnread {

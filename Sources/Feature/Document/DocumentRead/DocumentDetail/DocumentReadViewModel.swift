@@ -23,6 +23,7 @@ public class DocumentReadViewModel {
     var store: StateStore
     var usecase: any DocumentUseCaseProtocol
     var fileRepository: FileRepositoryProtocol
+    var fridayUseCase: FridayUseCaseProtocol
     var entry: EntryDetail? = nil
     var isLoading: Bool = false
     var cachedFileURL: URL?
@@ -38,12 +39,14 @@ public class DocumentReadViewModel {
         uri: String,
         store: StateStore,
         usecase: any DocumentUseCaseProtocol,
-        fileRepository: FileRepositoryProtocol
+        fileRepository: FileRepositoryProtocol,
+        fridayUseCase: FridayUseCaseProtocol
     ) {
         self.uri = uri
         self.store = store
         self.usecase = usecase
         self.fileRepository = fileRepository
+        self.fridayUseCase = fridayUseCase
     }
 
     private var cacheDirectory: URL {

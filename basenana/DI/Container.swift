@@ -37,6 +37,7 @@ class DIContainer {
                 entryUsecase: r.resolve(EntryUseCaseProtocol.self)!,
                 fileRepository: r.resolve(FileRepositoryProtocol.self)!,
                 documentUsecase: r.resolve(DocumentUseCaseProtocol.self)!,
+                fridayUseCase: r.resolve(FridayUseCaseProtocol.self)!,
                 syncUseCase: r.resolve(EntrySyncUseCase.self)!
             )
         }
@@ -45,7 +46,8 @@ class DIContainer {
                 prespective: .marked,
                 store: state,
                 usecase: r.resolve(DocumentUseCaseProtocol.self)!,
-                fileRepository: r.resolve(FileRepositoryProtocol.self)!
+                fileRepository: r.resolve(FileRepositoryProtocol.self)!,
+                fridayUseCase: r.resolve(FridayUseCaseProtocol.self)!
             )
         }//.inObjectScope(.container)
         self.c.register(DocumentListViewModel.self, name: DocumentPrespective.unread.Title){ r in
@@ -53,7 +55,8 @@ class DIContainer {
                 prespective: .unread,
                 store: state,
                 usecase: r.resolve(DocumentUseCaseProtocol.self)!,
-                fileRepository: r.resolve(FileRepositoryProtocol.self)!
+                fileRepository: r.resolve(FileRepositoryProtocol.self)!,
+                fridayUseCase: r.resolve(FridayUseCaseProtocol.self)!
             )
         }//.inObjectScope(.container)
         self.c.register(DocumentReadViewModel.self) { r, uri in
@@ -61,7 +64,8 @@ class DIContainer {
                 uri: uri,
                 store: state,
                 usecase: r.resolve(DocumentUseCaseProtocol.self)!,
-                fileRepository: r.resolve(FileRepositoryProtocol.self)!
+                fileRepository: r.resolve(FileRepositoryProtocol.self)!,
+                fridayUseCase: r.resolve(FridayUseCaseProtocol.self)!
             )
         }
         self.c.register(WorkflowListViewModel.self) { r in

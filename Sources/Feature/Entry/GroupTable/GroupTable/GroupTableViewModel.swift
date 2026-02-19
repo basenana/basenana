@@ -99,11 +99,13 @@ public class GroupTableViewModel: BaseViewModel {
     // Dependencies
     var fileRepository: FileRepositoryProtocol
     var documentUsecase: any DocumentUseCaseProtocol
+    var fridayUseCase: FridayUseCaseProtocol
     private var syncUseCase: EntrySyncUseCase
 
-    public init(store: StateStore, entryUsecase: any EntryUseCaseProtocol, fileRepository: FileRepositoryProtocol, documentUsecase: any DocumentUseCaseProtocol, syncUseCase: EntrySyncUseCase) {
+    public init(store: StateStore, entryUsecase: any EntryUseCaseProtocol, fileRepository: FileRepositoryProtocol, documentUsecase: any DocumentUseCaseProtocol, fridayUseCase: FridayUseCaseProtocol, syncUseCase: EntrySyncUseCase) {
         self.fileRepository = fileRepository
         self.documentUsecase = documentUsecase
+        self.fridayUseCase = fridayUseCase
         self.syncUseCase = syncUseCase
         super.init(store: store, entryUsecase: entryUsecase)
     }

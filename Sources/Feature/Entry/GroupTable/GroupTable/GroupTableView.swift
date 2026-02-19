@@ -447,7 +447,7 @@ private struct ResizableDocumentView: View {
                     .foregroundColor(.gray)
                     .frame(maxHeight: .infinity)
             } else {
-                DocumentReadContainerView(entryUri: viewModel.selectedEntryDetail!.uri, store: viewModel.store, fileRepository: viewModel.fileRepository, documentUsecase: viewModel.documentUsecase)
+                DocumentReadContainerView(entryUri: viewModel.selectedEntryDetail!.uri, store: viewModel.store, fileRepository: viewModel.fileRepository, documentUsecase: viewModel.documentUsecase, fridayUseCase: viewModel.fridayUseCase)
                     .id(viewModel.selectedEntryDetail!.uri)
                     .frame(maxHeight: .infinity)
             }
@@ -461,6 +461,7 @@ private struct DocumentReadContainerView: View {
     let store: StateStore
     let fileRepository: FileRepositoryProtocol
     let documentUsecase: any DocumentUseCaseProtocol
+    let fridayUseCase: FridayUseCaseProtocol
 
     @State private var viewModel: DocumentReadViewModel?
 
@@ -475,7 +476,8 @@ private struct DocumentReadContainerView: View {
                             uri: entryUri,
                             store: store,
                             usecase: documentUsecase,
-                            fileRepository: fileRepository
+                            fileRepository: fileRepository,
+                            fridayUseCase: fridayUseCase
                         )
                     }
             }

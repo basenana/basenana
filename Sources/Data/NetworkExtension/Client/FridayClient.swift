@@ -11,15 +11,21 @@ import Domain
 public class FridayClient: FridayClientProtocol {
 
     private let apiClient: APIClient
+    private let streamSession: URLSession
 
     public init(apiClient: APIClient) {
         self.apiClient = apiClient
+
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = 3600
+        configuration.timeoutIntervalForResource = 3600
+        self.streamSession = URLSession(configuration: configuration)
     }
 
     public func chat(message: String, handler: @escaping (FridayStreamEvent) async -> Void) async throws {
         let request = try buildRequest(message: message)
 
-        let (bytes, response) = try await apiClient.session.bytes(for: request)
+        let (bytes, response) = try await streamSession.bytes(for: request)
 
         guard let httpResponse = response as? HTTPURLResponse else {
             throw APIError.networkError(NSError(domain: "FridayClient", code: -1))
@@ -67,6 +73,7 @@ public class FridayClient: FridayClientProtocol {
 
         var request = URLRequest(url: url)
         request.httpMethod = APIEndpoint.chat.method.rawValue
+        request.timeoutInterval = 3600 // 1 hour for SSE stream
         request.setValue("text/event-stream", forHTTPHeaderField: "Accept")
         request.setValue("no-cache", forHTTPHeaderField: "Cache-Control")
 
