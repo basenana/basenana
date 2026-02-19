@@ -17,7 +17,14 @@ public class FridayChatViewModel: ObservableObject {
     @Published public var currentReasoning: String = ""
     @Published public var errorMessage: String?
 
+    @Published public var sessions: [FridaySession] = []
+    @Published public var currentSession: FridaySession?
+    @Published public var isShowingSessionList: Bool = false
+    @Published public var isCreatingSession: Bool = true
+    @Published public var sessionListError: String?
+
     private let fridayUseCase: FridayUseCaseProtocol
+    private var sessionId: String?
 
     public init(fridayUseCase: FridayUseCaseProtocol) {
         self.fridayUseCase = fridayUseCase
@@ -40,7 +47,6 @@ public class FridayChatViewModel: ObservableObject {
         )
         messages.append(userChatMessage)
 
-        // 添加助手消息占位符
         let assistantPlaceholder = ChatMessage(
             role: .assistant,
             reasoning: "",
@@ -49,8 +55,41 @@ public class FridayChatViewModel: ObservableObject {
         )
         messages.append(assistantPlaceholder)
 
+        var currentSessionId: String
+        var sessionName: String? = nil
+
+        if isCreatingSession && sessionId == nil {
+            sessionName = extractSessionName(from: userMessage)
+
+            do {
+                let session = try await fridayUseCase.createSession(name: sessionName ?? "")
+                self.sessionId = session.id
+                currentSessionId = session.id
+                self.currentSession = session
+                self.isCreatingSession = false
+                self.sessions.insert(session, at: 0)
+            } catch {
+                isStreaming = false
+                errorMessage = error.localizedDescription
+                addErrorMessage(error: error)
+                return
+            }
+        } else {
+            currentSessionId = sessionId ?? UUID().uuidString
+            if sessionId == nil {
+                self.sessionId = currentSessionId
+            }
+        }
+
+        let contextEntries = Self.getContextEntries()
+
         do {
-            try await fridayUseCase.chat(message: userMessage) { [weak self] event in
+            try await fridayUseCase.chat(
+                message: userMessage,
+                sessionId: currentSessionId,
+                name: sessionName,
+                contextEntries: contextEntries
+            ) { [weak self] event in
                 guard let self = self else { return }
                 Task { @MainActor in
                     switch event {
@@ -70,6 +109,76 @@ public class FridayChatViewModel: ObservableObject {
             isStreaming = false
             errorMessage = error.localizedDescription
             addErrorMessage(error: error)
+        }
+    }
+
+    func createNewSession() {
+        messages = []
+        inputText = ""
+        isStreaming = false
+        currentReasoning = ""
+        errorMessage = nil
+        sessionId = nil
+        currentSession = nil
+        isCreatingSession = true
+    }
+
+    func loadSessions() async {
+        sessionListError = nil
+        do {
+            sessions = try await fridayUseCase.getSessions()
+        } catch {
+            sessionListError = error.localizedDescription
+        }
+    }
+
+    func selectSession(_ session: FridaySession) async {
+        isShowingSessionList = false
+
+        messages = []
+        inputText = ""
+        isStreaming = false
+        currentReasoning = ""
+        errorMessage = nil
+
+        do {
+            let (meta, sessionMessages) = try await fridayUseCase.getSession(id: session.id)
+            self.sessionId = meta.id
+            self.currentSession = meta
+
+            for message in sessionMessages {
+                let role: ChatMessage.Role = message.type == "user" ? .user : .assistant
+                let chatMessage = ChatMessage(
+                    role: role,
+                    reasoning: message.reasoning ?? "",
+                    content: message.content,
+                    timestamp: message.time
+                )
+                messages.append(chatMessage)
+            }
+        } catch {
+            errorMessage = "Failed to load session: \(error.localizedDescription)"
+            addErrorMessage(error: error)
+        }
+    }
+
+    func deleteSession(_ session: FridaySession) async {
+        do {
+            try await fridayUseCase.deleteSession(id: session.id)
+            sessions.removeAll { $0.id == session.id }
+
+            if currentSession?.id == session.id {
+                messages = []
+                inputText = ""
+                isStreaming = false
+                currentReasoning = ""
+                errorMessage = nil
+                sessionId = nil
+                currentSession = nil
+                isCreatingSession = false
+            }
+        } catch {
+            sessionListError = "Failed to delete session: \(error.localizedDescription)"
         }
     }
 
@@ -113,8 +222,40 @@ public class FridayChatViewModel: ObservableObject {
         inputText = ""
         isStreaming = false
         currentReasoning = ""
+        sessionId = nil
     }
 
+    func startNewSession() {
+        clearChat()
+    }
+
+    private static func getContextEntries() -> [String]? {
+        let currentUri = StateStore.shared.selectedEntryUri
+        let currentGroupUri = StateStore.shared.currentGroupUri
+
+        #if DEBUG
+        print("[FridayChat] getContextEntries: selectedEntryUri=\(currentUri ?? "nil"), currentGroupUri=\(currentGroupUri ?? "nil")")
+        #endif
+
+        var contextEntries: [String] = []
+        if let uri = currentUri, !uri.isEmpty {
+            contextEntries.append(uri)
+        }
+        if let uri = currentGroupUri, !uri.isEmpty && !contextEntries.contains(uri) {
+            contextEntries.append(uri)
+        }
+
+        #if DEBUG
+        print("[FridayChat] getContextEntries: returning \(contextEntries)")
+        #endif
+
+        return contextEntries.isEmpty ? nil : contextEntries
+    }
+
+    private func extractSessionName(from message: String) -> String {
+        let firstLine = message.components(separatedBy: .newlines).first ?? message
+        return firstLine.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
 }
 
 public class ChatMessage: Identifiable, ObservableObject {

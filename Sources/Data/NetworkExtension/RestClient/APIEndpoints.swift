@@ -52,6 +52,11 @@ public enum APIEndpoint {
     case configSet(group: String, name: String)
     case configDelete(group: String, name: String)
     case chat
+    case fridaySessionList
+    case fridaySessions
+    case fridaySession(id: String)
+    case fridaySessionRename(id: String)
+    case fridaySessionDelete(id: String)
 
     var path: String {
         switch self {
@@ -132,12 +137,22 @@ public enum APIEndpoint {
             return "/api/v1/configs/\(group)/\(name)"
         case .chat:
             return "/api/v1/friday/chat"
+        case .fridaySessionList:
+            return "/api/v1/friday/sessions"
+        case .fridaySessions:
+            return "/api/v1/friday/sessions"
+        case .fridaySession(let id):
+            return "/api/v1/friday/sessions/\(id)"
+        case .fridaySessionRename(let id):
+            return "/api/v1/friday/sessions/\(id)"
+        case .fridaySessionDelete(let id):
+            return "/api/v1/friday/sessions/\(id)"
         }
     }
 
     var method: HTTPMethod {
         switch self {
-        case .healthCheck, .groupsTree, .messages, .workflows, .workflow, .workflowJobs, .workflowJob, .workflowPlugins, .configsGroup, .config:
+        case .healthCheck, .groupsTree, .messages, .workflows, .workflow, .workflowJobs, .workflowJob, .workflowPlugins, .configsGroup, .config, .fridaySessionList:
             return .get
         case .entriesDetails, .entriesProperty, .entriesFriday, .groupsChildren, .filesContent, .groupsConfigs:
             return .post
@@ -153,6 +168,14 @@ public enum APIEndpoint {
             return .post
         case .chat:
             return .post
+        case .fridaySessions:
+            return .post
+        case .fridaySession:
+            return .get
+        case .fridaySessionRename:
+            return .put
+        case .fridaySessionDelete:
+            return .delete
         }
     }
 

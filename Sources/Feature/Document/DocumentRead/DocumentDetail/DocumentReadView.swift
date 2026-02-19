@@ -32,6 +32,14 @@ public struct DocumentReadView: View {
                     .frame(minWidth: 400, idealWidth: 400, maxWidth: 500)
             }
         }
+        .onAppear {
+            StateStore.shared.selectedEntryUri = viewModel.uri
+        }
+        .onDisappear {
+            if StateStore.shared.selectedEntryUri == viewModel.uri {
+                StateStore.shared.selectedEntryUri = nil
+            }
+        }
         .onReceive(NotificationCenter.default.publisher(for: .updateDocumentMark)) { [self] notification in
             if let update = notification.object as? UpdateDocumentMark {
                 if update.uri != viewModel.uri { return }

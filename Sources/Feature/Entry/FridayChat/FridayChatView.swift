@@ -128,9 +128,43 @@ public struct FridayChatView: View {
                 RoundedRectangle(cornerRadius: 12)
                     .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
             )
+
+            Button {
+                viewModel.createNewSession()
+            } label: {
+                Image(systemName: "plus.circle.fill")
+                    .font(.body)
+            }
+            .buttonStyle(.plain)
+            .foregroundColor(.secondary)
+
+            Button {
+                Task {
+                    await viewModel.loadSessions()
+                    viewModel.isShowingSessionList.toggle()
+                }
+            } label: {
+                Image(systemName: "list.bullet.rectangle")
+                    .font(.body)
+            }
+            .buttonStyle(.plain)
+            .foregroundColor(.secondary)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
+        .popover(isPresented: $viewModel.isShowingSessionList) {
+            SessionListView(
+                sessions: viewModel.sessions,
+                currentSession: viewModel.currentSession,
+                onSelect: { session in
+                    Task { await viewModel.selectSession(session) }
+                },
+                onDelete: { session in
+                    Task { await viewModel.deleteSession(session) }
+                }
+            )
+            .frame(width: 280, height: 400)
+        }
     }
 }
 

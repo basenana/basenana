@@ -18,19 +18,15 @@ public struct FridayMessage: Sendable {
 }
 
 public struct FridayEvent: Sendable {
-    public let id: String
-    public let type: String
-    public let source: String
-    public let data: String
-    public let extraValue: FridayExtraValueDomain?
+    public let id: String?
+    public let event: String?
+    public let entryUri: String?
     public let time: Date?
 
-    public init(id: String, type: String, source: String, data: String, extraValue: FridayExtraValueDomain?, time: Date?) {
+    public init(id: String?, event: String?, entryUri: String?, time: Date?) {
         self.id = id
-        self.type = type
-        self.source = source
-        self.data = data
-        self.extraValue = extraValue
+        self.event = event
+        self.entryUri = entryUri
         self.time = time
     }
 }
@@ -55,5 +51,35 @@ public enum FridayChatEvent: Sendable {
             return true
         }
         return false
+    }
+}
+
+public struct FridaySession: Identifiable, Sendable {
+    public let id: String
+    public let name: String
+    public let createdAt: Date
+    public let updatedAt: Date
+
+    public init(id: String, name: String, createdAt: Date, updatedAt: Date) {
+        self.id = id
+        self.name = name
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+    }
+}
+
+public struct FridaySessionMessage: Sendable {
+    public let type: String
+    public let content: String
+    public let reasoning: String?
+    public let toolName: String?
+    public let time: Date
+
+    public init(type: String, content: String, reasoning: String?, toolName: String?, time: Date) {
+        self.type = type
+        self.content = content
+        self.reasoning = reasoning
+        self.toolName = toolName
+        self.time = time
     }
 }
