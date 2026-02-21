@@ -16,11 +16,11 @@ public struct DocumentReadView: View {
     @State var isMarked: Bool = false
 
     @State private var isFridayChatVisible: Bool = false
-    @StateObject private var chatViewModel: FridayChatViewModel
+    @State private var chatViewModel: FridayChatViewModel
 
-    public init(viewModel: DocumentReadViewModel) {
+    public init(viewModel: DocumentReadViewModel, chatViewModel: FridayChatViewModel) {
         self.viewModel = viewModel
-        self._chatViewModel = StateObject(wrappedValue: FridayChatViewModel(fridayUseCase: viewModel.fridayUseCase))
+        self.chatViewModel = chatViewModel
     }
 
     public var body: some View {

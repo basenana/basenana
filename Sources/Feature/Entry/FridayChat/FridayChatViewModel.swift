@@ -8,34 +8,40 @@
 import Foundation
 import Domain
 import Data
+import SwiftUI
 
+@Observable
 @MainActor
-public class FridayChatViewModel: ObservableObject {
-    @Published public var messages: [ChatMessage] = []
-    @Published public var inputText: String = ""
-    @Published public var isStreaming: Bool = false
-    @Published public var currentReasoning: String = ""
-    @Published public var errorMessage: String?
+public class FridayChatViewModel {
+    public var messages: [ChatMessage] = []
+    public var inputText: String = ""
+    public var isStreaming: Bool = false
+    public var currentReasoning: String = ""
+    public var errorMessage: String?
 
-    @Published public var sessions: [FridaySession] = []
-    @Published public var currentSession: FridaySession?
-    @Published public var isShowingSessionList: Bool = false
-    @Published public var isCreatingSession: Bool = true
-    @Published public var sessionListError: String?
+    public var sessions: [FridaySession] = []
+    public var currentSession: FridaySession?
+    public var isShowingSessionList: Bool = false
+    public var isCreatingSession: Bool = true
+    public var sessionListError: String?
 
     private let fridayUseCase: FridayUseCaseProtocol
+    public let entryUseCase: EntryUseCaseProtocol
     private var sessionId: String?
+    public var entryNameCache: [String: String] = [:]
 
-    public init(fridayUseCase: FridayUseCaseProtocol) {
+    public init(fridayUseCase: FridayUseCaseProtocol, entryUseCase: EntryUseCaseProtocol) {
         self.fridayUseCase = fridayUseCase
+        self.entryUseCase = entryUseCase
     }
 
-    func sendMessage() async {
-        guard !inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+    private func prepareAndAddMessage() -> String? {
+        let trimmedText = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedText.isEmpty else { return nil }
 
         errorMessage = nil
 
-        let userMessage = inputText
+        let userMessage = trimmedText
         inputText = ""
         isStreaming = true
 
@@ -55,11 +61,19 @@ public class FridayChatViewModel: ObservableObject {
         )
         messages.append(assistantPlaceholder)
 
+        return userMessage
+    }
+
+    func sendMessage() async {
+        let messageToSend = prepareAndAddMessage()
+
+        guard messageToSend != nil else { return }
+
         var currentSessionId: String
         var sessionName: String? = nil
 
         if isCreatingSession && sessionId == nil {
-            sessionName = extractSessionName(from: userMessage)
+            sessionName = extractSessionName(from: messageToSend!)
 
             do {
                 let session = try await fridayUseCase.createSession(name: sessionName ?? "")
@@ -85,7 +99,7 @@ public class FridayChatViewModel: ObservableObject {
 
         do {
             try await fridayUseCase.chat(
-                message: userMessage,
+                message: messageToSend!,
                 sessionId: currentSessionId,
                 name: sessionName,
                 contextEntries: contextEntries
@@ -94,13 +108,22 @@ public class FridayChatViewModel: ObservableObject {
                 Task { @MainActor in
                     switch event {
                     case .message(let message):
+                        #if DEBUG
+                        print("[FridayChat] Received message chunk, content: \(message.content?.prefix(50) ?? "nil"))")
+                        #endif
                         self.updateLastAssistantMessage(
                             reasoning: message.reasoning,
                             content: message.content
                         )
                     case .event(let event):
+                        #if DEBUG
+                        print("[FridayChat] Received event: \(event.event ?? "nil")")
+                        #endif
                         self.handleEvent(event)
                     case .done:
+                        #if DEBUG
+                        print("[FridayChat] Stream done")
+                        #endif
                         self.isStreaming = false
                     }
                 }
@@ -198,7 +221,18 @@ public class FridayChatViewModel: ObservableObject {
     }
 
     private func handleEvent(_ event: FridayEvent) {
-        // Handle tool use events if needed
+        guard !messages.isEmpty, messages.last?.role == .assistant else { return }
+        let lastIndex = messages.count - 1
+
+        #if DEBUG
+        print("[FridayChat] handleEvent: event=\(event.event ?? "nil"), entryUri=\(event.entryUri ?? "nil")")
+        #endif
+
+        messages[lastIndex].events.append(event)
+
+        #if DEBUG
+        print("[FridayChat] Event appended: \(event.event ?? "nil"), events count: \(messages[lastIndex].events.count)")
+        #endif
     }
 
     private func addErrorMessage(error: Error) {
@@ -258,11 +292,13 @@ public class FridayChatViewModel: ObservableObject {
     }
 }
 
-public class ChatMessage: Identifiable, ObservableObject {
+@Observable
+public class ChatMessage: Identifiable {
     public let id: UUID
     public let role: Role
-    @Published public var reasoning: String
-    @Published public var content: String
+    public var reasoning: String
+    public var content: String
+    public var events: [FridayEvent]
     public let timestamp: Date
 
     public enum Role {
@@ -270,19 +306,21 @@ public class ChatMessage: Identifiable, ObservableObject {
         case assistant
     }
 
-    public init(id: UUID = UUID(), role: Role, reasoning: String, content: String, timestamp: Date) {
+    public init(id: UUID = UUID(), role: Role, reasoning: String, content: String, events: [FridayEvent] = [], timestamp: Date) {
         self.id = id
         self.role = role
         self.reasoning = reasoning
         self.content = content
+        self.events = events
         self.timestamp = timestamp
     }
 
-    public init(role: Role, reasoning: String, content: String, timestamp: Date) {
+    public init(role: Role, reasoning: String, content: String, events: [FridayEvent] = [], timestamp: Date) {
         self.id = UUID()
         self.role = role
         self.reasoning = reasoning
         self.content = content
+        self.events = events
         self.timestamp = timestamp
     }
 

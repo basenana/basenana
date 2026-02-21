@@ -41,6 +41,10 @@ public class FridayRepository: FridayRepositoryProtocol {
                 time = nil
             }
 
+            #if DEBUG
+            print("[FridayRepository] eventUpdate: id=\(apiEvent.id ?? "nil"), event=\(apiEvent.event ?? "nil"), entryUri=\(apiEvent.entryUri ?? "nil")")
+            #endif
+
             let domainEvent = FridayEvent(
                 id: apiEvent.id,
                 event: apiEvent.event,

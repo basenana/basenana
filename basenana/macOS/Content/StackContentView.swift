@@ -20,6 +20,18 @@ struct StackContentView: View {
     @State private var hasAlert: Bool = false
     @State private var searchContent: String = ""
     @State private var isSearchActive: Bool = false
+    @State private var chatViewModel: FridayChatViewModel?
+
+    private var resolvedChatViewModel: FridayChatViewModel {
+        if let vm = chatViewModel {
+            return vm
+        }
+        let fridayUseCase = container.c.resolve(FridayUseCaseProtocol.self)!
+        let entryUseCase = container.c.resolve(EntryUseCaseProtocol.self)!
+        let vm = FridayChatViewModel(fridayUseCase: fridayUseCase, entryUseCase: entryUseCase)
+        chatViewModel = vm
+        return vm
+    }
 
     init() {
         self.container = DIContainer(state: .shared)
@@ -42,7 +54,7 @@ struct StackContentView: View {
                         case .listDocuments(prespective: let prespective):
                             DocumentListView(viewModel: container.c.resolve(DocumentListViewModel.self, name: prespective.Title)!).id(prespective).navigationTitle(prespective.Title)
                         case .readDocument(uri: let uri):
-                            DocumentReadView(viewModel: container.c.resolve(DocumentReadViewModel.self, argument: uri)!).id(uri)
+                            DocumentReadView(viewModel: container.c.resolve(DocumentReadViewModel.self, argument: uri)!, chatViewModel: resolvedChatViewModel).id(uri)
 
                         case .workflowDashboard:
                             WorkflowListView(viewModel: container.c.resolve(WorkflowListViewModel.self)!)
@@ -97,12 +109,13 @@ struct StackContentView: View {
 }
 
 struct StackBannerView: View {
-    @StateObject private var chatViewModel: FridayChatViewModel
+    @State private var chatViewModel: FridayChatViewModel
 
     init() {
         let container = DIContainer(state: .shared)
-        let useCase = container.c.resolve(FridayUseCaseProtocol.self)!
-        self._chatViewModel = StateObject(wrappedValue: FridayChatViewModel(fridayUseCase: useCase))
+        let fridayUseCase = container.c.resolve(FridayUseCaseProtocol.self)!
+        let entryUseCase = container.c.resolve(EntryUseCaseProtocol.self)!
+        chatViewModel = FridayChatViewModel(fridayUseCase: fridayUseCase, entryUseCase: entryUseCase)
     }
 
     public var body: some View {

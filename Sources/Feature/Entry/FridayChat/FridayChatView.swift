@@ -10,7 +10,7 @@ import Domain
 import MarkdownUI
 
 public struct FridayChatView: View {
-    @ObservedObject public var viewModel: FridayChatViewModel
+    @State public var viewModel: FridayChatViewModel
     @FocusState private var isInputFocused: Bool
 
     public init(viewModel: FridayChatViewModel) {
@@ -64,7 +64,7 @@ public struct FridayChatView: View {
                         let showStreaming = isLastAssistantMessage &&
                                           index == viewModel.messages.count - 1 &&
                                           viewModel.isStreaming
-                        ChatBubbleView(message: message, isStreaming: showStreaming)
+                        ChatBubbleView(message: message, viewModel: viewModel, isStreaming: showStreaming)
                             .id(message.id)
                         if index != viewModel.messages.count - 1 {
                             Divider()
@@ -74,6 +74,15 @@ public struct FridayChatView: View {
                 .padding()
             }
             .onChange(of: viewModel.messages.last?.content) { _, _ in
+                Task { @MainActor in
+                    if let lastMessage = viewModel.messages.last {
+                        withAnimation(.easeOut(duration: 0.2)) {
+                            proxy.scrollTo(lastMessage.id, anchor: .bottom)
+                        }
+                    }
+                }
+            }
+            .onChange(of: viewModel.messages.last?.events.count) { _, _ in
                 Task { @MainActor in
                     if let lastMessage = viewModel.messages.last {
                         withAnimation(.easeOut(duration: 0.2)) {
@@ -169,11 +178,13 @@ public struct FridayChatView: View {
 }
 
 public struct ChatBubbleView: View {
-    @ObservedObject public var message: ChatMessage
+    @Bindable public var message: ChatMessage
+    public var viewModel: FridayChatViewModel
     public var isStreaming: Bool
 
-    public init(message: ChatMessage, isStreaming: Bool = false) {
+    public init(message: ChatMessage, viewModel: FridayChatViewModel, isStreaming: Bool = false) {
         self.message = message
+        self.viewModel = viewModel
         self.isStreaming = isStreaming
     }
 
@@ -194,22 +205,33 @@ public struct ChatBubbleView: View {
                         StreamingIndicatorView()
                     }
 
+                    VStack(spacing: 4) {
+                        ForEach(message.events) { event in
+                            EventRowView(event: event, viewModel: viewModel)
+                        }
+                    }
+                    .padding(.top, 8)
+
                     HStack(alignment: .bottom, spacing: 4) {
                         Spacer()
-                        Button {
-                            copyToClipboard()
-                        } label: {
-                            Image(systemName: "doc.on.doc")
-                                .font(.caption2)
-                                .foregroundColor(.secondary)
-                        }
-                        .buttonStyle(.plain)
+                        copyButton
                     }
                 }
                 .textSelection(.enabled)
             }
         }
         .padding(.vertical, 12)
+    }
+
+    private var copyButton: some View {
+        Button {
+            copyToClipboard()
+        } label: {
+            Image(systemName: "doc.on.doc")
+                .font(.caption2)
+                .foregroundColor(.secondary)
+        }
+        .buttonStyle(.plain)
     }
 
     private func copyToClipboard() {
@@ -231,6 +253,80 @@ public struct ChatBubbleView: View {
             return date.formatted(date: .omitted, time: .shortened)
         } else {
             return date.formatted(date: .abbreviated, time: .shortened)
+        }
+    }
+}
+
+public struct EventRowView: View {
+    let event: FridayEvent
+    var viewModel: FridayChatViewModel
+
+    @State private var entryName: String?
+    @State private var isLoading: Bool = false
+
+    public init(event: FridayEvent, viewModel: FridayChatViewModel) {
+        self.event = event
+        self.viewModel = viewModel
+    }
+
+    public var body: some View {
+        HStack(spacing: 6) {
+            Text(event.event ?? "Event")
+                .font(.caption)
+                .foregroundColor(.secondary)
+
+            if let uri = event.entryUri, !uri.isEmpty {
+                if isLoading {
+                    ProgressView()
+                        .scaleEffect(0.7)
+                } else if let name = entryName {
+                    Text(name)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
+                } else {
+                    Text(uri)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
+                }
+            }
+
+            Spacer()
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 5)
+        .background(Color.secondary.opacity(0.1))
+        .clipShape(RoundedRectangle(cornerRadius: 6))
+        .onAppear {
+            loadEntryName()
+        }
+    }
+
+    private func loadEntryName() {
+        guard let uri = event.entryUri, !uri.isEmpty else { return }
+
+        // Check cache first
+        if let cachedName = viewModel.entryNameCache[uri] {
+            entryName = cachedName
+            return
+        }
+
+        // Check if already loaded
+        guard viewModel.entryNameCache[uri] == nil else { return }
+
+        // Fetch entry name
+        isLoading = true
+        Task { @MainActor in
+            do {
+                let detail = try await viewModel.entryUseCase.getEntryDetails(uri: uri)
+                let name = detail.documentTitle ?? detail.name
+                viewModel.entryNameCache[uri] = name
+                entryName = name
+                isLoading = false
+            } catch {
+                isLoading = false
+            }
         }
     }
 }

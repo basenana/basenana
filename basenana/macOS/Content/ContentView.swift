@@ -34,11 +34,26 @@ public struct ContentView: View {
 struct DocumentWindowView: View {
     let uri: String
 
+    @State private var state = StateStore.shared
     @State private var container = DIContainer(state: .shared)
+    @State private var chatViewModel: FridayChatViewModel?
+
+    private var resolvedChatViewModel: FridayChatViewModel {
+        if let vm = chatViewModel {
+            return vm
+        }
+        let fridayUseCase = container.c.resolve(FridayUseCaseProtocol.self)!
+        let entryUseCase = container.c.resolve(EntryUseCaseProtocol.self)!
+        let vm = FridayChatViewModel(fridayUseCase: fridayUseCase, entryUseCase: entryUseCase)
+        chatViewModel = vm
+        return vm
+    }
 
     var body: some View {
-        DocumentReadView(viewModel: container.c.resolve(DocumentReadViewModel.self, argument: uri)!)
-            .id(uri)
+        if state.fsInfo.fsApiReady {
+            DocumentReadView(viewModel: container.c.resolve(DocumentReadViewModel.self, argument: uri)!, chatViewModel: resolvedChatViewModel)
+                .id(uri)
+        }
     }
 }
 

@@ -47,13 +47,20 @@ public struct NavigationListView: View {
             .toolbar(removing: .sidebarToggle)
 
             if let doc = selection {
-                DocumentReadView(viewModel: DocumentReadViewModel(
-                    uri: doc.uri,
-                    store: viewModel.store,
-                    usecase: viewModel.usecase,
-                    fileRepository: viewModel.fileRepository,
-                    fridayUseCase: viewModel.fridayUseCase
-                ))
+                DocumentReadView(
+                    viewModel: DocumentReadViewModel(
+                        uri: doc.uri,
+                        store: viewModel.store,
+                        usecase: viewModel.usecase,
+                        fileRepository: viewModel.fileRepository,
+                        fridayUseCase: viewModel.fridayUseCase,
+                        entryUseCase: viewModel.entryUseCase
+                    ),
+                    chatViewModel: FridayChatViewModel(
+                        fridayUseCase: viewModel.fridayUseCase,
+                        entryUseCase: viewModel.entryUseCase
+                    )
+                )
                     .task {
                         if doc.isUnread {
                             doc.isUnread.toggle()

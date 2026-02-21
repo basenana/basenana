@@ -47,7 +47,8 @@ class DIContainer {
                 store: state,
                 usecase: r.resolve(DocumentUseCaseProtocol.self)!,
                 fileRepository: r.resolve(FileRepositoryProtocol.self)!,
-                fridayUseCase: r.resolve(FridayUseCaseProtocol.self)!
+                fridayUseCase: r.resolve(FridayUseCaseProtocol.self)!,
+                entryUseCase: r.resolve(EntryUseCaseProtocol.self)!
             )
         }//.inObjectScope(.container)
         self.c.register(DocumentListViewModel.self, name: DocumentPrespective.unread.Title){ r in
@@ -56,7 +57,8 @@ class DIContainer {
                 store: state,
                 usecase: r.resolve(DocumentUseCaseProtocol.self)!,
                 fileRepository: r.resolve(FileRepositoryProtocol.self)!,
-                fridayUseCase: r.resolve(FridayUseCaseProtocol.self)!
+                fridayUseCase: r.resolve(FridayUseCaseProtocol.self)!,
+                entryUseCase: r.resolve(EntryUseCaseProtocol.self)!
             )
         }//.inObjectScope(.container)
         self.c.register(DocumentReadViewModel.self) { r, uri in
@@ -65,7 +67,8 @@ class DIContainer {
                 store: state,
                 usecase: r.resolve(DocumentUseCaseProtocol.self)!,
                 fileRepository: r.resolve(FileRepositoryProtocol.self)!,
-                fridayUseCase: r.resolve(FridayUseCaseProtocol.self)!
+                fridayUseCase: r.resolve(FridayUseCaseProtocol.self)!,
+                entryUseCase: r.resolve(EntryUseCaseProtocol.self)!
             )
         }
         self.c.register(WorkflowListViewModel.self) { r in
@@ -124,16 +127,28 @@ class DIContainer {
 
         // Clients
         self.c.register(EntriesClientProtocol.self) { r in
-            EntriesClient(apiClient: self.environment.restAPIClient!.apiClient)
+            guard let client = self.environment.restAPIClient else {
+                fatalError("Cannot create EntriesClient before login. restAPIClient is nil.")
+            }
+            return EntriesClient(apiClient: client.apiClient)
         }.inObjectScope(.container)
         self.c.register(FileClientProtocol.self) { r in
-            FileClient(apiClient: self.environment.restAPIClient!.apiClient)
+            guard let client = self.environment.restAPIClient else {
+                fatalError("Cannot create FileClient before login. restAPIClient is nil.")
+            }
+            return FileClient(apiClient: client.apiClient)
         }.inObjectScope(.container)
         self.c.register(WorkflowClientProtocol.self) { r in
-            WorkflowClient(apiClient: self.environment.restAPIClient!.apiClient)
+            guard let client = self.environment.restAPIClient else {
+                fatalError("Cannot create WorkflowClient before login. restAPIClient is nil.")
+            }
+            return WorkflowClient(apiClient: client.apiClient)
         }.inObjectScope(.container)
         self.c.register(FridayClientProtocol.self) { r in
-            FridayClient(apiClient: self.environment.restAPIClient!.apiClient)
+            guard let client = self.environment.restAPIClient else {
+                fatalError("Cannot create FridayClient before login. restAPIClient is nil.")
+            }
+            return FridayClient(apiClient: client.apiClient)
         }.inObjectScope(.container)
     }
 }

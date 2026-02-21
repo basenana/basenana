@@ -18,6 +18,7 @@ public class DocumentListViewModel {
     var usecase: any DocumentUseCaseProtocol
     var fileRepository: FileRepositoryProtocol
     var fridayUseCase: FridayUseCaseProtocol
+    var entryUseCase: EntryUseCaseProtocol
 
     // documents need to display
     var sectionDocuments: [DocumentSection] = []
@@ -43,13 +44,15 @@ public class DocumentListViewModel {
         store: StateStore,
         usecase: any DocumentUseCaseProtocol,
         fileRepository: FileRepositoryProtocol,
-        fridayUseCase: FridayUseCaseProtocol
+        fridayUseCase: FridayUseCaseProtocol,
+        entryUseCase: EntryUseCaseProtocol
     ) {
         self.prespective = prespective
         self.store = store
         self.usecase = usecase
         self.fileRepository = fileRepository
         self.fridayUseCase = fridayUseCase
+        self.entryUseCase = entryUseCase
     }
 
 

@@ -42,31 +42,43 @@ public class FridayClient: FridayClientProtocol {
             )
         }
 
-        var eventType = ""
-        var eventData = ""
+        var currentEventType = ""
+        var currentEventData = ""
 
         for try await line in bytes.lines {
+            #if DEBUG
+            print("[FridayClient] Received line: [len=\(line.count)] \(line)")
+            #endif
             if line.hasPrefix("event:") {
-                if !eventType.isEmpty && !eventData.isEmpty {
-                    let event = parseEvent(type: eventType, data: eventData)
-                    await handler(event)
-                }
-                eventType = String(line.dropFirst(6)).trimmingCharacters(in: .whitespaces)
-                eventData = ""
+                currentEventType = String(line.dropFirst(6)).trimmingCharacters(in: .whitespaces)
+                currentEventData = ""
             } else if line.hasPrefix("data:") {
-                eventData = String(line.dropFirst(5)).trimmingCharacters(in: .whitespaces)
-            } else if line.isEmpty && !eventType.isEmpty && !eventData.isEmpty {
-                let event = parseEvent(type: eventType, data: eventData)
+                currentEventData = String(line.dropFirst(5)).trimmingCharacters(in: .whitespaces)
+
+                let event = parseEvent(type: currentEventType, data: currentEventData)
+                #if DEBUG
+                print("[FridayClient] Parsed event type: \(currentEventType), isDone: \(event.isDone), dataLen=\(currentEventData.count)")
+                #endif
                 await handler(event)
-                eventType = ""
-                eventData = ""
+
+                currentEventData = ""
             }
         }
 
-        if !eventType.isEmpty && !eventData.isEmpty {
-            let event = parseEvent(type: eventType, data: eventData)
+        // Handle final EVENT-UPDATE at stream end
+        if !currentEventType.isEmpty && !currentEventData.isEmpty {
+            let event = parseEvent(type: currentEventType, data: currentEventData)
+            #if DEBUG
+            print("[FridayClient] Parsed final event type: \(currentEventType), dataLen=\(currentEventData.count)")
+            #endif
             await handler(event)
         }
+
+        #if DEBUG
+        print("[FridayClient] Stream ended, sending .done")
+        #endif
+        // Send done event when stream ends
+        await handler(.done)
     }
 
     private func buildRequest(message: String, sessionId: String, name: String?, contextEntries: [String]?) throws -> URLRequest {
@@ -93,8 +105,11 @@ public class FridayClient: FridayClientProtocol {
     }
 
     private func parseEvent(type: String, data: String) -> FridayStreamEvent {
+        #if DEBUG
+        print("[FridayClient] parseEvent JSON: \(data)")
+        #endif
+        // Note: Don't use .convertFromSnakeCase here - FridayEventUpdate already has manual CodingKeys
         let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
 
         switch type {
         case "MESSAGE-APPEND":
@@ -107,8 +122,14 @@ public class FridayClient: FridayClientProtocol {
         case "EVENT-UPDATE":
             if let jsonData = data.data(using: .utf8),
                let eventUpdate = try? decoder.decode(FridayEventUpdate.self, from: jsonData) {
+                #if DEBUG
+                print("[FridayClient] EVENT-UPDATE decoded: id=\(eventUpdate.id ?? "nil"), event=\(eventUpdate.event ?? "nil"), entryUri=\(eventUpdate.entryUri ?? "nil")")
+                #endif
                 return .eventUpdate(eventUpdate)
             }
+            #if DEBUG
+            print("[FridayClient] EVENT-UPDATE decode FAILED, data: \(data)")
+            #endif
             return .done
 
         case "DONE":

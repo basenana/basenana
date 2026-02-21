@@ -17,7 +17,7 @@ public struct FridayMessage: Sendable {
     }
 }
 
-public struct FridayEvent: Sendable {
+public struct FridayEvent: Sendable, Identifiable {
     public let id: String?
     public let event: String?
     public let entryUri: String?

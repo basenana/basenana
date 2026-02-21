@@ -447,7 +447,7 @@ private struct ResizableDocumentView: View {
                     .foregroundColor(.gray)
                     .frame(maxHeight: .infinity)
             } else {
-                DocumentReadContainerView(entryUri: viewModel.selectedEntryDetail!.uri, store: viewModel.store, fileRepository: viewModel.fileRepository, documentUsecase: viewModel.documentUsecase, fridayUseCase: viewModel.fridayUseCase)
+                DocumentReadContainerView(entryUri: viewModel.selectedEntryDetail!.uri, store: viewModel.store, fileRepository: viewModel.fileRepository, documentUsecase: viewModel.documentUsecase, fridayUseCase: viewModel.fridayUseCase, entryUseCase: viewModel.entryUsecase)
                     .id(viewModel.selectedEntryDetail!.uri)
                     .frame(maxHeight: .infinity)
             }
@@ -462,13 +462,22 @@ private struct DocumentReadContainerView: View {
     let fileRepository: FileRepositoryProtocol
     let documentUsecase: any DocumentUseCaseProtocol
     let fridayUseCase: FridayUseCaseProtocol
+    let entryUseCase: EntryUseCaseProtocol
 
     @State private var viewModel: DocumentReadViewModel?
+    @State private var chatViewModel: FridayChatViewModel?
+
+    private var resolvedChatViewModel: FridayChatViewModel {
+        if let vm = chatViewModel {
+            return vm
+        }
+        return FridayChatViewModel(fridayUseCase: fridayUseCase, entryUseCase: entryUseCase)
+    }
 
     var body: some View {
         Group {
             if let vm = viewModel {
-                DocumentReadView(viewModel: vm)
+                DocumentReadView(viewModel: vm, chatViewModel: resolvedChatViewModel)
             } else {
                 ProgressView("Loading...")
                     .onAppear {
@@ -477,7 +486,8 @@ private struct DocumentReadContainerView: View {
                             store: store,
                             usecase: documentUsecase,
                             fileRepository: fileRepository,
-                            fridayUseCase: fridayUseCase
+                            fridayUseCase: fridayUseCase,
+                            entryUseCase: entryUseCase
                         )
                     }
             }
