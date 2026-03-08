@@ -1,7 +1,7 @@
 # Basenana
 
 <p align="center">
-  <img src="basenana/Assets.xcassets/AppIcon.appiconset/icon_16x16.png" alt="basenana logo" width="128" height="128">
+  <img src="https://raw.githubusercontent.com/basenana/basenana/refs/heads/main/basenana/Assets.xcassets/AppIcon.appiconset/AppLogo-128.png" alt="basenana logo" width="128" height="128">
 </p>
 
 <p align="center">
