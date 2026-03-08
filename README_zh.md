@@ -19,58 +19,58 @@
   </a>
 </p>
 
-basenana is the macOS client for [nanafs](https://nanafs.com), a cloud-oriented, file-first AI-powered personal knowledge management system.
+basenana 是 [nanafs](https://nanafs.com) 的 macOS 客户端，一个面向云上环境的、以文件为第一公民的 AI 驱动个人知识管理系统。
 
-## Features
+## 核心功能
 
-### 📥 Quick Capture
+### 📥 快速收藏
 
-Quickly capture web pages to Inbox via URL Scheme (`basenana://capture`), supports one-click capture from browser extensions, preserving the original web content for later reading.
+通过 URL Scheme (`basenana://capture`) 快速将网页抓取到 Inbox，支持从浏览器扩展一键收藏网页内容，保留原始网页的完整内容供稍后阅读。
 
-### 📰 RSS Subscription
+### 📰 RSS 订阅
 
-Sync RSS/Atom feeds to nanafs with:
-- Automatic scheduled fetching
-- Custom filter rules (CEL Pattern)
-- Multi-format storage (HTML, XML, JSON, Markdown, WebArchive)
+将 RSS/Atom 订阅源同步到 nanafs，支持：
+- 自动定时抓取
+- 自定义过滤规则 (CEL Pattern)
+- 多格式存储 (HTML, XML, JSON, Markdown, WebArchive)
 
-### 🤖 AI Assistant Friday
+### 🤖 AI 助手 Friday
 
-Interact with nanafs using LLM Agent:
-- Natural language queries across your document library
-- Document summarization and Q&A
-- Chat with references to specific documents
+基于 LLM Agent 的方式与 nanafs 交互：
+- 自然语言查询文档库
+- 文档摘要与问答
+- 引用文档进行对话
 
-### 📖 Document Reading
+### 📖 文档阅读
 
-Multi-format document support:
-- **PDF** - Full PDF rendering
-- **HTML** - Web content reading
-- **Markdown** - Markdown rendering
-- **WebArchive** - Offline web archives
+多格式文档阅读支持：
+- **PDF** - 完整 PDF 渲染
+- **HTML** - 网页内容阅读
+- **Markdown** - Markdown 渲染
+- **WebArchive** - 离线网页存档
 
-### 🔍 Full-text Search
+### 🔍 全文搜索
 
-Cross-document full-text search with highlighted results for quick content discovery.
+跨文档全文搜索，结果高亮显示，快速定位所需内容。
 
-### ⚙️ Workflow Automation
+### ⚙️ 工作流自动化
 
-Flexible workflow engine with support for:
-- RSS auto-fetch tasks
-- Scheduled execution
-- Local file monitoring triggers
+灵活的工作流引擎，支持：
+- RSS 自动抓取任务
+- 定时执行任务
+- 本地文件监控触发
 
-## Screenshots
+## 截图预览
 
-| Inbox | Document Reading |
-|-------|-----------------|
+| Inbox | 文档阅读 |
+|-------|----------|
 | ![QuickInbox](docs/screenshots/QuickInbox.png) | ![DocumentRead](docs/screenshots/DocumentRead.png) |
 
-| Unread | RSS Subscription |
-|--------|------------------|
+| 未读文档 | RSS 订阅 |
+|----------|----------|
 | ![Unread](docs/screenshots/Unread.png) | ![NewRssGroup](docs/screenshots/NewRssGroup.png) |
 
-## Tech Stack
+## 技术栈
 
 - **UI Framework**: SwiftUI
 - **Architecture**: Clean Architecture
@@ -80,7 +80,7 @@ Flexible workflow engine with support for:
 - **Dependency Injection**: [Swinject](https://github.com/Swinject/Swinject), [Factory](https://github.com/hmlongco/Factory)
 - **Logging**: [SwiftyBeaver](https://github.com/SwiftyBeaver/SwiftyBeaver)
 
-## Project Structure
+## 项目结构
 
 ```
 basenana/
@@ -100,32 +100,32 @@ basenana/
 └── Tests/                      # Unit tests
 ```
 
-## Build Guide
+## 构建指南
 
-### Prerequisites
+### 前置要求
 
 - macOS 14.0+
 - Xcode 15.0+
 
-### Build Steps
+### 构建步骤
 
 ```bash
-# 1. Clone the project
+# 1. 克隆项目
 git clone https://github.com/nanafs/basenana.git
 cd basenana
 
-# 2. Generate Xcode project
+# 2. 生成 Xcode 项目
 xcodegen generate
 
-# 3. Open in Xcode
+# 3. 在 Xcode 中打开
 open basenana.xcodeproj
 
-# 4. Build the project
-# Cmd + B or
+# 4. 构建项目
+# Cmd + B 或
 xcodebuild -project basenana.xcodeproj -scheme BasenanaApp -configuration Debug build
 ```
 
-### Run Tests
+### 运行测试
 
 ```bash
 xcodebuild test -scheme DomainTests
@@ -134,9 +134,9 @@ xcodebuild test -scheme FeatureTests
 xcodebuild test -scheme StyleguideTests
 ```
 
-## Requires nanafs Service
+## 依赖 nanafs 服务
 
-basenana requires the nanafs service to work. Visit [nanafs.com](https://nanafs.com) for more details.
+basenana 需要配合 nanafs 服务使用。请访问 [nanafs.com](https://nanafs.com) 了解更多详情。
 
 ## License
 
